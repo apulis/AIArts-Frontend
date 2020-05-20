@@ -1,0 +1,22 @@
+export default {
+  'menu.home': '首页',
+  'menu.dataSet': '数据集管理',
+  'menu.dataSet.dataSet-list': '数据集列表',
+
+  'menu.admin.sub-page': '二级管理页',
+  'menu.login': '登录',
+  'menu.register': '注册',
+  'menu.register.result': '注册结果',
+  'menu.dashboard': 'Dashboard',
+  'menu.dashboard.analysis': '分析页',
+  'menu.dashboard.monitor': '监控页',
+  'menu.dashboard.workplace': '工作台',
+  'menu.exception.403': '403',
+  'menu.exception.404': '404',
+  'menu.exception.500': '500',
+  'menu.account': '个人页',
+  'menu.account.center': '个人中心',
+  'menu.account.settings': '个人设置',
+  'menu.account.trigger': '触发报错',
+  'menu.account.logout': '退出登录',
+};
