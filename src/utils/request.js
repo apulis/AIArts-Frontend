@@ -35,7 +35,7 @@ const errorHandler = (error) => {
     const { status, url } = response;
     if (status === 401) {
       const href = window.location.href;
-      if (!/\/login/.test(href)) history.push('/data_manage/user/login');
+      if (!/\/login/.test(href)) history.push('/data-manage/user/login');
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,

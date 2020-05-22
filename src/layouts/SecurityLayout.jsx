@@ -28,7 +28,7 @@ class SecurityLayout extends React.Component {
 
     const token = localStorage.token;
     const queryString = stringify({
-      redirect: '/data_manage/project/my-project',
+      redirect: '/data-manage/project/my-project',
       // redirect: window.location.href,
     });
 
@@ -36,8 +36,8 @@ class SecurityLayout extends React.Component {
       return <PageLoading />;
     }
 
-    if (!token && window.location.pathname !== '/data_manage/user/login') {
-      return <Redirect to={`/data_manage/user/login?${queryString}`} />;
+    if (!token && window.location.pathname !== '/data-manage/user/login') {
+      return <Redirect to={`/data-manage/user/login?${queryString}`} />;
     }
 
     return children;

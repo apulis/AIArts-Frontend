@@ -1,7 +1,6 @@
 export default {
   'menu.home': '首页',
   'menu.dataSet': '数据集管理',
-  'menu.dataSet.dataSet-list': '数据集列表',
 
   'menu.admin.sub-page': '二级管理页',
   'menu.login': '登录',
