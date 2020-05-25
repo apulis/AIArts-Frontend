@@ -85,7 +85,7 @@ export default [
           },
           {
             path: '/',
-            redirect: '/data-manage/dataSet/',
+            redirect: '/data-manage/dataSet-manage',
           },
           {
             component: '404',
