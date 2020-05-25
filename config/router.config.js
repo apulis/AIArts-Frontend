@@ -4,17 +4,17 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
-        path: '/data_manage/user',
+        path: '/data-manage/user',
         component: '../layouts/UserLayout',
         routes: [
           {
-            path: '/data_manage/user',
-            redirect: '/data_manage/user/login',
+            path: '/data-manage/user',
+            redirect: '/data-manage/user/login',
           },
           {
             name: 'login',
             icon: 'smile',
-            path: '/data_manage/user/login',
+            path: '/data-manage/user/login',
             component: './user/login',
           },
           {
@@ -29,65 +29,63 @@ export default [
         authority: ['admin', 'user'],
         routes: [
           {
-            path: '/data_manage/dashboard',
+            path: '/data-manage/dashboard',
             name: 'dashboard',
             icon: 'dashboard',
             routes: [
               {
                 name: 'analysis',
                 icon: 'smile',
-                path: '/data_manage/dashboard/analysis',
+                path: '/data-manage/dashboard/analysis',
                 component: './dashboard/analysis',
               },
               {
                 name: 'monitor',
                 icon: 'smile',
-                path: '/data_manage/dashboard/monitor',
+                path: '/data-manage/dashboard/monitor',
                 component: './dashboard/monitor',
               },
               {
                 name: 'workplace',
                 icon: 'smile',
-                path: '/data_manage/dashboard/workplace',
+                path: '/data-manage/dashboard/workplace',
                 component: './dashboard/workplace',
               },
             ],
           },
           {
-            path: '/data_manage/dataSet-manage',
+            path: '/data-manage/dataSet-manage',
             name: 'dataSet',
-            icon: 'AppstoreOutlined',
+            icon: 'ReadOutlined',
             routes: [
               {
-                name: 'dataSet-list',
-                icon: 'ReadOutlined',
-                path: '/data_manage/dataSet-manage/dataSet-list',
-                component: './dataSet/dataSetList',
+                path: '/data-manage/dataSet-manage',
+                component: './dataSet',
               },
             ],
           },
           {
             name: 'account',
             icon: 'user',
-            path: '/data_manage/account',
+            path: '/data-manage/account',
             routes: [
               {
                 name: 'center',
                 icon: 'smile',
-                path: '/data_manage/account/center',
+                path: '/data-manage/account/center',
                 component: './account/center',
               },
               {
                 name: 'settings',
                 icon: 'smile',
-                path: '/data_manage/account/settings',
+                path: '/data-manage/account/settings',
                 component: './account/settings',
               },
             ],
           },
           {
             path: '/',
-            redirect: '/data_manage/dataSet/dataSet-list',
+            redirect: '/data-manage/dataSet/',
           },
           {
             component: '404',

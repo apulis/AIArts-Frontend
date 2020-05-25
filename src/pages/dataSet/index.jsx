@@ -1,8 +1,9 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getProject, deleteProject, submit, edit } from './service';
-import { PAGEPARAMS } from '../../../const';
+import { PAGEPARAMS } from '../../const';
+import ModalForm from './components/ModalForm';
 const { confirm } = Modal;
 
 const DataSetList = () => {
@@ -13,6 +14,7 @@ const DataSetList = () => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [editProjectId, setEditProjectId] = useState('');
   const [form] = Form.useForm();
+  const modalFormRef = useRef();
 
   useEffect(() => {
     getData();
@@ -31,7 +33,7 @@ const DataSetList = () => {
 
   const handleRemove = (id) => {
     confirm({
-      content: `确定要删除该项目吗？`,
+      content: `确定要删除该数据集吗？`,
       okText: '确定',
       cancelText: '取消',
       onOk: async () => {
@@ -50,41 +52,41 @@ const DataSetList = () => {
   };
 
   const onSubmit = () => {
-    form
-      .validateFields()
-      .then(async (values) => {
-        if (modalType === 'new') {
-          await submit(values);
-        } else if (modalType === 'edit') {
-          await edit(editProjectId, values);
-        }
-        message.success('提交成功！');
-        resetModal(false);
-        getData();
-      })
-      .catch((info) => {
-        message.error('提交失败！');
-        console.log('Validate Failed:', info);
-      });
+    console.log('tttttt', modalFormRef.current.hello());
+    // form.validateFields()
+    //   .then(async (values) => {
+    //     if (modalType === 'new') {
+    //       await submit(values);
+    //     } else if (modalType === 'edit') {
+    //       await edit(editProjectId, values);
+    //     }
+    //     message.success('提交成功！');
+    //     resetModal(false);
+    //     getData();
+    //   })
+    //   .catch((info) => {
+    //     message.error('提交失败！');
+    //     console.log('Validate Failed:', info);
+    //   });
   };
 
   const columns = [
     {
-      title: '项目ID',
+      title: '数据集ID',
       dataIndex: 'ProjectId',
       width: 300,
     },
     {
-      title: '项目名称',
+      title: '数据集名称',
       dataIndex: 'Name',
     },
     {
-      title: '项目分类',
+      title: '数据分类',
       dataIndex: 'type',
-      render: () => <span>图片标注</span>,
+      render: () => <span>图片</span>,
     },
     {
-      title: '项目描述',
+      title: '数据集简介',
       dataIndex: 'Info',
       ellipsis: true,
       width: 350,
@@ -115,7 +117,7 @@ const DataSetList = () => {
   };
 
   const resetModal = (type) => {
-    form.setFieldsValue(emptyValue);
+    // form.setFieldsValue(emptyValue);
     setModalFlag(type);
   };
 
@@ -129,7 +131,7 @@ const DataSetList = () => {
           resetModal(true);
         }}
       >
-        新建项目
+        新增数据集
       </Button>
       <Table
         columns={columns}
@@ -149,30 +151,17 @@ const DataSetList = () => {
       />
       {modalFlag && (
         <Modal
-          title={`${modalType === 'edit' ? '编辑' : '新建'}项目`}
+          title={`${modalType === 'edit' ? '编辑' : '新增'}数据集`}
           visible={modalFlag}
           onOk={onSubmit}
           onCancel={() => resetModal(false)}
           okText="提交"
           cancelText="取消"
           destroyOnClose
+          maskClosable={false}
+          width={600}
         >
-          <Form form={form}>
-            <Form.Item
-              label="项目名称"
-              name="Name"
-              rules={[{ required: true, message: '请填写项目名称' }]}
-            >
-              <Input placeholder="请填写项目名称" />
-            </Form.Item>
-            <Form.Item
-              label="项目描述"
-              name="Info"
-              rules={[{ required: true, message: '请填写项目描述' }, { min: 10 }]}
-            >
-              <Input.TextArea placeholder="请填写项目描述" autoSize={{ minRows: 4 }} />
-            </Form.Item>
-          </Form>
+          <ModalForm ref={modalFormRef}></ModalForm>
         </Modal>
       )}
     </>

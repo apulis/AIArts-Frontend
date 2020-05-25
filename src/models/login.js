@@ -10,11 +10,11 @@ const Model = {
   effects: {
     logout() {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
-      if (window.location.pathname !== '/data_manage/user/login' && !redirect) {
+      if (window.location.pathname !== '/data-manage/user/login' && !redirect) {
         localStorage.removeItem('token');
         localStorage.removeItem('userLevel');
         history.replace({
-          pathname: '/data_manage/user/login',
+          pathname: '/data-manage/user/login',
           search: stringify({
             redirect: window.location.href,
           }),
