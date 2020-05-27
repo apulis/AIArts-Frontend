@@ -1,8 +1,8 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProjects, deleteProject, addProject, editProject } from './service';
-import { PAGEPARAMS } from '../../const';
+import { getProjects, deleteProject, addProject, editProject } from './services';
+import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 const { confirm } = Modal;
 

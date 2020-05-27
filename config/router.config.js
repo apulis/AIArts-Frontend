@@ -60,7 +60,7 @@ export default [
             routes: [
               {
                 path: '/data-manage/project-manage',
-                component: './project',
+                component: './Project/ProjectList',
               },
             ],
           },
