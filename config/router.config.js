@@ -54,6 +54,17 @@ export default [
             ],
           },
           {
+            path: '/data-manage/project-manage',
+            name: 'Project',
+            icon: 'ProjectOutlined',
+            routes: [
+              {
+                path: '/data-manage/project-manage',
+                component: './Project/ProjectList',
+              },
+            ],
+          },
+          {
             path: '/data-manage/dataSet-manage',
             name: 'dataSet',
             icon: 'ReadOutlined',
