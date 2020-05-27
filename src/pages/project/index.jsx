@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProject, deleteProject, submit, edit } from './service';
+import { getProjects, deleteProject, addProject, editProject } from './service';
 import { PAGEPARAMS } from '../../const';
 import ModalForm from './components/ModalForm';
 const { confirm } = Modal;
@@ -22,29 +22,13 @@ const ProjectList = () => {
 
   const getData = async () => {
     const { page, size } = pageParams;
-    const { successful, projects, msg, totalCount } = await getProject(page, size);
+    const { successful, projects, msg, totalCount } = await getProjects(page, size);
     if (successful === 'true') {
       setProject({
         data: projects,
         total: totalCount,
       });
     }
-  };
-
-  const handleRemove = (id) => {
-    confirm({
-      content: `确定要删除该项目吗？`,
-      okText: '确定',
-      cancelText: '取消',
-      onOk: async () => {
-        const res = await deleteProject(id);
-        const { successful, msg } = res;
-        if (successful === 'true') {
-          getData();
-        }
-      },
-      onCancel() {},
-    });
   };
 
   const pageParamsChange = (page, size) => {
@@ -86,12 +70,6 @@ const ProjectList = () => {
         return (
           <div>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            {/* <a
-              style={{ color: 'red', marginLeft: 10 }}
-              onClick={() => handleRemove(item.ProjectId)}
-            >
-              删除
-            </a> */}
           </div>
         );
       },
@@ -112,16 +90,6 @@ const ProjectList = () => {
 
   return (
     <>
-      {/* <Button
-        type="primary"
-        style={{ marginBottom: 14 }}
-        onClick={() => {
-          setModalType('new');
-          resetModal(true);
-        }}
-      >
-        新增数据集
-      </Button> */}
       <Table
         columns={columns}
         dataSource={project.data}
