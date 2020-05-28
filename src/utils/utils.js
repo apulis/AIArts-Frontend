@@ -1,5 +1,6 @@
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
+import { isObject } from './types';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -57,3 +58,31 @@ export const getRouteAuthority = (path, routeData) => {
   });
   return authorities;
 };
+
+/**
+ * 规范化返回的列表数据
+ * @param {Object} data 列表数据
+ */
+export const normalizeTableResult = data => {
+  if (Array.isArray(data)) {
+    return {
+      list: data || [],
+      pagination: {
+        current: 1,
+        pageSize: 10,
+        total: 0
+      }
+    }
+  }
+  if (isObject(data)) {
+    return {
+      list: data.list || [],
+      pagination: {
+        current: data.pageNum || 1,
+        pageSize: data.pageSize || 10,
+        total: data.total
+      }
+    }
+  }
+  return data
+}

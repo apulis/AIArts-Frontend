@@ -1,8 +1,9 @@
 import request from '@/utils/request';
+import { MOCK_URL } from '@/config'
 
-export async function getProjects(page, size) {
-  return request('/api/projects', {
-    params: { page, size },
+export async function getProjects(params) {
+  return request(`${MOCK_URL}/api/projects`, {
+    params
   });
 }
 
@@ -19,8 +20,8 @@ export async function addProject(data) {
   });
 }
 
-export async function editProject(projectId, data) {
-  return await request(`/api/projects/${projectId}`, {
+export async function updateProject(projectId, data) {
+  return await request(`${MOCK_URL}/api/projects/${projectId}`, {
     method: 'PATCH',
     data: data,
   });

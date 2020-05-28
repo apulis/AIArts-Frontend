@@ -1,12 +1,20 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProjects, deleteProject, addProject, editProject } from './services';
+import { getProjects, deleteProject, addProject, updateProject } from './services';
 import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
+import { connect } from 'umi';
+
 const { confirm } = Modal;
 
-const ProjectList = () => {
+const ProjectList = props => {
+  const {
+    loading,
+    dispatch,
+    projectList: { data },
+  } = props;
+  console.log(data)
   const emptyValue = { Name: '', Info: '' };
   const [project, setProject] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
@@ -16,10 +24,18 @@ const ProjectList = () => {
   const [form] = Form.useForm();
   const modalFormRef = useRef();
 
+  // useEffect(() => {
+  //   getData();
+  // }, [pageParams]);
   useEffect(() => {
-    getData();
+    dispatch({
+      type: 'projectList/fetch',
+      payload: {
+        current: pageParams.page,
+        pageSize: pageParams.size
+      },
+    });
   }, [pageParams]);
-
   const getData = async () => {
     const { page, size } = pageParams;
     const { successful, projects, msg, totalCount } = await getProjects(page, size);
@@ -46,7 +62,7 @@ const ProjectList = () => {
     // },
     {
       title: 'Name',
-      dataIndex: 'Name',
+      dataIndex: 'name',
       width: 100
     },
     {
@@ -92,19 +108,18 @@ const ProjectList = () => {
     <>
       <Table
         columns={columns}
-        dataSource={project.data}
+        // dataSource={project.data}
+        dataSource={data.list}
         rowKey={(r, i) => `${i}`}
-        // rowSelection={{
-        //   type: 'checkbox'
-        // }}
         pagination={{
-          total: project.total,
+          total: data.pagination.total,
           showQuickJumper: true,
           showTotal: (total) => `共 ${total} 条`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
         }}
+        loading={loading}
       />
       {modalFlag && (
         <Modal
@@ -125,4 +140,8 @@ const ProjectList = () => {
   );
 };
 
-export default ProjectList;
+// export default ProjectList;
+export default connect(({ projectList, loading }) => ({
+  projectList,
+  loading: loading.models.projectList,
+}))(ProjectList);
