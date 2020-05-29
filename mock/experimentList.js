@@ -129,5 +129,5 @@ function postExperiment(req, res, u, b) {
 export default {
   'GET /api/experiments': getExperiments,
   'POST /api/experiments': postExperiment,
-  'UPDATE /api/experiments': postExperiment,
+  // 'UPDATE /api/experiments': postExperiment,
 };
