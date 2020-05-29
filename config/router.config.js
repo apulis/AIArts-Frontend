@@ -71,7 +71,7 @@ export default [
             routes: [
               {
                 path: '/data-manage/dataSet-manage',
-                component: './dataSet',
+                component: './DataSet',
               },
             ],
           },
