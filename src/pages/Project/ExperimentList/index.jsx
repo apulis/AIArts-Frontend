@@ -1,9 +1,9 @@
-import { Link } from 'umi';
+import { connect, Link, FormattedMessage } from 'umi';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Table } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
-import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 
 const ExperimentList = props => {
@@ -39,7 +39,7 @@ const ExperimentList = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      render: (text, record) => <Link to={ { pathname: '/project/basic-info', query: { id: record.id } } }>{text}</Link>
+      render: (text, record) => <Link to={ { pathname: '/data-manage/ProjectManage/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: 'Description',
@@ -93,7 +93,8 @@ const ExperimentList = props => {
   };
 
   return (
-    <>
+    // <PageHeaderWrapper content={<FormattedMessage id="project.experimentlist.description" />}>
+    <PageHeaderWrapper content={'下面展示了实验列表。'}>
       <Table
         columns={columns}
         dataSource={data.list}
@@ -114,7 +115,7 @@ const ExperimentList = props => {
         onCancel={handleCancel}
         onSubmit={handleSubmit}
       />
-    </>
+    </PageHeaderWrapper>
   );
 };
 

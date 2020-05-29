@@ -42,7 +42,7 @@ const ProjectList = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 100,
-      render: (text, record) => <Link to={ { pathname: '/project/basic-info', query: { id: record.id } } }>{text}</Link>
+      render: (text, record) => <Link to={ { pathname: '/data-manage/ProjectManage/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: 'Description',
@@ -90,7 +90,7 @@ const ProjectList = props => {
   };
 
   return (
-    <>
+    <PageHeaderWrapper content={'下面展示了项目列表。'}>
       <Table
         columns={columns}
         dataSource={data.list}
@@ -111,7 +111,7 @@ const ProjectList = props => {
         onCancel={handleCancel}
         onSubmit={handleSubmit}
       />
-    </>
+    </PageHeaderWrapper>
   );
 };
 
