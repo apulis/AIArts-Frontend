@@ -54,13 +54,21 @@ export default [
             ],
           },
           {
-            path: '/data-manage/ProjectManage/ProjectList',
+            path: '/data-manage/ProjectManage',
             name: 'Project',
             icon: 'ProjectOutlined',
             routes: [
               {
+                name: 'Project List',
+                icon: 'ProjectOutlined',
                 path: '/data-manage/ProjectManage/ProjectList',
                 component: './Project/ProjectList',
+              },
+              {
+                name: 'Experiment List',
+                icon: 'ExperimentOutlined',
+                path: '/data-manage/ProjectManage/ExperimentList',
+                component: './Project/ExperimentList',
               },
             ],
           },

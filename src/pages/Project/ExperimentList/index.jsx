@@ -1,27 +1,24 @@
-import { Link } from 'umi'
-import { message, Table, Modal, Form, Input, Button } from 'antd';
-import React, { useState, useEffect, useRef } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProjects, deleteProject, addProject, updateProject } from './services';
+import { Link } from 'umi';
+import { Table } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 
-const ProjectList = props => {
+const ExperimentList = props => {
   const {
     loading,
     dispatch,
-    projectList: { data },
+    experimentList: { data },
   } = props;
-  // console.log(data)
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);  
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
 
   useEffect(() => {
     dispatch({
-      type: 'projectList/fetch',
+      type: 'experimentList/fetch',
       payload: {
         current: pageParams.page,
         pageSize: pageParams.size
@@ -41,14 +38,20 @@ const ProjectList = props => {
     {
       title: 'Name',
       dataIndex: 'name',
-      width: 100,
+      width: 150,
       render: (text, record) => <Link to={ { pathname: '/project/basic-info', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: 'Description',
       dataIndex: 'desc',
       ellipsis: true,
-      width: 350,
+      // width: 350,
+    },
+    {
+      title: 'Version',
+      dataIndex: 'version',
+      ellipsis: true,
+      width: 100,
     },
     {
       title: 'Creator',
@@ -84,7 +87,7 @@ const ProjectList = props => {
     const id = current ? current.id : '';
     const params = {id, ...values }
     dispatch({
-      type: 'projectList/update',
+      type: 'experimentList/update',
       payload: params
     });
   };
@@ -115,7 +118,7 @@ const ProjectList = props => {
   );
 };
 
-export default connect(({ projectList, loading }) => ({
-  projectList,
-  loading: loading.models.projectList,
-}))(ProjectList);
+export default connect(({ experimentList, loading }) => ({
+  experimentList,
+  loading: loading.models.experimentList,
+}))(ExperimentList);
