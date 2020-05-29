@@ -54,12 +54,12 @@ export default [
             ],
           },
           {
-            path: '/data-manage/project-manage',
+            path: '/data-manage/ProjectManage/ProjectList',
             name: 'Project',
             icon: 'ProjectOutlined',
             routes: [
               {
-                path: '/data-manage/project-manage',
+                path: '/data-manage/ProjectManage/ProjectList',
                 component: './Project/ProjectList',
               },
             ],

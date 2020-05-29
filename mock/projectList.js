@@ -10,7 +10,7 @@ const genList = (current, pageSize) => {
   for (let i = 0; i < pageSize; i += 1) {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
-      key: index,
+      id: index,
       name: `Project ${index}`,
       desc: '这是一段描述',
       creator: Mock.mock('@cname'),
