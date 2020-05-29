@@ -3,7 +3,9 @@ import { getUserInfo } from '@/services/user';
 const UserModel = {
   namespace: 'user',
   state: {
-    currentUser: {},
+    currentUser: {
+      name: 'User'
+    },
   },
   effects: {
     *fetchCurrent(_, { call, put }) {

@@ -1,7 +1,9 @@
 import React from 'react';
 import { PageLoading } from '@ant-design/pro-layout';
+import { ConfigProvider } from 'antd';
 import { Redirect, connect } from 'umi';
 import { stringify } from 'querystring';
+import enUS from 'antd/es/locale/en_US';
 
 class SecurityLayout extends React.Component {
   state = {
@@ -11,9 +13,6 @@ class SecurityLayout extends React.Component {
   componentDidMount() {
     this.setState({
       isReady: true,
-    });
-    this.props.dispatch({
-      type: 'user/fetchCurrent',
     });
     const { location } = this.props;
     if (location && location.query && location.query.token) {
@@ -29,7 +28,6 @@ class SecurityLayout extends React.Component {
     const token = localStorage.token;
     const queryString = stringify({
       redirect: '/data-manage/project/my-project',
-      // redirect: window.location.href,
     });
 
     if ((!token && loading) || !isReady) {
@@ -39,8 +37,11 @@ class SecurityLayout extends React.Component {
     if (!token && window.location.pathname !== '/data-manage/user/login') {
       return <Redirect to={`/data-manage/user/login?${queryString}`} />;
     }
-
-    return children;
+    return (
+      <ConfigProvider locale={enUS}>
+        {children}
+      </ConfigProvider>
+    )
   }
 }
 

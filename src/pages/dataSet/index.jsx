@@ -1,16 +1,14 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getProject, deleteProject, submit, edit } from './service';
 import { PAGEPARAMS } from '../../const';
-const { confirm } = Modal;
+import styles from './index.less';
+import { Link } from 'umi';
 
 const DataSetList = () => {
-  const emptyValue = { Name: '', Info: '' };
-  const [project, setProject] = useState({ data: [], total: 0 });
+  const [dataSets, setDataSets] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
-  const [editProjectId, setEditProjectId] = useState('');
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -19,10 +17,30 @@ const DataSetList = () => {
 
   const getData = async () => {
     const { page, size } = pageParams;
-    const { successful, projects, msg, totalCount } = await getProject(page, size);
+    // const { successful, projects, msg, totalCount } = await getProject(page, size);
+    const { successful, dataSets, msg, totalCount } = {
+      successful: 'true',
+      totalCount: 2,
+      dataSets: [{
+        name: '11111',
+        id: 111,
+        desc: 'descdescdescdescdesc111',
+        Creator: 'CreatorCreator',
+        time: '2020-05-29 15:44:46',
+        version: 'V009'
+      },
+      {
+        name: '2222',
+        id: 222,
+        desc: 'descdescdescdescdesc222',
+        Creator: 'CreatorCreator',
+        time: '2020-05-29 15:44:46',
+        version: 'V009'
+      }]
+    };
     if (successful === 'true') {
-      setProject({
-        data: projects,
+      setDataSets({
+        data: dataSets,
         total: totalCount,
       });
     }
@@ -38,7 +56,7 @@ const DataSetList = () => {
     //     if (modalType === 'new') {
     //       await submit(values);
     //     } else if (modalType === 'edit') {
-    //       await edit(editProjectId, values);
+    //       await edit(editData, values);
     //     }
     //     message.success('提交成功！');
     //     resetModal(false);
@@ -53,11 +71,12 @@ const DataSetList = () => {
   const columns = [
     {
       title: 'Dataset Name',
-      dataIndex: 'Name',
+      key: 'name',
+      render: item => <Link to={{ pathname: '/data-manage/dataSetManage/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
       title: 'Description',
-      dataIndex: 'Info',
+      dataIndex: 'desc',
       ellipsis: true,
       width: 350,
     },
@@ -67,45 +86,33 @@ const DataSetList = () => {
     },
     {
       title: 'Update Time',
-      dataIndex: 'Update Time',
+      dataIndex: 'time',
     },
     {
       title: 'Update Version',
-      dataIndex: 'Update Version',
+      dataIndex: 'version',
     },
     {
       title: 'Operation',
-      render: (item) => {
-        return (
-          <div>
-            <a onClick={() => onEditClick(item)}>编辑</a>
-          </div>
-        );
-      },
+      render: item => <a onClick={() => onEditClick(item)}>Modify</a>,
     },
   ];
 
   const onEditClick = (item) => {
     form.setFieldsValue(item);
-    setEditProjectId(item.ProjectId);
     setModalFlag(true);
-  };
-
-  const resetModal = (type) => {
-    // form.setFieldsValue(emptyValue);
-    setModalFlag(type);
   };
 
   return (
     <>
       <Table
         columns={columns}
-        dataSource={project.data}
+        dataSource={dataSets.data}
         rowKey={(r, i) => `${i}`}
         pagination={{
-          total: project.total,
+          total: dataSets.total,
           showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: (total) => `Total ${total} items`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
@@ -113,26 +120,25 @@ const DataSetList = () => {
       />
       {modalFlag && (
         <Modal
-          title='编辑数据集'
+          title='Modify DataSet'
           visible={modalFlag}
           onOk={onSubmit}
-          onCancel={() => resetModal(false)}
+          onCancel={() => setModalFlag(false)}
           okText="Submit"
-          cancelText="Cancel"
           destroyOnClose
           maskClosable={false}
         >
-          <Form form={form}>
+          <Form form={form} className={styles.dataSetModal}>
             <Form.Item
               label="Dataset Name"
-              name="Name"
+              name="name"
               rules={[{ required: true }]}
             >
               <Input disabled />
             </Form.Item>
             <Form.Item
               label="Description"
-              name="Info"
+              name="desc"
               rules={[{ required: true, message: 'Description is required！' }]}
             >
               <Input.TextArea placeholder="please enter description" autoSize={{ minRows: 4 }} />
