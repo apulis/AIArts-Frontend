@@ -20,9 +20,9 @@ export async function addProject(data) {
   });
 }
 
-export async function updateProject(projectId, data) {
-  return await request(`${MOCK_URL}/api/projects/${projectId}`, {
-    method: 'PATCH',
-    data: data,
+export async function updateProject(params = {}) {
+  return await request(`${MOCK_URL}/api/projects/update`, {
+    method: 'POST',
+    params
   });
 }
