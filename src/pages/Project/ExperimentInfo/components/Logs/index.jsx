@@ -1,5 +1,4 @@
 import { connect, Link, FormattedMessage } from 'umi';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Table } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PAGEPARAMS } from '../../../../../const';
@@ -78,22 +77,20 @@ const Logs = props => {
   };
 
   return (
-    <PageHeaderWrapper content={'下面展示了实验日志。'}>
-      <Table
-        columns={columns}
-        dataSource={data.list}
-        rowKey={(r, i) => `${i}`}
-        pagination={{
-          total: data.pagination.total,
-          showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条`,
-          showSizeChanger: true,
-          onChange: pageParamsChange,
-          onShowSizeChange: pageParamsChange,
-        }}
-        loading={loading}
-      />
-    </PageHeaderWrapper>
+    <Table
+      columns={columns}
+      dataSource={data.list}
+      rowKey={(r, i) => `${i}`}
+      pagination={{
+        total: data.pagination.total,
+        showQuickJumper: true,
+        showTotal: (total) => `共 ${total} 条`,
+        showSizeChanger: true,
+        onChange: pageParamsChange,
+        onShowSizeChange: pageParamsChange,
+      }}
+      loading={loading}
+    />
   );
 };
 

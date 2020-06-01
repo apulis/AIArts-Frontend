@@ -25,7 +25,7 @@ const ExperimentInfo = props => {
 
   return (
     <PageHeaderWrapper title="实验-详细信息">
-      <Card size="small" bordered={false}>
+      <Card bordered={false}>
         <div className={styles.tabsWrapper}>
             <Tabs animated={false}>
             {tabs.map(item => (
