@@ -11,9 +11,9 @@ const genList = (current, pageSize) => {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
       id: index,
-      name: `Experiment ${index}`,
+      name: `Dataset ${index}`,
       version: `Version ${index}`,
-      desc: '这是一段实验描述',
+      desc: '这是一段实验数据集描述',
       creator: Mock.mock('@cname'),
       updateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     });
@@ -24,7 +24,7 @@ const genList = (current, pageSize) => {
 
 let tableListDataSource = genList(1, 100);
 
-function getExperiments(req, res, u) {
+function getDatasets(req, res, u) {
   let realUrl = u;
 
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
@@ -65,7 +65,7 @@ function getExperiments(req, res, u) {
   return res.json(result);
 }
 
-function postExperiment(req, res, u, b) {
+function postDataset(req, res, u, b) {
   let realUrl = u;
 
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
@@ -126,52 +126,7 @@ function postExperiment(req, res, u, b) {
   res.json(result);
 }
 
-function getExperimentById(req, res, u) {
-  let realUrl = u;
-
-  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
-    realUrl = req.url;
-  }
-
-  const { current = 1, pageSize = 10 } = req.query;
-  const params = parse(realUrl, true).query;
-  let dataSource = [...tableListDataSource].slice((current - 1) * pageSize, current * pageSize);
-
-  if (params.sorter) {
-    const s = params.sorter.split('_');
-    dataSource = dataSource.sort((prev, next) => {
-      if (s[1] === 'descend') {
-        return next[s[0]] - prev[s[0]];
-      }
-
-      return prev[s[0]] - next[s[0]];
-    });
-  }
-
-  if (params.name) {
-    dataSource = dataSource.filter((data) => data.name.includes(params.name || ''));
-  }
-
-  let experiment = null
-
-  // id
-  if (params.id) {
-    experiment = dataSource.find(data => data.id === params.id)
-  }
-
-  const result = {
-    code: 0,
-    data: {
-      experiment
-    },
-    msg: 'success'
-  };
-  return res.json(result);
-}
-
 export default {
-  'GET /api/experiments': getExperiments,
-  'POST /api/experiments': postExperiment,
-  'GET /api/experiment/queryById': getExperimentById
-  // 'UPDATE /api/experiments': postExperiment,
+  'GET /api/project/experiment/dataset/list': getDatasets,
+  'POST /api/projct/experiment/dataset/update': postDataset
 };

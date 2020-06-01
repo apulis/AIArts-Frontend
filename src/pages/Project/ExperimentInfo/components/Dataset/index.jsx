@@ -2,23 +2,20 @@ import { connect, Link, FormattedMessage } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Table } from 'antd';
 import React, { useState, useEffect } from 'react';
-import { PAGEPARAMS } from '../../../const';
-import ModalForm from './components/ModalForm';
+import { PAGEPARAMS } from '../../../../../const';
 import { formatDate } from '@/utils/time';
 
-const ExperimentList = props => {
+const Dataset = props => {
   const {
     loading,
     dispatch,
-    experimentList: { data },
+    experimentDataset: { data },
   } = props;
-  const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState(undefined);  
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
 
   useEffect(() => {
     dispatch({
-      type: 'experimentList/fetch',
+      type: 'experimentDataset/fetch',
       payload: {
         current: pageParams.page,
         pageSize: pageParams.size
@@ -39,7 +36,7 @@ const ExperimentList = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      // render: (text, record) => <Link to={`/data-manage/ProjectManage/Experiment?id=${record.id}`}>{text}</Link>
+      // render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Description',
@@ -62,16 +59,16 @@ const ExperimentList = props => {
       dataIndex: 'updateTime',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
     },
-    {
-      title: 'Operation',
-      render: (item) => {
-        return (
-          <div>
-            <a onClick={() => showEditModal(item)}>编辑</a>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: 'Operation',
+    //   render: (item) => {
+    //     return (
+    //       <div>
+    //         <a onClick={() => showEditModal(item)}>编辑</a>
+    //       </div>
+    //     );
+    //   }
+    // }
   ];
 
   const showEditModal = (item) => {
@@ -79,22 +76,8 @@ const ExperimentList = props => {
     setCurrent(item);
   };
 
-  const handleCancel = () => {
-    setVisible(false);
-  };
-
-  const handleSubmit = values => {
-    const id = current ? current.id : '';
-    const params = {id, ...values }
-    dispatch({
-      type: 'experimentList/update',
-      payload: params
-    });
-  };
-
   return (
-    // <PageHeaderWrapper content={<FormattedMessage id="project.experimentlist.description" />}>
-    <PageHeaderWrapper content={'下面展示了实验列表。'}>
+    <PageHeaderWrapper title='实验数据集'>
       <Table
         columns={columns}
         dataSource={data.list}
@@ -109,17 +92,11 @@ const ExperimentList = props => {
         }}
         loading={loading}
       />
-      <ModalForm 
-        current={current}
-        visible={visible}
-        onCancel={handleCancel}
-        onSubmit={handleSubmit}
-      />
     </PageHeaderWrapper>
   );
 };
 
-export default connect(({ experimentList, loading }) => ({
-  experimentList,
-  loading: loading.models.experimentList
-}))(ExperimentList);
+export default connect(({ experimentDataset, loading }) => ({
+  experimentDataset,
+  loading: loading.models.experimentDataset
+}))(Dataset);

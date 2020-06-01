@@ -70,6 +70,12 @@ export default [
                 path: '/data-manage/ProjectManage/ExperimentList',
                 component: './Project/ExperimentList',
               },
+              {
+                name: 'Experiment Info',
+                icon: 'InfoCircleOutlined',
+                path: '/data-manage/ProjectManage/ExperimentInfo',
+                component: './Project/ExperimentInfo',
+              },
             ],
           },
           {
