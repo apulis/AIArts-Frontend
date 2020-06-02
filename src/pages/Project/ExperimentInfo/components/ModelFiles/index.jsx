@@ -1,20 +1,21 @@
 import { connect, Link, FormattedMessage } from 'umi';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Table } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PAGEPARAMS } from '../../../../../const';
 import { formatDate } from '@/utils/time';
 
-const Code = props => {
+const ModelFiles = props => {
   const {
     loading,
     dispatch,
-    experimentCode: { data },
+    experimentModels: { data },
   } = props;
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
 
   useEffect(() => {
     dispatch({
-      type: 'experimentCode/fetch',
+      type: 'experimentModels/fetch',
       payload: {
         current: pageParams.page,
         pageSize: pageParams.size
@@ -38,12 +39,42 @@ const Code = props => {
       render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
     {
+      title: 'Description',
+      dataIndex: 'desc',
+      ellipsis: true,
+      // width: 350,
+    },
+    {
       title: 'Version',
       dataIndex: 'version',
       ellipsis: true,
       width: 100,
+    },
+    {
+      title: 'Creator',
+      dataIndex: 'creator',
+    },
+    {
+      title: 'Update Time',
+      dataIndex: 'updateTime',
+      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
     }
+    // {
+    //   title: 'Operation',
+    //   render: (item) => {
+    //     return (
+    //       <div>
+    //         <a onClick={() => showEditModal(item)}>编辑</a>
+    //       </div>
+    //     );
+    //   }
+    // }
   ];
+
+  const showEditModal = (item) => {
+    setVisible(true);
+    setCurrent(item);
+  };
   return (
     <Table
       columns={columns}
@@ -55,14 +86,14 @@ const Code = props => {
         showTotal: (total) => `共 ${total} 条`,
         showSizeChanger: true,
         onChange: pageParamsChange,
-        onShowSizeChange: pageParamsChange,
+        onShowSizeChange: pageParamsChange
       }}
       loading={loading}
     />
   );
 };
 
-export default connect(({ experimentCode, loading }) => ({
-  experimentCode,
-  loading: loading.models.experimentCode
-}))(Code);
+export default connect(({ experimentModels, loading }) => ({
+  experimentModels,
+  loading: loading.models.experimentModels
+}))(ModelFiles);

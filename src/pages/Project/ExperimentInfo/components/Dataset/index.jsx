@@ -35,19 +35,19 @@ const Dataset = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      // render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Description',
       dataIndex: 'desc',
       ellipsis: true,
-      // width: 350,
+      width: 350
     },
     {
       title: 'Version',
       dataIndex: 'version',
       ellipsis: true,
-      width: 100,
+      width: 100
     },
     {
       title: 'Creator',
@@ -63,7 +63,7 @@ const Dataset = props => {
     //   render: (item) => {
     //     return (
     //       <div>
-    //         <a onClick={() => showEditModal(item)}>编辑</a>
+    //         <a onClick={() => showEditModal(item)}>跳转</a>
     //       </div>
     //     );
     //   }
