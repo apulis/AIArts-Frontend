@@ -34,15 +34,26 @@ const Code = props => {
     {
       title: 'Name',
       dataIndex: 'name',
-      width: 150,
+      // width: 150,
       render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Version',
       dataIndex: 'version',
       ellipsis: true,
-      width: 100,
-    }
+      width: 200,
+    },
+    {
+      title: 'Operation',
+      width: 200,
+      render: (item) => {
+        return (
+          <div>
+            <a onClick={() => showEditModal(item)}>打开</a>
+          </div>
+        );
+      }
+    }    
   ];
   return (
     <Table

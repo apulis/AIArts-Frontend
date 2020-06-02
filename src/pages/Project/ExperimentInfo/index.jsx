@@ -24,7 +24,7 @@ const ExperimentInfo = props => {
   const { TabPane } = Tabs
 
   return (
-    <PageHeaderWrapper title="Experiment Details">
+    <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'}>
       <Card bordered={false}>
         <div className={styles.tabsWrapper}>
             <Tabs animated={false}>

@@ -55,8 +55,8 @@ const ProjectList = props => {
       dataIndex: 'creator',
     },
     {
-      title: 'Update Time',
-      dataIndex: 'updateTime',
+      title: 'Latest Time',
+      dataIndex: 'latestTime',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
     },
     {

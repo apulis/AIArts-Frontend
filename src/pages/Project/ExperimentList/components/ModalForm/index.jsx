@@ -25,7 +25,7 @@ const ModalForm = props => {
     if (current) {
       form.setFieldsValue({
         ...current,
-        updateTime: current.updateTime ? moment(current.updateTime) : null,
+        latestTime: current.latestTime ? moment(current.latestTime) : null,
       });
     }
   }, [props.current]);
@@ -64,7 +64,7 @@ const ModalForm = props => {
           <Input placeholder="请输入实验名称" />
         </Form.Item>
         <Form.Item
-          name="updateTime"
+          name="latestTime"
           label="更新时间"
           rules={[
             {

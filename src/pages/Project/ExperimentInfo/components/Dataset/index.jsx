@@ -41,7 +41,7 @@ const Dataset = props => {
       title: 'Description',
       dataIndex: 'desc',
       ellipsis: true,
-      width: 350
+      // width: 350
     },
     {
       title: 'Version',
@@ -52,27 +52,28 @@ const Dataset = props => {
     {
       title: 'Creator',
       dataIndex: 'creator',
+      width: 100
     },
     {
-      title: 'Update Time',
-      dataIndex: 'updateTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
+      title: 'Latest Time',
+      dataIndex: 'latestTime',
+      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+      width: 200
     },
-    // {
-    //   title: 'Operation',
-    //   render: (item) => {
-    //     return (
-    //       <div>
-    //         <a onClick={() => showEditModal(item)}>跳转</a>
-    //       </div>
-    //     );
-    //   }
-    // }
+    {
+      title: 'Operation',
+      render: (item) => {
+        return (
+          <div>
+            <a onClick={() => showEditModal(item)}>跳转</a>
+          </div>
+        );
+      }
+    }
   ];
 
   const showEditModal = (item) => {
-    setVisible(true);
-    setCurrent(item);
+    // setCurrent(item);
   };
 
   return (

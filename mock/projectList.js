@@ -14,7 +14,7 @@ const genList = (current, pageSize) => {
       name: `Project ${index}`,
       desc: '这是一段描述',
       creator: Mock.mock('@cname'),
-      updateTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+      latestTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     });
   }
 
@@ -89,7 +89,7 @@ function postProject(req, res, u, b) {
           name: `Project ${tableListDataSource.length}`,
           desc: '这是一段描述',
           creator: Mock.mock('@cname'),
-          updateTime: new Date()
+          latestTime: new Date()
         };
         tableListDataSource.unshift(newRule);
         return res.json(newRule);

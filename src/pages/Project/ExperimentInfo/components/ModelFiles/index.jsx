@@ -38,42 +38,46 @@ const ModelFiles = props => {
       width: 150,
       render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
-    {
-      title: 'Description',
-      dataIndex: 'desc',
-      ellipsis: true,
-      // width: 350,
-    },
-    {
-      title: 'Version',
-      dataIndex: 'version',
-      ellipsis: true,
-      width: 100,
-    },
-    {
-      title: 'Creator',
-      dataIndex: 'creator',
-    },
-    {
-      title: 'Update Time',
-      dataIndex: 'updateTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
-    }
     // {
-    //   title: 'Operation',
-    //   render: (item) => {
-    //     return (
-    //       <div>
-    //         <a onClick={() => showEditModal(item)}>编辑</a>
-    //       </div>
-    //     );
-    //   }
-    // }
+    //   title: 'Description',
+    //   dataIndex: 'desc',
+    //   ellipsis: true,
+    //   // width: 350,
+    // },
+    {
+      title: 'Size',
+      dataIndex: 'size',
+    },  
+    // {
+    //   title: 'Version',
+    //   dataIndex: 'version',
+    //   ellipsis: true,
+    //   width: 100,
+    // },
+    // {
+    //   title: 'Creator',
+    //   dataIndex: 'creator',
+    // },
+    // {
+    //   title: 'Latest Time',
+    //   dataIndex: 'latestTime',
+    //   render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
+    // },
+    {
+      title: 'Operation',
+      render: (item) => {
+        return (
+          <div>
+            <a onClick={() => showEditModal(item)}>打开</a>
+          </div>
+        );
+      }
+    }
   ];
 
   const showEditModal = (item) => {
-    setVisible(true);
-    setCurrent(item);
+    // setVisible(true);
+    // setCurrent(item);
   };
   return (
     <Table
