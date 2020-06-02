@@ -1,4 +1,5 @@
 import { Collapse, PageHeader, Descriptions, Tag } from 'antd';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 const { Panel } = Collapse;
@@ -36,7 +37,7 @@ const DataSetDetail = () => {
   }
 
   return (
-    <>
+    <PageHeaderWrapper title={false}>
       <PageHeader
         ghost={false}
         onBack={() => window.history.back()}
@@ -59,7 +60,7 @@ const DataSetDetail = () => {
           })}
         </Collapse>
       </PageHeader>
-    </>
+    </PageHeaderWrapper>
   )
 }
 

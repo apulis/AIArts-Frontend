@@ -1,5 +1,5 @@
 export default {
-  'menu.home': '首页',
+  'menu.home': 'Home',
   'menu.dataSet': 'DataSet',
   'menu.Project': 'Project',
   'menu.admin.sub-page': '二级管理页',

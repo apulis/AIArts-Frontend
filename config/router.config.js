@@ -80,7 +80,7 @@ export default [
           },
           {
             path: '/data-manage/dataSetManage',
-            name: 'dataSet',
+            name: 'DataSet',
             icon: 'ReadOutlined',
             routes: [
               {

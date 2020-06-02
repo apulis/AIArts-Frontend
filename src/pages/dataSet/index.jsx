@@ -1,4 +1,5 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect } from 'react';
 import { getProject, deleteProject, submit, edit } from './service';
 import { PAGEPARAMS } from '../../const';
@@ -104,7 +105,7 @@ const DataSetList = () => {
   };
 
   return (
-    <>
+    <PageHeaderWrapper title={false}>
       <Table
         columns={columns}
         dataSource={dataSets.data}
@@ -146,7 +147,7 @@ const DataSetList = () => {
           </Form>
         </Modal>
       )}
-    </>
+    </PageHeaderWrapper>
   );
 };
 
