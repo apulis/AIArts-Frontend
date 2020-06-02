@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Ant Design Pro',
+  title: 'Model & Experiment Management System',
   pwa: false,
   iconfontUrl: '',
 };
