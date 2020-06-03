@@ -54,24 +54,24 @@ const ModalForm = props => {
         <Form.Item
           name="name"
           label="实验名称"
-          rules={[
-            {
-              required: true,
-              message: '请输入实验名称',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '请输入实验名称',
+          //   },
+          // ]}
         >
-          <Input placeholder="请输入实验名称" />
+          <Input placeholder="请输入实验名称" disabled/>
         </Form.Item>
         <Form.Item
           name="latestTime"
           label="更新时间"
-          rules={[
-            {
-              required: true,
-              message: '请选择更新时间',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '请选择更新时间',
+          //   },
+          // ]}
         >
           <DatePicker
             showTime
@@ -80,31 +80,32 @@ const ModalForm = props => {
             style={{
               width: '100%',
             }}
+            disabled
           />
         </Form.Item>
         <Form.Item
           name="version"
           label="实验版本"
-          rules={[
-            {
-              required: true,
-              message: '请输入实验版本号',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '请输入实验版本号',
+          //   },
+          // ]}
         >
-          <Input placeholder="请输入实验创建人" />
+          <Input placeholder="请输入实验创建人" disabled/>
         </Form.Item>
         <Form.Item
           name="creator"
           label="实验创建人"
-          rules={[
-            {
-              required: true,
-              message: '请输入实验创建人',
-            },
-          ]}
+          // rules={[
+          //   {
+          //     required: true,
+          //     message: '请输入实验创建人',
+          //   },
+          // ]}
         >
-          <Input placeholder="请输入实验创建人" />
+          <Input placeholder="请输入实验创建人" disabled/>
         </Form.Item>
         <Form.Item
           name="desc"

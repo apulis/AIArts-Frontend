@@ -10,7 +10,6 @@ const Logs = props => {
     dispatch,
     experimentLogs: { data },
   } = props;
-  const [current, setCurrent] = useState(undefined);  
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
 
   useEffect(() => {
