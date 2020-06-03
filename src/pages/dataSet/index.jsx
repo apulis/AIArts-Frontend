@@ -113,7 +113,7 @@ const DataSetList = () => {
         pagination={{
           total: dataSets.total,
           showQuickJumper: true,
-          showTotal: (total) => `Total ${total} items`,
+          showTotal: total => `Total ${total} items`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
