@@ -24,8 +24,27 @@ const ExperimentInfo = props => {
     });
   }, [experimentId]);
 
+  const routes = [
+    {
+      path: '/data-manage/dataSet-manage',
+      breadcrumbName: 'Home',
+    },
+    {
+      path: '/data-manage/ProjectList',
+      breadcrumbName: 'Project List',
+    },
+    {
+      path: '/data-manage/ProjectList/ExperimentList',
+      breadcrumbName: 'Experiment List',
+    },
+    {
+      path: '/data-manage/ProjectList/ExperimentList/ExperimentInfo',
+      breadcrumbName: 'Experiment Info',
+    },
+  ];
+
   return (
-    <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'}>
+    <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'} breadcrumb={{ routes }}>
        <GridContent>
           <React.Fragment>
             <Row

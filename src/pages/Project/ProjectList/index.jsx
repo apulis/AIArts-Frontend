@@ -42,7 +42,7 @@ const ProjectList = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 100,
-      render: (text, record) => <Link to={ { pathname: '/data-manage/ProjectManage/ExperimentList', query: { id: record.id } } }>{text}</Link>
+      render: (text, record) => <Link to={ { pathname: '/data-manage/ProjectList/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: 'Description',

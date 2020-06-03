@@ -39,7 +39,7 @@ const ExperimentList = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      render: (text, record) => <Link to={`/data-manage/ProjectManage/ExperimentInfo?id=${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/data-manage/ProjectList/ExperimentList/ExperimentInfo?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Description',
@@ -92,9 +92,24 @@ const ExperimentList = props => {
     });
   };
 
+  const routes = [
+    {
+      path: 'index',
+      breadcrumbName: 'Home',
+    },
+    {
+      path: '/data-manage/ProjectList',
+      breadcrumbName: 'Project List',
+    },
+    {
+      path: '/data-manage/ProjectList/ExperimentList',
+      breadcrumbName: 'Experiment List',
+    },
+  ];
+
   return (
     // <PageHeaderWrapper content={<FormattedMessage id="project.experimentlist.description" />}>
-    <PageHeaderWrapper title="Experiment lists" content={'下面展示了实验列表。'}>
+    <PageHeaderWrapper title="Experiment lists" content={'下面展示了实验列表。'} breadcrumb={{ routes }}>
       <Table
         columns={columns}
         dataSource={data.list}
