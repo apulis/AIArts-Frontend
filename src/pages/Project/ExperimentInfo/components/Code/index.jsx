@@ -21,7 +21,7 @@ const Code = props => {
     >     
       <div className={styles.field}>
         <span className={styles.label}>{'Version: '}</span>
-        <a className={styles.number} href={codePath}>{version}</a>
+        <a className={styles.number} href={codePath} target='_blank'>{version}</a>
       </div>
     </Card>
   );
