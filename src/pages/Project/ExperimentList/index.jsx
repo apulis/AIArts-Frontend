@@ -94,7 +94,7 @@ const ExperimentList = props => {
 
   return (
     // <PageHeaderWrapper content={<FormattedMessage id="project.experimentlist.description" />}>
-    <PageHeaderWrapper content={'下面展示了实验列表。'}>
+    <PageHeaderWrapper title="Experiment lists" content={'下面展示了实验列表。'}>
       <Table
         columns={columns}
         dataSource={data.list}

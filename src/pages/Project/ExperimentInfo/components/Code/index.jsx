@@ -1,8 +1,9 @@
 import { connect, Link, FormattedMessage } from 'umi';
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PAGEPARAMS } from '../../../../../const';
 import { formatDate } from '@/utils/time';
+import styles from './index.less';
 
 const Code = props => {
   const {
@@ -22,54 +23,21 @@ const Code = props => {
     });
   }, [pageParams]);
 
-  const pageParamsChange = (page, size) => {
-    setPageParams({ page: page, size: size });
-  };
-
-  const columns = [
-    // {
-    //   title: 'ID',
-    //   dataIndex: 'id'
-    // },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      // width: 150,
-      render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
-    },
-    {
-      title: 'Version',
-      dataIndex: 'version',
-      ellipsis: true,
-      width: 200,
-    },
-    {
-      title: 'Operation',
-      width: 200,
-      render: (item) => {
-        return (
-          <div>
-            <a onClick={() => showEditModal(item)}>打开</a>
-          </div>
-        );
-      }
-    }    
-  ];
   return (
-    <Table
-      columns={columns}
-      dataSource={data.list}
-      rowKey={(r, i) => `${i}`}
-      pagination={{
-        total: data.pagination.total,
-        showQuickJumper: true,
-        showTotal: (total) => `共 ${total} 条`,
-        showSizeChanger: true,
-        onChange: pageParamsChange,
-        onShowSizeChange: pageParamsChange,
-      }}
+    <Card
       loading={loading}
-    />
+      bordered={false}
+      title={'Code'}
+      style={{
+        height: '100%',
+      }}
+    >     
+      <div className={styles.field}>
+        <span className={styles.label}>{'Version: '}</span>
+        {/* <span className={styles.number}>{'xxxxxx'}</span> */}
+        <a className={styles.number}>{'e64c1cab6457fce0e9be9425fb20bd90880ceccf'}</a>
+      </div>
+    </Card>     
   );
 };
 

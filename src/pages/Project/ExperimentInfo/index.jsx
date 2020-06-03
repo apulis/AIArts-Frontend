@@ -1,9 +1,12 @@
 import { connect } from 'umi';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Tabs } from 'antd';
+import { PageHeaderWrapper, GridContent } from '@ant-design/pro-layout';
+import { Col, Row } from 'antd';
 import React, { useEffect } from 'react';
-import { tabs } from './config'
 import styles from './index.less'
+import Code from './components/Code'
+import Dataset from './components/Dataset'
+import Logs from './components/Logs'
+import ModelFiles from './components/ModelFiles'
 
 const ExperimentInfo = props => {
   const {
@@ -21,21 +24,38 @@ const ExperimentInfo = props => {
     });
   }, [experimentId]);
 
-  const { TabPane } = Tabs
-
   return (
     <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'}>
-      <Card bordered={false}>
-        <div className={styles.tabsWrapper}>
-            <Tabs animated={false}>
-            {tabs.map(item => (
-                <TabPane tab={<span title={item.title}>{item.title}</span>} key={item.id}>
-                  <div className={styles.panel}>{item.children ? item.children({ ...values,experimentId: experimentId}) : null}</div>
-                </TabPane>
-            ))}
-            </Tabs>
-        </div>
-      </Card>
+       <GridContent>
+          <React.Fragment>
+            <Row
+              gutter={24}
+              style={{
+                marginTop: 24,
+              }}
+            >
+              <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                <Code/>
+              </Col>
+              <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                <Logs {...props} />
+              </Col>
+            </Row>            
+            <Row
+              gutter={24}
+              style={{
+                marginTop: 24,
+              }}
+            >
+              <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                <Dataset/>
+              </Col>
+              <Col xl={12} lg={24} md={24} sm={24} xs={24}>
+                <ModelFiles {...props} />
+              </Col>
+            </Row>            
+          </React.Fragment>
+       </GridContent>
     </PageHeaderWrapper>
   );
 };

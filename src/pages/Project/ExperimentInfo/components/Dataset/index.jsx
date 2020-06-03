@@ -1,5 +1,5 @@
 import { connect, Link, FormattedMessage } from 'umi';
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PAGEPARAMS } from '../../../../../const';
 import { formatDate } from '@/utils/time';
@@ -22,15 +22,7 @@ const Dataset = props => {
     });
   }, [pageParams]);
 
-  const pageParamsChange = (page, size) => {
-    setPageParams({ page: page, size: size });
-  };
-
   const columns = [
-    // {
-    //   title: 'ID',
-    //   dataIndex: 'id'
-    // },
     {
       title: 'Name',
       dataIndex: 'name',
@@ -49,48 +41,30 @@ const Dataset = props => {
       ellipsis: true,
       width: 100
     },
-    {
-      title: 'Creator',
-      dataIndex: 'creator',
-      width: 100
-    },
-    {
-      title: 'Latest Time',
-      dataIndex: 'latestTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
-      width: 200
-    },
-    {
-      title: 'Operation',
-      render: (item) => {
-        return (
-          <div>
-            <a onClick={() => showEditModal(item)}>跳转</a>
-          </div>
-        );
-      }
-    }
   ];
 
-  const showEditModal = (item) => {
-    // setCurrent(item);
-  };
-
   return (
-    <Table
-      columns={columns}
-      dataSource={data.list}
-      rowKey={(r, i) => `${i}`}
-      pagination={{
-        total: data.pagination.total,
-        showQuickJumper: true,
-        showTotal: (total) => `共 ${total} 条`,
-        showSizeChanger: true,
-        onChange: pageParamsChange,
-        onShowSizeChange: pageParamsChange,
-      }}
+    <Card
       loading={loading}
-    />
+      bordered={false}
+      title={'Datasets'}
+      style={{
+        height: '100%',
+      }}
+    > 
+      <Table
+        columns={columns}
+        dataSource={data.list}
+        rowKey={record => record.index}
+        size='small'
+        pagination={{
+          style: {
+            marginBottom: 0,
+          },
+          pageSize: 5
+        }}
+      />
+    </Card>    
   );
 };
 
