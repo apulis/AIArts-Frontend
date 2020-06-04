@@ -14,7 +14,6 @@ const ProjectList = props => {
     dispatch,
     projectList: { data },
   } = props;
-  // console.log(data)
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);  
   const [pageParams, setPageParams] = useState(PAGEPARAMS);

@@ -54,11 +54,11 @@ function getProjects(req, res, u) {
     code: 0,
     data: {
       list: dataSource,
-      pagination: {
+      // pagination: {
         total: tableListDataSource.length,
         pageSize: parseInt(`${params.pageSize}`, 10) || 10,
         current: parseInt(`${params.current}`, 10) || 1,
-      }
+      // }
     },
     msg: 'success'
   };
