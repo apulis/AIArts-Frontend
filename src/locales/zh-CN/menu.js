@@ -1,7 +1,7 @@
 export default {
   'menu.home': '首页',
   'menu.dataSet': '数据集管理',
-  'menu.ProjectList': '项目管理',
+  'menu.ProjectList': '项目列表',
   'menu.admin.sub-page': '二级管理页',
   'menu.login': '登录',
   'menu.register': '注册',

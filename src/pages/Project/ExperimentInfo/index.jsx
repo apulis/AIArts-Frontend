@@ -1,4 +1,4 @@
-import { connect } from 'umi';
+import { connect, Link } from 'umi';
 import { PageHeaderWrapper, GridContent } from '@ant-design/pro-layout';
 import { Col, Row } from 'antd';
 import React, { useEffect } from 'react';
@@ -31,24 +31,32 @@ const ExperimentInfo = props => {
   const routes = [
     {
       path: '/data-manage/dataSet-manage',
-      breadcrumbName: 'Home',
+      breadcrumbName: 'Home'
     },
     {
       path: '/data-manage/ProjectList',
-      breadcrumbName: 'Project List',
+      breadcrumbName: 'Project List'
     },
     {
       path: '/data-manage/ProjectList/ExperimentList',
-      breadcrumbName: 'Experiment List',
+      breadcrumbName: 'ExperimentList'
     },
     {
       path: '/data-manage/ProjectList/ExperimentList/ExperimentInfo',
-      breadcrumbName: 'Experiment Info',
+      breadcrumbName: 'ExperimentInfo'
     },
   ];
 
+  const itemRender = (route, params, routes, paths) => {
+    const last = routes.indexOf(route) === routes.length - 1;
+    return last ? (
+      <span>{route.breadcrumbName}</span>
+    ) : (
+      <Link to={route.path}>{route.breadcrumbName}</Link>
+    );
+  }  
   return (
-    <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'} breadcrumb={{ routes }}>
+    <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'} breadcrumb={{ itemRender, routes }}>
        <GridContent>
           <React.Fragment>
             <Row

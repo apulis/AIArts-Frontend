@@ -94,22 +94,36 @@ const ExperimentList = props => {
 
   const routes = [
     {
-      path: 'index',
+      path: '/data-manage/dataSet-manage',
       breadcrumbName: 'Home',
     },
     {
       path: '/data-manage/ProjectList',
-      breadcrumbName: 'Project List',
+      breadcrumbName: 'ProjectList',
     },
     {
       path: '/data-manage/ProjectList/ExperimentList',
-      breadcrumbName: 'Experiment List',
+      breadcrumbName: 'ExperimentList',
     },
   ];
 
+  const itemRender = (route, params, routes, paths) => {
+    const last = routes.indexOf(route) === routes.length - 1;
+    return last ? (
+      <span>{route.breadcrumbName}</span>
+    ) : (
+      <Link to={route.path}>{route.breadcrumbName}</Link>
+    );
+    // return last ? (
+    //   <span>{route.breadcrumbName}</span>
+    // ) : (
+    //   <Link to={paths.join('/')}>{route.breadcrumbName}</Link>
+    // );
+  }
+
   return (
     // <PageHeaderWrapper content={<FormattedMessage id="project.experimentlist.description" />}>
-    <PageHeaderWrapper title="Experiment lists" content={'下面展示了实验列表。'} breadcrumb={{ routes }}>
+    <PageHeaderWrapper title="Experiment lists" content={'下面展示了实验列表。'} breadcrumb={{ itemRender, routes }}>
       <Table
         columns={columns}
         dataSource={data.list}
