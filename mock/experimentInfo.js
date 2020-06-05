@@ -1,7 +1,19 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { parse } from 'url';
 import Mock from 'mockjs';
 
 function getExperimentById(req, res, u) {
+  let realUrl = u;
+// console.log('req', req)
+  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
+    realUrl = req.url;
+  }
+
+  // const { current = 1, pageSize = 10 } = req.query;
+  // console.log(1, req.query)
+  const params = parse(realUrl, true).query;
+  // console.log(2, params)  
+
   let codeData = [
     { 
       codePath: '',
@@ -53,6 +65,8 @@ function getExperimentById(req, res, u) {
     },
     msg: 'success'
   };
+  // debugger
+  // console.log( res.json(result))
   return res.json(result);
 }
 

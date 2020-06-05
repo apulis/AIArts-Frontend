@@ -1,26 +1,12 @@
-import { connect, Link, FormattedMessage } from 'umi';
+import { Link } from 'umi';
 import { Table, Card } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { PAGEPARAMS } from '../../../../../const';
-import { formatDate } from '@/utils/time';
+import React from 'react';
 
 const ModelFiles = props => {
   const {
     loading,
-    dispatch,
-    experimentModels: { data },
+    data
   } = props;
-  const [pageParams, setPageParams] = useState(PAGEPARAMS);
-
-  useEffect(() => {
-    dispatch({
-      type: 'experimentModels/fetch',
-      payload: {
-        current: pageParams.page,
-        pageSize: pageParams.size
-      },
-    });
-  }, [pageParams]);
 
   const columns = [
     {
@@ -46,9 +32,8 @@ const ModelFiles = props => {
     >    
     <Table
       columns={columns}
-      dataSource={data.list}
-      // rowKey={record => record.index}
-      rowKey={(r, i) => `${i}`}
+      dataSource={data}
+      rowKey={record => record.id}
       size='small'
       pagination={{
         style: {
@@ -61,7 +46,4 @@ const ModelFiles = props => {
   );
 };
 
-export default connect(({ experimentModels, loading }) => ({
-  experimentModels,
-  loading: loading.models.experimentModels
-}))(ModelFiles);
+export default ModelFiles;

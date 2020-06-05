@@ -7,13 +7,24 @@ import Code from './components/Code'
 import Dataset from './components/Dataset'
 import Logs from './components/Logs'
 import ModelFiles from './components/ModelFiles'
+import { useParams } from 'react-router-dom';
 
 const ExperimentInfo = props => {
   const {
     loading,
+    dispatch,
     experimentInfo
   } = props;
-  
+  const { id } = useParams();
+  useEffect(() => {
+    dispatch({
+      type: 'experimentInfo/fetch',
+      payload: {
+        id
+      },
+    });
+  }, [id]);
+
 console.log(experimentInfo)
   const { codeData, datasetData, logData, modelData } = experimentInfo
 console.log(codeData, datasetData, logData, modelData)

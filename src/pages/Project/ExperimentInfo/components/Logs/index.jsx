@@ -1,26 +1,12 @@
-import { connect, Link, FormattedMessage } from 'umi';
+import { Link } from 'umi';
 import { Card, Table } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { PAGEPARAMS } from '../../../../../const';
-import { formatDate } from '@/utils/time';
+import React from 'react';
 
 const Logs = props => {
   const {
     loading,
-    dispatch,
-    experimentLogs: { data },
+    data,
   } = props;
-  const [pageParams, setPageParams] = useState(PAGEPARAMS);
-
-  useEffect(() => {
-    dispatch({
-      type: 'experimentLogs/fetch',
-      payload: {
-        current: pageParams.page,
-        pageSize: pageParams.size
-      },
-    });
-  }, [pageParams]);
 
   const columns = [
     {
@@ -42,9 +28,8 @@ const Logs = props => {
     >    
       <Table
         columns={columns}
-        dataSource={data.list}
-        // rowKey={record => record.index}
-        rowKey={(r, i) => `${i}`}
+        dataSource={data}
+        rowKey={record => record.id}
         size='small'
         pagination={{
           style: {
@@ -57,7 +42,4 @@ const Logs = props => {
   );
 };
 
-export default connect(({ experimentLogs, loading }) => ({
-  experimentLogs,
-  loading: loading.models.experimentLogs
-}))(Logs);
+export default Logs;
