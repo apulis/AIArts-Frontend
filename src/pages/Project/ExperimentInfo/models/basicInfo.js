@@ -20,7 +20,7 @@ export default {
           // data: { code, data, msg }
           code, data, msg
         } = yield call(services.query, payload)
-        console.log('basicInfo', code, data, msg)
+        // console.log('basicInfo', code, data, msg)
         let error = null
         if (code === 0) {
           yield put({

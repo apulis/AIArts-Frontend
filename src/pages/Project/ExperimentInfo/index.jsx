@@ -13,7 +13,7 @@ const ExperimentInfo = props => {
   const {
     loading,
     dispatch,
-    experimentInfo
+    info
   } = props;
   const { id } = useParams();
   useEffect(() => {
@@ -25,9 +25,8 @@ const ExperimentInfo = props => {
     });
   }, [id]);
 
-console.log(experimentInfo)
-  const { codeData, datasetData, logData, modelData } = experimentInfo
-console.log(codeData, datasetData, logData, modelData)
+  const { codeData, datasetData, logData, modelData } = info
+// console.log(codeData, datasetData, logData, modelData)
 
   const routes = [
     {
@@ -84,7 +83,7 @@ console.log(codeData, datasetData, logData, modelData)
   );
 };
 
-export default connect(({ experimentInfo: {data: experimentInfo}, loading }) => ({
-  experimentInfo,
+export default connect(({ experimentInfo: {data: info}, loading }) => ({
+  info,
   loading: loading.effects['experimentInfo/fetch']
 }))(ExperimentInfo);
