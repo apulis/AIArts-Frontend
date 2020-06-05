@@ -1,6 +1,7 @@
 import { Link } from 'umi';
 import { Table, Card } from 'antd';
 import React from 'react';
+import { bytesToSize } from '@/utils/utils';
 
 const ModelFiles = props => {
   const {
@@ -18,6 +19,7 @@ const ModelFiles = props => {
     {
       title: 'Size',
       dataIndex: 'size',
+      render: (text) => bytesToSize(parseInt(text))
     } 
   ];
 

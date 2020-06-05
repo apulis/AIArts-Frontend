@@ -50,7 +50,7 @@ function getExperimentById(req, res, u) {
     modelData.push({
       id: index,
       name: `Model${index}`,
-      size: Mock.mock('@integer(1000)')
+      size: Mock.mock('@integer(1024, 1024*1024)')
     });
   }
 
