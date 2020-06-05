@@ -43,7 +43,8 @@ const Logs = props => {
       <Table
         columns={columns}
         dataSource={data.list}
-        rowKey={record => record.index}
+        // rowKey={record => record.index}
+        rowKey={(r, i) => `${i}`}
         size='small'
         pagination={{
           style: {

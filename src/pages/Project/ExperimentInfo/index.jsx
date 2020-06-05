@@ -10,19 +10,13 @@ import ModelFiles from './components/ModelFiles'
 
 const ExperimentInfo = props => {
   const {
-    dispatch,
-    values,
-    values: {experimentId}
+    loading,
+    experimentInfo
   } = props;
-
-  useEffect(() => {
-    dispatch({
-      type: 'experimentInfo/fetch',
-      payload: {
-        id: experimentId
-      }
-    });
-  }, [experimentId]);
+  
+console.log(experimentInfo)
+  const { codeData, datasetData, logData, modelData } = experimentInfo
+console.log(codeData, datasetData, logData, modelData)
 
   const routes = [
     {
@@ -54,10 +48,10 @@ const ExperimentInfo = props => {
               }}
             >
               <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-                <Code/>
+                <Code loading={loading} data={codeData}/>
               </Col>
               <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-                <Logs {...props} />
+                <Logs loading={loading} data={logData}/>
               </Col>
             </Row>            
             <Row
@@ -67,10 +61,10 @@ const ExperimentInfo = props => {
               }}
             >
               <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-                <Dataset/>
+                <Dataset loading={loading} data={datasetData}/>
               </Col>
               <Col xl={12} lg={24} md={24} sm={24} xs={24}>
-                <ModelFiles {...props} />
+                <ModelFiles loading={loading} data={modelData} />
               </Col>
             </Row>            
           </React.Fragment>
@@ -79,7 +73,7 @@ const ExperimentInfo = props => {
   );
 };
 
-export default connect(({ experimentInfo: { info: values }, loading }) => ({
-  values,
+export default connect(({ experimentInfo: {data: experimentInfo}, loading }) => ({
+  experimentInfo,
   loading: loading.effects['experimentInfo/fetch']
 }))(ExperimentInfo);

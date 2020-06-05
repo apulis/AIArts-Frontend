@@ -55,7 +55,7 @@ export default [
           },
           {
             path: '/data-manage/ProjectList',
-            name: 'Project List',
+            name: 'ProjectList',
             icon: 'ProjectOutlined',
             component: './Project/ProjectList',
             // routes: [
@@ -82,15 +82,15 @@ export default [
             // ],
           },
           {
-            name: 'Experiment List',
-            icon: 'ExperimentOutlined',
+            // name: 'ExperimentList',
+            // icon: 'ExperimentOutlined',
             path: '/data-manage/ProjectList/ExperimentList',
             component: './Project/ExperimentList',
             hideInMenu: true,
           },
           {
-            name: 'Experiment Info',
-            icon: 'InfoCircleOutlined',
+            // name: 'ExperimentInfo',
+            // icon: 'InfoCircleOutlined',
             path: '/data-manage/ProjectList/ExperimentList/ExperimentInfo',
             component: './Project/ExperimentInfo',
             hideInMenu: true,

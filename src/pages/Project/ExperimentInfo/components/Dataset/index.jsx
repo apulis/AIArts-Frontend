@@ -23,23 +23,26 @@ const Dataset = props => {
 
   const columns = [
     {
+      key: 'Name',
       title: 'Name',
       dataIndex: 'name',
       width: 150,
       render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
     {
+      key: 'desc',
       title: 'Description',
       dataIndex: 'desc',
       ellipsis: true,
       // width: 350
     },
     {
+      key: 'version',
       title: 'Version',
       dataIndex: 'version',
       ellipsis: true,
       width: 100
-    },
+    }
   ];
 
   return (
@@ -54,7 +57,8 @@ const Dataset = props => {
       <Table
         columns={columns}
         dataSource={data.list}
-        rowKey={record => record.index}
+        // rowKey={record => record.index}
+        rowKey={(r, i) => `${i}`}
         size='small'
         pagination={{
           style: {
