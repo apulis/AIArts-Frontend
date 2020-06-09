@@ -63,7 +63,7 @@ const ProjectList = props => {
       render: (item) => {
         return (
           <div>
-            <a onClick={() => showEditModal(item)}>编辑</a>
+            <a onClick={() => showEditModal(item)}>Modify</a>
           </div>
         );
       },
@@ -89,7 +89,7 @@ const ProjectList = props => {
   };
 
   return (
-    <PageHeaderWrapper content={'下面展示了项目列表。'}>
+    <PageHeaderWrapper content={'Project Lists are as follows.'}>
       <Table
         columns={columns}
         dataSource={data.list}
@@ -97,7 +97,7 @@ const ProjectList = props => {
         pagination={{
           total: data.pagination.total,
           showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: (total) => `Total ${total} items`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,

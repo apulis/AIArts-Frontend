@@ -67,7 +67,7 @@ const ExperimentList = props => {
       render: (item) => {
         return (
           <div>
-            <a onClick={() => showEditModal(item)}>编辑</a>
+            <a onClick={() => showEditModal(item)}>Modify</a>
           </div>
         );
       },
@@ -123,7 +123,7 @@ const ExperimentList = props => {
 
   return (
     // <PageHeaderWrapper content={<FormattedMessage id="project.experimentlist.description" />}>
-    <PageHeaderWrapper title="Experiment lists" content={'下面展示了实验列表。'} breadcrumb={{ itemRender, routes }}>
+    <PageHeaderWrapper title="Experiment lists" content={'Experiment Lists are as follows.'} breadcrumb={{ itemRender, routes }}>
       <Table
         columns={columns}
         dataSource={data.list}
@@ -131,7 +131,7 @@ const ExperimentList = props => {
         pagination={{
           total: data.pagination.total,
           showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: (total) => `Total ${total} items`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
