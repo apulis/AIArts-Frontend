@@ -96,13 +96,17 @@ export default [
             hideInMenu: true,
           },          
           {
-            path: '/data-manage/dataSet-manage',
-            name: 'dataSet',
+            path: '/data-manage/dataSetManage',
+            name: 'DataSet',
             icon: 'ReadOutlined',
             routes: [
               {
-                path: '/data-manage/dataSet-manage',
-                component: './dataSet',
+                path: '/data-manage/dataSetManage',
+                component: './DataSet',
+              },
+              {
+                path: '/data-manage/dataSetManage/detail',
+                component: './DataSet/detail',
               },
             ],
           },
@@ -127,7 +131,7 @@ export default [
           },
           {
             path: '/',
-            redirect: '/data-manage/dataSet-manage',
+            redirect: '/data-manage/dataSetManage',
           },
           {
             component: '404',
