@@ -28,31 +28,31 @@ export default [
         Routes: ['src/pages/Authorized'],
         authority: ['admin', 'user'],
         routes: [
-          {
-            path: '/data-manage/dashboard',
-            name: 'dashboard',
-            icon: 'dashboard',
-            routes: [
-              {
-                name: 'analysis',
-                icon: 'smile',
-                path: '/data-manage/dashboard/analysis',
-                component: './dashboard/analysis',
-              },
-              {
-                name: 'monitor',
-                icon: 'smile',
-                path: '/data-manage/dashboard/monitor',
-                component: './dashboard/monitor',
-              },
-              {
-                name: 'workplace',
-                icon: 'smile',
-                path: '/data-manage/dashboard/workplace',
-                component: './dashboard/workplace',
-              },
-            ],
-          },
+          // {
+          //   path: '/data-manage/dashboard',
+          //   name: 'dashboard',
+          //   icon: 'dashboard',
+          //   routes: [
+          //     {
+          //       name: 'analysis',
+          //       icon: 'smile',
+          //       path: '/data-manage/dashboard/analysis',
+          //       component: './dashboard/analysis',
+          //     },
+          //     {
+          //       name: 'monitor',
+          //       icon: 'smile',
+          //       path: '/data-manage/dashboard/monitor',
+          //       component: './dashboard/monitor',
+          //     },
+          //     {
+          //       name: 'workplace',
+          //       icon: 'smile',
+          //       path: '/data-manage/dashboard/workplace',
+          //       component: './dashboard/workplace',
+          //     },
+          //   ],
+          // },
           {
             path: '/data-manage/ProjectList',
             name: 'ProjectList',
@@ -110,25 +110,25 @@ export default [
               },
             ],
           },
-          {
-            name: 'account',
-            icon: 'user',
-            path: '/data-manage/account',
-            routes: [
-              {
-                name: 'center',
-                icon: 'smile',
-                path: '/data-manage/account/center',
-                component: './account/center',
-              },
-              {
-                name: 'settings',
-                icon: 'smile',
-                path: '/data-manage/account/settings',
-                component: './account/settings',
-              },
-            ],
-          },
+          // {
+          //   name: 'account',
+          //   icon: 'user',
+          //   path: '/data-manage/account',
+          //   routes: [
+          //     {
+          //       name: 'center',
+          //       icon: 'smile',
+          //       path: '/data-manage/account/center',
+          //       component: './account/center',
+          //     },
+          //     {
+          //       name: 'settings',
+          //       icon: 'smile',
+          //       path: '/data-manage/account/settings',
+          //       component: './account/settings',
+          //     },
+          //   ],
+          // },
           {
             path: '/',
             redirect: '/data-manage/dataSetManage',
