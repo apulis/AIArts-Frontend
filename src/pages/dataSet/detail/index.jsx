@@ -10,21 +10,21 @@ const DataSetDetail = () => {
     StoragePath: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     CreateTime: '2017-01-10',
     UpdateTime: '2017-01-10',
-    Description: 'DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription'
+    Description: 'THE MNIST DATABASE of handwritten digits'
   },
   {
     Creator: 'Lili Qu',
     StoragePath: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     CreateTime: '2017-01-10',
     UpdateTime: '2017-01-10',
-    Description: 'DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription'
+    Description: 'THE MNIST DATABASE of handwritten digits'
   },
   {
     Creator: 'Lili Qu',
     StoragePath: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     CreateTime: '2017-01-10',
     UpdateTime: '2017-01-10',
-    Description: 'DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription'
+    Description: 'THE MNIST DATABASE of handwritten digits'
   }]
   
   const getPanelHeader = (i) => {
@@ -41,7 +41,7 @@ const DataSetDetail = () => {
       <PageHeader
         ghost={false}
         onBack={() => window.history.back()}
-        title="Dataset Name: testttttt"
+        title="Dataset Name: MNIST"
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {

@@ -16,8 +16,8 @@ function getExperimentById(req, res, u) {
 
   let codeData = [
     { 
-      codePath: '',
-      version: Mock.mock('@guid') 
+      codePath: 'https://github.com/loveunk/pytorch_samples/commit/cdac8152f3aa0589f71347ad291a9f80a932fc49',
+      version: Mock.mock('@guid')
     }
   ]
 
@@ -27,9 +27,9 @@ function getExperimentById(req, res, u) {
     const index = i;
     datasetData.push({
       id: index,
-      name: `Dataset${index}`,
+      name: `MNIST`,
       version: `Version ${index}`,
-      desc: '这是一段实验数据集描述'
+      desc: 'THE MNIST DATABASE of handwritten digits'
     });
   }
 
@@ -39,7 +39,7 @@ function getExperimentById(req, res, u) {
     const index = i;
     logData.push({
       id: index,
-      name: `log${index}`
+      name: `logs${index}`
     });
   }
 
@@ -49,7 +49,7 @@ function getExperimentById(req, res, u) {
     const index = i;
     modelData.push({
       id: index,
-      name: `Model${index}`,
+      name: `mnist_cnn.pt`,
       size: Mock.mock('@integer(1024, 1024*1024)')
     });
   }

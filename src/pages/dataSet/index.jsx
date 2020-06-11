@@ -5,6 +5,7 @@ import { getProject, deleteProject, submit, edit } from './service';
 import { PAGEPARAMS } from '../../const';
 import styles from './index.less';
 import { Link } from 'umi';
+import Mock from 'mockjs';
 
 const DataSetList = () => {
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
@@ -21,20 +22,44 @@ const DataSetList = () => {
     // const { successful, projects, msg, totalCount } = await getProject(page, size);
     const { successful, dataSets, msg, totalCount } = {
       successful: 'true',
-      totalCount: 2,
+      totalCount: 5,
       dataSets: [{
-        name: '11111',
-        id: 111,
-        desc: 'descdescdescdescdesc111',
-        Creator: 'CreatorCreator',
+        name: 'MNIST',
+        id: 1,
+        desc: 'THE MNIST DATABASE of handwritten digits',
+        Creator:  Mock.mock('@cname'),
         time: '2020-05-29 15:44:46',
         version: 'V009'
       },
       {
-        name: '2222',
-        id: 222,
-        desc: 'descdescdescdescdesc222',
-        Creator: 'CreatorCreator',
+        name: 'coco/2014',
+        id: 2,
+        desc: 'a large-scale object detection, segmentation, and captioning datas',
+        Creator:  Mock.mock('@cname'),
+        time: '2020-05-29 15:44:46',
+        version: 'V009'
+      },
+      {
+        name: 'coco/2017',
+        id: 3,
+        desc: 'a large-scale object detection, segmentation, and captioning dataset.',
+        Creator:  Mock.mock('@cname'),
+        time: '2020-05-29 15:44:46',
+        version: 'V009'
+      },
+      {
+        name: 'voc/2007',
+        id: 4,
+        desc: 'data from the PASCAL Visual Object Classes Challenge 2007',
+        Creator:  Mock.mock('@cname'),
+        time: '2020-05-29 15:44:46',
+        version: 'V009'
+      },
+      {
+        name: 'voc/2012',
+        id: 5,
+        desc: 'data from the PASCAL Visual Object Classes Challenge 2012',
+        Creator:  Mock.mock('@cname'),
         time: '2020-05-29 15:44:46',
         version: 'V009'
       }]

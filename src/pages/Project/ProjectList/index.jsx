@@ -40,7 +40,7 @@ const ProjectList = props => {
     {
       title: 'Name',
       dataIndex: 'name',
-      width: 100,
+      width: 150,
       render: (text, record) => <Link to={ { pathname: '/data-manage/ProjectList/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
@@ -56,7 +56,8 @@ const ProjectList = props => {
     {
       title: 'Latest Time',
       dataIndex: 'latestTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
+      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+      width: 200
     },
     {
       title: 'Operation',

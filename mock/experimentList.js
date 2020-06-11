@@ -11,9 +11,9 @@ const genList = (current, pageSize) => {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
       id: index,
-      name: `Experiment${index}`,
+      name: `Exp #${index}`,
       version: `Version ${index}`,
-      desc: '这是一段实验描述',
+      desc: 'baseline model',
       creator: Mock.mock('@cname'),
       latestTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     });
@@ -22,7 +22,7 @@ const genList = (current, pageSize) => {
   return tableListDataSource;
 };
 
-let tableListDataSource = genList(1, 100);
+let tableListDataSource = genList(1, 50);
 
 function getExperiments(req, res, u) {
   let realUrl = u;
