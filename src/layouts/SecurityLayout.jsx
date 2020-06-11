@@ -34,9 +34,9 @@ class SecurityLayout extends React.Component {
       return <PageLoading />;
     }
 
-    if (!token && window.location.pathname !== '/data-manage/user/login') {
-      return <Redirect to={`/data-manage/user/login?${queryString}`} />;
-    }
+    // if (!token && window.location.pathname !== '/data-manage/user/login') {
+    //   return <Redirect to={`/data-manage/user/login?${queryString}`} />;
+    // }
     return (
       <ConfigProvider locale={enUS}>
         {children}
