@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { parse } from 'url';
 import Mock from 'mockjs';
+import moment from 'moment';
 
 function getExperimentById(req, res, u) {
   let realUrl = u;
@@ -39,7 +40,8 @@ function getExperimentById(req, res, u) {
     const index = i;
     logData.push({
       id: index,
-      name: `logs${index}`
+      name: `logs${index}`,
+      time: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
     });
   }
 
