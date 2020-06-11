@@ -1,17 +1,20 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getProject, deleteProject, submit, edit } from './service';
 import { PAGEPARAMS } from '../../const';
 import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
+import AddModalForm from './components/AddModalForm';
 
 const DataSetList = () => {
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
+  const [addModalFlag, setAddModalFlag] = useState(false);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [form] = Form.useForm();
+  const addModalFormRef = useRef();
 
   useEffect(() => {
     getData();
@@ -131,6 +134,7 @@ const DataSetList = () => {
 
   return (
     <PageHeaderWrapper title={false}>
+      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => setAddModalFlag(true)}>Add DataSet</Button>
       <Table
         columns={columns}
         dataSource={dataSets.data}
@@ -156,9 +160,9 @@ const DataSetList = () => {
         >
           <Form form={form} className={styles.dataSetModal}>
             <Form.Item
-              label="Dataset Name"
+              label="DataSet Name"
               name="name"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: 'DataSet Name is required！'  }]}
             >
               <Input disabled />
             </Form.Item>
@@ -170,6 +174,22 @@ const DataSetList = () => {
               <Input.TextArea placeholder="please enter description" autoSize={{ minRows: 4 }} />
             </Form.Item>
           </Form>
+        </Modal>
+      )}
+      {addModalFlag && (
+        <Modal
+          title="Add DataSet"
+          visible={addModalFlag}
+          onOk={onSubmit}
+          onCancel={() => setAddModalFlag(false)}
+          okText="提交"
+          cancelText="取消"
+          destroyOnClose
+          maskClosable={false}
+          width={600}
+          className={styles.dataSetModal}
+        >
+          <AddModalForm ref={addModalFormRef}></AddModalForm>
         </Modal>
       )}
     </PageHeaderWrapper>
