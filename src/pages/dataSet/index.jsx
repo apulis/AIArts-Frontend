@@ -8,12 +8,14 @@ import { Link } from 'umi';
 import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
 
+const { confirm } = Modal;
+
 const DataSetList = () => {
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
+  const [editData, setEditData] = useState({});
   const [modalFlag, setModalFlag] = useState(false);
-  const [addModalFlag, setAddModalFlag] = useState(false);
+  const [modalType, setModalType] = useState(0);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
-  const [form] = Form.useForm();
   const addModalFormRef = useRef();
 
   useEffect(() => {
@@ -123,18 +125,44 @@ const DataSetList = () => {
     },
     {
       title: 'Operation',
-      render: item => <a onClick={() => onEditClick(item)}>Modify</a>,
+      render: item => {
+        return (
+          <>
+            <a onClick={() => onEditClick(item)}>Modify</a>
+            <a style={{ marginLeft: 16, color: 'red' }} onClick={() => onDelete(item.id)}>Delete</a>
+          </>
+        )
+      },
     },
   ];
 
-  const onEditClick = (item) => {
-    form.setFieldsValue(item);
-    setModalFlag(true);
+  const onEditClick = item => {
+    setEditData(item); 
+    showModal(1);
   };
+
+  const onDelete = id => {
+    confirm({
+      title: 'Are you sure to delete this dataSet？',
+      icon: <ExclamationCircleOutlined />,
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        
+      },
+      onCancel() {}
+    });
+  }
+
+  const showModal = type => {
+    setModalType(type);
+    setModalFlag(true);
+  }
 
   return (
     <PageHeaderWrapper title={false}>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => setAddModalFlag(true)}>Add DataSet</Button>
+      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>Add DataSet</Button>
       <Table
         columns={columns}
         dataSource={dataSets.data}
@@ -150,46 +178,17 @@ const DataSetList = () => {
       />
       {modalFlag && (
         <Modal
-          title='Modify DataSet'
+          title={`${modalType ? 'Modify' : 'Add'} DataSet`}
           visible={modalFlag}
           onOk={onSubmit}
           onCancel={() => setModalFlag(false)}
           okText="Submit"
           destroyOnClose
           maskClosable={false}
-        >
-          <Form form={form} className={styles.dataSetModal}>
-            <Form.Item
-              label="DataSet Name"
-              name="name"
-              rules={[{ required: true, message: 'DataSet Name is required！'  }]}
-            >
-              <Input disabled />
-            </Form.Item>
-            <Form.Item
-              label="Description"
-              name="desc"
-              rules={[{ required: true, message: 'Description is required！' }]}
-            >
-              <Input.TextArea placeholder="please enter description" autoSize={{ minRows: 4 }} />
-            </Form.Item>
-          </Form>
-        </Modal>
-      )}
-      {addModalFlag && (
-        <Modal
-          title="Add DataSet"
-          visible={addModalFlag}
-          onOk={onSubmit}
-          onCancel={() => setAddModalFlag(false)}
-          okText="提交"
-          cancelText="取消"
-          destroyOnClose
-          maskClosable={false}
           width={600}
           className={styles.dataSetModal}
         >
-          <AddModalForm ref={addModalFormRef}></AddModalForm>
+          <AddModalForm ref={addModalFormRef} modalType={modalType} editData={editData}></AddModalForm>
         </Modal>
       )}
     </PageHeaderWrapper>

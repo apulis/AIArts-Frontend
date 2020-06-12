@@ -5,11 +5,13 @@ import styles from './index.less';
 
 const { Dragger } = Upload;
 
-const ModalForm = (props, ref) => {
+const AddModalForm = (props, ref) => {
   const [form] = Form.useForm();
+  const { modalType, editData } = props;
 
   useImperativeHandle(ref, () => ({
     hello: () => console.log('hello world!'),
+    form: form
   }));
 
   const uploadProps = {
@@ -30,25 +32,25 @@ const ModalForm = (props, ref) => {
   };
 
   return (
-    <Form form={form} className={styles.modalFormWrap}>
+    <Form form={form} className={styles.modalFormWrap} initialValues={modalType ? editData : {}}>
       <Form.Item
         label="DataSet Name"
-        name="Name"
+        name="name"
         rules={[{ required: true, message: '请填写数据集名称！' }]}
       >
-        <Input placeholder="please enter dataSet Name" />
+        <Input placeholder="please enter dataSet Name" disabled={modalType} />
       </Form.Item>
       <Form.Item
         label="Description"
-        name="Info"
-        rules={[{ required: true, message: 'DataSet Name is required！' }]}
+        name="desc"
+        rules={[{ required: true, message: 'DataSet Name is requi red！' }]} 
       >
         <Input.TextArea placeholder="please enter description" autoSize={{ minRows: 4 }} />
       </Form.Item>
-      <Form.Item
-        label="上传文件"
+      {!modalType && <Form.Item
+        label="Upload File"
         name="file"
-        rules={[{ required: true, message: '请上传文件！' }]}
+        rules={[{ required: true, message: 'please upload file！' }]}
       >
         <Dragger {...uploadProps}>
           <p className="ant-upload-drag-icon">
@@ -56,9 +58,9 @@ const ModalForm = (props, ref) => {
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
         </Dragger>
-      </Form.Item>
+      </Form.Item>}
     </Form>
   );
 };
 
-export default forwardRef(ModalForm);
+export default forwardRef(AddModalForm);
