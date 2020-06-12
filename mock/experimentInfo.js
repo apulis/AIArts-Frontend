@@ -17,7 +17,8 @@ function getExperimentById(req, res, u) {
 
   let codeData = [
     { 
-      codePath: 'https://github.com/loveunk/pytorch_samples/commit/cdac8152f3aa0589f71347ad291a9f80a932fc49',
+      // codePath: 'https://github.com/loveunk/pytorch_samples/commit/cdac8152f3aa0589f71347ad291a9f80a932fc49',
+      codePath: 'https://github.com/loveunk/pytorch_samples/tree/master',
       version: Mock.mock('@guid')
     }
   ]
