@@ -2,29 +2,30 @@ import { Collapse, PageHeader, Descriptions, Tag } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
+import { formatDate } from '@/utils/time';
 const { Panel } = Collapse;
 
 const DataSetDetail = () => {
   const data = [{
-    Creator: 'Lili Qu',
-    StoragePath: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    CreateTime: '2017-01-10',
-    UpdateTime: '2017-01-10',
-    Description: 'THE MNIST DATABASE of handwritten digits'
+    creator: 'Lili Qu',
+    storage_path: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    create_time: 1592364634,
+    update_time: 1592364634,
+    description: 'THE MNIST DATABASE of handwritten digits'
   },
   {
-    Creator: 'Lili Qu',
-    StoragePath: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    CreateTime: '2017-01-10',
-    UpdateTime: '2017-01-10',
-    Description: 'THE MNIST DATABASE of handwritten digits'
+    creator: 'Lili Qu',
+    storage_path: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    create_time: 1592364634,
+    update_time: 1592364634,
+    description: 'THE MNIST DATABASE of handwritten digits'
   },
   {
-    Creator: 'Lili Qu',
-    StoragePath: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
-    CreateTime: '2017-01-10',
-    UpdateTime: '2017-01-10',
-    Description: 'THE MNIST DATABASE of handwritten digits'
+    creator: 'Lili Qu',
+    storage_path: 'xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    create_time: 1592364634,
+    update_time: 1592364634,
+    description: 'THE MNIST DATABASE of handwritten digits'
   }]
   
   const getPanelHeader = (i) => {
@@ -45,15 +46,15 @@ const DataSetDetail = () => {
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {
-            const { Creator, StoragePath, CreateTime, UpdateTime, Description } = item;
+            const { creator, storage_path, create_time, update_time, description } = item;
             return (
               <Panel header={getPanelHeader(index)} key={index}>
                 <Descriptions size="small" column={2}>
-                  <Descriptions.Item label="Creator">{Creator}</Descriptions.Item>
-                  <Descriptions.Item label="Storage Path">{StoragePath}</Descriptions.Item>
-                  <Descriptions.Item label="Create Time">{CreateTime}</Descriptions.Item>
-                  <Descriptions.Item label="Update Time">{UpdateTime}</Descriptions.Item>
-                  <Descriptions.Item label="Description ">{Description}</Descriptions.Item>
+                  <Descriptions.Item label="creator">{creator}</Descriptions.Item>
+                  <Descriptions.Item label="Storage Path">{storage_path}</Descriptions.Item>
+                  <Descriptions.Item label="Create Time">{formatDate(create_time, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="Update Time">{formatDate(update_time, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="description ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
             )

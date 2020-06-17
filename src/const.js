@@ -1,6 +1,6 @@
 export const PAGEPARAMS = {
   page: 1,
-  size: 10,
+  count: 10,
 };
 
 export const avatar =

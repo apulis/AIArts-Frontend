@@ -1,12 +1,13 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getProject, deleteProject, submit, edit } from './service';
+import { getDatasets, getDatasetDetail } from './service';
 import { PAGEPARAMS } from '../../const';
 import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
+import { formatDate } from '@/utils/time';
 
 const { confirm } = Modal;
 
@@ -23,49 +24,49 @@ const DataSetList = () => {
   }, [pageParams]);
 
   const getData = async () => {
-    const { page, size } = pageParams;
-    // const { successful, projects, msg, totalCount } = await getProject(page, size);
-    const { successful, dataSets, msg, totalCount } = {
+    const { page, count } = pageParams;
+    // const { code, data, msg, total } = await getDatasets(page, size);
+    const { successful, dataSets, msg, totalCount } = { 
       successful: 'true',
       totalCount: 5,
       dataSets: [{
         name: 'MNIST',
         id: 1,
-        desc: 'THE MNIST DATABASE of handwritten digits',
-        Creator:  Mock.mock('@cname'),
-        time: '2020-05-29 15:44:46',
+        description: 'THE MNIST DATABASE of handwritten digits',
+        creator:  Mock.mock('@cname'),
+        update_time: 1592364634,
         version: 'V009'
       },
       {
         name: 'coco/2014',
         id: 2,
-        desc: 'a large-scale object detection, segmentation, and captioning datas',
-        Creator:  Mock.mock('@cname'),
-        time: '2020-05-29 15:44:46',
+        description: 'a large-scale object detection, segmentation, and captioning datas',
+        creator:  Mock.mock('@cname'),
+        update_time: 1592364634,
         version: 'V009'
       },
       {
         name: 'coco/2017',
         id: 3,
-        desc: 'a large-scale object detection, segmentation, and captioning dataset.',
-        Creator:  Mock.mock('@cname'),
-        time: '2020-05-29 15:44:46',
+        description: 'a large-scale object detection, segmentation, and captioning dataset.',
+        creator:  Mock.mock('@cname'),
+        update_time: 1592364634,
         version: 'V009'
       },
       {
         name: 'voc/2007',
         id: 4,
-        desc: 'data from the PASCAL Visual Object Classes Challenge 2007',
-        Creator:  Mock.mock('@cname'),
-        time: '2020-05-29 15:44:46',
+        description: 'data from the PASCAL Visual Object Classes Challenge 2007',
+        creator:  Mock.mock('@cname'),
+        update_time: 1592364634,
         version: 'V009'
       },
       {
         name: 'voc/2012',
         id: 5,
-        desc: 'data from the PASCAL Visual Object Classes Challenge 2012',
-        Creator:  Mock.mock('@cname'),
-        time: '2020-05-29 15:44:46',
+        description: 'data from the PASCAL Visual Object Classes Challenge 2012',
+        creator:  Mock.mock('@cname'),
+        update_time: 1592364634,
         version: 'V009'
       }]
     };
@@ -77,8 +78,8 @@ const DataSetList = () => {
     }
   };
 
-  const pageParamsChange = (page, size) => {
-    setPageParams({ page: page, size: size });
+  const pageParamsChange = (page, count) => {
+    setPageParams({ page: page, count: count });
   };
 
   const onSubmit = () => {
@@ -107,17 +108,18 @@ const DataSetList = () => {
     },
     {
       title: 'Description',
-      dataIndex: 'desc',
+      dataIndex: 'description',
       ellipsis: true,
       width: 350,
     },
     {
-      title: 'Creator',
-      dataIndex: 'Creator',
+      title: 'creator',
+      dataIndex: 'creator',
     },
     {
       title: 'Update Time',
-      dataIndex: 'time',
+      dataIndex: 'update_time',
+      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
     },
     {
       title: 'Update Version',

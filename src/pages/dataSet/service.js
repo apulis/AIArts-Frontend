@@ -1,15 +1,13 @@
 import request from '@/utils/request';
 
-export async function getProject(page, size) {
-  return request('/api/projects', {
-    params: { page, size },
+export async function getDatasets(page, count) {
+  return request('/api/datasets', {
+    params: { page, count },
   });
 }
 
-export async function deleteProject(projectId) {
-  return request(`/api/projects/${projectId}`, {
-    method: 'DELETE',
-  });
+export async function getDatasetDetail(datasetId) {
+  return request(`/api/datasets/${datasetId}`);
 }
 
 export async function submit(data) {
