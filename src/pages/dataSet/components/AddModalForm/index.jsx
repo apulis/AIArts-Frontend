@@ -1,5 +1,5 @@
 import { message, Form, Input, Button, Select, Radio, Upload } from 'antd';
-import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.less';
 
@@ -8,18 +8,20 @@ const { Dragger } = Upload;
 const AddModalForm = (props, ref) => {
   const [form] = Form.useForm();
   const { modalType, editData } = props;
+  const [fileList, setFileList] = useState([]);
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({ 
     hello: () => console.log('hello world!'),
     form: form
   }));
 
   const uploadProps = {
-    name: 'file',
+    name: 'data',
     multiple: true,
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    action: '/api/dataset/upload',
     onChange(info) {
       const { status } = info.file;
+      setFileList(info.fileList);
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
@@ -29,6 +31,17 @@ const AddModalForm = (props, ref) => {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
+    beforeUpload(file) {
+      const { type } = file;
+      return new Promise((resolve, reject) => {
+        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
+          resolve(file);
+        } else {
+          message.warning(`Only supports uploading ${fileList.length ?  'one file' : '.zip, .tar and .tar.gz file format！'}`)
+          reject(file);
+        }
+      });
+    }
   };
 
   return (
@@ -36,14 +49,14 @@ const AddModalForm = (props, ref) => {
       <Form.Item
         label="DataSet Name"
         name="name"
-        rules={[{ required: true, message: '请填写数据集名称！' }]}
+        rules={[{ required: true, message: 'DataSet Name is required！' }, { max: 25 }]}
       >
         <Input placeholder="please enter dataSet Name" disabled={modalType} />
       </Form.Item>
       <Form.Item
         label="Description"
-        name="desc"
-        rules={[{ required: true, message: 'DataSet Name is requi red！' }]} 
+        name="description"
+        rules={[{ required: true, message: 'Description is required！' }, { max: 50 }]} 
       >
         <Input.TextArea placeholder="please enter description" autoSize={{ minRows: 4 }} />
       </Form.Item>
@@ -57,6 +70,7 @@ const AddModalForm = (props, ref) => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
+          <p className="ant-upload-hint">（Only supports uploading .zip, .tar and .tar.gz file format）</p>
         </Dragger>
       </Form.Item>}
     </Form>

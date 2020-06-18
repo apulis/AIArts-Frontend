@@ -1,6 +1,6 @@
 export default {
   'menu.home': 'Home',
-  'menu.dataSet': 'DataSet',
+  'menu.DataSet': 'DataSet',
   'menu.ProjectList': 'ProjectList',
   'menu.admin': 'Admin',
   'menu.admin.sub-page': 'Sub-Page',

@@ -6,20 +6,31 @@ export async function getDatasets(page, count) {
   });
 }
 
-export async function getDatasetDetail(datasetId) {
-  return request(`/api/datasets/${datasetId}`);
+export async function getDatasetDetail(id) {
+  return request(`/api/datasets/${id}`);
 }
 
-export async function submit(data) {
-  return await request('/api/projects', {
+export async function edit(id, data) {
+  return await request(`/api/dataset/${id}`, {
     method: 'POST',
     data: data,
   });
 }
 
-export async function edit(projectId, data) {
-  return await request(`/api/projects/${projectId}`, {
-    method: 'PATCH',
+export async function deleteDataSet(id) {
+  return request(`/api/datasets/${id}`, { method: 'DELETE' })
+}
+
+export async function upload(data) {
+  return await request(`/api/dataset/upload`, {
+    method: 'POST',
+    data: data,
+  });
+}
+
+export async function add(data) {
+  return await request(`/api/dataset`, {
+    method: 'POST',
     data: data,
   });
 }

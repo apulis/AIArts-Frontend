@@ -1,13 +1,14 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDatasets, getDatasetDetail } from './service';
+import { getDatasets, edit, deleteDataSet, add } from './service';
 import { PAGEPARAMS } from '../../const';
 import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
 import { formatDate } from '@/utils/time';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 
@@ -25,56 +26,14 @@ const DataSetList = () => {
 
   const getData = async () => {
     const { page, count } = pageParams;
-    // const { code, data, msg, total } = await getDatasets(page, size);
-    const { successful, dataSets, msg, totalCount } = { 
-      successful: 'true',
-      totalCount: 5,
-      dataSets: [{
-        name: 'MNIST',
-        id: 1,
-        description: 'THE MNIST DATABASE of handwritten digits',
-        creator:  Mock.mock('@cname'),
-        update_time: 1592364634,
-        version: 'V009'
-      },
-      {
-        name: 'coco/2014',
-        id: 2,
-        description: 'a large-scale object detection, segmentation, and captioning datas',
-        creator:  Mock.mock('@cname'),
-        update_time: 1592364634,
-        version: 'V009'
-      },
-      {
-        name: 'coco/2017',
-        id: 3,
-        description: 'a large-scale object detection, segmentation, and captioning dataset.',
-        creator:  Mock.mock('@cname'),
-        update_time: 1592364634,
-        version: 'V009'
-      },
-      {
-        name: 'voc/2007',
-        id: 4,
-        description: 'data from the PASCAL Visual Object Classes Challenge 2007',
-        creator:  Mock.mock('@cname'),
-        update_time: 1592364634,
-        version: 'V009'
-      },
-      {
-        name: 'voc/2012',
-        id: 5,
-        description: 'data from the PASCAL Visual Object Classes Challenge 2012',
-        creator:  Mock.mock('@cname'),
-        update_time: 1592364634,
-        version: 'V009'
-      }]
-    };
-    if (successful === 'true') {
+    const { code, data, msg, total } = await getDatasets(page, count);
+    if (code === 0) {
       setDataSets({
-        data: dataSets,
-        total: totalCount,
+        data: data,
+        total: total,
       });
+    } else {
+      message.error(msg);
     }
   };
 
@@ -83,21 +42,26 @@ const DataSetList = () => {
   };
 
   const onSubmit = () => {
-    // form.validateFields()
-    //   .then(async (values) => {
-    //     if (modalType === 'new') {
-    //       await submit(values);
-    //     } else if (modalType === 'edit') {
-    //       await edit(editData, values);
-    //     }
-    //     message.success('提交成功！');
-    //     resetModal(false);
-    //     getData();
-    //   })
-    //   .catch((info) => {
-    //     message.error('提交失败！');
-    //     console.log('Validate Failed:', info);
-    //   });
+    addModalFormRef.current.form.validateFields().then(async (values) => {
+      let res = {}, text = '';
+      if (modalType) {
+        text = 'Modified';
+        res = await edit(editData.id, values);
+      } else {
+        values.storage_path = values.file.file.response.data.path;
+        delete values.file;
+        text = 'Add';
+        res = await add(values);
+      }
+      const { code, msg } = res;
+      if (code === 0) {
+        getData();
+        message.success(`${text} Successfully！`);
+        setModalFlag(false);
+      } else {
+        message.error(msg);
+      }
+    });
   };
 
   const columns = [
@@ -151,7 +115,13 @@ const DataSetList = () => {
       okType: 'danger',
       cancelText: 'No',
       onOk: async () => {
-        
+        const res = await deleteDataSet(id);
+        const { code, msg } = res;
+        if (code === 0) {
+          getData();
+        } else {
+          message.error(msg);
+        }
       },
       onCancel() {}
     });

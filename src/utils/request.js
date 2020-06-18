@@ -77,7 +77,7 @@ request.interceptors.request.use(async (url, options) => {
 });
 
 request.interceptors.response.use((response, options) => {
-  if (options.method === 'DELETE' && response.status === 200) message.success('Deleted successfully！');
+  if (options.method === 'DELETE' && response.status === 200) message.success('Deleted Successfully！');
   return response;
 });
 
