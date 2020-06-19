@@ -83,7 +83,7 @@ const DataSetList = () => {
     {
       title: 'Update Time',
       dataIndex: 'update_time',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
+      render: text => formatDate(text * 1000, 'YYYY-MM-DD HH:MM:SS')
     },
     {
       title: 'Update Version',
