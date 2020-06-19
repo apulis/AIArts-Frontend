@@ -31,12 +31,15 @@ const AddModalForm = (props, ref) => {
       }
     },
     beforeUpload(file) {
-      const { type } = file;
+      const { type, size } = file;
+      const isOverSize = size * 1024 * 1024 * 1024 > 2; 
       return new Promise((resolve, reject) => {
-        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
+        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip') && !isOverSize) {
           resolve(file);
         } else {
-          message.warning(`Only supports uploading ${fileList.length ?  'one file' : '.zip, .tar and .tar.gz file format！'}`)
+          let text = '';
+          text = isOverSize ? 'files within 2GB' : `${fileList.length ?  'one file' : '.zip, .tar and .tar.gz file format'}`;
+          message.warning(`Only supports uploading ${text}！`);
           reject(file);
         }
       });
@@ -69,7 +72,7 @@ const AddModalForm = (props, ref) => {
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">Click or drag file to this area to upload</p>
-          <p className="ant-upload-hint">（Only supports uploading .zip, .tar and .tar.gz file format）</p>
+          <p className="ant-upload-hint">（Only supports uploading .zip, .tar and .tar.gz file format and within 2GB）</p>
         </Dragger>
       </Form.Item>}
     </Form>
