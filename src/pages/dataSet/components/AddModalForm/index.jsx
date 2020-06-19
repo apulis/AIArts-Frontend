@@ -11,7 +11,6 @@ const AddModalForm = (props, ref) => {
   const [fileList, setFileList] = useState([]);
 
   useImperativeHandle(ref, () => ({ 
-    hello: () => console.log('hello world!'),
     form: form
   }));
 

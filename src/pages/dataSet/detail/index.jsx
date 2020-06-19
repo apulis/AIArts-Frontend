@@ -48,8 +48,8 @@ const DataSetDetail = () => {
                 <Descriptions size="small" column={2}>
                   <Descriptions.Item label="creator">{creator}</Descriptions.Item>
                   <Descriptions.Item label="Storage Path">{storage_path}</Descriptions.Item>
-                  <Descriptions.Item label="Create Time">{formatDate(create_time, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="Update Time">{formatDate(update_time, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="Create Time">{formatDate(create_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="Update Time">{formatDate(update_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
                   <Descriptions.Item label="description ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
