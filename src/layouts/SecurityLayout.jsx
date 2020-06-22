@@ -16,6 +16,7 @@ class SecurityLayout extends React.Component {
     });
     const { location } = this.props;
     if (location && location.query && location.query.token) {
+      console.log('location.query',location.query)
       localStorage.setItem('token', location.query.token);
     }
   }
@@ -27,16 +28,16 @@ class SecurityLayout extends React.Component {
 
     const token = localStorage.token;
     const queryString = stringify({
-      redirect: '/data-manage/project/my-project',
+      redirect: '/',
     });
 
     if ((!token && loading) || !isReady) {
       return <PageLoading />;
     }
 
-    // if (!token && window.location.pathname !== '/data-manage/user/login') {
-    //   return <Redirect to={`/data-manage/user/login?${queryString}`} />;
-    // }
+    if (!token && window.location.pathname !== '/data-manage/user/login') {
+      return <Redirect to={`/data-manage/user/login?${queryString}`} />;
+    }
     return (
       <ConfigProvider locale={enUS}>
         {children}
