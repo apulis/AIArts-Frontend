@@ -94,6 +94,6 @@ export const bytesToSize = bytes => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   // eslint-disable-next-line no-restricted-properties
-  return `${(bytes / Math.pow(k, i)).toPrecision(3)} ${sizes[i]}`
-  // return `${(bytes / Math.pow(k, i)).toPrecision(1)} ${sizes[i]}`
+  // return `${(bytes / Math.pow(k, i)).toPrecision(3)} ${sizes[i]}`
+  return `${(bytes / Math.pow(k, i)).toFixed(0)} ${sizes[i]}`
 }
