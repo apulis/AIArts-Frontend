@@ -7,7 +7,7 @@ const { Dragger } = Upload;
 
 const AddModalForm = (props, ref) => {
   const [form] = Form.useForm();
-  const { modalType, editData } = props;
+  const { modalType, editData, setBtn } = props;
   const [fileList, setFileList] = useState([]);
 
   useImperativeHandle(ref, () => ({ 
@@ -20,14 +20,17 @@ const AddModalForm = (props, ref) => {
     action: '/api/dataset/upload',
     onChange(info) {
       const { status } = info.file;
+      setBtn(true);
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
         setFileList(info.fileList);
+        setBtn(false);
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
+        setBtn(false);
       }
     },
     beforeUpload(file) {

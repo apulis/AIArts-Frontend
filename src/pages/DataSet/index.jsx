@@ -18,6 +18,7 @@ const DataSetList = () => {
   const [modalFlag, setModalFlag] = useState(false);
   const [modalType, setModalType] = useState(0);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [btnDisabled, setBtnDisabled] = useState(false);
   const addModalFormRef = useRef();
 
   useEffect(() => {
@@ -152,15 +153,21 @@ const DataSetList = () => {
         <Modal
           title={`${modalType ? 'Modify' : 'Add'} DataSet`}
           visible={modalFlag}
-          onOk={onSubmit}
-          onCancel={() => setModalFlag(false)}
-          okText="Submit"
+          // onOk={onSubmit}
+          // onCancel={() => setModalFlag(false)}
+          // okText="Submit"
           destroyOnClose
           maskClosable={false}
           width={600}
           className={styles.dataSetModal}
+          footer={[
+            <Button onClick={() => setModalFlag(false)}>Cancel </Button>,
+            <Button type="primary" disabled={btnDisabled} onClick={onSubmit}>
+              Submit
+            </Button>,
+          ]}
         >
-          <AddModalForm ref={addModalFormRef} modalType={modalType} editData={editData}></AddModalForm>
+          <AddModalForm ref={addModalFormRef} setBtn={setBtnDisabled} modalType={modalType} editData={editData}></AddModalForm>
         </Modal>
       )}
     </PageHeaderWrapper>

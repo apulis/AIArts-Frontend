@@ -40,17 +40,17 @@ class AvatarDropdown extends React.Component {
             个人中心
           </Menu.Item>
         )} */}
-        {menu && (
+        {/* {menu && (
           <Menu.Item key="settings">
             <SettingOutlined />
             个人信息
           </Menu.Item>
         )}
-        {menu && <Menu.Divider />}
+        {menu && <Menu.Divider />} */}
 
         <Menu.Item key="logout">
           <LogoutOutlined />
-          退出登录
+          Logo Out
         </Menu.Item>
       </Menu>
     );
