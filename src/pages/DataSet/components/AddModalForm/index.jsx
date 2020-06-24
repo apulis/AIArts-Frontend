@@ -32,7 +32,7 @@ const AddModalForm = (props, ref) => {
     },
     beforeUpload(file) {
       const { type, size } = file;
-      const isOverSize = size * 1024 * 1024 * 1024 > 2; 
+      const isOverSize = size / 1024 / 1024 / 1024 > 2; 
       return new Promise((resolve, reject) => {
         if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip') && !isOverSize) {
           resolve(file);

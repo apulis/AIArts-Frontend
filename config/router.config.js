@@ -130,6 +130,10 @@ export default [
           //   ],
           // },
           {
+            path: '/data-manage',
+            redirect: '/data-manage/dataSetManage',
+          },
+          {
             path: '/',
             redirect: '/data-manage/dataSetManage',
           },
