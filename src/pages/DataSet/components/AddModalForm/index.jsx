@@ -20,11 +20,11 @@ const AddModalForm = (props, ref) => {
     action: '/api/dataset/upload',
     onChange(info) {
       const { status } = info.file;
-      setFileList(info.fileList);
       if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
+        setFileList(info.fileList);
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
