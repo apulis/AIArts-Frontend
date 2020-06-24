@@ -1,0 +1,28 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: datamanage
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: datamanage
+  template:
+    metadata:
+      name: datamanage
+      labels:
+        app: datamanage
+        datamanage: active
+    spec:
+      hostNetwork: true
+      nodeSelector:
+        restfulapi: active
+      containers:
+      - name: datamanage
+        image: apulistech/datasetmanage:0.0.1
+        imagePullPolicy: IfNotPresent
+      tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
