@@ -43,6 +43,9 @@ const AddModalForm = (props, ref) => {
           reject(file);
         }
       });
+    },
+    onRemove(file) {
+      if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
     }
   };
 
