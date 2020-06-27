@@ -153,9 +153,7 @@ const DataSetList = () => {
         <Modal
           title={`${modalType ? 'Modify' : 'Add'} DataSet`}
           visible={modalFlag}
-          // onOk={onSubmit}
-          // onCancel={() => setModalFlag(false)}
-          // okText="Submit"
+          onCancel={() => setModalFlag(false)}
           destroyOnClose
           maskClosable={false}
           width={600}
