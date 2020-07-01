@@ -72,6 +72,7 @@ const AddModalForm = (props, ref) => {
         label="Upload File"
         name="file"
         rules={[{ required: true, message: 'please upload file！' }]}
+        valuePropName="fileList"
       >
         <Dragger {...uploadProps}>
           <p className="ant-upload-drag-icon">

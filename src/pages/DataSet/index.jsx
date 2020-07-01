@@ -157,6 +157,7 @@ const DataSetList = () => {
           destroyOnClose
           maskClosable={false}
           width={600}
+          key="sad"
           className={styles.dataSetModal}
           footer={[
             <Button onClick={() => setModalFlag(false)}>Cancel </Button>,

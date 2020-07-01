@@ -3,7 +3,8 @@ import { PageLoading } from '@ant-design/pro-layout';
 import { ConfigProvider } from 'antd';
 import { Redirect, connect } from 'umi';
 import { stringify } from 'querystring';
-import enUS from 'antd/es/locale/en_US';
+// import enUS from 'antd/es/locale/en_US';
+import zhCN from 'antd/es/locale/zh_CN';
 
 class SecurityLayout extends React.Component {
   state = {
@@ -39,7 +40,7 @@ class SecurityLayout extends React.Component {
       return <Redirect to={`/data-manage/user/login?${queryString}`} />;
     }
     return (
-      <ConfigProvider locale={enUS}>
+      <ConfigProvider locale={zhCN}>
         {children}
       </ConfigProvider>
     )
