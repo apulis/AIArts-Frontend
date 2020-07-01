@@ -55,7 +55,7 @@ export default [
           // },
           {
             path: '/data-manage/ProjectList',
-            name: 'ProjectList',
+            // name: 'ProjectList',
             icon: 'ProjectOutlined',
             component: './Project/ProjectList',
             // routes: [
@@ -129,6 +129,10 @@ export default [
           //     },
           //   ],
           // },
+          {
+            path: '/data-manage',
+            redirect: '/data-manage/dataSetManage',
+          },
           {
             path: '/',
             redirect: '/data-manage/dataSetManage',

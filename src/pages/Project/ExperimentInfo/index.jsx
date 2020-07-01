@@ -56,7 +56,7 @@ const ExperimentInfo = props => {
     );
   }  
   return (
-    <PageHeaderWrapper title="Experiment Details" content={'下面展示了实验详情。'} breadcrumb={{ itemRender, routes }}>
+    <PageHeaderWrapper title="Experiment Details" content={'The experiment details are as follows.'} breadcrumb={{ itemRender, routes }}>
        <GridContent>
           <React.Fragment>
             <Row

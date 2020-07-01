@@ -13,8 +13,13 @@ const Logs = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
-    }
+      // render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
+      render: (text, record) => <span><a href="https://lutzroeder.github.io/netron?url=https://raw.githubusercontent.com/srom/chessbot/master/model/chessbot.pb" rel="nofollow" target="_blank">{text}</a></span>
+    },
+    {
+      title: 'Time',
+      dataIndex: 'time'
+    }    
   ];
 
  return (

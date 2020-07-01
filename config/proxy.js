@@ -8,7 +8,10 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://apulis-test.sigsus1.cn:51443',
+      // target: 'http://apulis-test.sigsus1.cn:51443',
+      // target: 'http://sandbox2-master.sigsus.cn:56511/',
+
+      target: 'http://10.31.3.120:5000',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
@@ -17,7 +20,8 @@ export default {
   },
   test: {
     '/api/': {
-      target: 'https://apulis-test.sigsus1.cn:51443',
+      target: 'http://sandbox2-master.sigsus.cn:56511/',
+      // target: 'http://10.31.3.120:5000',
       changeOrigin: true,
       pathRewrite: {
         '^': '',

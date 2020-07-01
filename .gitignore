@@ -37,4 +37,6 @@ screenshot
 .firebase
 .eslintcache
 
+git config core.ignorecase false
+
 build

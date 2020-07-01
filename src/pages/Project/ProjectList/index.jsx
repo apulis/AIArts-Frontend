@@ -40,7 +40,7 @@ const ProjectList = props => {
     {
       title: 'Name',
       dataIndex: 'name',
-      width: 100,
+      width: 150,
       render: (text, record) => <Link to={ { pathname: '/data-manage/ProjectList/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
@@ -56,14 +56,15 @@ const ProjectList = props => {
     {
       title: 'Latest Time',
       dataIndex: 'latestTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
+      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+      width: 200
     },
     {
       title: 'Operation',
       render: (item) => {
         return (
           <div>
-            <a onClick={() => showEditModal(item)}>编辑</a>
+            <a onClick={() => showEditModal(item)}>Modify</a>
           </div>
         );
       },
@@ -89,7 +90,7 @@ const ProjectList = props => {
   };
 
   return (
-    <PageHeaderWrapper content={'下面展示了项目列表。'}>
+    <PageHeaderWrapper content={'Project Lists are as follows.'}>
       <Table
         columns={columns}
         dataSource={data.list}
@@ -97,7 +98,7 @@ const ProjectList = props => {
         pagination={{
           total: data.pagination.total,
           showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: (total) => `Total ${total} items`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
