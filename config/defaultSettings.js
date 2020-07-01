@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'Model & Experiment Management System',
+  title: 'AIArts Platform',
   pwa: false,
   iconfontUrl: '',
 };
