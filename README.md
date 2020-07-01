@@ -1,1 +1,1 @@
-# Data Platform
+# AIArts Platform
