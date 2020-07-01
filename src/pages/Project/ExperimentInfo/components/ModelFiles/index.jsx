@@ -14,7 +14,7 @@ const ModelFiles = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      render: (text, record) => <Link to={`/data-manage/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/aIarts/ProjectManage/Dataset?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Size',

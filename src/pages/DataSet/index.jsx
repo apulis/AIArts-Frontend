@@ -69,7 +69,7 @@ const DataSetList = () => {
     {
       title: 'Dataset Name',
       key: 'name',
-      render: item => <Link to={{ pathname: '/data-manage/dataSetManage/detail', query: { id: item.id } }}>{item.name}</Link>,
+      render: item => <Link to={{ pathname: '/aIarts/dataSetManage/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
       title: 'Description',

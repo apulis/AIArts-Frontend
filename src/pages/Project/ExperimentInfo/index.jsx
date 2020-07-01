@@ -30,19 +30,19 @@ const ExperimentInfo = props => {
 
   const routes = [
     {
-      path: '/data-manage/dataSet-manage',
+      path: '/aIarts/dataSet-manage',
       breadcrumbName: 'Home'
     },
     {
-      path: '/data-manage/ProjectList',
+      path: '/aIarts/ProjectList',
       breadcrumbName: 'Project List'
     },
     {
-      path: '/data-manage/ProjectList/ExperimentList',
+      path: '/aIarts/ProjectList/ExperimentList',
       breadcrumbName: 'ExperimentList'
     },
     {
-      path: '/data-manage/ProjectList/ExperimentList/ExperimentInfo',
+      path: '/aIarts/ProjectList/ExperimentList/ExperimentInfo',
       breadcrumbName: 'ExperimentInfo'
     },
   ];

@@ -39,7 +39,7 @@ const ExperimentList = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      render: (text, record) => <Link to={`/data-manage/ProjectList/ExperimentList/ExperimentInfo?id=${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/aIarts/ProjectList/ExperimentList/ExperimentInfo?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Description',
@@ -94,15 +94,15 @@ const ExperimentList = props => {
 
   const routes = [
     {
-      path: '/data-manage/dataSet-manage',
+      path: '/aIarts/dataSet-manage',
       breadcrumbName: 'Home',
     },
     {
-      path: '/data-manage/ProjectList',
+      path: '/aIarts/ProjectList',
       breadcrumbName: 'ProjectList',
     },
     {
-      path: '/data-manage/ProjectList/ExperimentList',
+      path: '/aIarts/ProjectList/ExperimentList',
       breadcrumbName: 'ExperimentList',
     },
   ];

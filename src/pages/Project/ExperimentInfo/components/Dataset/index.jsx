@@ -13,7 +13,7 @@ const Dataset = props => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      render: (text, record) => <Link to={`/data-manage/dataSetManage/detail?id=${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/aIarts/dataSetManage/detail?id=${record.id}`}>{text}</Link>
     },
     {
       title: 'Description',

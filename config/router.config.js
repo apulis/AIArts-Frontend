@@ -4,17 +4,17 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
-        path: '/data-manage/user',
+        path: '/aIarts/user',
         component: '../layouts/UserLayout',
         routes: [
           {
-            path: '/data-manage/user',
-            redirect: '/data-manage/user/login',
+            path: '/aIarts/user',
+            redirect: '/aIarts/user/login',
           },
           {
             name: 'login',
             icon: 'smile',
-            path: '/data-manage/user/login',
+            path: '/aIarts/user/login',
             component: './user/login',
           },
           {
@@ -29,32 +29,32 @@ export default [
         authority: ['admin', 'user'],
         routes: [
           // {
-          //   path: '/data-manage/dashboard',
+          //   path: '/aIarts/dashboard',
           //   name: 'dashboard',
           //   icon: 'dashboard',
           //   routes: [
           //     {
           //       name: 'analysis',
           //       icon: 'smile',
-          //       path: '/data-manage/dashboard/analysis',
+          //       path: '/aIarts/dashboard/analysis',
           //       component: './dashboard/analysis',
           //     },
           //     {
           //       name: 'monitor',
           //       icon: 'smile',
-          //       path: '/data-manage/dashboard/monitor',
+          //       path: '/aIarts/dashboard/monitor',
           //       component: './dashboard/monitor',
           //     },
           //     {
           //       name: 'workplace',
           //       icon: 'smile',
-          //       path: '/data-manage/dashboard/workplace',
+          //       path: '/aIarts/dashboard/workplace',
           //       component: './dashboard/workplace',
           //     },
           //   ],
           // },
           {
-            path: '/data-manage/ProjectList',
+            path: '/aIarts/ProjectList',
             // name: 'ProjectList',
             icon: 'ProjectOutlined',
             component: './Project/ProjectList',
@@ -62,20 +62,20 @@ export default [
             //   {
             //     name: 'Project List',
             //     icon: 'ProjectOutlined',
-            //     path: '/data-manage/ProjectManage/ProjectList',
+            //     path: '/aIarts/ProjectManage/ProjectList',
             //     component: './Project/ProjectList',
             //   },
             //   {
             //     name: 'Experiment List',
             //     icon: 'ExperimentOutlined',
-            //     path: '/data-manage/ProjectManage/ExperimentList',
+            //     path: '/aIarts/ProjectManage/ExperimentList',
             //     component: './Project/ExperimentList',
             //     hideInMenu: true,
             //   },
             //   {
             //     name: 'Experiment Info',
             //     icon: 'InfoCircleOutlined',
-            //     path: '/data-manage/ProjectManage/ExperimentInfo',
+            //     path: '/aIarts/ProjectManage/ExperimentInfo',
             //     component: './Project/ExperimentInfo',
             //     hideInMenu: true,
             //   },
@@ -84,28 +84,28 @@ export default [
           {
             // name: 'ExperimentList',
             // icon: 'ExperimentOutlined',
-            path: '/data-manage/ProjectList/ExperimentList',
+            path: '/aIarts/ProjectList/ExperimentList',
             component: './Project/ExperimentList',
             hideInMenu: true,
           },
           {
             // name: 'ExperimentInfo',
             // icon: 'InfoCircleOutlined',
-            path: '/data-manage/ProjectList/ExperimentList/ExperimentInfo',
+            path: '/aIarts/ProjectList/ExperimentList/ExperimentInfo',
             component: './Project/ExperimentInfo',
             hideInMenu: true,
           },          
           {
-            path: '/data-manage/dataSetManage',
+            path: '/aIarts/dataSetManage',
             name: 'DataSet',
             icon: 'ReadOutlined',
             routes: [
               {
-                path: '/data-manage/dataSetManage',
+                path: '/aIarts/dataSetManage',
                 component: './DataSet',
               },
               {
-                path: '/data-manage/dataSetManage/detail',
+                path: '/aIarts/dataSetManage/detail',
                 component: './DataSet/detail',
               },
             ],
@@ -113,29 +113,29 @@ export default [
           // {
           //   name: 'account',
           //   icon: 'user',
-          //   path: '/data-manage/account',
+          //   path: '/aIarts/account',
           //   routes: [
           //     {
           //       name: 'center',
           //       icon: 'smile',
-          //       path: '/data-manage/account/center',
+          //       path: '/aIarts/account/center',
           //       component: './account/center',
           //     },
           //     {
           //       name: 'settings',
           //       icon: 'smile',
-          //       path: '/data-manage/account/settings',
+          //       path: '/aIarts/account/settings',
           //       component: './account/settings',
           //     },
           //   ],
           // },
           {
-            path: '/data-manage',
-            redirect: '/data-manage/dataSetManage',
+            path: '/aIarts',
+            redirect: '/aIarts/dataSetManage',
           },
           {
             path: '/',
-            redirect: '/data-manage/dataSetManage',
+            redirect: '/aIarts/dataSetManage',
           },
           {
             component: '404',
