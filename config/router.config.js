@@ -54,47 +54,11 @@ export default [
           //   ],
           // },
           {
-            path: '/aIarts/ProjectList',
-            // name: 'ProjectList',
-            icon: 'ProjectOutlined',
-            component: './Project/ProjectList',
-            // routes: [
-            //   {
-            //     name: 'Project List',
-            //     icon: 'ProjectOutlined',
-            //     path: '/aIarts/ProjectManage/ProjectList',
-            //     component: './Project/ProjectList',
-            //   },
-            //   {
-            //     name: 'Experiment List',
-            //     icon: 'ExperimentOutlined',
-            //     path: '/aIarts/ProjectManage/ExperimentList',
-            //     component: './Project/ExperimentList',
-            //     hideInMenu: true,
-            //   },
-            //   {
-            //     name: 'Experiment Info',
-            //     icon: 'InfoCircleOutlined',
-            //     path: '/aIarts/ProjectManage/ExperimentInfo',
-            //     component: './Project/ExperimentInfo',
-            //     hideInMenu: true,
-            //   },
-            // ],
-          },
-          {
-            // name: 'ExperimentList',
-            // icon: 'ExperimentOutlined',
-            path: '/aIarts/ProjectList/ExperimentList',
-            component: './Project/ExperimentList',
-            hideInMenu: true,
-          },
-          {
-            // name: 'ExperimentInfo',
-            // icon: 'InfoCircleOutlined',
-            path: '/aIarts/ProjectList/ExperimentList/ExperimentInfo',
-            component: './Project/ExperimentInfo',
-            hideInMenu: true,
-          },          
+            path: '/aIarts/ModelList',
+            name: '模型管理',
+            icon: 'CodepenOutlined',
+            component: './ModelMngt/ModelList'
+          },         
           {
             path: '/aIarts/dataSetManage',
             name: 'DataSet',

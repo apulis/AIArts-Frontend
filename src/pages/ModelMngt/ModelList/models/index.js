@@ -1,9 +1,9 @@
 import { pagination as defaultPagination } from '@/config'
 import { normalizeTableResult } from '@/utils/utils'
-import { getProjects, addProject, updateProject } from '../services'
+import { getModels, addModel, updateModel } from '../services'
 
 export default {
-  namespace: 'projectList',
+  namespace: 'modelList',
   state: {
     data: {
       list: [],
@@ -21,7 +21,7 @@ export default {
   effects: {
     *fetch ({ payload = {} }, { call, put, select }) {
       try {
-        const pagination = yield select(state => state.projectList.data.pagination)
+        const pagination = yield select(state => state.modelList.data.pagination)
         const { pageNum = pagination.current, pageSize = pagination.pageSize, ...restParams } = payload
         const params = {
           ...restParams,
@@ -30,7 +30,7 @@ export default {
         }
         const {
           code, data, msg
-        } = yield call(getProjects, params)
+        } = yield call(getModels, params)
         // console.log(code, data, msg)
         let error = null
         if (code === 0) {
@@ -51,7 +51,7 @@ export default {
       try {
         const {
           data: { code, data, msg }
-        } = yield call(addProject, payload)
+        } = yield call(addModel, payload)
 
         // console.log('======', code, data, msg)
 
@@ -71,7 +71,7 @@ export default {
       try {
         const {
           data: { code, data, msg }
-        } = yield call(updateProject, payload)
+        } = yield call(updateModel, payload)
         let error = null
         if (code !== 0) {
           error = { code, msg }

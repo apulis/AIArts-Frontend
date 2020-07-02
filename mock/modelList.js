@@ -11,18 +11,20 @@ const genList = (current, pageSize) => {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
       id: index,
-      name: `Model${index}`,
-      version: `Version ${index}`,
-      desc: '这是一段实验Model描述',
-      creator: Mock.mock('@cname'),
-      latestTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+      name: `digit_classification`,
+      status: `status`,
+      engineType: `engineType`,
+      storePath: `storePath`,
+      createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+      desc: 'Handwritten digit classification'
     });
   }
 
+  // tableListDataSource.reverse();
   return tableListDataSource;
 };
 
-let tableListDataSource = genList(1, 100);
+let tableListDataSource = genList(1, 50);
 
 function getModels(req, res, u) {
   let realUrl = u;
@@ -54,11 +56,11 @@ function getModels(req, res, u) {
     code: 0,
     data: {
       list: dataSource,
-      pagination: {
+      // pagination: {
         total: tableListDataSource.length,
         pageSize: parseInt(`${params.pageSize}`, 10) || 10,
         current: parseInt(`${params.current}`, 10) || 1,
-      }
+      // }
     },
     msg: 'success'
   };
@@ -121,12 +123,12 @@ function postModel(req, res, u, b) {
     list: tableListDataSource,
     pagination: {
       total: tableListDataSource.length,
-    }
+    },
   };
   res.json(result);
 }
 
 export default {
-  'GET /api/project/experiment/model/list': getModels,
-  'POST /api/projct/experiment/model/update': postModel
+  'GET /api/models': getModels,
+  'POST /api/models': postModel,
 };
