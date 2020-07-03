@@ -98,6 +98,11 @@ export default [
             redirect: '/aIarts/dataSetManage',
           },
           {
+            path: '/model-training',
+            name: 'ModelTraining',
+            component: './ModelTraining',
+          },
+          {
             path: '/',
             redirect: '/aIarts/dataSetManage',
           },
