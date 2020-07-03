@@ -1,5 +1,5 @@
 import { Link } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Space } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getProjects, deleteProject, addProject, updateProject } from './services';
@@ -7,6 +7,7 @@ import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
+import { SyncOutlined } from '@ant-design/icons';
 // import { Resizable } from 'react-resizable';
 
 // const ResizableTitle = props => {
@@ -45,6 +46,7 @@ const ModelList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);  
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch({
@@ -132,29 +134,76 @@ const ModelList = props => {
     });
   };
 
+  const formItemLayout ={
+      labelCol: { span: 4 },
+      wrapperCol: { span: 14 },
+    };
   return (
-    <PageHeaderWrapper>
-      <Table
-        columns={columns}
-        dataSource={data.list}
-        rowKey={(r, i) => `${i}`}
-        pagination={{
-          total: data.pagination.total,
-          showQuickJumper: true,
-          showTotal: (total) => `总共 ${total} 条`,
-          showSizeChanger: true,
-          onChange: pageParamsChange,
-          onShowSizeChange: pageParamsChange,
-        }}
-        loading={loading}
-      />
-      <ModalForm 
+    <>
+      <PageHeaderWrapper>
+        <Card bordered={false}
+          bodyStyle={{
+            padding: '0'
+          }}
+        >
+          <div
+            style={{
+              padding: '24px 0 24px 24px'
+            }}
+          >
+            <Button type="default">创建模型</Button>
+            <div
+              style={{
+                float: "right",
+              }}          
+            >
+              <Form
+                // {...formItemLayout}
+                layout='inline'
+                form={form}
+              >
+                {/* <Form.Item>
+                  <Button type="default">创建模型</Button>
+                </Form.Item>             */}
+                <Form.Item label="模型名称">
+                  <Input placeholder="请输入模型名称" />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="default">重置</Button>
+                </Form.Item>    
+                <Form.Item>
+                  <Button type="primary">查询</Button>
+                </Form.Item>    
+                <Form.Item>
+                  <Button icon={<SyncOutlined />}></Button>
+                </Form.Item>
+              </Form>              
+            </div>            
+          </div>
+          <Table
+            columns={columns}
+            dataSource={data.list}
+            rowKey={(r, i) => `${i}`}
+            pagination={{
+              total: data.pagination.total,
+              showQuickJumper: true,
+              showTotal: (total) => `总共 ${total} 条`,
+              showSizeChanger: true,
+              onChange: pageParamsChange,
+              onShowSizeChange: pageParamsChange,
+            }}
+            loading={loading}
+          />
+        </Card>
+      </PageHeaderWrapper>
+
+      <ModalForm
         current={current}
         visible={visible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
       />
-    </PageHeaderWrapper>
+    </>
   );
 };
 
