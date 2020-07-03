@@ -94,7 +94,7 @@ export default [
             path: '/aIarts/ProjectList/ExperimentList/ExperimentInfo',
             component: './Project/ExperimentInfo',
             hideInMenu: true,
-          },          
+          },     
           {
             path: '/aIarts/dataSetManage',
             name: 'DataSet',
@@ -132,6 +132,11 @@ export default [
           {
             path: '/aIarts',
             redirect: '/aIarts/dataSetManage',
+          },
+          {
+            path: '/model-training',
+            name: 'ModelTraining',
+            component: './ModelTraining',
           },
           {
             path: '/',
