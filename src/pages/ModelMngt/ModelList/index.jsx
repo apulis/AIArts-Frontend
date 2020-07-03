@@ -7,6 +7,34 @@ import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
+// import { Resizable } from 'react-resizable';
+
+// const ResizableTitle = props => {
+//   const { onResize, width, ...restProps } = props;
+
+//   if (!width) {
+//     return <th {...restProps} />;
+//   }
+
+//   return (
+//     <Resizable
+//       width={width}
+//       height={0}
+//       handle={
+//         <span
+//           className="react-resizable-handle"
+//           onClick={e => {
+//             e.stopPropagation();
+//           }}
+//         />
+//       }
+//       onResize={onResize}
+//       draggableOpts={{ enableUserSelectHack: false }}
+//     >
+//       <th {...restProps} />
+//     </Resizable>
+//   );
+// };
 
 const ModelList = props => {
   const {
@@ -105,7 +133,7 @@ const ModelList = props => {
   };
 
   return (
-    <PageHeaderWrapper content={'Project Lists are as follows.'}>
+    <PageHeaderWrapper>
       <Table
         columns={columns}
         dataSource={data.list}
