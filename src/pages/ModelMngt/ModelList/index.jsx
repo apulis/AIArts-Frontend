@@ -1,5 +1,5 @@
 import { Link } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Divider } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Space } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getProjects, deleteProject, addProject, updateProject } from './services';
@@ -76,13 +76,11 @@ const ModelList = props => {
       width: 220,
       render: (item) => {
         return (
-          <>
+          <Space size="middle">
             <a onClick={() => showEditModal(item)}>模型下载</a>
-            <Divider type="vertical" />
             <a onClick={() => showEditModal(item)}>创建推理</a>
-            <Divider type="vertical" />
             <a onClick={() => showEditModal(item)}>删除</a>
-          </>
+          </Space>
         );
       },
     },
