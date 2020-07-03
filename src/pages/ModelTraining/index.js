@@ -37,15 +37,25 @@ const ModelTraining = () => {
     }); 
     setRunningParams(newRunningParams);
   }
-  const removeRuningParams = (key) => {
-    const newRunningParams = runningParams.filter((param) => param.createTime !== key)
+  const removeRuningParams = async (key) => {
+    const values = await getFieldValue('runningParams');
+    [...runningParams].forEach((param, index) => {
+      param.key = values[index].key;
+      param.value = values[index].value;
+    })
+    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key)
+    console.log('newRunningParams', newRunningParams)
     setRunningParams(newRunningParams)
+    setFieldsValue({
+      runningParams: newRunningParams.map(params => ({key: params.key, value: params.value}))
+    })
   }
   const frameWorks = [
     {
       name: 'name1',
       value: 'value1'
-    },{
+    },
+    {
       name: 'name2',
       value: 'value2'
     },
@@ -76,11 +86,11 @@ const ModelTraining = () => {
               runningParams.map((param, index) => {
                 return (
                   <>
-                    <FormItem name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} rules={[{required: true}]} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                    <FormItem initialValue={runningParams[index].key} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} rules={[{required: true}]} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                       <Input />
                     </FormItem>
                     <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
-                    <FormItem name={['runningParams', index, 'value']}  wrapperCol={{ span: 24 }} rules={[{required: true}]} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                    <FormItem initialValue={runningParams[index].value} name={['runningParams', index, 'value']}  wrapperCol={{ span: 24 }} rules={[{required: true}]} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                       <Input />
                     </FormItem>
                     {
@@ -90,8 +100,6 @@ const ModelTraining = () => {
                 )
               })
             }
-            
-
             <div className={styles.addParams} onClick={addParams}>
               <PlusSquareOutlined fill="#1890ff" style={{color: '#1890ff', marginRight: '10px'}} />
               <a>点击增加参数</a>
