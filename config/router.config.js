@@ -55,10 +55,10 @@ export default [
           // },
           {
             path: '/aIarts/ModelList',
-            name: '模型管理',
+            name: 'modelManagement',
             icon: 'CodepenOutlined',
             component: './ModelMngt/ModelList'
-          },       
+          },
           {
             path: '/aIarts/ModelMngt/CreateModel',
             component: './ModelMngt/CreateModel'
