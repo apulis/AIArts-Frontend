@@ -1,4 +1,4 @@
-import { Link } from 'umi'
+import { Link, history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -44,7 +44,7 @@ const ModelList = props => {
     modelList: { data },
   } = props;
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState(undefined);  
+  const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [form] = Form.useForm();
 
@@ -68,7 +68,7 @@ const ModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
-      render: (text, record) => <Link to={ { pathname: '/aIarts/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
+      // render: (text, record) => <Link to={ { pathname: '/aIarts/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: '状态',
@@ -107,9 +107,9 @@ const ModelList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => showEditModal(item)}>模型下载</a>
-            <a onClick={() => showEditModal(item)}>创建推理</a>
-            <a onClick={() => showEditModal(item)}>删除</a>
+            <a onClick={() => downloadModel(item)}>模型下载</a>
+            <a onClick={() => createInference(item)}>创建推理</a>
+            <a onClick={() => deleteModel(item)}>删除</a>
           </Space>
         );
       },
@@ -121,6 +121,9 @@ const ModelList = props => {
     setCurrent(item);
   };
 
+  const onReset = () => {
+    form.resetFields();
+  };
   const handleCancel = () => {
     setVisible(false);
   };
@@ -134,10 +137,51 @@ const ModelList = props => {
     });
   };
 
-  const formItemLayout ={
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
-    };
+  const onFinish = values => {
+    console.log(values.modelName);
+  };
+
+  const handleRefresh = () => {
+    dispatch({
+      type: 'modelList/fetch',
+      payload: {
+        current: pageParams.page,
+        pageSize: pageParams.size
+      },
+    });
+  };
+
+  const downloadModel = (item) => {
+    dispatch({
+      type: 'modelList/download',
+      payload: {
+        id: item.id
+      }
+    });
+  };
+
+  const createInference = (item) => {
+    dispatch({
+      type: 'modelList/creatInference',
+      payload: {
+        id: item.id
+      }
+    });
+  };
+
+  const deleteModel = (item) => {
+    dispatch({
+      type: 'modelList/delete',
+      payload: {
+        id: item.id
+      }
+    });
+  };
+
+  const createModel = (item) => {
+    history.push('/aIarts/ModelMngt/CreateModel')
+  };
+
   return (
     <>
       <PageHeaderWrapper>
@@ -151,33 +195,33 @@ const ModelList = props => {
               padding: '24px 0 24px 24px'
             }}
           >
-            <Button type="default">创建模型</Button>
+            <Button type="default" onClick={createModel}>创建模型</Button>
             <div
               style={{
                 float: "right",
               }}          
             >
               <Form
-                // {...formItemLayout}
                 layout='inline'
                 form={form}
+                onFinish={onFinish}
               >
-                {/* <Form.Item>
-                  <Button type="default">创建模型</Button>
-                </Form.Item>             */}
-                <Form.Item label="模型名称">
+                <Form.Item
+                  name="modelName" 
+                  label="模型名称"
+                >
                   <Input placeholder="请输入模型名称" />
                 </Form.Item>
                 <Form.Item>
-                  <Button type="default">重置</Button>
-                </Form.Item>    
-                <Form.Item>
-                  <Button type="primary">查询</Button>
-                </Form.Item>    
-                <Form.Item>
-                  <Button icon={<SyncOutlined />}></Button>
+                  <Button htmlType="button" onClick={onReset}>重置</Button>
                 </Form.Item>
-              </Form>              
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">查询</Button>
+                </Form.Item>
+                <Form.Item>
+                  <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                </Form.Item>
+              </Form>
             </div>            
           </div>
           <Table

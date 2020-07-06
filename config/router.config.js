@@ -58,7 +58,11 @@ export default [
             name: '模型管理',
             icon: 'CodepenOutlined',
             component: './ModelMngt/ModelList'
-          },         
+          },       
+          {
+            path: '/aIarts/ModelMngt/CreateModel',
+            component: './ModelMngt/CreateModel'
+          },
           {
             path: '/aIarts/dataSetManage',
             name: 'DataSet',
