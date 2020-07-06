@@ -6,6 +6,8 @@ import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { history } from 'umi';
 
+const prefix = '/api'
+
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
@@ -35,7 +37,7 @@ const errorHandler = (error) => {
     const { status, url } = response;
     if (status === 401) {
       const href = window.location.href;
-      if (!/\/login/.test(href)) history.push('/aIarts/user/login');
+      window.location.href = '/custom-user-dashboard/user/login?' + encodeURIComponent(href);
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,
@@ -46,8 +48,12 @@ const errorHandler = (error) => {
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
+  } else if (response.code !== 0) {
+    notification.error({
+      description: response.msg,
+      message: '请求错误',
+    })
   }
-
   return response;
 };
 /**
@@ -58,7 +64,7 @@ const request = extend({
   errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
-  // prefix: prefix
+  prefix: prefix
 });
 
 request.interceptors.request.use(async (url, options) => {
