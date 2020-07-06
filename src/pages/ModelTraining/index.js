@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Col, Row } from 'antd';
+import { Form, Input, Button, Divider, Select, Col, Row, message } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import FormList from 'antd/lib/form/FormList';
+
+import { submitModelTraining } from '../../services/modelTraning';
 
 import styles from './index.less';
 
@@ -25,9 +26,14 @@ const ModelTraining = () => {
   const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
-  const handleClick = async () => {
+  const handleSubmit = async () => {
     const values = await validateFields();
     console.log('values', values)
+    const cancel = message.loading('正在提交');
+    const res = await submitModelTraining(values);
+    if (res.code === 0) {
+      cancel();
+    }
   }
   const addParams = () => {
     const newRunningParams = runningParams.concat({
@@ -36,6 +42,17 @@ const ModelTraining = () => {
       createTime: generateKey(),
     }); 
     setRunningParams(newRunningParams);
+  }
+  const validateRunningParams = async (index, propertyName, ...args) => {
+    const [rule, value, callback] = [...args];
+    const runningParams = await getFieldValue('runningParams');
+    runningParams.forEach((r, i) => {
+      if (r[propertyName] === value && index !== i) {
+        console.log(r[propertyName], value)
+        callback('不能输入相同的参数名称');
+      }
+    })
+    callback();
   }
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('runningParams');
@@ -105,11 +122,11 @@ const ModelTraining = () => {
               runningParams.map((param, index) => {
                 return (
                   <>
-                    <FormItem initialValue={runningParams[index].key} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} rules={[{required: true}]} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                    <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                       <Input />
                     </FormItem>
                     <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
-                    <FormItem initialValue={runningParams[index].value} name={['runningParams', index, 'value']}  wrapperCol={{ span: 24 }} rules={[{required: true}]} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                    <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['runningParams', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                       <Input />
                     </FormItem>
                     {
@@ -124,7 +141,7 @@ const ModelTraining = () => {
               <a>点击增加参数</a>
             </div>
           </FormItem>
-          <FormItem label="计算节点规格" {...commonLayout} rules={[{ required: true }]}>
+          <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
             <Select style={{width: '200px'}}>
               {
                 frameWorks.map(f => (
@@ -134,7 +151,7 @@ const ModelTraining = () => {
             </Select>
           </FormItem>
         </Form>
-        <Button type="primary" style={{float: 'right'}} onClick={handleClick}>立即创建</Button>
+        <Button type="primary" style={{float: 'right'}} onClick={handleSubmit}>立即创建</Button>
       </div>
     </PageHeaderWrapper>
     
