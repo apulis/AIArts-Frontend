@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select } from 'antd';
+import { Form, Input, Button, Divider, Select, Col, Row } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
@@ -60,19 +60,26 @@ const ModelTraining = () => {
       value: 'value2'
     },
   ]
+
+  const commonLayout = {
+    labelCol: { span: 3 }, 
+    wrapperCol: { span: 8 }
+  }
   return (
     <PageHeaderWrapper>
       <div className={styles.modelTraining}>
         <Form form={form}>
-          <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 8 }} name="workName" label="作业名称" rules={[{ required: true }]}>
+          <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
             <Input placeholder="请输入作业名称" />
           </FormItem>
           <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
             <TextArea placeholder="请输入描述信息" />
           </FormItem>
         </Form>
+        <Divider style={{borderColor: '#cdcdcd'}} />
+        <h2 style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</h2>
         <Form form={form}>
-          <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 8 }} name="frameWork" label="算法引擎" rules={[{ required: true }]}>
+          <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
             <Select>
               {
                 frameWorks.map(f => (
@@ -80,6 +87,18 @@ const ModelTraining = () => {
                 ))
               }
             </Select>
+          </FormItem>
+          <FormItem {...commonLayout} label="代码目录" name="codeDir" rules={[{ required: true }]}>
+            <Input />
+          </FormItem>
+          <FormItem {...commonLayout} label="启动文件" name="bootFile" rules={[{ required: true }]}>
+            <Input />
+          </FormItem>
+          <FormItem {...commonLayout} label="输出路径" name="outputPath" style={{marginTop: '50px'}} rules={[{ required: true }]}>
+            <Input />
+          </FormItem>
+          <FormItem {...commonLayout} label="训练数据集" name="trainingDataSet" rules={[{ required: true }]}>
+            <Input />
           </FormItem>
           <FormItem label="运行参数" labelCol={{ span: 3 }} >
             {
@@ -104,6 +123,15 @@ const ModelTraining = () => {
               <PlusSquareOutlined fill="#1890ff" style={{color: '#1890ff', marginRight: '10px'}} />
               <a>点击增加参数</a>
             </div>
+          </FormItem>
+          <FormItem label="计算节点规格" {...commonLayout} rules={[{ required: true }]}>
+            <Select style={{width: '200px'}}>
+              {
+                frameWorks.map(f => (
+                  <Option value={f.value}>{f.name}</Option>
+                ))
+              }
+            </Select>
           </FormItem>
         </Form>
         <Button type="primary" style={{float: 'right'}} onClick={handleClick}>立即创建</Button>
