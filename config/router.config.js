@@ -98,8 +98,12 @@ export default [
             redirect: '/aIarts/dataSetManage',
           },
           {
-            path: '/model-training',
+            path: '/model-training/list',
             name: 'ModelTraining',
+            component: './ModelTraining/List',
+          },
+          {
+            path: '/model-training/submit',
             component: './ModelTraining',
           },
           {
