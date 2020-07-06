@@ -54,6 +54,18 @@ export default [
           //   ],
           // },
           {
+            path: '/aIarts/codeList',
+            name: '代码开发',
+            icon: 'CodepenOutlined',
+            component: './CodeDevelopment/CodeList'
+          },  
+          {
+            path: '/aIarts/codeCreate',
+            name: '代码开发--创建job',
+            icon: 'CodepenOutlined',
+            component: './CodeDevelopment/CodeCreate'
+          },  
+          {
             path: '/aIarts/ModelList',
             name: '模型管理',
             icon: 'CodepenOutlined',
