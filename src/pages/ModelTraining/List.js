@@ -52,7 +52,7 @@ const List = () => {
       <Link to="/model-training/submit">
         <Button href="">创建训练作业</Button>
       </Link>
-      <Search style={{width: '200px', float: 'right'}} />
+      <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" />
       <Table style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
     </PageHeaderWrapper>
   )
