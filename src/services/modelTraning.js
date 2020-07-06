@@ -1,4 +1,4 @@
-import request from '../utils/art-request';
+import request from '../utils/request';
 
 
 export async function submitModelTraining(data) {
