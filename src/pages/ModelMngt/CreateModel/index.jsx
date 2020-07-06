@@ -6,6 +6,7 @@ import { getProjects, deleteProject, addProject, updateProject } from './service
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 import { FolderOpenOutlined } from '@ant-design/icons';
+import ModalForm from './components/ModalForm';
 
 const { TextArea } = Input;
 
@@ -13,6 +14,7 @@ const CreateModel = props => {
   const {
     dispatch
   } = props;
+  const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
   const selectTrainingJob = () => {
@@ -23,7 +25,31 @@ const CreateModel = props => {
     console.log(values.modelName);
   };
 
+  const showJobModal = () => {
+    setVisible(true);
+    // setCurrent(item);
+  };
+
+  const onReset = () => {
+    form.resetFields();
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const handleSubmit = item => {
+    // const id = item ? item.id : '';
+    // const params = {id, ...values }
+    // dispatch({
+    //   type: 'modelList/update',
+    //   payload: params
+    // });
+    form.setFieldsValue(item);
+  };
+
   return (
+    <>
     <PageHeader
       ghost={false}
       onBack={() => history.push('/aIarts/ModelList')}
@@ -49,7 +75,7 @@ const CreateModel = props => {
             name="desc"
             label="描述"
           >
-            <TextArea rows={4} placeholder="请输入描述信息" maxlength={256}/>
+            <TextArea rows={4} placeholder="请输入描述信息" maxLength={256}/>
           </Form.Item>
           <Form.Item
             label="选择训练作业"
@@ -64,7 +90,7 @@ const CreateModel = props => {
             <Form.Item
               style={{ display: 'inline-block', width: 'calc(5% - 4px)', margin: '0 0 0 8px' }}
             >
-              <Button icon={<FolderOpenOutlined />} onClick={selectTrainingJob}></Button>
+              <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
             </Form.Item>
           </Form.Item>
           <Form.Item
@@ -75,6 +101,13 @@ const CreateModel = props => {
         </Form>
       </div>
     </PageHeader>
+    <ModalForm
+      // current={current}
+      visible={visible}
+      onCancel={handleCancel}
+      onSubmit={handleSubmit}
+    />
+    </>  
   );
 };
 

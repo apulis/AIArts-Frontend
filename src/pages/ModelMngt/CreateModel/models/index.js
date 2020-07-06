@@ -1,9 +1,9 @@
 import { pagination as defaultPagination } from '@/config'
 import { normalizeTableResult } from '@/utils/utils'
-import { getModels, addModel, updateModel } from '../services'
+import { getTrainingJobs } from '../services'
 
 export default {
-  namespace: 'createModel',
+  namespace: 'jobList',
   state: {
     data: {
       list: [],
@@ -21,7 +21,7 @@ export default {
   effects: {
     *fetch ({ payload = {} }, { call, put, select }) {
       try {
-        const pagination = yield select(state => state.modelList.data.pagination)
+        const pagination = yield select(state => state.jobList.data.pagination)
         const { pageNum = pagination.current, pageSize = pagination.pageSize, ...restParams } = payload
         const params = {
           ...restParams,
@@ -30,7 +30,7 @@ export default {
         }
         const {
           code, data, msg
-        } = yield call(getModels, params)
+        } = yield call(getTrainingJobs, params)
         // console.log(code, data, msg)
         let error = null
         if (code === 0) {
@@ -45,43 +45,6 @@ export default {
         return { error, data }
       } catch (error) {
         return { error, data: null }
-      }
-    },
-    *add ({ payload }, { call }) {
-      try {
-        const {
-          data: { code, data, msg }
-        } = yield call(addModel, payload)
-
-        // console.log('======', code, data, msg)
-
-        let error = null
-        if (code !== 0) {
-          error = { code, msg }
-        }
-        return { error, data }
-      } catch (error) {
-        return {
-          error,
-          data: null
-        }
-      }
-    },
-    *update ({ payload }, { call }) {
-      try {
-        const {
-          data: { code, data, msg }
-        } = yield call(updateModel, payload)
-        let error = null
-        if (code !== 0) {
-          error = { code, msg }
-        }
-        return { error, data }
-      } catch (error) {
-        return {
-          error,
-          data: null
-        }
       }
     }
   }
