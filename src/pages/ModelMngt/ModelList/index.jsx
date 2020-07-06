@@ -1,5 +1,5 @@
-import { Link } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Space } from 'antd';
+import { Link, history } from 'umi'
+import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getProjects, deleteProject, addProject, updateProject } from './services';
@@ -7,6 +7,7 @@ import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
+import { SyncOutlined } from '@ant-design/icons';
 // import { Resizable } from 'react-resizable';
 
 // const ResizableTitle = props => {
@@ -43,8 +44,9 @@ const ModelList = props => {
     modelList: { data },
   } = props;
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState(undefined);  
+  const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch({
@@ -66,7 +68,7 @@ const ModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
-      render: (text, record) => <Link to={ { pathname: '/aIarts/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
+      // render: (text, record) => <Link to={ { pathname: '/aIarts/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: '状态',
@@ -105,9 +107,9 @@ const ModelList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => showEditModal(item)}>模型下载</a>
-            <a onClick={() => showEditModal(item)}>创建推理</a>
-            <a onClick={() => showEditModal(item)}>删除</a>
+            <a onClick={() => downloadModel(item)}>模型下载</a>
+            <a onClick={() => createInference(item)}>创建推理</a>
+            <a onClick={() => deleteModel(item)}>删除</a>
           </Space>
         );
       },
@@ -119,6 +121,9 @@ const ModelList = props => {
     setCurrent(item);
   };
 
+  const onReset = () => {
+    form.resetFields();
+  };
   const handleCancel = () => {
     setVisible(false);
   };
@@ -132,29 +137,117 @@ const ModelList = props => {
     });
   };
 
+  const onFinish = values => {
+    console.log(values.modelName);
+  };
+
+  const handleRefresh = () => {
+    dispatch({
+      type: 'modelList/fetch',
+      payload: {
+        current: pageParams.page,
+        pageSize: pageParams.size
+      },
+    });
+  };
+
+  const downloadModel = (item) => {
+    dispatch({
+      type: 'modelList/download',
+      payload: {
+        id: item.id
+      }
+    });
+  };
+
+  const createInference = (item) => {
+    dispatch({
+      type: 'modelList/creatInference',
+      payload: {
+        id: item.id
+      }
+    });
+  };
+
+  const deleteModel = (item) => {
+    dispatch({
+      type: 'modelList/delete',
+      payload: {
+        id: item.id
+      }
+    });
+  };
+
+  const createModel = (item) => {
+    history.push('/aIarts/ModelMngt/CreateModel')
+  };
+
   return (
-    <PageHeaderWrapper>
-      <Table
-        columns={columns}
-        dataSource={data.list}
-        rowKey={(r, i) => `${i}`}
-        pagination={{
-          total: data.pagination.total,
-          showQuickJumper: true,
-          showTotal: (total) => `总共 ${total} 条`,
-          showSizeChanger: true,
-          onChange: pageParamsChange,
-          onShowSizeChange: pageParamsChange,
-        }}
-        loading={loading}
-      />
-      <ModalForm 
+    <>
+      <PageHeaderWrapper>
+        <Card bordered={false}
+          bodyStyle={{
+            padding: '0'
+          }}
+        >
+          <div
+            style={{
+              padding: '24px 0 24px 24px'
+            }}
+          >
+            <Button type="default" onClick={createModel}>创建模型</Button>
+            <div
+              style={{
+                float: "right",
+              }}          
+            >
+              <Form
+                layout='inline'
+                form={form}
+                onFinish={onFinish}
+              >
+                <Form.Item
+                  name="modelName" 
+                  label="模型名称"
+                >
+                  <Input placeholder="请输入模型名称" />
+                </Form.Item>
+                <Form.Item>
+                  <Button htmlType="button" onClick={onReset}>重置</Button>
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">查询</Button>
+                </Form.Item>
+                <Form.Item>
+                  <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                </Form.Item>
+              </Form>
+            </div>            
+          </div>
+          <Table
+            columns={columns}
+            dataSource={data.list}
+            rowKey={(r, i) => `${i}`}
+            pagination={{
+              total: data.pagination.total,
+              showQuickJumper: true,
+              showTotal: (total) => `总共 ${total} 条`,
+              showSizeChanger: true,
+              onChange: pageParamsChange,
+              onShowSizeChange: pageParamsChange,
+            }}
+            loading={loading}
+          />
+        </Card>
+      </PageHeaderWrapper>
+
+      <ModalForm
         current={current}
         visible={visible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
       />
-    </PageHeaderWrapper>
+    </>
   );
 };
 
