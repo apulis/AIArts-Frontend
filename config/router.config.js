@@ -107,6 +107,15 @@ export default [
             component: './ModelTraining',
           },
           {
+            path: '/model-training/:id/detail',
+            component: './ModelTraining/detail',
+          },
+          {
+            path: '/inference-service/submit',
+            name: 'InferenceService',
+            component: './InferenceService/Submit',
+          },
+          {
             path: '/',
             redirect: '/aIarts/dataSetManage',
           },

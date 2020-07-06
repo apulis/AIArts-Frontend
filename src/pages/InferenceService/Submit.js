@@ -3,26 +3,15 @@ import { Form, Input, Button, Divider, Select, Col, Row, message } from 'antd';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
+import { generateKey } from '../ModelTraining/index';
 
-import { submitModelTraining } from '../../services/modelTraning';
-
-import styles from './index.less';
+import styles from './index.less'
 
 
-const { TextArea } = Input;
-const { Option } = Select;
+const { TextArea } = Input; 
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
-export const generateKey = () => {
-  return new Date().getTime();
-}
-
-const ModelTraining = () => {
-  const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
+const SubmitModelTraining = () => {
+  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const handleSubmit = async () => {
@@ -39,7 +28,7 @@ const ModelTraining = () => {
       key: '',
       value: '',
       createTime: generateKey(),
-    }); 
+    });
     setRunningParams(newRunningParams);
   }
   const validateRunningParams = async (index, propertyName, ...args) => {
@@ -63,7 +52,7 @@ const ModelTraining = () => {
     console.log('newRunningParams', newRunningParams)
     setRunningParams(newRunningParams)
     setFieldsValue({
-      runningParams: newRunningParams.map(params => ({key: params.key, value: params.value}))
+      runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
     })
   }
   const frameWorks = [
@@ -78,7 +67,7 @@ const ModelTraining = () => {
   ]
 
   const commonLayout = {
-    labelCol: { span: 3 }, 
+    labelCol: { span: 3 },
     wrapperCol: { span: 8 }
   }
   return (
@@ -91,8 +80,8 @@ const ModelTraining = () => {
           <TextArea placeholder="请输入描述信息" />
         </FormItem>
       </Form>
-      <Divider style={{borderColor: '#cdcdcd'}} />
-      <h2 style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</h2>
+      <Divider style={{ borderColor: '#cdcdcd' }} />
+      <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
       <Form form={form}>
         <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
           <Select>
@@ -103,44 +92,35 @@ const ModelTraining = () => {
             }
           </Select>
         </FormItem>
-        <FormItem {...commonLayout} label="代码目录" name="codeDir" rules={[{ required: true }]}>
-          <Input />
+        <FormItem {...commonLayout} name="modelName" label="使用模型" rules={[{ required: true }]}>
+          <Input placeholder="请输入使用模型" />
         </FormItem>
-        <FormItem {...commonLayout} label="启动文件" name="bootFile" rules={[{ required: true }]}>
-          <Input />
-        </FormItem>
-        <FormItem {...commonLayout} label="输出路径" name="outputPath" style={{marginTop: '50px'}} rules={[{ required: true }]}>
-          <Input />
-        </FormItem>
-        <FormItem {...commonLayout} label="训练数据集" name="trainingDataSet" rules={[{ required: true }]}>
-          <Input />
-        </FormItem>
-        <FormItem label="运行参数" labelCol={{ span: 3 }} >
+        <FormItem label="作业参数" labelCol={{ span: 3 }} >
           {
             runningParams.map((param, index) => {
               return (
                 <>
-                  <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                  <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args) } }]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                     <Input />
                   </FormItem>
-                  <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
-                  <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['runningParams', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                  <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                  <FormItem initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args) } }]} name={['runningParams', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                     <Input />
                   </FormItem>
                   {
-                    runningParams.length > 1 && <DeleteOutlined style={{marginLeft: '10px', cursor: 'pointer'}} onClick={() => removeRuningParams(param.createTime)} />
+                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
                   }
                 </>
               )
             })
           }
           <div className={styles.addParams} onClick={addParams}>
-            <PlusSquareOutlined fill="#1890ff" style={{color: '#1890ff', marginRight: '10px'}} />
+            <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
             <a>点击增加参数</a>
           </div>
         </FormItem>
         <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{width: '200px'}}>
+          <Select style={{ width: '200px' }}>
             {
               frameWorks.map(f => (
                 <Option value={f.value}>{f.name}</Option>
@@ -149,11 +129,11 @@ const ModelTraining = () => {
           </Select>
         </FormItem>
       </Form>
-      <Button type="primary" style={{float: 'right'}} onClick={handleSubmit}>立即创建</Button>
+      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
     </div>
-    
+
   )
 }
 
 
-export default ModelTraining;
+export default SubmitModelTraining;
