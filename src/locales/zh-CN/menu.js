@@ -19,4 +19,5 @@ export default {
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
   'menu.modelManagement': '模型管理',
+  'menu.inferenceService': '推理服务'
 };
