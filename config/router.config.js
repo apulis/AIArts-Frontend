@@ -49,10 +49,25 @@ export default [
             component: './ModelMngt/CreateModel'
           },
           {
-            path: '/InferenceList',
+            path: '/Inference',
             name: 'inferenceService',
             icon: 'BulbOutlined',
-            component: './InferenceService/InferenceList'
+            routes: [
+              {
+                path: '/Inference/list',
+                name: 'list',
+                component: './InferenceService/InferenceList'
+              },
+              {
+                path: '/Inference/submit',
+                name: '提交推理服务',
+                component: './InferenceService/Submit',
+              },
+              {
+                path: '/Inference/:id/detail',
+                component: './InferenceService/Detail',
+              },
+            ]
           },        
           {
             path: '/dataManage',
@@ -119,16 +134,6 @@ export default [
                 component: './ModelTraining/detail',
               },
             ]
-          },
-          {
-            path: '/inference-service/submit',
-            name: 'InferenceService',
-            component: './InferenceService/Submit',
-          },
-          {
-            path: '/inference-service/:id/detail',
-            name: 'InferenceService2',
-            component: './InferenceService/Detail',
           },
           {
             path: '/',
