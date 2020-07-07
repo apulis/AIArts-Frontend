@@ -3,7 +3,7 @@ import { Form, Input, Button, Divider, Select, Col, Row, message } from 'antd';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { generateKey } from '../ModelTraining/index';
+import { generateKey } from '../ModelTraining/Submit';
 
 import styles from './index.less'
 

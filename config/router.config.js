@@ -127,11 +127,11 @@ export default [
               {
                 path: '/model-training/submit',
                 // name: '创建模型作业',
-                component: './ModelTraining',
+                component: './ModelTraining/Submit',
               },
               {
                 path: '/model-training/:id/detail',
-                component: './ModelTraining/detail',
+                component: './ModelTraining/Detail',
               },
             ]
           },
