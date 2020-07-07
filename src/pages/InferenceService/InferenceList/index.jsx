@@ -155,64 +155,62 @@ const InferenceList = props => {
   };
 
   return (
-    <>
-      <PageHeaderWrapper>
-        <Card bordered={false}
-          bodyStyle={{
-            padding: '0'
+    <PageHeaderWrapper>
+      <Card bordered={false}
+        bodyStyle={{
+          padding: '0'
+        }}
+      >
+        <div
+          style={{
+            padding: '24px 0 24px 24px'
           }}
         >
+          <Button type="default" onClick={CreateJob}>创建推理作业</Button>
           <div
             style={{
-              padding: '24px 0 24px 24px'
-            }}
+              float: "right",
+            }}          
           >
-            <Button type="default" onClick={CreateJob}>创建推理作业</Button>
-            <div
-              style={{
-                float: "right",
-              }}          
+            <Form
+              layout='inline'
+              form={form}
+              onFinish={onFinish}
             >
-              <Form
-                layout='inline'
-                form={form}
-                onFinish={onFinish}
+              <Form.Item
+                name="jobName" 
+                label="作业名称"
               >
-                <Form.Item
-                  name="jobName" 
-                  label="作业名称"
-                >
-                  <Input placeholder="请输入作业名称" />
-                </Form.Item>
-                <Form.Item>
-                  <Button htmlType="button" onClick={onReset}>重置</Button>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">查询</Button>
-                </Form.Item>
-                <Form.Item>
-                  <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
-                </Form.Item>
-              </Form>
-            </div>            
-          </div>
-          <Table
-            columns={columns}
-            dataSource={data.list}
-            rowKey={(r, i) => `${i}`}
-            pagination={{
-              total: data.pagination.total,
-              showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
-              showSizeChanger: true,
-              onChange: pageParamsChange,
-              onShowSizeChange: pageParamsChange,
-            }}
-            loading={loading}
-          />
-        </Card>
-      </PageHeaderWrapper>
-    </>
+                <Input placeholder="请输入作业名称" />
+              </Form.Item>
+              <Form.Item>
+                <Button htmlType="button" onClick={onReset}>重置</Button>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">查询</Button>
+              </Form.Item>
+              <Form.Item>
+                <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+              </Form.Item>
+            </Form>
+          </div>            
+        </div>
+        <Table
+          columns={columns}
+          dataSource={data.list}
+          rowKey={(r, i) => `${i}`}
+          pagination={{
+            total: data.pagination.total,
+            showQuickJumper: true,
+            showTotal: (total) => `总共 ${total} 条`,
+            showSizeChanger: true,
+            onChange: pageParamsChange,
+            onShowSizeChange: pageParamsChange,
+          }}
+          loading={loading}
+        />
+      </Card>
+    </PageHeaderWrapper>
   );
 };
 
