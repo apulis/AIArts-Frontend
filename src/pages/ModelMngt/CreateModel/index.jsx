@@ -39,13 +39,9 @@ const CreateModel = props => {
   };
 
   const handleSubmit = item => {
-    // const id = item ? item.id : '';
-    // const params = {id, ...values }
-    // dispatch({
-    //   type: 'modelList/update',
-    //   payload: params
-    // });
-    form.setFieldsValue(item);
+    // console.log(item)
+    form.setFieldsValue({job: item.name, jobId: item.id});
+    setVisible(false);
   };
 
   const layout = {
@@ -82,8 +78,9 @@ const CreateModel = props => {
             wrapperCol={{ span: 14 }}
             name="desc"
             label="描述"
+            rules={[{ max: 256 }]}
           >
-            <TextArea rows={4} placeholder="请输入描述信息" maxLength={256}/>
+            <TextArea rows={4} placeholder="请输入描述信息" />
           </Form.Item>
           <Form.Item
             {...layout}
@@ -103,6 +100,12 @@ const CreateModel = props => {
               <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
             </Form.Item>
           </Form.Item>
+          <Form.Item
+              name="jobId"
+              hidden            
+            >
+              <Input type="hidden"/>
+            </Form.Item>          
           <Form.Item
             style={{ float: 'right' }}
           >
