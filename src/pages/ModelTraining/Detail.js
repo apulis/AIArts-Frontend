@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState} from 'react';
 import { Button, Descriptions, Divider } from 'antd';
 import { useParams } from 'umi';
 
@@ -9,11 +9,53 @@ import List from 'react-virtualized/dist/es/List';
 import styles from './index.less';
 
 
+const testLog = `
+[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
+[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
+[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
+[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
+[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
+[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
+[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
+[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
+[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login
+[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
+[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
+[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
+[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
+[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
+[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
+[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
+[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
+[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
+[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
+[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login
 
+`
 
 
 const Detail = () => {
   const params = useParams();
+  const [logs, setLogs] = useState(testLog);
+  console.log('logs', logs)
   console.log('params', params)
   useEffect(() => {
     // 获取当前job detail
@@ -56,8 +98,8 @@ const Detail = () => {
         <Descriptions.Item label="输出路径">test</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
-      <pre>
-        logafsduj afsdhuj
+      <pre className={styles.logs}>
+        {logs}
       </pre>
     </div>
     
