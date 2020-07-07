@@ -64,6 +64,12 @@ export default [
             component: './ModelMngt/CreateModel'
           },
           {
+            path: '/aIarts/InferenceList',
+            name: 'inferenceService',
+            icon: 'CodepenOutlined',
+            component: './InferenceService/InferenceList'
+          },          
+          {
             path: '/aIarts/dataSetManage',
             name: 'DataSet',
             icon: 'ReadOutlined',
