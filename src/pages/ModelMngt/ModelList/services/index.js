@@ -2,7 +2,7 @@ import request from '@/utils/request';
 import { MOCK_URL } from '@/config'
 
 export async function getModels(params) {
-  return request(`${MOCK_URL}/api/models`, {
+  return request(`/models`, {
     params
   });
 }
