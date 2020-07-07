@@ -116,6 +116,11 @@ export default [
             component: './InferenceService/Submit',
           },
           {
+            path: '/inference-service/:id/detail',
+            name: 'InferenceService2',
+            component: './InferenceService/Detail',
+          },
+          {
             path: '/',
             redirect: '/aIarts/dataSetManage',
           },
