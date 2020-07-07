@@ -54,15 +54,13 @@ export default [
           //   ],
           // },
           {
-            path: '/aIarts/codeList',
+            path: '/aIarts/CodeList',
             name: '代码开发',
             icon: 'CodepenOutlined',
             component: './CodeDevelopment/CodeList'
           },  
           {
-            path: '/aIarts/codeCreate',
-            name: '代码开发--创建job',
-            icon: 'CodepenOutlined',
+            path: '/aIarts/CodeCreate',
             component: './CodeDevelopment/CodeCreate'
           },  
           {
