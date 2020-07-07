@@ -6,7 +6,7 @@ import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { history } from 'umi';
 
-const prefix = '/api'
+const prefix = '/ai_arts/api'
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
