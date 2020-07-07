@@ -31,7 +31,7 @@ const errorHandler = (error) => {
     const { status, url } = response;
     if (status === 401) {// 4.未登录跳转
       const href = window.location.href;
-      if (!/\/login/.test(href)) history.push('/aIarts/user/login');
+      if (!/\/login/.test(href)) history.push('/AIarts/user/login');
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,

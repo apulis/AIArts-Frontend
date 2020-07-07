@@ -46,7 +46,7 @@ const DataSetList = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = {}, text = '';
       if (modalType) {
-        text = 'Modified';
+        text = '编辑';
         res = await edit(editData.id, values);
       } else {
         values.storage_path = values.file.file.response.data.path;
@@ -57,7 +57,7 @@ const DataSetList = () => {
       const { code, msg } = res;
       if (code === 0) {
         getData();
-        message.success(`${text} Successfully！`);
+        message.success(`${text}成功！`);
         setModalFlag(false);
       } else {
         message.error(msg);
@@ -67,36 +67,36 @@ const DataSetList = () => {
 
   const columns = [
     {
-      title: 'Dataset Name',
+      title: '数据集名称',
       key: 'name',
-      render: item => <Link to={{ pathname: '/aIarts/dataSetManage/detail', query: { id: item.id } }}>{item.name}</Link>,
+      render: item => <Link to={{ pathname: '/AIarts/dataSetManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
-      title: 'Description',
+      title: '简介',
       dataIndex: 'description',
       ellipsis: true,
       width: 350,
     },
     {
-      title: 'creator',
+      title: '创建者',
       dataIndex: 'creator',
     },
     {
-      title: 'Update Time',
+      title: '更新时间',
       dataIndex: 'update_time',
       render: text => formatDate(text * 1000, 'YYYY-MM-DD HH:MM:SS')
     },
     {
-      title: 'Update Version',
+      title: '更新版本',
       dataIndex: 'version',
     },
     {
-      title: 'Operation',
+      title: '操作',
       render: item => {
         return (
           <>
-            <a onClick={() => onEditClick(item)}>Modify</a>
-            <a style={{ marginLeft: 16, color: 'red' }} onClick={() => onDelete(item.id)}>Delete</a>
+            <a onClick={() => onEditClick(item)}>编辑</a>
+            <a style={{ marginLeft: 16, color: 'red' }} onClick={() => onDelete(item.id)}>删除</a>
           </>
         )
       },
@@ -110,11 +110,11 @@ const DataSetList = () => {
 
   const onDelete = id => {
     confirm({
-      title: 'Are you sure to delete this dataSet？',
+      title: '确定要删除改数据集吗？',
       icon: <ExclamationCircleOutlined />,
-      okText: 'Yes',
+      okText: '删除',
       okType: 'danger',
-      cancelText: 'No',
+      cancelText: '取消',
       onOk: async () => {
         const res = await deleteDataSet(id);
         const { code, msg } = res;
@@ -134,8 +134,8 @@ const DataSetList = () => {
   }
 
   return (
-    <PageHeaderWrapper title={false}>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>Add DataSet</Button>
+    <PageHeaderWrapper>
+      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
       <Table
         columns={columns}
         dataSource={dataSets.data}
@@ -143,7 +143,7 @@ const DataSetList = () => {
         pagination={{
           total: dataSets.total,
           showQuickJumper: true,
-          showTotal: total => `Total ${total} items`,
+          showTotal: total => `总共 ${total} 条`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
@@ -151,7 +151,7 @@ const DataSetList = () => {
       />
       {modalFlag && (
         <Modal
-          title={`${modalType ? 'Modify' : 'Add'} DataSet`}
+          title={`${modalType ? '编辑' : '新增'} 数据集`}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
@@ -160,9 +160,9 @@ const DataSetList = () => {
           key="sad"
           className={styles.dataSetModal}
           footer={[
-            <Button onClick={() => setModalFlag(false)}>Cancel </Button>,
+            <Button onClick={() => setModalFlag(false)}>取消</Button>,
             <Button type="primary" disabled={btnDisabled} onClick={onSubmit}>
-              Submit
+              提交
             </Button>,
           ]}
         >

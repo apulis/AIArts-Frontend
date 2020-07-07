@@ -1,8 +1,8 @@
 export default {
   'menu.home': 'Home',
-  'menu.DataSet': 'DataSet',
-  'menu.Project': 'Project',
-  'menu.admin.sub-page': '二级管理页',
+  'menu.DataManage': '数据管理',
+  'menu.DataManage.DataSet': '数据集管理',
+  'menu.DataManage.ImageLabel': '数据标注',
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',

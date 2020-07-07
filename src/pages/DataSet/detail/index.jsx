@@ -27,8 +27,8 @@ const DataSetDetail = () => {
   const getPanelHeader = (i, version) => {
     return (
       <div className={styles.panelHeader}>
-        <h3>Version: {version}</h3>
-        {i === 0 && <Tag color="#1890ff">Current Version</Tag>}
+        <h3>版本号: {version}</h3>
+        {i === 0 && <Tag color="#1890ff">当前版本</Tag>}
       </div>
     )
   };
@@ -37,8 +37,8 @@ const DataSetDetail = () => {
     <PageHeaderWrapper title={false}>
       <PageHeader
         ghost={false}
-        onBack={() => history.push('/aIarts/dataSetManage')}
-        title="Dataset Name: MNIST"
+        onBack={() => history.push('/AIarts/dataManage/dataSet')}
+        title="数据集名称: MNIST"
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {
@@ -46,11 +46,11 @@ const DataSetDetail = () => {
             return (
               <Panel header={getPanelHeader(index, version)} key={index}>
                 <Descriptions size="small" column={2}>
-                  <Descriptions.Item label="creator">{creator}</Descriptions.Item>
+                  <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
                   <Descriptions.Item label="Storage Path">{storage_path}</Descriptions.Item>
-                  <Descriptions.Item label="Create Time">{formatDate(create_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="Update Time">{formatDate(update_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="description ">{description}</Descriptions.Item>
+                  <Descriptions.Item label="创建时间">{formatDate(create_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="更新时间">{formatDate(update_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
             )
