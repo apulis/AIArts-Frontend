@@ -1,5 +1,5 @@
 export default {
-  'menu.home': 'Home',
+  'menu.home': '首页',
   'menu.DataManage': '数据管理',
   'menu.DataManage.DataSet': '数据集管理',
   'menu.DataManage.ImageLabel': '数据标注',
