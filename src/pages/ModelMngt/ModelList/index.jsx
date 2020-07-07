@@ -38,6 +38,7 @@ import { SyncOutlined } from '@ant-design/icons';
 // };
 
 const ModelList = props => {
+  console.log('model',props)
   const {
     loading,
     dispatch,
