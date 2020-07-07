@@ -39,6 +39,11 @@ const InferenceList = props => {
       dataIndex: 'name',
       // ellipsis: true,
       // width: 150
+      render(_text, item) {
+        return (
+          <Link to={`/Inference/${item.id}/detail`}>{item.name}</Link>
+        )
+      }
     },
     {
       title: '使用模型',
