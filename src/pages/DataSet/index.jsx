@@ -27,10 +27,11 @@ const DataSetList = () => {
 
   const getData = async () => {
     const { page, count } = pageParams;
-    const { code, data, msg, total } = await getDatasets(page, count);
-    if (code === 0) {
+    const { code, data, msg } = await getDatasets(page, count);
+    if (code === 0 && data) {
+      const { total, datasets } = data;
       setDataSets({
-        data: data,
+        data: datasets,
         total: total,
       });
     } else {
@@ -69,7 +70,7 @@ const DataSetList = () => {
     {
       title: '数据集名称',
       key: 'name',
-      render: item => <Link to={{ pathname: '/dataSetManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
+      render: item => <Link to={{ pathname: '/dataManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
       title: '简介',
@@ -83,8 +84,8 @@ const DataSetList = () => {
     },
     {
       title: '更新时间',
-      dataIndex: 'update_time',
-      render: text => formatDate(text * 1000, 'YYYY-MM-DD HH:MM:SS')
+      dataIndex: 'updated_at',
+      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
     },
     {
       title: '更新版本',

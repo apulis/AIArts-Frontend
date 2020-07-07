@@ -5,10 +5,13 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { formatDate } from '@/utils/time';
 import { getDatasetDetail } from '../service';
+import { PageLoading } from '@ant-design/pro-layout';
+
 const { Panel } = Collapse;
 
 const DataSetDetail = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const id = new URLSearchParams(window.location.search).get('id');
 
   useEffect(() => {
@@ -17,11 +20,12 @@ const DataSetDetail = () => {
 
   const getData = async () => {
     const { code, data, msg, total } = await getDatasetDetail(id);
-    if (code === 0) {
-      setData(data);
+    if (code === 0 && data) {
+      setData([data.dataset]);
     } else {
       message.error(msg);
     }
+    setLoading(false);
   };
   
   const getPanelHeader = (i, version) => {
@@ -33,23 +37,25 @@ const DataSetDetail = () => {
     )
   };
 
+  if (loading) return (<PageLoading />)
+
   return (
     <PageHeaderWrapper title={false}>
       <PageHeader
         ghost={false}
         onBack={() => history.push('/dataManage/dataSet')}
-        title="数据集名称: MNIST"
+        title={`数据集名称: ${data[0].name}`}
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {
-            const { creator, storage_path, create_time, update_time, description, version } = item;
+            const { creator, path, created_at, updated_at, description, version } = item;
             return (
               <Panel header={getPanelHeader(index, version)} key={index}>
                 <Descriptions size="small" column={2}>
                   <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
-                  <Descriptions.Item label="Storage Path">{storage_path}</Descriptions.Item>
-                  <Descriptions.Item label="创建时间">{formatDate(create_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="更新时间">{formatDate(update_time * 1000, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="Storage Path">{path}</Descriptions.Item>
+                  <Descriptions.Item label="创建时间">{formatDate(created_at, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="更新时间">{formatDate(updated_at, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
                   <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>

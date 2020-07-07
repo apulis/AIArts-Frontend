@@ -7,10 +7,10 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'http://apulis-test.sigsus1.cn:51443',
+    '/ai_arts/api/': {
+      // target: 'http://apulis-test.sigsus1.cn:51443',
       // target: 'http://sandbox2-master.sigsus.cn:56511/',
-      // target: 'http://10.31.3.120:5000',
+      target: 'http://10.31.3.120:9000',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
