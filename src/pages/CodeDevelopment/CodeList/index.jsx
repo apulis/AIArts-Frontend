@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Link } from 'umi';
 import { Table, Space, Button, Row, Col, Input } from 'antd';
-import { SyncOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons';
 import { formatDate } from '@/utils/time';
 import { PAGEPARAMS } from '../../../const';
 import { getCodes } from './service.js'
@@ -115,7 +115,7 @@ const CodeList = (props) => {
               style={{ width: 200 }}
             />
             <span>
-              <Button onClick={() => onRefreshTable()} shape="circle" icon={<SyncOutlined />} />
+              <Button onClick={() => onRefreshTable()} shape="circle" icon={<ReloadOutlined />} />
             </span>
           </div>
         </Col>
