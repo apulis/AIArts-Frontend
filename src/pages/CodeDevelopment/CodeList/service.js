@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 export async function getCodes(page, count) {
-  return request('/api/codes', {
+  return request('/codes', {
     params: { page, count },
   });
 }

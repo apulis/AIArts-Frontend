@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Link } from 'umi';
-import { Table, Space, Button, Row, Col, Input } from 'antd';
+import { Table, Space, Button, Row, Col, Input,message } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { formatDate } from '@/utils/time';
 import { PAGEPARAMS } from '../../../const';
