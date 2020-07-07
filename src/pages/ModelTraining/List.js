@@ -18,8 +18,13 @@ const trainingWork = [{
 }]
 
 for (let i = 0; i < 30; i ++) {
-  trainingWork.push({id: i + trainingWork[i].id, createTime: trainingWork[i].createTime - 0 + 1000000, ...trainingWork[i]})
+  trainingWork.push({
+    ...trainingWork[i],
+    id: i + trainingWork[i].id,
+    createTime: trainingWork[i].createTime - 0 + 10000000,
+  })
 }
+
 
 const List = () => {
   const [trainingWorkList, setTrainingWorkList] = useState(trainingWork);
@@ -45,9 +50,8 @@ const List = () => {
       dataIndex: 'createTime',
       title: '创建时间',
       render(_text, item) {
-        console.log('item', item.createTime)
         return (
-          <div>{moment(item.createTime - 0).format()}</div>
+          <div>{moment(item.createTime - 0).format('MMMM Do YYYY, h:mm:ss')}</div>
         )
       }
     },
