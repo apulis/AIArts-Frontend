@@ -1,59 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState,useEffect } from 'react';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {Table,Space} from 'antd';
 import { formatDate } from '@/utils/time';
-import { connect } from 'umi';
-const CodeList = ()=>{
-    const dataSource = [
-      {
-        devName:'debug_job_001',
-        status:'创建中',
-        enginType:'tensorflow,tf-1.8.0-py2.7',
-        createTime:'Aug 5,2017 7:20:57 AM GMT +08:00',
-        codeStorePath:'/hhftest-huanan/ckpt/',
-        desc:'this is debug job this is debug job',
-      },
-      {
-        devName:'debug_job_001',
-        status:'创建中',
-        enginType:'tensorflow,tf-1.8.0-py2.7',
-        createTime:'Aug 5,2017 7:20:57 AM GMT +08:00',
-        codeStorePath:'/hhftest-huanan/ckpt/',
-        desc:'this is debug job this is debug job',
-      },
-      {
-        devName:'debug_job_001',
-        status:'创建中',
-        enginType:'tensorflow,tf-1.8.0-py2.7',
-        createTime:'Aug 5,2017 7:20:57 AM GMT +08:00',
-        codeStorePath:'/hhftest-huanan/ckpt/',
-        desc:'this is debug job this is debug job',
-      },
-      {
-        devName:'debug_job_001',
-        status:'创建中',
-        enginType:'tensorflow,tf-1.8.0-py2.7',
-        createTime:'Aug 5,2017 7:20:57 AM GMT +08:00',
-        codeStorePath:'/hhftest-huanan/ckpt/',
-        desc:'this is debug job this is debug job',
-      },
-      {
-        devName:'debug_job_001',
-        status:'创建中',
-        enginType:'tensorflow,tf-1.8.0-py2.7',
-        createTime:'Aug 5,2017 7:20:57 AM GMT +08:00',
-        codeStorePath:'/hhftest-huanan/ckpt/',
-        desc:'this is debug job this is debug job',
-      },
-      {
-        devName:'debug_job_001',
-        status:'创建中',
-        enginType:'tensorflow,tf-1.8.0-py2.7',
-        createTime:'Aug 5,2017 7:20:57 AM GMT +08:00',
-        codeStorePath:'/hhftest-huanan/ckpt/',
-        desc:'this is debug job this is debug job',
-      },
-      ];
-      
+import { PAGEPARAMS } from '../../../const';
+import { getCodes } from './service.js'
+const CodeList = (props)=>{
+      const [codes, setCodes] = useState({ data: [], total: 0 });
+      const [loading,setLoading] = useState(false);
+      const [pageParams, setPageParams] = useState(PAGEPARAMS);// 页长
+      useEffect(()=>{// componentDidMount()
+        getData();
+      },[pageParams])// pageParams改变触发的componentwillUpdate()
+      const getData = async () => {
+        setLoading(true);
+        const { page, count } = pageParams;
+        const { code, data, msg, total } = await getCodes(page, count);
+        setLoading(false);
+        if (code === 0) {
+          setCodes({
+            data: data,
+            total: total,
+          });
+        } else {
+          message.error(msg);
+        }
+      };
+      console.log(codes)
       const columns = [
         {
           title: '开发环境名称',
@@ -69,8 +41,8 @@ const CodeList = ()=>{
         },
         {
           title: '引擎类型',
-          dataIndex: 'enginType',
-          key: 'enginType',
+          dataIndex: 'engineType',
+          key: 'engineType',
           ellipsis: true,
         },
         {
@@ -113,14 +85,12 @@ const CodeList = ()=>{
         console.log('delete',item)
       }
       return (
-          <>
-            <Table dataSource={dataSource} columns={columns} />;
-          </>
+          <PageHeaderWrapper>
+            <Table dataSource={codes.data.list} columns={columns} loading={loading}/>
+            {/* <h2>s</h2> */}
+          </PageHeaderWrapper>
       )
       
 }
 
-export default connect(({ codeList, loading }) => ({
-  codeList,
-  loading: loading.models.codeList,
-}))(CodeList);
+export default CodeList;

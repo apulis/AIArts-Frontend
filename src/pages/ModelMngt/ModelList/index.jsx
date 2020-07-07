@@ -37,6 +37,7 @@ import { formatDate } from '@/utils/time';
 // };
 
 const ModelList = props => {
+  console.log('model',props)
   const {
     loading,
     dispatch,
@@ -45,7 +46,7 @@ const ModelList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);  
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
-
+debugger
   useEffect(() => {
     dispatch({
       type: 'modelList/fetch',

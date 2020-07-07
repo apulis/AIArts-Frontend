@@ -68,7 +68,7 @@ const CodeCreate = () => {
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>}
-              name="nodeName"
+              name="nodeSpecification"
               rules={[{ required: true }]}
             >
               <Select style={{ width: 120 }} onChange={handleChange}>
