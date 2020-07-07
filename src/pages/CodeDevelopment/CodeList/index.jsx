@@ -102,7 +102,7 @@ const CodeList = (props) => {
       <Row style={{marginBottom:"20px"}}>
         <Col span={12}>
           <div style={{ float: "left"}}>
-            <Link to="/AIarts/CodeCreate">
+            <Link to="/CodeCreate">
               <Button href="">创建开发环境</Button>
             </Link>
           </div>

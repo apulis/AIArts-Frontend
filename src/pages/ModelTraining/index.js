@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Col, Row, message } from 'antd';
+import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader } from 'antd';
+import { history } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
@@ -83,6 +84,12 @@ const ModelTraining = () => {
   }
   return (
     <div className={styles.modelTraining}>
+      <PageHeader
+        className="site-page-header"
+        onBack={() => history.push('/model-training/list')}
+        title='创建训练作业'
+        subTitle={<Button onClick={() => history.push('/model-training/list')}>返回训练作业列表</Button>}
+      />
       <Form form={form}>
         <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
           <Input placeholder="请输入作业名称" />
@@ -92,7 +99,7 @@ const ModelTraining = () => {
         </FormItem>
       </Form>
       <Divider style={{borderColor: '#cdcdcd'}} />
-      <h2 style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</h2>
+      <div className="ant-page-header-heading-title" style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</div>
       <Form form={form}>
         <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
           <Select>

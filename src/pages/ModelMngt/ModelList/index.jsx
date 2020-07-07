@@ -69,7 +69,7 @@ const ModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
-      // render: (text, record) => <Link to={ { pathname: '/AIarts/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
+      // render: (text, record) => <Link to={ { pathname: '/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
     },
     {
       title: '状态',
@@ -180,7 +180,7 @@ const ModelList = props => {
   };
 
   const createModel = (item) => {
-    history.push('/AIarts/ModelMngt/CreateModel')
+    history.push('/ModelMngt/CreateModel')
   };
 
   return (

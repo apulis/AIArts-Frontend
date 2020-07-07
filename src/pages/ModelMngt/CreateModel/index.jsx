@@ -57,7 +57,7 @@ const CreateModel = props => {
     <>
     <PageHeader
       ghost={false}
-      onBack={() => history.push('/AIarts/ModelList')}
+      onBack={() => history.push('/ModelList')}
       title="创建模型"
     >
       <div

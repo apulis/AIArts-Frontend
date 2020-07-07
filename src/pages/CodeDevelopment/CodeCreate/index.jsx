@@ -27,7 +27,7 @@ const CodeCreate = () => {
   return (
     <>
       <PageHeader ghost={false}
-        onBack={() => history.push('/AIarts/CodeList')}
+        onBack={() => history.push('/CodeList')}
         title="返回代码开发">
       </PageHeader>
       <div style={{ margin: "50px", width:"600px" }}>

@@ -37,7 +37,7 @@ const DataSetDetail = () => {
     <PageHeaderWrapper title={false}>
       <PageHeader
         ghost={false}
-        onBack={() => history.push('/AIarts/dataManage/dataSet')}
+        onBack={() => history.push('/dataManage/dataSet')}
         title="数据集名称: MNIST"
       >
         <Collapse defaultActiveKey={['0']}>

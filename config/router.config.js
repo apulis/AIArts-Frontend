@@ -4,17 +4,17 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
-        path: '/AIarts/user',
+        path: '/user',
         component: '../layouts/UserLayout',
         routes: [
           {
-            path: '/AIarts/user',
-            redirect: '/AIarts/user/login',
+            path: '/user',
+            redirect: '/user/login',
           },
           {
             name: 'login',
             icon: 'smile',
-            path: '/AIarts/user/login',
+            path: '/user/login',
             component: './user/login',
           },
           {
@@ -29,43 +29,43 @@ export default [
         authority: ['admin', 'user'],
         routes: [
           {
-            path: '/AIarts/CodeList',
+            path: '/CodeList',
             name: '代码开发',
             icon: 'CodepenOutlined',
             component: './CodeDevelopment/CodeList'
           },  
           {
-            path: '/AIarts/CodeCreate',
+            path: '/CodeCreate',
             component: './CodeDevelopment/CodeCreate'
           },  
           {
-            path: '/AIarts/ModelList',
+            path: '/ModelList',
             name: 'modelManagement',
             icon: 'CodepenOutlined',
             component: './ModelMngt/ModelList'
           },
           {
-            path: '/AIarts/ModelMngt/CreateModel',
+            path: '/ModelMngt/CreateModel',
             component: './ModelMngt/CreateModel'
           },
           {
-            path: '/AIarts/InferenceList',
+            path: '/InferenceList',
             name: 'inferenceService',
             icon: 'BulbOutlined',
             component: './InferenceService/InferenceList'
           },        
           {
-            path: '/AIarts/dataManage',
+            path: '/dataManage',
             name: 'DataManage',
             icon: 'ReadOutlined',
             routes: [
               {
-                path: '/AIarts/dataManage/dataSet',
+                path: '/dataManage/dataSet',
                 name: 'DataSet',
                 component: './DataSet',
               },
               {
-                path: '/AIarts/dataManage/dataSet/detail',
+                path: '/dataManage/dataSet/detail',
                 component: './DataSet/detail',
               },
               {
@@ -78,38 +78,47 @@ export default [
           // {
           //   name: 'account',
           //   icon: 'user',
-          //   path: '/AIarts/account',
+          //   path: '/account',
           //   routes: [
           //     {
           //       name: 'center',
           //       icon: 'smile',
-          //       path: '/AIarts/account/center',
+          //       path: '/account/center',
           //       component: './account/center',
           //     },
           //     {
           //       name: 'settings',
           //       icon: 'smile',
-          //       path: '/AIarts/account/settings',
+          //       path: '/account/settings',
           //       component: './account/settings',
           //     },
           //   ],
           // },
           {
-            path: '/AIarts',
-            redirect: '/AIarts/dataSetManage',
+            path: '/',
+            redirect: '/CodeList',
           },
+          
           {
-            path: '/model-training/list',
-            name: 'ModelTraining',
-            component: './ModelTraining/List',
-          },
-          {
-            path: '/model-training/submit',
-            component: './ModelTraining',
-          },
-          {
-            path: '/model-training/:id/detail',
-            component: './ModelTraining/detail',
+            path: '/model-training',
+            name: '模型训练',
+            icon: 'FireOutlined',
+            routes: [
+              {
+                path: '/model-training/list',
+                name: '模型列表',
+                component: './ModelTraining/List',
+              },
+              {
+                path: '/model-training/submit',
+                name: '创建模型作业',
+                component: './ModelTraining',
+              },
+              {
+                path: '/model-training/:id/detail',
+                component: './ModelTraining/detail',
+              },
+            ]
           },
           {
             path: '/inference-service/submit',
@@ -123,7 +132,7 @@ export default [
           },
           {
             path: '/',
-            redirect: '/AIarts/dataSetManage',
+            redirect: '/dataSetManage',
           },
           {
             component: '404',

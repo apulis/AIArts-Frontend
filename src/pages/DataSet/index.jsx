@@ -69,7 +69,7 @@ const DataSetList = () => {
     {
       title: '数据集名称',
       key: 'name',
-      render: item => <Link to={{ pathname: '/AIarts/dataSetManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
+      render: item => <Link to={{ pathname: '/dataSetManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
       title: '简介',
