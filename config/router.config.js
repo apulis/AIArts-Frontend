@@ -73,7 +73,11 @@ export default [
           {
             path: '/Inference/submit',
             component: './InferenceService/Submit',
-          },                  
+          },
+          {
+            path: '/Inference/:id/detail',
+            component: './InferenceService/Detail',
+          },                        
           {
             path: '/dataManage',
             name: 'DataManage',
