@@ -49,26 +49,31 @@ export default [
             component: './ModelMngt/CreateModel'
           },
           {
-            path: '/Inference',
+            path: '/Inference/list',
             name: 'inferenceService',
             icon: 'BulbOutlined',
-            routes: [
-              {
-                path: '/Inference/list',
-                name: 'list',
-                component: './InferenceService/InferenceList'
-              },
-              {
-                path: '/Inference/submit',
-                // name: '提交推理服务',
-                component: './InferenceService/Submit',
-              },
-              {
-                path: '/Inference/:id/detail',
-                component: './InferenceService/Detail',
-              },
-            ]
-          },        
+            component: './InferenceService/InferenceList'
+            // routes: [
+            //   {
+            //     path: '/Inference/list',
+            //     name: 'list',
+            //     component: './InferenceService/InferenceList'
+            //   },
+            //   {
+            //     path: '/Inference/submit',
+            //     // name: '提交推理服务',
+            //     component: './InferenceService/Submit',
+            //   },
+            //   {
+            //     path: '/Inference/:id/detail',
+            //     component: './InferenceService/Detail',
+            //   },
+            // ]
+          },
+          {
+            path: '/Inference/submit',
+            component: './InferenceService/Submit',
+          },                  
           {
             path: '/dataManage',
             name: 'DataManage',
@@ -115,26 +120,31 @@ export default [
           },
           
           {
-            path: '/model-training',
+            path: '/model-training/list',
             name: '模型训练',
             icon: 'FireOutlined',
-            routes: [
-              {
-                path: '/model-training/list',
-                name: '模型列表',
-                component: './ModelTraining/List',
-              },
-              {
-                path: '/model-training/submit',
-                // name: '创建模型作业',
-                component: './ModelTraining',
-              },
-              {
-                path: '/model-training/:id/detail',
-                component: './ModelTraining/detail',
-              },
-            ]
+            component: './ModelTraining/List'
+            // routes: [
+            //   {
+            //     path: '/model-training/list',
+            //     name: '模型列表',
+            //     component: './ModelTraining/List',
+            //   },
+            //   {
+            //     path: '/model-training/submit',
+            //     // name: '创建模型作业',
+            //     component: './ModelTraining',
+            //   },
+            //   {
+            //     path: '/model-training/:id/detail',
+            //     component: './ModelTraining/detail',
+            //   },
+            // ]
           },
+          {
+            path: '/model-training/submit',
+            component: './ModelTraining',
+          },          
           {
             path: '/',
             redirect: '/dataSetManage',
