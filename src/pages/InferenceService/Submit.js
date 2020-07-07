@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Col, Row, message } from 'antd';
+import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader } from 'antd';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import { generateKey } from '../ModelTraining/index';
+import { history } from 'umi';
 
 import styles from './index.less'
 
@@ -71,6 +72,11 @@ const SubmitModelTraining = () => {
     wrapperCol: { span: 8 }
   }
   return (
+    <PageHeader
+      ghost={false}
+      onBack={() => history.push('/Inference/list')}
+      title="创建推理作业"
+    >
     <div className={styles.modelTraining}>
       <Form form={form}>
         <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
@@ -131,7 +137,7 @@ const SubmitModelTraining = () => {
       </Form>
       <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
     </div>
-
+    </PageHeader>
   )
 }
 
