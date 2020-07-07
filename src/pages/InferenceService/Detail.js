@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Descriptions, message, Upload, Button } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { useParams } from 'umi';
 
 import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition } from '../../services/inferenceService';
 
@@ -17,6 +18,8 @@ const InferenceDetail = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [beginAnalizeLoading, setBeginAnalizeLoading] = useState(false);
+  const params = useParams()
+  const id = params.id;
   const [logs, setLogs] = useState('');
   const handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -61,7 +64,7 @@ const InferenceDetail = () => {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        action={`/inferences/${id}/upload_image`}
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
