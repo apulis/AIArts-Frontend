@@ -60,7 +60,7 @@ export default [
               },
               {
                 path: '/Inference/submit',
-                name: '提交推理服务',
+                // name: '提交推理服务',
                 component: './InferenceService/Submit',
               },
               {
@@ -126,7 +126,7 @@ export default [
               },
               {
                 path: '/model-training/submit',
-                name: '创建模型作业',
+                // name: '创建模型作业',
                 component: './ModelTraining',
               },
               {
