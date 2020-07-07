@@ -17,7 +17,6 @@ class SecurityLayout extends React.Component {
     });
     const { location } = this.props;
     if (location && location.query && location.query.token) {
-      console.log('location.query',location.query)
       localStorage.setItem('token', location.query.token);
     }
   }

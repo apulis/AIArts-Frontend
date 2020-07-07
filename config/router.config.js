@@ -148,10 +148,6 @@ export default [
           {
             path: '/model-training/submit',
             component: './ModelTraining',
-          },          
-          {
-            path: '/',
-            redirect: '/dataSetManage',
           },
           {
             component: '404',
