@@ -55,8 +55,6 @@ const testLog = `
 const Detail = () => {
   const params = useParams();
   const [logs, setLogs] = useState(testLog);
-  console.log('logs', logs)
-  console.log('params', params)
   useEffect(() => {
     // 获取当前job detail
     return () => {
