@@ -1,4 +1,4 @@
-import { Link, history } from 'umi'
+import { Link, history } from 'umi';
 import { message, Table, Modal, Form, Input, Button, Space, Card, PageHeader } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';

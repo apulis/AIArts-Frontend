@@ -151,7 +151,7 @@ const InferenceList = props => {
   };
 
   const CreateJob = (item) => {
-    history.push('/ModelMngt/CreateModel')
+    history.push('/Inference/submit')
   };
 
   return (
