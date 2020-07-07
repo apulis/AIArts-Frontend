@@ -66,7 +66,7 @@ export default [
           {
             path: '/aIarts/InferenceList',
             name: 'inferenceService',
-            icon: 'CodepenOutlined',
+            icon: 'BulbOutlined',
             component: './InferenceService/InferenceList'
           },          
           {
