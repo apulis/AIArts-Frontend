@@ -48,6 +48,11 @@ const CreateModel = props => {
     form.setFieldsValue(item);
   };
 
+  const layout = {
+    labelCol: { span: 3 },
+    wrapperCol: { span: 8 }
+  };
+
   return (
     <>
     <PageHeader
@@ -65,6 +70,7 @@ const CreateModel = props => {
           onFinish={onFinish}
         >
           <Form.Item
+            {...layout}
             name="modelName"
             label="名称"
             rules={[{ required: true, message: '名称不能为空!' }]}
@@ -72,12 +78,16 @@ const CreateModel = props => {
             <Input placeholder="请输入模型名称" />
           </Form.Item>
           <Form.Item
+            labelCol={{ span: 3 }} 
+            wrapperCol={{ span: 14 }}
             name="desc"
             label="描述"
           >
             <TextArea rows={4} placeholder="请输入描述信息" maxLength={256}/>
           </Form.Item>
           <Form.Item
+            {...layout}
+            name='jobWrapper'
             label="选择训练作业"
             rules={[{ required: true, message: '训练作业不能为空!' }]}
           >
