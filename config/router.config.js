@@ -127,23 +127,17 @@ export default [
             path: '/model-training/list',
             name: '模型训练',
             icon: 'FireOutlined',
-            routes: [
-              {
-                path: '/model-training/list',
-                name: '模型列表',
-                component: './ModelTraining/List',
-              },
-              {
-                path: '/model-training/submit',
-                // name: '创建模型作业',
-                component: './ModelTraining/Submit',
-              },
-              {
-                path: '/model-training/:id/detail',
-                component: './ModelTraining/Detail',
-              },
-            ]
-          },   
+            component: './ModelTraining/List',
+          },
+          {
+            path: '/model-training/submit',
+            // name: '创建模型作业',
+            component: './ModelTraining/Submit',
+          },
+          {
+            path: '/model-training/:id/detail',
+            component: './ModelTraining/Detail',
+          },  
           {
             path: '/',
             redirect: '/dataSetManage',
