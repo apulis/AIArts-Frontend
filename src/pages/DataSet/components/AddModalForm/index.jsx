@@ -27,9 +27,9 @@ const AddModalForm = (props, ref) => {
       if (status === 'done') {
         setFileList(info.fileList);
         setBtn(false);
-        message.success(`${info.file.name} file uploaded successfully.`);
+        message.success(`${info.file.name}文件上传成功！`);
       } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+        message.error(`${info.file.name} 文件上传失败！`);
         setBtn(false);
       }
     },
@@ -41,8 +41,8 @@ const AddModalForm = (props, ref) => {
           resolve(file);
         } else {
           let text = '';
-          text = isOverSize ? 'files within 2GB' : `${fileList.length ?  'one file' : '.zip, .tar and .tar.gz file format'}`;
-          message.warning(`Only supports uploading ${text}！`);
+          text = isOverSize ? '2GB以内的文件' : `${fileList.length ?  '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
+          message.warning(`只支持上传 ${text}！`);
           reject(file);
         }
       });
@@ -55,31 +55,31 @@ const AddModalForm = (props, ref) => {
   return (
     <Form form={form} className={styles.modalFormWrap} initialValues={modalType ? editData : {}}>
       <Form.Item
-        label="DataSet Name"
+        label="数据集名称"
         name="name"
-        rules={[{ required: true, message: 'DataSet Name is required！' }, { max: 25 }]}
+        rules={[{ required: true, message: '请输入数据集名称！' }, { max: 25 }]}
       >
-        <Input placeholder="please enter dataSet Name" disabled={modalType} />
+        <Input placeholder="请输入数据集名称" disabled={modalType} />
       </Form.Item>
       <Form.Item
-        label="Description"
+        label="简介"
         name="description"
-        rules={[{ required: true, message: 'Description is required！' }, { max: 50 }]} 
+        rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]} 
       >
-        <Input.TextArea placeholder="please enter description" autoSize={{ minRows: 4 }} />
+        <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
       </Form.Item>
       {!modalType && <Form.Item
-        label="Upload File"
+        label="上传文件"
         name="file"
-        rules={[{ required: true, message: 'please upload file！' }]}
+        rules={[{ required: true, message: '请上传文件！' }]}
         valuePropName="fileList"
       >
         <Dragger {...uploadProps}>
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
-          <p className="ant-upload-text">Click or drag file to this area to upload</p>
-          <p className="ant-upload-hint">（Only supports uploading .zip, .tar and .tar.gz file format and within 2GB）</p>
+          <p className="ant-upload-text">请点击或拖入文件上传</p>
+          <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件，且最大不能超过2GB）</p>
         </Dragger>
       </Form.Item>}
     </Form>

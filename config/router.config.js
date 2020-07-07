@@ -4,17 +4,17 @@ export default [
     component: '../layouts/SecurityLayout',
     routes: [
       {
-        path: '/aIarts/user',
+        path: '/AIarts/user',
         component: '../layouts/UserLayout',
         routes: [
           {
-            path: '/aIarts/user',
-            redirect: '/aIarts/user/login',
+            path: '/AIarts/user',
+            redirect: '/AIarts/user/login',
           },
           {
             name: 'login',
             icon: 'smile',
-            path: '/aIarts/user/login',
+            path: '/AIarts/user/login',
             component: './user/login',
           },
           {
@@ -28,74 +28,75 @@ export default [
         Routes: ['src/pages/Authorized'],
         authority: ['admin', 'user'],
         routes: [
-          // {
-          //   path: '/aIarts/dashboard',
-          //   name: 'dashboard',
-          //   icon: 'dashboard',
-          //   routes: [
-          //     {
-          //       name: 'analysis',
-          //       icon: 'smile',
-          //       path: '/aIarts/dashboard/analysis',
-          //       component: './dashboard/analysis',
-          //     },
-          //     {
-          //       name: 'monitor',
-          //       icon: 'smile',
-          //       path: '/aIarts/dashboard/monitor',
-          //       component: './dashboard/monitor',
-          //     },
-          //     {
-          //       name: 'workplace',
-          //       icon: 'smile',
-          //       path: '/aIarts/dashboard/workplace',
-          //       component: './dashboard/workplace',
-          //     },
-          //   ],
-          // },
           {
-            path: '/aIarts/ModelList',
-            name: '模型管理',
+            path: '/AIarts/CodeList',
+            name: '代码开发',
+            icon: 'CodepenOutlined',
+            component: './CodeDevelopment/CodeList'
+          },  
+          {
+            path: '/AIarts/CodeCreate',
+            component: './CodeDevelopment/CodeCreate'
+          },  
+          {
+            path: '/AIarts/ModelList',
+            name: 'modelManagement',
             icon: 'CodepenOutlined',
             component: './ModelMngt/ModelList'
-          },         
+          },
           {
-            path: '/aIarts/dataSetManage',
-            name: 'DataSet',
+            path: '/AIarts/ModelMngt/CreateModel',
+            component: './ModelMngt/CreateModel'
+          },
+          {
+            path: '/AIarts/InferenceList',
+            name: 'inferenceService',
+            icon: 'BulbOutlined',
+            component: './InferenceService/InferenceList'
+          },        
+          {
+            path: '/AIarts/dataManage',
+            name: 'DataManage',
             icon: 'ReadOutlined',
             routes: [
               {
-                path: '/aIarts/dataSetManage',
+                path: '/AIarts/dataManage/dataSet',
+                name: 'DataSet',
                 component: './DataSet',
               },
               {
-                path: '/aIarts/dataSetManage/detail',
+                path: '/AIarts/dataManage/dataSet/detail',
                 component: './DataSet/detail',
+              },
+              {
+                path: 'https://www.baidu.com/',
+                target: '_blank',
+                name: 'ImageLabel',
               },
             ],
           },
           // {
           //   name: 'account',
           //   icon: 'user',
-          //   path: '/aIarts/account',
+          //   path: '/AIarts/account',
           //   routes: [
           //     {
           //       name: 'center',
           //       icon: 'smile',
-          //       path: '/aIarts/account/center',
+          //       path: '/AIarts/account/center',
           //       component: './account/center',
           //     },
           //     {
           //       name: 'settings',
           //       icon: 'smile',
-          //       path: '/aIarts/account/settings',
+          //       path: '/AIarts/account/settings',
           //       component: './account/settings',
           //     },
           //   ],
           // },
           {
-            path: '/aIarts',
-            redirect: '/aIarts/dataSetManage',
+            path: '/AIarts',
+            redirect: '/AIarts/dataSetManage',
           },
           {
             path: '/model-training/list',
@@ -122,7 +123,7 @@ export default [
           },
           {
             path: '/',
-            redirect: '/aIarts/dataSetManage',
+            redirect: '/AIarts/dataSetManage',
           },
           {
             component: '404',

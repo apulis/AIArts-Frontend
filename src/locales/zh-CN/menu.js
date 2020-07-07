@@ -1,8 +1,8 @@
 export default {
-  'menu.home': 'Home',
-  'menu.DataSet': 'DataSet',
-  'menu.Project': 'Project',
-  'menu.admin.sub-page': '二级管理页',
+  'menu.home': '首页',
+  'menu.DataManage': '数据管理',
+  'menu.DataManage.DataSet': '数据集管理',
+  'menu.DataManage.ImageLabel': '数据标注',
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
@@ -18,4 +18,6 @@ export default {
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
+  'menu.modelManagement': '模型管理',
+  'menu.inferenceService': '推理服务'
 };
