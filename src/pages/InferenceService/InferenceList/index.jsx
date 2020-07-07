@@ -37,55 +37,55 @@ const InferenceList = props => {
     {
       title: '作业名称',
       dataIndex: 'name',
-      ellipsis: true,
-      width: 150
+      // ellipsis: true,
+      // width: 150
     },
     {
       title: '使用模型',
       dataIndex: 'model',
-      ellipsis: true,
-      width: 100
+      // ellipsis: true,
+      // width: 100
     },
     {
       title: '状态',
       dataIndex: 'status',
-      ellipsis: true,
-      width: 100
+      // ellipsis: true,
+      // width: 100
     },
     {
       title: '引擎类型',
       dataIndex: 'engineType',
-      ellipsis: true,
-      width: 100,
+      // ellipsis: true,
+      // width: 100,
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
-      ellipsis: true,
-      width: 150,
+      // ellipsis: true,
+      // width: 150,
     },
     {
       title: '运行时长',
       dataIndex: 'runDuration',
-      ellipsis: true,
-      width: 100,
+      // ellipsis: true,
+      // width: 100,
     },
     {
       title: '服务地址',
       dataIndex: 'serverAddr',
-      ellipsis: true,
-      width: 100,
+      // ellipsis: true,
+      // width: 100,
     },
     {
       title: '描述',
       dataIndex: 'desc',
-      ellipsis: true,
-      width: 150
+      // ellipsis: true,
+      // width: 150
     },
     {
       title: '操作',
-      width: 100,
+      width: 120,
       render: (item) => {
         return (
           <Space size="middle">
