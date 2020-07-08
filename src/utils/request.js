@@ -8,7 +8,7 @@ import { history } from 'umi';
 
 const prefix = '/ai_arts/api'
 
-const codeMessage = {
+export const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
   202: '一个请求已经进入后台排队（异步任务）。',
@@ -30,7 +30,7 @@ const codeMessage = {
  * 异常处理程序
  */
 
-const errorHandler = (error) => {
+export const errorHandler = (error) => {
   const { response } = error;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
