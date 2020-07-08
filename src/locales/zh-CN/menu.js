@@ -21,5 +21,6 @@ export default {
   'menu.codeDevelopment': '代码开发',
   'menu.modelManagement': '模型管理',
   'menu.inferenceService': '推理服务',
-  'menu.inferenceService.list': '推理服务列表'
+  'menu.inferenceService.list': '推理服务列表',
+  'menu.modelTraining': '模型训练'
 };
