@@ -37,7 +37,9 @@ export const errorHandler = (error) => {
     const { status, url } = response;
     if (status === 401) {
       const href = window.location.href;
-      window.location.href = '/custom-user-dashboard/user/login?' + encodeURIComponent(href);
+      if (!/localhost/.test(href)) {
+        window.location.href = '/custom-user-dashboard/user/login?' + encodeURIComponent(href);
+      }
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,
@@ -83,7 +85,6 @@ request.interceptors.request.use(async (url, options) => {
 });
 
 request.interceptors.response.use((response, options) => {
-  if (options.method === 'DELETE' && response.status === 200) message.success('Deleted Successfully！');
   return response;
 });
 
