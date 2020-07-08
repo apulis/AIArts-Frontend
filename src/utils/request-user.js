@@ -1,17 +1,17 @@
 import { extend } from 'umi-request';
-
 import { errorHandler } from './request'
 import { message } from 'antd';
 
+import { USER_DASHBOARD_BACKEND } from '@/utils/const';
 
-const userPrefix = '/custom-user-dashboard-backend';
+
 
 
 const request = extend({
   errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
-  prefix: userPrefix
+  prefix: USER_DASHBOARD_BACKEND
 });
 
 request.use(async (ctx, next) => {
