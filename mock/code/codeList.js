@@ -129,6 +129,6 @@ function postCode(req, res, u, b) {
 }
 
 export default {
-  'GET /api/codes': getCodes,
-  'POST /api/code': postCode,
+  'GET /ai_arts/api/codes': getCodes,
+  'POST /ai_arts/api/code': postCode,
 };
