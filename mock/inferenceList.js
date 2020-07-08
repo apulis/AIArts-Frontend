@@ -130,6 +130,6 @@ function postInference(req, res, u, b) {
 }
 
 export default {
-  'GET /api/inferences': getInferences,
-  'POST /api/inferences': postInference,
+  'GET /ai_arts/api/inferences': getInferences,
+  'POST /ai_arts/api/inferences': postInference,
 };

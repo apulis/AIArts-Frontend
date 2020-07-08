@@ -162,12 +162,13 @@ const ModelList = props => {
   };
 
   const createInference = (item) => {
-    dispatch({
-      type: 'modelList/creatInference',
-      payload: {
-        id: item.id
-      }
-    });
+    // dispatch({
+    //   type: 'modelList/creatInference',
+    //   payload: {
+    //     id: item.id
+    //   }
+    // });
+    history.push('/Inference/submit')
   };
 
   const deleteModel = (item) => {
