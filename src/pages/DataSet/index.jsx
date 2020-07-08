@@ -9,6 +9,7 @@ import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
 import { formatDate } from '@/utils/time';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { PageLoading } from '@ant-design/pro-layout';
 
 const { confirm } = Modal;
 
@@ -19,6 +20,8 @@ const DataSetList = () => {
   const [modalType, setModalType] = useState(0);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [btnDisabled, setBtnDisabled] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const addModalFormRef = useRef();
 
   useEffect(() => {
@@ -27,6 +30,7 @@ const DataSetList = () => {
 
   const getData = async () => {
     const { page, count } = pageParams;
+    setLoading(true);
     const { code, data, msg } = await getDatasets(page, count);
     if (code === 0 && data) {
       const { total, datasets } = data;
@@ -37,6 +41,7 @@ const DataSetList = () => {
     } else {
       message.error(msg);
     }
+    setLoading(false);
   };
 
   const pageParamsChange = (page, count) => {
@@ -45,24 +50,29 @@ const DataSetList = () => {
 
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
-      let res = {}, text = '';
+      let res = null, text = '';
+      // values.Creator = 'zzzz'
+      setBtnLoading(true);
       if (modalType) {
         text = '编辑';
         res = await edit(editData.id, values);
       } else {
-        values.storage_path = values.file.file.response.data.path;
+        values.path = values.file.file.response.data.path;
         delete values.file;
-        text = 'Add';
+        delete values.sourceType;
+        text = '新增';
         res = await add(values);
       }
+      console.log('msgmsg', res)
       const { code, msg } = res;
       if (code === 0) {
         getData();
         message.success(`${text}成功！`);
         setModalFlag(false);
       } else {
-        message.error(msg);
+        message.error(code === 30005 ? '该存储路径下没有可用的数据集！' : msg);
       }
+      setBtnLoading(false);
     });
   };
 
@@ -134,13 +144,15 @@ const DataSetList = () => {
     setModalFlag(true);
   }
 
+  if (loading) return (<PageLoading />)
+
   return (
     <PageHeaderWrapper>
       <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
       <Table
         columns={columns}
         dataSource={dataSets.data}
-        rowKey={(r, i) => `${i}`}
+        rowKey={r => r.id}
         pagination={{
           total: dataSets.total,
           showQuickJumper: true,
@@ -158,11 +170,10 @@ const DataSetList = () => {
           destroyOnClose
           maskClosable={false}
           width={600}
-          key="sad"
           className={styles.dataSetModal}
           footer={[
             <Button onClick={() => setModalFlag(false)}>取消</Button>,
-            <Button type="primary" disabled={btnDisabled} onClick={onSubmit}>
+            <Button type="primary" disabled={btnDisabled} loading={btnLoading} onClick={onSubmit}>
               提交
             </Button>,
           ]}
