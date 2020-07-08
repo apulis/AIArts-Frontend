@@ -1,7 +1,6 @@
 import request from '@/utils/request';
 
 export async function getCodes(page, count) {
-  debugger
   return request('/codes', {
     params: { page, pageSize:count },
   });

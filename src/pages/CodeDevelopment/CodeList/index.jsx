@@ -19,7 +19,6 @@ const CodeList = (props) => {
     const { page, pageSize } = pageParams;
     const obj = await getCodes(page, pageSize);
     const { code, data, msg, total } = obj
-    debugger
     if (code === 0) {
       setCodes({
         data: data,
@@ -135,7 +134,6 @@ const CodeList = (props) => {
           onShowSizeChange: onPageParamsChange,
         }}
         loading={loading} />
-      {/* <h2>s</h2> */}
     </PageHeaderWrapper>
   )
 
