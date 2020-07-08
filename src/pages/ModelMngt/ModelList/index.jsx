@@ -38,7 +38,6 @@ import { SyncOutlined } from '@ant-design/icons';
 // };
 
 const ModelList = props => {
-  console.log('model',props)
   const {
     loading,
     dispatch,
@@ -108,7 +107,7 @@ const ModelList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => downloadModel(item)}>模型下载</a>
+            <a href={item.url} onClick={() => downloadModel(item)}>模型下载</a>
             <a onClick={() => createInference(item)}>创建推理</a>
             <a onClick={() => deleteModel(item)}>删除</a>
           </Space>
