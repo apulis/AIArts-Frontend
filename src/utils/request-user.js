@@ -1,6 +1,7 @@
 import { extend } from 'umi-request';
 
 import { errorHandler } from './request'
+import { message } from 'antd';
 
 
 const userPrefix = '/custom-user-dashboard-backend';
@@ -15,8 +16,7 @@ const request = extend({
 
 request.use(async (ctx, next) => {
   await next();
-  // 统一对结果进行处理
-  console.log(1231231111, ctx.res)
+  // 兼容当前项目的返回参数格式
   if (ctx.res.success === true) {
     ctx.res.code = 0;
   }
