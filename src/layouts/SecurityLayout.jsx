@@ -48,8 +48,6 @@ class SecurityLayout extends React.Component {
       isReady: true,
     });
     this.collectAuthInfo();
-    
-    
   }
 
   render() {
