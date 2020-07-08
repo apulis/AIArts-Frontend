@@ -5,7 +5,7 @@ import { Table, Space, Button, Row, Col, Input,message } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { formatDate } from '@/utils/time';
 import { PAGEPARAMS } from '../../../const';
-import { getCodes } from './service.js'
+import { getCodes } from '../service.js'
 const CodeList = (props) => {
   const { Search } = Input;
   const [codes, setCodes] = useState({ data: [], total: 0 });
@@ -115,7 +115,7 @@ const CodeList = (props) => {
               style={{ width: 200 }}
             />
             <span>
-              <Button onClick={() => onRefreshTable()} shape="circle" icon={<ReloadOutlined />} />
+              <Button onClick={() => onRefreshTable()} icon={<ReloadOutlined />} />
             </span>
           </div>
         </Col>
