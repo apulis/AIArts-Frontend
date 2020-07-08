@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader } from 'antd';
-import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import { generateKey } from '../ModelTraining/Submit';
@@ -68,7 +68,7 @@ const SubmitModelTraining = () => {
   ]
 
   const commonLayout = {
-    labelCol: { span: 3 },
+    labelCol: { span: 4 },
     wrapperCol: { span: 8 }
   }
   return (
@@ -82,7 +82,7 @@ const SubmitModelTraining = () => {
         <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
           <Input placeholder="请输入作业名称" />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
+        <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
         </FormItem>
       </Form>
@@ -98,10 +98,14 @@ const SubmitModelTraining = () => {
             }
           </Select>
         </FormItem>
-        <FormItem {...commonLayout} name="modelName" label="使用模型" rules={[{ required: true }]}>
-          <Input placeholder="请输入使用模型" />
+        <FormItem labelCol={{span: 4}} label="使用模型">
+          <FormItem name="modelName" noStyle rules={[{ required: true }]}>
+            
+            <Input placeholder="请输入使用模型" style={{width: '260px'}} />
+          </FormItem>
+          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />}></Button>
         </FormItem>
-        <FormItem label="作业参数" labelCol={{ span: 3 }} >
+        <FormItem label="作业参数" labelCol={{ span: 4 }} >
           {
             runningParams.map((param, index) => {
               return (

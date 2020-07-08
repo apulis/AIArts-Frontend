@@ -23,7 +23,7 @@ const DataSetDetail = () => {
     if (code === 0 && data) {
       setData([data.dataset]);
     } else {
-      message.error(msg);
+      msg && message.error(msg);
     }
     setLoading(false);
   };

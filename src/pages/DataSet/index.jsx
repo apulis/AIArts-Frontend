@@ -39,7 +39,7 @@ const DataSetList = () => {
         total: total,
       });
     } else {
-      message.error(msg);
+      msg && message.error(msg);
     }
     setLoading(false);
   };
@@ -51,7 +51,7 @@ const DataSetList = () => {
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = null, text = '';
-      // values.Creator = 'zzzz'
+      values.Creator = 'zzzz'
       setBtnLoading(true);
       if (modalType) {
         text = '编辑';
@@ -63,14 +63,13 @@ const DataSetList = () => {
         text = '新增';
         res = await add(values);
       }
-      console.log('msgmsg', res)
       const { code, msg } = res;
       if (code === 0) {
         getData();
         message.success(`${text}成功！`);
         setModalFlag(false);
       } else {
-        message.error(code === 30005 ? '该存储路径下没有可用的数据集！' : msg);
+        msg && message.error(msg);
       }
       setBtnLoading(false);
     });
@@ -132,7 +131,7 @@ const DataSetList = () => {
         if (code === 0) {
           getData();
         } else {
-          message.error(msg);
+          msg && message.error(msg);
         }
       },
       onCancel() {}

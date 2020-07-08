@@ -4,11 +4,12 @@
  */
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
-import { history } from 'umi';
+
+import { USER_DASHBOARD_PATH } from '@/utils/const';
 
 const prefix = '/ai_arts/api'
 
-const codeMessage = {
+export const codeMessage = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
   202: '一个请求已经进入后台排队（异步任务）。',
@@ -30,14 +31,28 @@ const codeMessage = {
  * 异常处理程序
  */
 
-const errorHandler = (error) => {
+export const errorHandler = async (error) => {
   const { response } = error;
+  const _response = await response.json();
+  const CODE = _response.code;
+  if (CODE === 30005) {
+    message.error('该存储路径下没有可用的数据集！');
+    return response;
+  } else if (CODE === 20001) {
+    message.error('请求参数错误！');
+    return response;
+  }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     if (status === 401) {
       const href = window.location.href;
-      window.location.href = '/custom-user-dashboard/user/login?' + encodeURIComponent(href);
+      if (!/localhost/.test(href)) {
+        const queryString = stringify({
+          redirect: encodeURIComponent(window.location.href),
+        });
+        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+      }
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,
@@ -48,11 +63,6 @@ const errorHandler = (error) => {
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
-  } else if (response.code !== 0) {
-    notification.error({
-      description: response.msg,
-      message: '请求错误',
-    })
   }
   return response;
 };
@@ -83,7 +93,6 @@ request.interceptors.request.use(async (url, options) => {
 });
 
 request.interceptors.response.use((response, options) => {
-  if (options.method === 'DELETE' && response.status === 200) message.success('Deleted Successfully！');
   return response;
 });
 

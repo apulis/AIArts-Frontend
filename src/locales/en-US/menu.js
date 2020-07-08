@@ -51,5 +51,6 @@ export default {
   'menu.editor.koni': 'Koni Editor',
   'menu.modelManagement': 'Model Management',
   'menu.inferenceService': 'Inference Service',
-  'menu.inferenceService.list': 'Inference Service List'
+  'menu.inferenceService.list': 'Inference Service List',
+  'menu.modelTraining': 'Model Training'
 };
