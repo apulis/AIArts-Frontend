@@ -63,5 +63,5 @@ function getTrainingJobs(req, res, u) {
 }
 
 export default {
-  'GET /api/jobs': getTrainingJobs
+  'GET /ai_arts/api/jobs': getTrainingJobs
 };

@@ -17,7 +17,7 @@ const AddModalForm = (props, ref) => {
   const uploadProps = {
     name: 'data',
     multiple: true,
-    action: '/api/dataset/upload',
+    action: '/ai_arts/api/files/upload/dataset',
     onChange(info) {
       const { status } = info.file;
       setBtn(true);

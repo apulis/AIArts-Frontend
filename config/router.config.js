@@ -127,27 +127,16 @@ export default [
             path: '/model-training/list',
             name: '模型训练',
             icon: 'FireOutlined',
-            component: './ModelTraining/List'
-            // routes: [
-            //   {
-            //     path: '/model-training/list',
-            //     name: '模型列表',
-            //     component: './ModelTraining/List',
-            //   },
-            //   {
-            //     path: '/model-training/submit',
-            //     // name: '创建模型作业',
-            //     component: './ModelTraining',
-            //   },
-            //   {
-            //     path: '/model-training/:id/detail',
-            //     component: './ModelTraining/detail',
-            //   },
-            // ]
+            component: './ModelTraining/List',
           },
           {
             path: '/model-training/submit',
-            component: './ModelTraining',
+            // name: '创建模型作业',
+            component: './ModelTraining/Submit',
+          },
+          {
+            path: '/model-training/:id/detail',
+            component: './ModelTraining/Detail',
           },
           {
             component: '404',
