@@ -16,8 +16,10 @@ const CodeList = (props) => {
   }, [pageParams])// pageParams改变触发的componentwillUpdate()
   const renderData = async () => {
     setLoading(true);
-    const { page, count } = pageParams;
-    const { code, data, msg, total } = await getCodes(page, count);
+    const { page, pageSize } = pageParams;
+    const obj = await getCodes(page, pageSize);
+    const { code, data, msg, total } = obj
+    debugger
     if (code === 0) {
       setCodes({
         data: data,
@@ -95,7 +97,7 @@ const CodeList = (props) => {
     alert('flash Data')
   }
   const onPageParamsChange = (page, size) => {
-    setPageParams({ page: page, size: size });
+    setPageParams({ page: page, pageSize: size });
   };
   return (
     <PageHeaderWrapper>
@@ -126,8 +128,8 @@ const CodeList = (props) => {
         rowKey={(r, i) => `${i}`}
         pagination={{
           total: codes.data.total,
-          showQuickJumper: true,
           showTotal: (total) => `总共 ${total} 条`,
+          showQuickJumper: true,
           showSizeChanger: true,
           onChange: onPageParamsChange,
           onShowSizeChange: onPageParamsChange,
