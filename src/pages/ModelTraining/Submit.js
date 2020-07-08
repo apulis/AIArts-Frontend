@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader } from 'antd';
+import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader, Modal } from 'antd';
 import { history } from 'umi';
-import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 
@@ -25,10 +25,13 @@ export const generateKey = () => {
 const ModelTraining = () => {
   const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
   const [form] = useForm();
+  const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
+  const [bootFileModalVisible, setBootFileModalVisible] = useState(false);
+  const [outputPathModalVisible, setOutputPathModalVisible] = useState(false);
+  const [trainingDataSetModalVisible, setTrainingDataSetModalVisible] = useState(false);
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const handleSubmit = async () => {
     const values = await validateFields();
-    console.log('values', values)
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     if (res.code === 0) {
@@ -82,6 +85,9 @@ const ModelTraining = () => {
     labelCol: { span: 3 }, 
     wrapperCol: { span: 8 }
   }
+  const onSelectCodeDir = () => {
+
+  }
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -92,7 +98,7 @@ const ModelTraining = () => {
       />
       <Form form={form}>
         <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
-          <Input placeholder="请输入作业名称" />
+          <Input style={{ width: 260 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
@@ -102,7 +108,7 @@ const ModelTraining = () => {
       <div className="ant-page-header-heading-title" style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</div>
       <Form form={form}>
         <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
-          <Select>
+          <Select style={{ width: 260 }} >
             {
               frameWorks.map(f => (
                 <Option value={f.value}>{f.name}</Option>
@@ -110,17 +116,36 @@ const ModelTraining = () => {
             }
           </Select>
         </FormItem>
-        <FormItem {...commonLayout} label="代码目录" name="codeDir" rules={[{ required: true }]}>
-          <Input />
+        <FormItem {...commonLayout} label="代码目录">
+          <FormItem
+            name="codeDir"
+            noStyle
+          >
+            <Input style={{ width: 260 }} />
+          </FormItem>
+          <Button style={{marginLeft: '15px', display: 'inline-block'}} onClick={() => setCodeDirModalVisible(true)} icon={<FolderOpenOutlined />}></Button>
         </FormItem>
-        <FormItem {...commonLayout} label="启动文件" name="bootFile" rules={[{ required: true }]}>
-          <Input />
+        <FormItem {...commonLayout} label="启动文件">
+          
+          <FormItem name="bootFile" noStyle>
+            <Input style={{ width: 260 }} />
+          </FormItem>
+          
+          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />} onClick={() => setBootFileModalVisible(true)}></Button>
         </FormItem>
-        <FormItem {...commonLayout} label="输出路径" name="outputPath" style={{marginTop: '50px'}} rules={[{ required: true }]}>
-          <Input />
+        <FormItem className="ant-form-item-required" {...commonLayout} label="输出路径" style={{marginTop: '50px'}}>
+          
+          <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} noStyle>
+            <Input style={{ width: 260 }} />
+          </FormItem>
+          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />} onClick={() => setOutputPathModalVisible(true)}></Button>
         </FormItem>
-        <FormItem {...commonLayout} label="训练数据集" name="trainingDataSet" rules={[{ required: true }]}>
-          <Input />
+        <FormItem {...commonLayout} label="训练数据集">
+          
+          <FormItem name="trainingDataSet" rules={[{ required: true, message: '请输入训练数据集' }]} noStyle>
+            <Input style={{ width: 260 }} />
+          </FormItem>
+          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined onClick={() => setTrainingDataSetModalVisible(true)} />}></Button>
         </FormItem>
         <FormItem label="运行参数" labelCol={{ span: 3 }} >
           {
@@ -147,7 +172,7 @@ const ModelTraining = () => {
           </div>
         </FormItem>
         <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{width: '200px'}}>
+          <Select style={{width: '260px'}}>
             {
               frameWorks.map(f => (
                 <Option value={f.value}>{f.name}</Option>
@@ -156,6 +181,34 @@ const ModelTraining = () => {
           </Select>
         </FormItem>
       </Form>
+      <Modal
+        visible={bootFileModalVisible}
+        forceRender
+        onCancel={() => setBootFileModalVisible(false)}
+      >
+
+      </Modal>
+      <Modal
+        visible={codeDirModalVisible}
+        forceRender
+        onCancel={() => setCodeDirModalVisible(false)}
+      >
+
+      </Modal>
+      <Modal
+        visible={outputPathModalVisible}
+        forceRender
+        onCancel={() => setOutputPathModalVisible(false)}
+      >
+
+      </Modal>
+      <Modal
+        visible={trainingDataSetModalVisible}
+        forceRender
+        onCancel={() => setTrainingDataSetModalVisible(false)}
+      >
+
+      </Modal>
       <Button type="primary" style={{float: 'right'}} onClick={handleSubmit}>立即创建</Button>
     </div>
     
