@@ -31,7 +31,7 @@ export default [
           {
             path: '/CodeList',
             name: '代码开发',
-            icon: 'CodepenOutlined',
+            icon: 'EditOutlined',
             component: './CodeDevelopment/CodeList'
           },  
           {
