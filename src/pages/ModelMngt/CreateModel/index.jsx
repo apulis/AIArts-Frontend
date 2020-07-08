@@ -101,29 +101,6 @@ const CreateModel = props => {
             </Form.Item>
           </Form.Item>
           <Form.Item
-            {...layout}
-            name='fileWrapper'
-            label={<span>
-              上传压缩包&nbsp;
-            <Tooltip title="上传压缩包提示信息">
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </span>}
-            rules={[{ required: true, message: '文件不能为空!' }]}
-          >
-            <Form.Item
-              name="modelFile" 
-              style={{ display: 'inline-block', width: 'calc(95% - 4px)' }}              
-            >
-              <Input placeholder="请选择模型文件压缩包" />
-            </Form.Item>
-            <Form.Item
-              style={{ display: 'inline-block', width: 'calc(5% - 4px)', margin: '0 0 0 8px' }}
-            >
-              <Button icon={<PlusOutlined />} onClick={showJobModal}>选择文件</Button>
-            </Form.Item>
-          </Form.Item>
-          <Form.Item
               name="jobId"
               hidden            
             >
