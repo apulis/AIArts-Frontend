@@ -3,7 +3,7 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import { extend } from 'umi-request';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 
 import { USER_DASHBOARD_PATH } from '@/utils/const';
 
@@ -31,8 +31,17 @@ export const codeMessage = {
  * 异常处理程序
  */
 
-export const errorHandler = (error) => {
+export const errorHandler = async (error) => {
   const { response } = error;
+  const _response = await response.json();
+  const CODE = _response.code;
+  if (CODE === 30005) {
+    message.error('该存储路径下没有可用的数据集！');
+    return response;
+  } else if (CODE === 20001) {
+    message.error('请求参数错误！');
+    return response;
+  }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
@@ -54,11 +63,6 @@ export const errorHandler = (error) => {
       description: '您的网络发生异常，无法连接服务器',
       message: '网络异常',
     });
-  } else if (response.code !== 0) {
-    notification.error({
-      description: response.msg,
-      message: '请求错误',
-    })
   }
   return response;
 };
