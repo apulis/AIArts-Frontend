@@ -39,46 +39,6 @@ export default [
             component: './CodeDevelopment/CodeCreate'
           },  
           {
-            path: '/ModelList',
-            name: 'modelManagement',
-            icon: 'CodepenOutlined',
-            component: './ModelMngt/ModelList'
-          },
-          {
-            path: '/ModelMngt/CreateModel',
-            component: './ModelMngt/CreateModel'
-          },
-          {
-            path: '/Inference/list',
-            name: 'inferenceService',
-            icon: 'BulbOutlined',
-            component: './InferenceService/InferenceList'
-            // routes: [
-            //   {
-            //     path: '/Inference/list',
-            //     name: 'list',
-            //     component: './InferenceService/InferenceList'
-            //   },
-            //   {
-            //     path: '/Inference/submit',
-            //     // name: '提交推理服务',
-            //     component: './InferenceService/Submit',
-            //   },
-            //   {
-            //     path: '/Inference/:id/detail',
-            //     component: './InferenceService/Detail',
-            //   },
-            // ]
-          },
-          {
-            path: '/Inference/submit',
-            component: './InferenceService/Submit',
-          },
-          {
-            path: '/Inference/:id/detail',
-            component: './InferenceService/Detail',
-          },                        
-          {
             path: '/dataManage',
             name: 'DataManage',
             icon: 'ReadOutlined',
@@ -99,30 +59,6 @@ export default [
               },
             ],
           },
-          // {
-          //   name: 'account',
-          //   icon: 'user',
-          //   path: '/account',
-          //   routes: [
-          //     {
-          //       name: 'center',
-          //       icon: 'smile',
-          //       path: '/account/center',
-          //       component: './account/center',
-          //     },
-          //     {
-          //       name: 'settings',
-          //       icon: 'smile',
-          //       path: '/account/settings',
-          //       component: './account/settings',
-          //     },
-          //   ],
-          // },
-          {
-            path: '/',
-            redirect: '/CodeList',
-          },
-          
           {
             path: '/model-training/list',
             name: '模型训练',
@@ -131,16 +67,39 @@ export default [
           },
           {
             path: '/model-training/submit',
-            // name: '创建模型作业',
             component: './ModelTraining/Submit',
           },
           {
             path: '/model-training/:id/detail',
             component: './ModelTraining/Detail',
-          },  
+          },          
+          {
+            path: '/ModelList',
+            name: 'modelManagement',
+            icon: 'CodepenOutlined',
+            component: './ModelMngt/ModelList'
+          },
+          {
+            path: '/ModelMngt/CreateModel',
+            component: './ModelMngt/CreateModel'
+          },
+          {
+            path: '/Inference/list',
+            name: 'inferenceService',
+            icon: 'BulbOutlined',
+            component: './InferenceService/InferenceList'
+          },
+          {
+            path: '/Inference/submit',
+            component: './InferenceService/Submit',
+          },
+          {
+            path: '/Inference/:id/detail',
+            component: './InferenceService/Detail',
+          },                        
           {
             path: '/',
-            redirect: '/dataSetManage',
+            redirect: '/CodeList',
           },
           {
             component: '404',
