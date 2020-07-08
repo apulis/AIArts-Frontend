@@ -3,8 +3,9 @@
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
 import { extend } from 'umi-request';
-import { notification, message } from 'antd';
-import { history } from 'umi';
+import { notification } from 'antd';
+
+import { USER_DASHBOARD_PATH } from '@/utils/const';
 
 const prefix = '/ai_arts/api'
 
@@ -37,7 +38,12 @@ export const errorHandler = (error) => {
     const { status, url } = response;
     if (status === 401) {
       const href = window.location.href;
-      window.location.href = '/custom-user-dashboard/user/login?' + encodeURIComponent(href);
+      if (!/localhost/.test(href)) {
+        const queryString = stringify({
+          redirect: encodeURIComponent(window.location.href),
+        });
+        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+      }
     }
     notification.error({
       message: `请求错误 ${status}: ${url}`,
@@ -83,7 +89,6 @@ request.interceptors.request.use(async (url, options) => {
 });
 
 request.interceptors.response.use((response, options) => {
-  if (options.method === 'DELETE' && response.status === 200) message.success('Deleted Successfully！');
   return response;
 });
 
