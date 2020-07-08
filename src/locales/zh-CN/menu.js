@@ -18,6 +18,7 @@ export default {
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
+  'menu.codeDevelopment': '代码开发',
   'menu.modelManagement': '模型管理',
   'menu.inferenceService': '推理服务',
   'menu.inferenceService.list': '推理服务列表'

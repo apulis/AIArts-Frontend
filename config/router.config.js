@@ -30,8 +30,8 @@ export default [
         routes: [
           {
             path: '/CodeList',
-            name: '代码开发',
-            icon: 'CodepenOutlined',
+            name: 'codeDevelopment',
+            icon: 'EditOutlined',
             component: './CodeDevelopment/CodeList'
           },  
           {
