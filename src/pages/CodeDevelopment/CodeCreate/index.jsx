@@ -33,7 +33,7 @@ const CodeCreate = () => {
       <div style={{ margin: "50px", width:"600px" }}>
         <Form
           {...formItemLayout}
-          labelAlign='left'
+          labelAlign='right'
         >
           <Form.Item
             label="开发环境名称"
@@ -85,7 +85,7 @@ const CodeCreate = () => {
         </Form>
       </div>
       <Row style={{ float: "right" }}>
-          <Button type="primary" danger onClick={handleClick}>立即创建</Button>
+          <Button type="primary" onClick={handleClick}>立即创建</Button>
         </Row>
     </>
   )
