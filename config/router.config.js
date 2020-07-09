@@ -61,7 +61,7 @@ export default [
           },
           {
             path: '/model-training/list',
-            name: '模型训练',
+            name: 'modelTraining',
             icon: 'FireOutlined',
             component: './ModelTraining/List',
           },

@@ -11,7 +11,7 @@ export async function getDatasetDetail(id) {
 }
 
 export async function edit(id, data) {
-  return await request(`/dataset/${id}`, {
+  return await request(`/datasets/${id}`, {
     method: 'POST',
     data: data,
   });
@@ -29,7 +29,7 @@ export async function upload(data) {
 }
 
 export async function add(data) {
-  return await request(`/dataset`, {
+  return await request(`/datasets`, {
     method: 'POST',
     data: data,
   });

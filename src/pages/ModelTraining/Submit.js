@@ -97,7 +97,7 @@ const ModelTraining = () => {
         subTitle={<Button onClick={() => history.push('/model-training/list')}>返回训练作业列表</Button>}
       />
       <Form form={form}>
-        <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
+        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="workName" label="作业名称" rules={[{ required: true }]}>
           <Input style={{ width: 260 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
@@ -116,7 +116,9 @@ const ModelTraining = () => {
             }
           </Select>
         </FormItem>
-        <FormItem {...commonLayout} label="代码目录">
+        <FormItem 
+          labelCol={{ span: 3 }}
+          label="代码目录">
           <FormItem
             name="codeDir"
             noStyle
@@ -125,7 +127,7 @@ const ModelTraining = () => {
           </FormItem>
           <Button style={{marginLeft: '15px', display: 'inline-block'}} onClick={() => setCodeDirModalVisible(true)} icon={<FolderOpenOutlined />}></Button>
         </FormItem>
-        <FormItem {...commonLayout} label="启动文件">
+        <FormItem labelCol={{ span: 3 }}label="启动文件">
           
           <FormItem name="bootFile" noStyle>
             <Input style={{ width: 260 }} />
@@ -133,14 +135,14 @@ const ModelTraining = () => {
           
           <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />} onClick={() => setBootFileModalVisible(true)}></Button>
         </FormItem>
-        <FormItem className="ant-form-item-required" {...commonLayout} label="输出路径" style={{marginTop: '50px'}}>
+        <FormItem className="ant-form-item-required" labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>
           
           <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} noStyle>
             <Input style={{ width: 260 }} />
           </FormItem>
           <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />} onClick={() => setOutputPathModalVisible(true)}></Button>
         </FormItem>
-        <FormItem {...commonLayout} label="训练数据集">
+        <FormItem labelCol={{ span: 3 }} label="训练数据集">
           
           <FormItem name="trainingDataSet" rules={[{ required: true, message: '请输入训练数据集' }]} noStyle>
             <Input style={{ width: 260 }} />
