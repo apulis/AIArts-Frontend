@@ -33,7 +33,18 @@ export const codeMessage = {
 
 export const errorHandler = async (error) => {
   const { response } = error;
-  const _response = await response.json();
+  let _response;
+  try {
+    _response = await response.json();
+  } catch (e) {
+    notification.error({
+      message: '请求错误',
+      description: '请稍后再试',
+    });
+  }
+  if (!_response) {
+    return {};
+  }
   const CODE = _response.code;
   if (CODE === 30005) {
     message.error('该存储路径下没有可用的数据集！');
@@ -57,11 +68,6 @@ export const errorHandler = async (error) => {
     notification.error({
       message: `请求错误 ${status}: ${url}`,
       description: errorText,
-    });
-  } else if (!response) {
-    notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
     });
   }
   return response;
