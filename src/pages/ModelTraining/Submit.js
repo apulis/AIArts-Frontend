@@ -32,6 +32,11 @@ const ModelTraining = () => {
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const handleSubmit = async () => {
     const values = await validateFields();
+    let params = {}
+    values.params && values.params.forEach(p => {
+      params[p.key] = p.value;
+    })
+    values.params = params;
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     if (res.code === 0) {
@@ -56,7 +61,7 @@ const ModelTraining = () => {
       callback();
       return;
     }
-    const runningParams = await getFieldValue('runningParams');
+    const runningParams = await getFieldValue('params');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
         console.log(r[propertyName], value)
@@ -105,7 +110,7 @@ const ModelTraining = () => {
         subTitle={<Button onClick={() => history.push('/model-training/list')}>返回训练作业列表</Button>}
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="workName" label="作业名称" rules={[{ required: true }]}>
+        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }]}>
           <Input style={{ width: 260 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
@@ -128,7 +133,7 @@ const ModelTraining = () => {
           labelCol={{ span: 3 }}
           label="代码目录">
           <FormItem
-            name="codeDir"
+            name="codePath"
             noStyle
           >
             <Input style={{ width: 260 }} />
@@ -137,7 +142,7 @@ const ModelTraining = () => {
         </FormItem>
         <FormItem labelCol={{ span: 3 }}label="启动文件">
           
-          <FormItem name="bootFile" noStyle>
+          <FormItem name="startupFile" noStyle>
             <Input style={{ width: 260 }} />
           </FormItem>
           
@@ -152,7 +157,7 @@ const ModelTraining = () => {
         </FormItem>
         <FormItem labelCol={{ span: 3 }} label="训练数据集">
           
-          <FormItem name="trainingDataSet" rules={[{ required: true, message: '请输入训练数据集' }]} noStyle>
+          <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} noStyle>
             <Input style={{ width: 260 }} />
           </FormItem>
           <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined onClick={() => setTrainingDataSetModalVisible(true)} />}></Button>
@@ -162,11 +167,11 @@ const ModelTraining = () => {
             runningParams.map((param, index) => {
               return (
                 <>
-                  <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                  <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                     <Input />
                   </FormItem>
                   <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
-                  <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['runningParams', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
+                  <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['params', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
                     <Input />
                   </FormItem>
                   {
@@ -181,11 +186,20 @@ const ModelTraining = () => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{width: '260px'}}>
             {
               frameWorks.map(f => (
                 <Option value={f.value}>{f.name}</Option>
+              ))
+            }
+          </Select>
+        </FormItem>
+        <FormItem label="计算节点个数" name="deviceNum" {...commonLayout} rules={[{ required: true }]}>
+          <Select style={{width: '260px'}}>
+            {
+              [1, 2, 4, 8].map(f => (
+                <Option value={f}>{f}</Option>
               ))
             }
           </Select>
