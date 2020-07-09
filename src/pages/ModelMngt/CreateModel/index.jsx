@@ -84,6 +84,14 @@ const CreateModel = props => {
           </Form.Item>
           <Form.Item
             {...layout}
+            name="storePath"
+            label="存储路径"
+            rules={[{ required: true, message: '存储路径不能为空!' }]}
+          >
+            <Input placeholder="请输入存储路径" />
+          </Form.Item>          
+          <Form.Item
+            {...layout}
             name='jobWrapper'
             label="选择训练作业"
             rules={[{ required: true, message: '训练作业不能为空!' }]}
