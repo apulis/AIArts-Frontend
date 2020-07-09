@@ -29,9 +29,8 @@ const DataSetList = () => {
   }, [pageParams]);
 
   const getData = async () => {
-    const { page, count } = pageParams;
     setLoading(true);
-    const { code, data, msg } = await getDatasets(page, count);
+    const { code, data, msg } = await getDatasets(pageParams);
     if (code === 0 && data) {
       const { total, datasets } = data;
       setDataSets({
@@ -45,7 +44,7 @@ const DataSetList = () => {
   };
 
   const pageParamsChange = (page, count) => {
-    setPageParams({ page: page, count: count });
+    setPageParams({ pageNum: page, pageSize: count });
   };
 
   const onSubmit = () => {
@@ -93,7 +92,7 @@ const DataSetList = () => {
     },
     {
       title: '更新时间',
-      dataIndex: 'updated_at',
+      dataIndex: 'updatedAt',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
     },
     {

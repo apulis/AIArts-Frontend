@@ -12,16 +12,20 @@ const queryString = stringify({
 export default () => {
   
   return (
-    <Result
-      status="403"
-      style={{
-        background: 'none',
-      }}
-      subTitle="尚未登录"
-      extra={
-        <Button href={USER_DASHBOARD_PATH + queryString} type="primary">
-          去登录
-        </Button>
-      }
-    />
+    <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+      <Result
+        status="403"
+        style={{
+          background: 'none',
+          marginTop: '-200px'
+        }}
+        subTitle="尚未登录"
+        extra={
+          <Button href={USER_DASHBOARD_PATH + '?' + queryString} type="primary">
+            去登录
+          </Button>
+        }
+      />
+    </div>
+    
 )};

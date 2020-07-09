@@ -52,14 +52,14 @@ const ModelList = props => {
     dispatch({
       type: 'modelList/fetch',
       payload: {
-        current: pageParams.page,
-        pageSize: pageParams.size
+        pageNum: pageParams.pageNum,
+        pageSize: pageParams.pageSize
       },
     });
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
-    setPageParams({ page: page, size: size });
+    setPageParams({ pageNum: page, pageSize: size });
   };
 
   const columns = [
@@ -78,26 +78,26 @@ const ModelList = props => {
     },
     {
       title: '引擎类型',
-      dataIndex: 'engineType',
+      dataIndex: 'type',
       ellipsis: true,
       width: 100,
     },
     {
       title: '存储路径',
-      dataIndex: 'storePath',
+      dataIndex: 'path',
       ellipsis: true,
       width: 100,
     },
     {
       title: '创建时间',
-      dataIndex: 'createTime',
+      dataIndex: 'createdAt',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
       ellipsis: true,
       width: 150,
     },
     {
       title: '描述',
-      dataIndex: 'desc',
+      dataIndex: 'description',
       ellipsis: true,
       width: 150
     },
@@ -146,8 +146,8 @@ const ModelList = props => {
     dispatch({
       type: 'modelList/fetch',
       payload: {
-        current: pageParams.page,
-        pageSize: pageParams.size
+        pageNum: pageParams.pageNum,
+        pageSize: pageParams.pageSize
       },
     });
   };
@@ -229,7 +229,7 @@ const ModelList = props => {
           <Table
             columns={columns}
             dataSource={data.list}
-            rowKey={(r, i) => `${i}`}
+            rowKey='id'
             pagination={{
               total: data.pagination.total,
               showQuickJumper: true,

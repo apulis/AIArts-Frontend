@@ -93,6 +93,7 @@ request.interceptors.request.use(async (url, options) => {
 });
 
 request.interceptors.response.use((response, options) => {
+  if (options.method === 'DELETE' && response.status === 200) message.success('删除成功！');
   return response;
 });
 
