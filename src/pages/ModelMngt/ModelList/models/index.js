@@ -34,7 +34,15 @@ export default {
         // console.log(code, data, msg)
         let error = null
         if (code === 0) {
-          const result = normalizeTableResult(data)
+          // const result = normalizeTableResult(data)
+          const result = {
+            list: data.models || [],
+            pagination: {
+              current: data.pageNum || 1,
+              pageSize: data.pageSize || 10,
+              total: data.total
+            }
+          }
           yield put({
             type: 'save',
             payload: result
