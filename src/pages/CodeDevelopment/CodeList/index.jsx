@@ -29,7 +29,6 @@ const CodeList = (props) => {
     }
     setLoading(false);
   };
-  console.log(codes)
   const columns = [
     {
       title: '开发环境名称',
@@ -111,7 +110,7 @@ const CodeList = (props) => {
         <Col span={12}>
           <div style={{ float: "right" }}>
             <Search
-              placeholder="输入开发名称查询"
+              placeholder="输入开发环境名称查询"
               onSearch={value => onSearch(value)}
               style={{ width: 200 }}
             />
@@ -134,7 +133,6 @@ const CodeList = (props) => {
           onShowSizeChange: onPageParamsChange,
         }}
         loading={loading} />
-      {/* <h2>s</h2> */}
     </PageHeaderWrapper>
   )
 

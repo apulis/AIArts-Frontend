@@ -8,21 +8,73 @@ const CodeCreate = () => {
   const { TextArea } = Input;
   const formItemLayout = {
     labelCol: {
-      xs: { span: 24 },
-      sm: { span: 8 },
+      span: 4
     },
     wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 16 },
+      span: 12
     },
   };
-  const { validateFields, getFieldsValue } = form;
-  const handleClick = async () => {
-    const result = await validateFields();// 提交前表单验证
-    alert(result.toString());
+  const buttonItemLayout = {
+    wrapperCol: {
+      span: 2,
+      offset: 22
+    }
+  }
+  const { validateFields, getFieldValue,resetFields} = form;
+
+  const engineType1 = [
+  {
+    name:'one',
+    value:'one'
+  },
+  {
+    name:'two',
+    value:'two'
+  },
+  {
+    name:'three',
+    value:'three'
+  }]
+  const engineType2 = [
+    {
+      name:'one',
+      value:'one'
+    },
+    {
+      name:'two',
+      value:'two'
+    },
+    {
+      name:'three',
+      value:'three'
+    }]
+  const nodeSpeciation = [
+    {
+      name:'one',
+      value:'one'
+    },
+    {
+      name:'two',
+      value:'two'
+    },
+    {
+      name:'three',
+      value:'three'
+    }]
+
+  const handleSubmit = async () => {
+    const values = await validateFields();// 提交前表单验证
+    console.log('result',values);
+    // if success
+    resetFields()
   }
   const handleChange = (value) => {
     console.log(`selected ${value}`)
+  }
+  const validateMessages = {
+    required: '${label} 是必填项!',
+    types: {
+    },
   }
   return (
     <>
@@ -30,15 +82,18 @@ const CodeCreate = () => {
         onBack={() => history.push('/CodeList')}
         title="返回代码开发">
       </PageHeader>
-      <div style={{ margin: "50px", width:"600px" }}>
+      <div style={{ margin: "50px" }}>
         <Form
           {...formItemLayout}
           labelAlign='right'
+          onFinish = {handleSubmit}
+          validateMessages={validateMessages}
+          form={form}
         >
           <Form.Item
             label="开发环境名称"
-            name="username"
-            rules={[{ required: true, message: '请输入开发环境名称' }]}
+            name="devName"
+            rules={[{ required: true}]}
           >
             <Input placeholder="请输入开发环境名称" />
           </Form.Item>
@@ -56,13 +111,17 @@ const CodeCreate = () => {
             label="引擎类型"
             name="engineType"
           >
-            <Select defaultValue="tensorflow" style={{ width: "50%" }} onChange={handleChange}>
-              <Option value="what">what</Option>
-              <Option value="tensorflow">tensorflow</Option>
+            <Select style={{ width: "50%" }} onChange={handleChange}>
+              {
+                engineType1.map((item)=>( <Option value={item.value}>{item.name}</Option>))
+              }
             </Select>
-            <Select defaultValue="tf-1.8.0-py2.7" style={{ width: "50%" }} onChange={handleChange}>
-              <Option value="tf-1.8.0-py2.7">tf-1.8.0-py2.7</Option>
-              <Option value="tf-1.8.0-py3.7">tf-1.8.0-py3.7</Option>
+            <Select style={{ width: "50%" }} onChange={handleChange}>
+            {
+                engineType2.map((item)=>(
+                <Option value={item.value}>{item.name}</Option>
+                ))
+              }
             </Select>
           </Form.Item>
           <Form.Item
@@ -73,20 +132,22 @@ const CodeCreate = () => {
               </Tooltip>
             </span>}
             name="nodeSpecification"
-            rules={[{ required: true }]}
+            rules={[{ required: true,message:'请选择 计算节点规格'}]}
           >
             <Select style={{ width: "50%" }} onChange={handleChange}>
-              <Option value="one">one</Option>
-              <Option value="two">two</Option>
-              <Option value="three">three</Option>
-              <Option value="four">four</Option>
+            {
+                nodeSpeciation.map((item)=>(
+                <Option value={item.value}>{item.name}</Option>
+                ))
+              }
             </Select>
+          </Form.Item>
+          <Form.Item {...buttonItemLayout}>
+            <Button type="primary" htmlType="submit">立即创建</Button>
           </Form.Item>
         </Form>
       </div>
-      <Row style={{ float: "right" }}>
-          <Button type="primary" onClick={handleClick}>立即创建</Button>
-        </Row>
+
     </>
   )
 
