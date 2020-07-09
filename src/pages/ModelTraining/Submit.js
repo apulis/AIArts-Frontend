@@ -48,6 +48,14 @@ const ModelTraining = () => {
   }
   const validateRunningParams = async (index, propertyName, ...args) => {
     const [rule, value, callback] = [...args];
+    if (propertyName === 'value') {
+      callback();
+      return;
+    }
+    if (!value) {
+      callback();
+      return;
+    }
     const runningParams = await getFieldValue('runningParams');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
