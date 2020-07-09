@@ -20,51 +20,51 @@ const CodeCreate = () => {
       offset: 22
     }
   }
-  const { validateFields, getFieldValue,resetFields} = form;
-
-  const engineType1 = [
-  {
-    name:'one',
-    value:'one'
-  },
-  {
-    name:'two',
-    value:'two'
-  },
-  {
-    name:'three',
-    value:'three'
-  }]
-  const engineType2 = [
+  const { validateFields, getFieldValue, resetFields } = form;
+  const codeStorePath = 'xxxxxxxxxxx'
+  const deviceType = [
     {
-      name:'one',
-      value:'one'
+      name: 'one',
+      value: 'one'
     },
     {
-      name:'two',
-      value:'two'
+      name: 'two',
+      value: 'two'
     },
     {
-      name:'three',
-      value:'three'
+      name: 'three',
+      value: 'three'
     }]
-  const nodeSpeciation = [
+  const deviceNum = [
     {
-      name:'one',
-      value:'one'
+      name: 'one',
+      value: 'one'
     },
     {
-      name:'two',
-      value:'two'
+      name: 'two',
+      value: 'two'
     },
     {
-      name:'three',
-      value:'three'
+      name: 'three',
+      value: 'three'
+    }]
+  const engineType = [
+    {
+      name: 'one',
+      value: 'one'
+    },
+    {
+      name: 'two',
+      value: 'two'
+    },
+    {
+      name: 'three',
+      value: 'three'
     }]
 
   const handleSubmit = async () => {
     const values = await validateFields();// 提交前表单验证
-    console.log('result',values);
+    console.log('result', values);
     // if success
     resetFields()
   }
@@ -86,14 +86,14 @@ const CodeCreate = () => {
         <Form
           {...formItemLayout}
           labelAlign='right'
-          onFinish = {handleSubmit}
+          onFinish={handleSubmit}
           validateMessages={validateMessages}
           form={form}
         >
           <Form.Item
             label="开发环境名称"
             name="devName"
-            rules={[{ required: true}]}
+            rules={[{ required: true }]}
           >
             <Input placeholder="请输入开发环境名称" />
           </Form.Item>
@@ -108,36 +108,46 @@ const CodeCreate = () => {
             />
           </Form.Item>
           <Form.Item
-            label="引擎类型"
-            name="engineType"
+            label="代码存储路径"
+            name="codeStorePath"
+            rules={[{ required: true }]}
           >
-            <Select style={{ width: "50%" }} onChange={handleChange}>
+            {codeStorePath}
+            <Input placeholder="代码存储路径" />
+          </Form.Item>
+          <Form.Item
+            label="设备类型"
+            name="deviceType"
+            rules={[{ required: true }]}
+          >
+            <Select defaultValue={deviceType[0].name}   style={{ width: "50%" }} onChange={handleChange}>
               {
-                engineType1.map((item)=>( <Option value={item.value}>{item.name}</Option>))
+                deviceType.map((item) => (<Option value={item.value}>{item.name}</Option>))
               }
             </Select>
-            <Select style={{ width: "50%" }} onChange={handleChange}>
-            {
-                engineType2.map((item)=>(
-                <Option value={item.value}>{item.name}</Option>
+          </Form.Item>
+          <Form.Item
+            label="设备数量"
+            name="deviceNum"
+            rules={[{ required: true }]}
+          >
+            <Select defaultValue={deviceNum[0].name} style={{ width: "50%" }} onChange={handleChange}>
+              {
+                deviceNum.map((item) => (
+                  <Option value={item.value}>{item.name}</Option>
                 ))
               }
             </Select>
           </Form.Item>
           <Form.Item
-            label={<span>
-              计算节点规格&nbsp;
-            <Tooltip title="如果没有在代码中硬编码指定设备并且没有使用MoXing API开发代码，请确保代码参数中包含“num_gpus”。">
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </span>}
-            name="nodeSpecification"
-            rules={[{ required: true,message:'请选择 计算节点规格'}]}
+            label="引擎类型"
+            name="engineType"
+            rules={[{ required: true, message: '请选择 引擎类型' }]}
           >
-            <Select style={{ width: "50%" }} onChange={handleChange}>
-            {
-                nodeSpeciation.map((item)=>(
-                <Option value={item.value}>{item.name}</Option>
+            <Select defaultValue={engineType[0].name} style={{ width: "50%" }} onChange={handleChange}>
+              {
+                engineType.map((item) => (
+                  <Option value={item.value}>{item.name}</Option>
                 ))
               }
             </Select>

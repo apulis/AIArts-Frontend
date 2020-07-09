@@ -16,13 +16,13 @@ const CodeList = (props) => {
   }, [pageParams])// pageParams改变触发的componentwillUpdate()
   const renderData = async () => {
     setLoading(true);
-    const { page, pageSize } = pageParams;
-    const obj = await getCodes(page, pageSize);
-    const { code, data, msg, total } = obj
+    const { pageNum, pageSize } = pageParams;
+    const obj = await getCodes(pageNum, pageSize);
+    const { code, data, msg } = obj
     if (code === 0) {
       setCodes({
         data: data,
-        total: total,
+        total: data.total,
       });
     } else {
       message.error(msg);
@@ -34,43 +34,33 @@ const CodeList = (props) => {
     {
       title: '开发环境名称',
       dataIndex: 'name',
-      key: 'name',
       ellipsis: true,
     },
     {
       title: '状态',
       dataIndex: 'status',
-      key: 'status',
       ellipsis: true,
     },
     {
       title: '引擎类型',
       dataIndex: 'engine',
-      key: 'engine',
       ellipsis: true,
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
       ellipsis: true,
     },
     {
       title: '代码存储目录',
       dataIndex: 'codePath',
-      key: 'codeStorePath',
       ellipsis: true,
     },
     {
       title: '描述',
       dataIndex: 'desc',
-      key: 'desc',
       ellipsis: true,
-    },
-    {
-      dataIndex: 'codeUrl',
-      key: 'codeUrl',
     },
     {
       title: '操作',
@@ -139,9 +129,8 @@ const CodeList = (props) => {
   //   },
   // ];
   const onOpen = (item) => {
-
     alert('open')
-    console.log('open', item)
+    console.log('open', item.codeUrl)
   }
   const onDelete = (item) => {
     alert('delete')
@@ -181,7 +170,7 @@ const CodeList = (props) => {
         </Col>
       </Row>
       <Table
-        dataSource={codes.data.list}
+        dataSource={codes.data.codesets}
         columns={columns}
         rowKey={(r, i) => `${i}`}
         pagination={{
