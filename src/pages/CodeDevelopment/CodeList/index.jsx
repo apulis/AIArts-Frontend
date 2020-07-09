@@ -29,11 +29,12 @@ const CodeList = (props) => {
     }
     setLoading(false);
   };
+
   const columns = [
     {
       title: '开发环境名称',
-      dataIndex: 'devName',
-      key: 'devName',
+      dataIndex: 'name',
+      key: 'name',
       ellipsis: true,
     },
     {
@@ -44,8 +45,8 @@ const CodeList = (props) => {
     },
     {
       title: '引擎类型',
-      dataIndex: 'engineType',
-      key: 'engineType',
+      dataIndex: 'engine',
+      key: 'engine',
       ellipsis: true,
     },
     {
@@ -57,7 +58,7 @@ const CodeList = (props) => {
     },
     {
       title: '代码存储目录',
-      dataIndex: 'codeStorePath',
+      dataIndex: 'codePath',
       key: 'codeStorePath',
       ellipsis: true,
     },
@@ -66,6 +67,10 @@ const CodeList = (props) => {
       dataIndex: 'desc',
       key: 'desc',
       ellipsis: true,
+    },
+    {
+      dataIndex: 'codeUrl',
+      key: 'codeUrl',
     },
     {
       title: '操作',
@@ -79,7 +84,62 @@ const CodeList = (props) => {
       },
     },
   ];
+    // const columns = [
+  //   {
+  //     title: '开发环境名称',
+  //     dataIndex: 'devName',
+  //     key: 'devName',
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     title: '状态',
+  //     dataIndex: 'status',
+  //     key: 'status',
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     title: '引擎类型',
+  //     dataIndex: 'engineType',
+  //     key: 'engineType',
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     title: '创建时间',
+  //     dataIndex: 'createTime',
+  //     key: 'createTime',
+  //     render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     title: '代码存储目录',
+  //     dataIndex: 'codeStorePath',
+  //     key: 'codeStorePath',
+  //     ellipsis: true,
+  //   },
+  //   {
+  //     title: '描述',
+  //     dataIndex: 'desc',
+  //     key: 'desc',
+  //     ellipsis: true,
+  //   },
+  //   // {
+  //   //   dataIndex: 'code_path',
+  //   //   key: 'code_path',
+  //   // },
+  //   {
+  //     title: '操作',
+  //     render: (item) => {
+  //       return (
+  //         <Space size="middle">
+  //           <a onClick={() => onOpen(item)}>打开</a>
+  //           <a onClick={() => onDelete(item)}>删除</a>
+  //         </Space>
+  //       );
+  //     },
+  //   },
+  // ];
   const onOpen = (item) => {
+
     alert('open')
     console.log('open', item)
   }

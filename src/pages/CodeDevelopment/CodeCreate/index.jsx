@@ -127,7 +127,7 @@ const CodeCreate = () => {
           <Form.Item
             label={<span>
               计算节点规格&nbsp;
-            <Tooltip title="计算节点提示信息。。。。。">
+            <Tooltip title="如果没有在代码中硬编码指定设备并且没有使用MoXing API开发代码，请确保代码参数中包含“num_gpus”。">
                 <QuestionCircleOutlined />
               </Tooltip>
             </span>}

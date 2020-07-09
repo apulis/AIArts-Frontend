@@ -11,13 +11,23 @@ const genList = (current, pageSize) => {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
       id: index,
-      devName: `debug_job_001`,
+      name: `debug_job_001`,
       status: `status`,
-      engineType: `engineType`,
-      codeStorePath: `storePath`,
+      engine: `engineType`,
+      codePath: `storePath`,
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      desc: 'Handwritten digit classification'
+      desc: 'Handwritten digit classification',
+      codeUrl:'http://xxxx'
     });
+    // tableListDataSource.push({
+    //   id: index,
+    //   devName: `debug_job_001`,
+    //   status: `status`,
+    //   engineType: `engineType`,
+    //   codeStorePath: `storePath`,
+    //   createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+    //   desc: 'Handwritten digit classification',
+    // });
   }
 
   // tableListDataSource.reverse();
@@ -33,9 +43,9 @@ function getCodes(req, res, u) {
     realUrl = req.url;
   }
 
-  const { current = 1, pageSize = 10 } = req.query;// 请求参数
+  const { pageNum = 1, pageSize = 10 } = req.query;// 请求参数
   const params = parse(realUrl, true).query;
-  let dataSource = [...tableListDataSource].slice((current - 1) * pageSize, current * pageSize);
+  let dataSource = [...tableListDataSource].slice((pageNum - 1) * pageSize, pageNum * pageSize);
 
   if (params.sorter) {
     const s = params.sorter.split('_');
@@ -55,12 +65,8 @@ function getCodes(req, res, u) {
   const result = {
     code: 0,
     data: {
-      list: dataSource,
-      // pagination: {
-        total: tableListDataSource.length,
-        pageSize: parseInt(`${params.pageSize}`, 10) || 10,
-        current: parseInt(`${params.current}`, 10) || 1,
-      // }
+      codesets: dataSource,
+      total: tableListDataSource.length,
     },
     msg: 'success'
   };
