@@ -19,7 +19,7 @@ export default () => {
       }}
       subTitle="尚未登录"
       extra={
-        <Button href={USER_DASHBOARD_PATH + queryString} type="primary">
+        <Button href={USER_DASHBOARD_PATH + '?' + queryString} type="primary">
           去登录
         </Button>
       }
