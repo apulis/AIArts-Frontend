@@ -1,8 +1,8 @@
 import request from '@/utils/request';
 
-export async function getDatasets(page, count) {
+export async function getDatasets(params) {
   return request('/datasets', {
-    params: { page, count },
+    params: params,
   });
 }
 
