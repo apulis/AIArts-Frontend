@@ -2,28 +2,30 @@ import request from '../utils/request';
 
 
 export async function submitModelTraining(data) {
-  return await request('/trainings', {
+  return await request('/training', {
     method: 'POST',
-    data,
+    data: {
+      training: data,
+    },
   })
 }
 
 export async function fetchTrainingDetail(id) {
-  return await request(`/trainings/${id}`)
+  return await request(`/training/${id}`)
 }
 
 export async function fetchTrainingLog(id) {
-  return await request(`/trainings/${id}/log`)
+  return await request(`/training/${id}/log`)
 }
 
 export async function stopTraining(id) {
-  return await request(`/api/trainings/${id}/stop`, {
+  return await request(`/api/training/${id}/stop`, {
     method: 'POST'
   })
 }
 
 export async function removeTraining(id) {
-  return await request(`/api/trainings/${id}`, {
+  return await request(`/api/training/${id}`, {
     method: 'DELETE'
   })
 }
