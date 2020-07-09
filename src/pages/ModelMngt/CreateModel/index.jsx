@@ -2,18 +2,18 @@ import { Link, history } from 'umi';
 import { message, Table, Modal, Form, Input, Button, Space, Card, PageHeader, Tooltip } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProjects, deleteProject, addProject, updateProject } from './services';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 import { FolderOpenOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
+import { addModel } from '../ModelList/services';
 
 const { TextArea } = Input;
 
 const CreateModel = props => {
-  const {
-    dispatch
-  } = props;
+  // const {
+  //   dispatch
+  // } = props;
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -21,8 +21,24 @@ const CreateModel = props => {
 
   };
 
-  const onFinish = values => {
-    console.log(values.modelName);
+  const onFinish = async (values) => {
+    // console.log(values);
+    const { name, description, path, jobId } = values;
+    const data = {
+      name,
+      description,
+      path,
+      jobId: jobId || '1',
+      creator: 'bifeng.peng'
+    }
+    
+    const { code, msg } = await addModel(data);
+
+    if (code === 0) {
+      message.success(`创建成功`);
+    } else {
+      msg && message.error(`创建失败:${msg}`);
+    }
   };
 
   const showJobModal = () => {
@@ -67,7 +83,7 @@ const CreateModel = props => {
         >
           <Form.Item
             {...layout}
-            name="modelName"
+            name="name"
             label="名称"
             rules={[{ required: true, message: '名称不能为空!' }]}
           >
@@ -76,7 +92,7 @@ const CreateModel = props => {
           <Form.Item
             labelCol={{ span: 3 }} 
             wrapperCol={{ span: 14 }}
-            name="desc"
+            name="description"
             label="描述"
             rules={[{ max: 256 }]}
           >
@@ -84,7 +100,7 @@ const CreateModel = props => {
           </Form.Item>
           <Form.Item
             {...layout}
-            name="storePath"
+            name="path"
             label="存储路径"
             rules={[{ required: true, message: '存储路径不能为空!' }]}
           >
@@ -94,10 +110,11 @@ const CreateModel = props => {
             {...layout}
             name='jobWrapper'
             label="选择训练作业"
-            rules={[{ required: true, message: '训练作业不能为空!' }]}
+            // rules={[{ required: true, message: '训练作业不能为空!' }]}
           >
             <Form.Item
-              name="job" 
+              name="job"
+              rules={[{ required: true, message: '训练作业不能为空!' }]}
               style={{ display: 'inline-block', width: 'calc(95% - 4px)' }}              
             >
               <Input placeholder="请选择训练作业名称" />
@@ -122,6 +139,7 @@ const CreateModel = props => {
         </Form>
       </div>
     </PageHeader>
+    {/* 选择训练作业弹框 */}
     <ModalForm
       // current={current}
       visible={visible}
