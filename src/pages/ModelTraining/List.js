@@ -1,40 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Table, Input } from 'antd';
 import { Link } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-
 import moment from 'moment';
+
+import { fetchTrainingList } from '@/services/modelTraning';
 
 const { Search } = Input;
 
-const trainingWork = [{
-  id: 10000,
-  workName: '作业名称',
-  status: '已完成',
-  engineType: 'mxnet, mx-1.5.9',
-  createTime: '1594122050517',
-  runningTime: '1000000',
-  desc: '训练作业',
-}]
-
-for (let i = 0; i < 30; i ++) {
-  trainingWork.push({
-    ...trainingWork[i],
-    id: i + trainingWork[i].id,
-    createTime: trainingWork[i].createTime - 0 + 10000000,
-  })
-}
 
 
 const List = () => {
-  const [trainingWorkList, setTrainingWorkList] = useState(trainingWork);
+  const [trainingWorkList, setTrainingWorkList] = useState([]);
+  const [tableLoading, setTableLoading] = useState(true);
+  const getTrainingList = async () => {
+    const res = await fetchTrainingList();
+    if (res.code === 0) {
+      const trainings = (res.data && res.data.Trainings) || [];
+      console.log('trainings', trainings)
+      setTrainingWorkList(trainings);
+      setTableLoading(false)
+    }
+  }
+  useEffect(() => {
+    getTrainingList()
+  }, [])
   const columns = [
     {
-      dataIndex: 'workName',
+      dataIndex: 'name',
       title: '作业名称',
       render(_text, item) {
         return (
-          <Link to={`/model-training/${item.id}/detail`}>{item.workName}</Link>
+          <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
         )
       }
     },
@@ -43,7 +40,7 @@ const List = () => {
       title: '状态'
     },
     {
-      dataIndex: 'engineType',
+      dataIndex: 'engine',
       title: '引擎类型',
     },
     {
@@ -82,7 +79,7 @@ const List = () => {
         <Button href="">创建训练作业</Button>
       </Link>
       <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" />
-      <Table style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
+      <Table loading={tableLoading} style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
     </PageHeaderWrapper>
   )
 }

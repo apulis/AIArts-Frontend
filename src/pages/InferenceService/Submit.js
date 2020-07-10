@@ -17,7 +17,6 @@ const SubmitModelTraining = () => {
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const handleSubmit = async () => {
     const values = await validateFields();
-    console.log('values', values)
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     if (res.code === 0) {
@@ -37,7 +36,6 @@ const SubmitModelTraining = () => {
     const runningParams = await getFieldValue('runningParams');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        console.log(r[propertyName], value)
         callback('不能输入相同的参数名称');
       }
     })
@@ -110,12 +108,12 @@ const SubmitModelTraining = () => {
             runningParams.map((param, index) => {
               return (
                 <>
-                  <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args) } }]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
-                    <Input />
+                  <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args) } }]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                    <Input  style={{width: '260px'}}/>
                   </FormItem>
                   <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
-                  <FormItem initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args) } }]} name={['runningParams', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
-                    <Input />
+                  <FormItem initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args) } }]} name={['runningParams', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                    <Input  style={{width: '260px'}}/>
                   </FormItem>
                   {
                     runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
@@ -130,7 +128,7 @@ const SubmitModelTraining = () => {
           </div>
         </FormItem>
         <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{ width: '200px' }}>
+          <Select style={{ width: '260px' }}>
             {
               frameWorks.map(f => (
                 <Option value={f.value}>{f.name}</Option>

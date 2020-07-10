@@ -57,7 +57,8 @@ const ModelTraining = () => {
     const res = await submitModelTraining(values);
     cancel();
     if (res.code === 0) {
-      message.success('成功创建')
+      message.success('成功创建');
+      history.push('/model-training/list')
     }
   }
   const addParams = () => {
