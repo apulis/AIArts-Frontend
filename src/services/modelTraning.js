@@ -10,6 +10,10 @@ export async function submitModelTraining(data) {
   })
 }
 
+export async function fetchAvilableResource() {
+  return await request('/common/resource')
+}
+
 export async function fetchTrainingDetail(id) {
   return await request(`/training/${id}`)
 }
