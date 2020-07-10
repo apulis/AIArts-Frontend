@@ -1,6 +1,6 @@
 import { pagination as defaultPagination } from '@/config'
 import { normalizeTableResult } from '@/utils/utils'
-import { getModels, addModel, updateModel } from '../services'
+import { getModels, addModel, updateModel, deleteModel } from '../services'
 
 export default {
   namespace: 'modelList',
@@ -31,7 +31,6 @@ export default {
         const {
           code, data, msg
         } = yield call(getModels, params)
-        // console.log(code, data, msg)
         let error = null
         if (code === 0) {
           // const result = normalizeTableResult(data)
@@ -58,7 +57,7 @@ export default {
     *add ({ payload }, { call }) {
       try {
         const {
-          data: { code, data, msg }
+          code, data, msg
         } = yield call(addModel, payload)
 
         // console.log('======', code, data, msg)
@@ -91,6 +90,20 @@ export default {
           data: null
         }
       }
-    }
+    },
+    *delete ({ payload }, { call }) {
+      try {
+        const {
+          code, data, msg
+        } = yield call(deleteModel, payload.id)
+        let error = null
+        if (code !== 0) {
+          error = { code, msg }
+        }
+        return { error, data }
+      } catch (error) {
+        return { error, data: null }
+      }
+    }    
   }
 }
