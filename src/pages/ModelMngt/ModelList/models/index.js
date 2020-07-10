@@ -1,6 +1,6 @@
 import { pagination as defaultPagination } from '@/config'
 import { normalizeTableResult } from '@/utils/utils'
-import { getModels, addModel, updateModel, deleteModel } from '../services'
+import { getModels, addModel, updateModel, deleteModel, downloadModel } from '../services'
 
 export default {
   namespace: 'modelList',
@@ -104,6 +104,21 @@ export default {
       } catch (error) {
         return { error, data: null }
       }
-    }    
+    },
+    *download ({ payload }, { call }) {
+      try {
+        const {
+          code, data, msg
+        } = yield call(downloadModel, payload.id)
+        // console.log(code, data, msg)
+        let error = null
+        if (code !== 0) {
+          error = { code, msg }
+        }
+        return { error, data }
+      } catch (error) {
+        return { error, data: null }
+      }
+    }        
   }
 }
