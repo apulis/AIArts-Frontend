@@ -37,7 +37,7 @@ export async function stopTraining(id) {
   })
 }
 
-export async function removeTraining(id) {
+export async function removeTrainings(id) {
   return await request(`/api/trainings/${id}`, {
     method: 'DELETE'
   })
