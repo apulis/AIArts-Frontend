@@ -25,3 +25,9 @@ export async function updateModel(params = {}) {
     params
   });
 }
+
+export async function downloadModel(modelId) {
+  return request(`/files/download/model/${modelId}`, {
+    method: 'GET'
+  });
+}
