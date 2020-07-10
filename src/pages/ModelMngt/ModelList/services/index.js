@@ -1,5 +1,4 @@
 import request from '@/utils/request';
-import { MOCK_URL } from '@/config'
 
 export async function getModels(params) {
   return request(`/models`, {
@@ -7,21 +6,21 @@ export async function getModels(params) {
   });
 }
 
-export async function deleteModel(projectId) {
-  return request(`/api/models/${projectId}`, {
+export async function deleteModel(modelId) {
+  return request(`/models/${modelId}`, {
     method: 'DELETE',
   });
 }
 
 export async function addModel(data) {
-  return await request('/api/models', {
+  return await request('/models', {
     method: 'POST',
     data: data,
   });
 }
 
 export async function updateModel(params = {}) {
-  return await request(`${MOCK_URL}/api/models/update`, {
+  return await request(`/models/${params.modelId}`, {
     method: 'POST',
     params
   });

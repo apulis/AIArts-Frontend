@@ -22,7 +22,7 @@ const TrainingJobModal = props => {
     dispatch({
       type: 'jobList/fetch',
       payload: {
-        current: pageParams.page,
+        pageNum: pageParams.pageNum,
         pageSize: 5
       },
     });

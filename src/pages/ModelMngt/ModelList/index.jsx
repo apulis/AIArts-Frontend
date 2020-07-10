@@ -2,40 +2,13 @@ import { Link, history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProjects, deleteProject, addProject, updateProject } from './services';
 import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
-import { SyncOutlined } from '@ant-design/icons';
-// import { Resizable } from 'react-resizable';
+import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
-// const ResizableTitle = props => {
-//   const { onResize, width, ...restProps } = props;
-
-//   if (!width) {
-//     return <th {...restProps} />;
-//   }
-
-//   return (
-//     <Resizable
-//       width={width}
-//       height={0}
-//       handle={
-//         <span
-//           className="react-resizable-handle"
-//           onClick={e => {
-//             e.stopPropagation();
-//           }}
-//         />
-//       }
-//       onResize={onResize}
-//       draggableOpts={{ enableUserSelectHack: false }}
-//     >
-//       <th {...restProps} />
-//     </Resizable>
-//   );
-// };
+const { confirm } = Modal;
 
 const ModelList = props => {
   const {
@@ -172,11 +145,31 @@ const ModelList = props => {
   };
 
   const deleteModel = (item) => {
-    dispatch({
-      type: 'modelList/delete',
-      payload: {
-        id: item.id
-      }
+    confirm({
+      title: '删除模型',
+      icon: <ExclamationCircleOutlined />,
+      content: '删除操作无法恢复，是否继续？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk() {
+        dispatch({
+          type: 'modelList/delete',
+          payload: {
+            id: item.id
+          }
+        }).then(({ error, data }) => {
+          if (error === null) {
+            message.success(`删除成功`);
+            handleRefresh();
+          } else {
+            message.error(`删除失败${error.msg}` || `删除失败`);
+          }
+        })
+      },
+      onCancel() {
+        // console.log('Cancel');
+      },
     });
   };
 
