@@ -5,16 +5,19 @@ export async function getCodes(pageNum, pageSize) {
     params: { pageNum, pageSize },
   });
 }
-export async function getResource(data) {
-  return await request(`/codes/upload`, {
-    method: 'POST',
-    data: data,
-  });
-}
-export async function postCode() {
-  return request(`/codes`);
+
+export async function deleteCode(id) {
+  return request(`/codes/${id}`, { method: 'DELETE'})
 }
 
-export async function deleteCode() {
-  return request(`/codes`, { method: 'DELETE' })
+export async function getResource() {
+  return await request(`/common/resource`, {
+  });
+}
+
+export async function postCode(data) {
+  return request(`/codes`,{
+    method:'POST',
+    data
+  });
 }
