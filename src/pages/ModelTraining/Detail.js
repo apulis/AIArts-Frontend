@@ -1,10 +1,11 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Descriptions, Divider } from 'antd';
 import { useParams } from 'umi';
 import { message } from 'antd';
 
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
+import moment from 'moment';
 
 import { fetchTrainingDetail, removeTrainings } from '@/services/modelTraning';
 import styles from './index.less';
@@ -55,6 +56,7 @@ const testLog = `
 
 const Detail = () => {
   const params = useParams();
+  const logEl = useRef(null);
   const id = params.id;
   const [logs, setLogs] = useState(testLog);
   const [jobDetail, setJobDetail] = useState({});
@@ -67,6 +69,11 @@ const Detail = () => {
   useEffect(() => {
     getTrainingDetail();
   }, [])
+
+  const getTrainingLogs = () => {
+    logEl.current.scrollTo(0, 100000000)
+  }
+
   const stopTraining = () => {
     //
   }
@@ -102,7 +109,8 @@ const Detail = () => {
         <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
-      <pre className={styles.logs}>
+      <Button onClick={getTrainingLogs}>获取训练日志</Button>
+      <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
         {logs}
       </pre>
     </div>
