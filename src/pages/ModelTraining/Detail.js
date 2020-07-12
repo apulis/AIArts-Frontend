@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Button, Descriptions, Divider } from 'antd';
 import { useParams } from 'umi';
 import { message } from 'antd';
-
+import { LoadingOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
@@ -37,6 +37,13 @@ const Detail = () => {
         l && l.scrollTo(0, 100000000);
       }, 120);
     }
+  }
+
+  const handleFetchTrainingLogs = async () => {
+    const cancel = message.loading('获取日志中')
+    await getTrainingLogs()
+    cancel();
+    message.success('成功获取日志')
   }
 
 
@@ -75,10 +82,10 @@ const Detail = () => {
         <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
-      <Button onClick={getTrainingLogs}>获取训练日志</Button>
-      <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+      <Button onClick={handleFetchTrainingLogs}>获取训练日志</Button>
+      {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
         {logs}
-      </pre>
+      </pre> : <LoadingOutlined />}
     </div>
     
   )
