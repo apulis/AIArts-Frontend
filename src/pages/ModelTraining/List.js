@@ -66,7 +66,6 @@ const List = () => {
         return (
           <>
             <a style={{marginLeft: '-20px'}}>停止</a>
-            <a style={{marginLeft: '20px'}}>删除</a>
           </>
         )
       }

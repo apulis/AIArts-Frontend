@@ -26,6 +26,7 @@ const ModelTraining = () => {
   const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
+  const [codePathPrefix, setCodePathPrefix] = useState('');
   const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
   const [bootFileModalVisible, setBootFileModalVisible] = useState(false);
   const [outputPathModalVisible, setOutputPathModalVisible] = useState(false);
@@ -37,7 +38,12 @@ const ModelTraining = () => {
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      const { data: { aiFrameworkList, deviceList } } = res;
+      let { data: { aiFrameworks, deviceList, codePathPrefix } } = res;
+      setCodePathPrefix(codePathPrefix + '/');
+      let aiFrameworkList = []
+      Object.keys(aiFrameworks).forEach(val => {
+        aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
+      })
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
     }
@@ -52,6 +58,9 @@ const ModelTraining = () => {
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     })
+    values.codePath = codePathPrefix + values.codePath;
+    values.startupFile = codePathPrefix + values.startupFile;
+    values.outputPath = codePathPrefix + values.outputPath;
     values.params = params;
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
@@ -82,7 +91,6 @@ const ModelTraining = () => {
     const runningParams = await getFieldValue('params');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        console.log(r[propertyName], value)
         callback('不能输入相同的参数名称');
       }
     })
@@ -129,7 +137,7 @@ const ModelTraining = () => {
       />
       <Form form={form}>
         <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }]}>
-          <Input style={{ width: 260 }}  placeholder="请输入作业名称" />
+          <Input style={{ width: 300 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
@@ -139,10 +147,10 @@ const ModelTraining = () => {
       <div className="ant-page-header-heading-title" style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</div>
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
-          <Select style={{ width: 260 }} >
+          <Select style={{ width: 300 }} >
             {
               frameWorks.map(f => (
-                <Option value={f.engine}>{f.name}</Option>
+                <Option value={f}>{f}</Option>
               ))
             }
           </Select>
@@ -152,16 +160,16 @@ const ModelTraining = () => {
           name="codePath"
           label="代码目录"
         >
-          <Input style={{ width: 260 }} />
+          <Input addonBefore={codePathPrefix} style={{ width: 300 }} />
         </FormItem>
         <FormItem labelCol={{ span: 3 }}label="启动文件"  name="startupFile">
-          <Input style={{ width: 260 }} />
+          <Input  addonBefore={codePathPrefix} style={{ width: 300 }} />
         </FormItem>
         <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>
-          <Input style={{ width: 260 }} />
+          <Input addonBefore={codePathPrefix}  style={{ width: 300 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
-          <Input style={{ width: 260 }} />
+          <Input style={{ width: 300 }} />
         </FormItem>
         <FormItem label="运行参数" labelCol={{ span: 3 }} >
           {
@@ -169,11 +177,11 @@ const ModelTraining = () => {
               return (
                 <>
                   <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input style={{ width: 260 }} />
+                    <Input style={{ width: 300 }} />
                   </FormItem>
                   <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
                   <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['params', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input style={{ width: 260 }} />
+                    <Input style={{ width: 300 }} />
                   </FormItem>
                   {
                     runningParams.length > 1 && <DeleteOutlined style={{marginLeft: '10px', cursor: 'pointer'}} onClick={() => removeRuningParams(param.createTime)} />
@@ -188,7 +196,7 @@ const ModelTraining = () => {
           </div>
         </FormItem>
         <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{width: '260px'}} onChange={onDeviceTypeChange}>
+          <Select style={{width: '300px'}} onChange={onDeviceTypeChange}>
             {
               deviceList.map(d => (
                 <Option value={d.deviceType}>{d.deviceType}</Option>
@@ -202,7 +210,7 @@ const ModelTraining = () => {
           {...commonLayout}
           rules={[{ required: true }]}
         >
-          <Select style={{width: '260px'}} >
+          <Select style={{width: '300px'}} >
             {
               availableDeviceNumList.map(avail => (
                 <Option value={avail}>{avail}</Option>

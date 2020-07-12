@@ -5,7 +5,7 @@ import { useParams } from 'umi';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 
-
+import { fetchTrainingDetail, removeTrainings } from '@/services/modelTraning';
 import styles from './index.less';
 
 
@@ -54,9 +54,14 @@ const testLog = `
 
 const Detail = () => {
   const params = useParams();
+  console.log('params', params)
+  const id = params.id;
   const [logs, setLogs] = useState(testLog);
+  const getTrainingDetail = () => {
+    fetchTrainingDetail(id)
+  }
   useEffect(() => {
-    // 获取当前job detail
+    getTrainingDetail()
     return () => {
       
     }
@@ -65,15 +70,17 @@ const Detail = () => {
     //
   }
 
-  const removeTraining = () => {
-    //
+  const removeTraining = async () => {
+    const res = await removeTrainings(id);
+    if (res.code === 0) {
+      message.success('成功删除');
+    }
   }
   return (
     <div className={styles.modelDetail}>
       <div className={styles.topButtons}>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>模型训练</div>
         <div>
-          <Button onClick={stopTraining} style={{marginRight: '12px'}}>停止训练</Button>
           <Button onClick={removeTraining}>删除训练</Button>
         </div>
       </div>
