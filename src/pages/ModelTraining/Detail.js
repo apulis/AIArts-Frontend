@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import { Button, Descriptions, Divider } from 'antd';
 import { useParams } from 'umi';
+import { message } from 'antd';
 
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
@@ -54,17 +55,17 @@ const testLog = `
 
 const Detail = () => {
   const params = useParams();
-  console.log('params', params)
   const id = params.id;
   const [logs, setLogs] = useState(testLog);
-  const getTrainingDetail = () => {
-    fetchTrainingDetail(id)
+  const [jobDetail, setJobDetail] = useState({});
+  const getTrainingDetail = async () => {
+    const res = await fetchTrainingDetail(id);
+    if (res.code === 0) {
+      setJobDetail(res.data)
+    }
   }
   useEffect(() => {
-    getTrainingDetail()
-    return () => {
-      
-    }
+    getTrainingDetail();
   }, [])
   const stopTraining = () => {
     //
@@ -85,22 +86,20 @@ const Detail = () => {
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
-        <Descriptions.Item label="作业名称">Zhou Maomao</Descriptions.Item>
-        <Descriptions.Item label="作业状态">1810000000</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">Hangzhou, Zhejiang</Descriptions.Item>
-        <Descriptions.Item label="ID">empty</Descriptions.Item>
-        <Descriptions.Item label="创建时间">test</Descriptions.Item>
-        <Descriptions.Item label="运行时长">test</Descriptions.Item>
-        <Descriptions.Item label="运行参数">test</Descriptions.Item>
-        <Descriptions.Item label="代码目录">test</Descriptions.Item>
-        <Descriptions.Item label="计算节点个数">test</Descriptions.Item>
-        <Descriptions.Item label="启动文件">test</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">test</Descriptions.Item>
-        <Descriptions.Item label="训练数据集">test</Descriptions.Item>
-        <Descriptions.Item label="描述">test</Descriptions.Item>
-        <Descriptions.Item label="输出路径">test</Descriptions.Item>
-        <Descriptions.Item label="checkpoint 文件">test</Descriptions.Item>
-        <Descriptions.Item label="输出路径">test</Descriptions.Item>
+        <Descriptions.Item label="作业名称">{jobDetail.name}</Descriptions.Item>
+        <Descriptions.Item label="作业状态">{jobDetail.status}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
+        <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('MMMM Do YYYY, hh:mm:ss')}</Descriptions.Item>
+        <Descriptions.Item label="运行参数">{jobDetail.params}</Descriptions.Item>
+        <Descriptions.Item label="代码目录">{jobDetail.codePath}</Descriptions.Item>
+        <Descriptions.Item label="计算节点个数">{jobDetail.deviceNum}</Descriptions.Item>
+        <Descriptions.Item label="启动文件">{jobDetail.startupFile}</Descriptions.Item>
+        <Descriptions.Item label="计算节点规格">{jobDetail.deviceType}</Descriptions.Item>
+        <Descriptions.Item label="训练数据集">{jobDetail.datasetPath}</Descriptions.Item>
+        <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
+        <Descriptions.Item label="输出路径">{jobDetail.outputPath}</Descriptions.Item>
+        <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
       <pre className={styles.logs}>

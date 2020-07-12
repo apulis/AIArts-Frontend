@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input } from 'antd';
+import { Button, Table, Input, message } from 'antd';
 import { Link } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 
-import { fetchTrainingList } from '@/services/modelTraning';
+import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
 
 const { Search } = Input;
 
@@ -17,7 +17,6 @@ const List = () => {
     const res = await fetchTrainingList();
     if (res.code === 0) {
       const trainings = (res.data && res.data.Trainings) || [];
-      console.log('trainings', trainings)
       setTrainingWorkList(trainings);
       setTableLoading(false)
     }
@@ -25,6 +24,13 @@ const List = () => {
   useEffect(() => {
     getTrainingList()
   }, [])
+  const removeTraining = async (id) => {
+    const res = await removeTrainings(id);
+    if (res.code === 0) {
+      message.success('成功删除');
+      getTrainingList();
+    }
+  }
   const columns = [
     {
       dataIndex: 'name',
@@ -48,13 +54,9 @@ const List = () => {
       title: '创建时间',
       render(_text, item) {
         return (
-          <div>{moment(item.createTime - 0).format('MMMM Do YYYY, h:mm:ss')}</div>
+          <div>{moment(item.createTime).format('MMMM Do YYYY, hh:mm:ss')}</div>
         )
       }
-    },
-    {
-      dataIndex: 'runningTime',
-      title: '运行时长'
     },
     {
       dataIndex: 'desc',
@@ -62,10 +64,10 @@ const List = () => {
     },
     {
       title: '操作',
-      render() {
+      render(_text, item) {
         return (
           <>
-            <a style={{marginLeft: '-20px'}}>停止</a>
+            <a onClick={() => removeTraining(item.id)}>删除</a>
           </>
         )
       }

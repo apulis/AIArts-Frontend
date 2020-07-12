@@ -30,13 +30,13 @@ export async function fetchTrainingLog(id) {
 }
 
 export async function stopTraining(id) {
-  return await request(`/api/trainings/${id}/stop`, {
+  return await request(`/trainings/${id}/stop`, {
     method: 'POST'
   })
 }
 
 export async function removeTrainings(id) {
-  return await request(`/api/trainings/${id}`, {
+  return await request(`/trainings/${id}`, {
     method: 'DELETE'
   })
 }
