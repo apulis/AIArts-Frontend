@@ -8,6 +8,7 @@ import moment from 'moment';
 import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition, fetchInferenceLog } from '../../services/inferenceService';
 
 import styles from './index.less';
+import { getJobStatus } from '@/utils/utils';
 
 export function getBase64(img, callback) {
   const reader = new FileReader();
@@ -106,7 +107,7 @@ const InferenceDetail = () => {
       <Button loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
-        <Descriptions.Item label="作业状态">{jobDetail.jobStatus}</Descriptions.Item>
+        <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.image}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.jobId}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.jobTime).format('YYYY-MM-DD HH:mm')}</Descriptions.Item>

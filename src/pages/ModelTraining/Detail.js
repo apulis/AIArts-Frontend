@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog } from '@/services/modelTraning';
 import styles from './index.less';
+import { getJobStatus } from '@/utils/utils';
 
 
 const Detail = () => {
@@ -67,7 +68,7 @@ const Detail = () => {
       </div>
       <Descriptions bordered={true} column={2}>
         <Descriptions.Item label="作业名称">{jobDetail.name}</Descriptions.Item>
-        <Descriptions.Item label="作业状态">{jobDetail.status}</Descriptions.Item>
+        <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.status)}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('MMMM Do YYYY, hh:mm:ss')}</Descriptions.Item>
