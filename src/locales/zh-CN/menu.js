@@ -1,8 +1,8 @@
 export default {
   'menu.home': '首页',
-  'menu.dataManage': '数据管理',
-  'menu.dataManage.DataSet': '数据集管理',
-  'menu.dataManage.ImageLabel': '数据标注',
+  'menu.DataManage': '数据管理',
+  'menu.DataManage.DataSet': '数据集管理',
+  'menu.DataManage.ImageLabel': '数据标注',
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
@@ -18,6 +18,5 @@ export default {
   'menu.modelManagement': '模型管理',
   'menu.inferenceService': '推理服务',
   'menu.inferenceService.list': '推理服务列表',
-  'menu.modelTraining': '模型训练',
-  'menu.resourceMonitoring': '资源监控'
+  'menu.modelTraining': '模型训练'
 };
