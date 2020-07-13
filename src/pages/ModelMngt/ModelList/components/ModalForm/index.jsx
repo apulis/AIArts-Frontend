@@ -1,5 +1,5 @@
 import React, { useEffect, forwardRef } from 'react';
-import moment from 'moment';
+// import moment from 'moment';
 import { Modal, Form, DatePicker, Input } from 'antd';
 import styles from './index.less';
 
@@ -25,7 +25,7 @@ const ModalForm = props => {
     if (current) {
       form.setFieldsValue({
         ...current,
-        latestTime: current.latestTime ? moment(current.latestTime) : null,
+        // latestTime: current.latestTime ? moment(current.latestTime) : null,
       });
     }
   }, [props.current]);
@@ -43,7 +43,7 @@ const ModalForm = props => {
 
   const modalFooter = 
     {
-      okText: 'Submit',
+      okText: '提交',
       onOk: handleSubmit,
       onCancel,
     };
@@ -53,7 +53,7 @@ const ModalForm = props => {
       <Form {...formLayout} form={form} onFinish={handleFinish}>
         <Form.Item
           name="name"
-          label="Project Name"
+          label="模型名称"
           // rules={[
           //   {
           //     required: true,
@@ -61,9 +61,9 @@ const ModalForm = props => {
           //   },
           // ]}
         >
-          <Input placeholder="Please input project name" disabled/>
+          <Input placeholder="请输入模型名称" disabled/>
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="latestTime"
           label="Update Time"
           // rules={[
@@ -95,18 +95,18 @@ const ModalForm = props => {
           disabled
         >
           <Input placeholder="Please input project creator" disabled/>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
-          name="desc"
-          label="Description"
+          name="description"
+          label="描述"
           rules={[
             {
-              message: 'Please input at least five words!',
-              min: 5,
+              message: '最多256个字！',
+              max: 256,
             },
           ]}
         >
-          <TextArea rows={4} placeholder="Please input at least five words" />
+          <TextArea rows={4} placeholder="输入最多256个字！" />
         </Form.Item>
       </Form>
     );
@@ -114,7 +114,7 @@ const ModalForm = props => {
 
   return (
     <Modal
-      title='Modify Project'
+      title='修改模型'
       className={styles.standardListForm}
       width={640}
       bodyStyle={
