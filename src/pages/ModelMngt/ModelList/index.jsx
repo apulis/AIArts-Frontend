@@ -8,6 +8,7 @@ import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { downloadModel } from '../ModelList/services';
+import { stringify } from 'querystring';
 
 const { confirm } = Modal;
 
@@ -149,13 +150,10 @@ const ModelList = props => {
   };
 
   const createInference = (item) => {
-    // dispatch({
-    //   type: 'modelList/creatInference',
-    //   payload: {
-    //     id: item.id
-    //   }
-    // });
-    history.push('/Inference/submit')
+    const queryString = stringify({
+      modelPath: encodeURIComponent(item.path)
+    });
+    history.push((`/Inference/submit/?${queryString}`))
   };
 
   const deleteModel = (item) => {

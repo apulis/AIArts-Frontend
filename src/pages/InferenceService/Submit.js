@@ -27,7 +27,7 @@ const SubmitModelTraining = () => {
     const submitData = {};
     submitData.image = values.frameWork;
     submitData.jobName = values.workName;
-    submitData.model_base_path = values.moduleName;
+    submitData.model_base_path = values.modelName;
     submitData.device = values.deviceType;
     submitData.desc = values.desc;
     submitData.params = {};
