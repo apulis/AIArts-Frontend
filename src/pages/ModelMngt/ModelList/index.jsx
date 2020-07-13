@@ -1,12 +1,13 @@
 import { Link, history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS } from '../../../const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { downloadModel } from '../ModelList/services';
 
 const { confirm } = Modal;
 
@@ -22,6 +23,8 @@ const ModelList = props => {
   const [form] = Form.useForm();
 
   useEffect(() => {
+    console.log('---useEffect---');
+    
     dispatch({
       type: 'modelList/fetch',
       payload: {
@@ -29,10 +32,19 @@ const ModelList = props => {
         pageSize: pageParams.pageSize
       },
     });
+  // }, [1]);
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
+    // console.log('---pageParamsChange---')
     setPageParams({ pageNum: page, pageSize: size });
+    // dispatch({
+    //   type: 'modelList/fetch',
+    //   payload: {
+    //     pageNum: page,
+    //     pageSize: size
+    //   }
+    // });
   };
 
   const columns = [
@@ -80,7 +92,7 @@ const ModelList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a href={item.url} onClick={() => downloadModel(item)}>模型下载</a>
+            <a onClick={() => handleDownload(item)}>模型下载</a>
             <a onClick={() => createInference(item)}>创建推理</a>
             <a onClick={() => deleteModel(item)}>删除</a>
           </Space>
@@ -96,6 +108,7 @@ const ModelList = props => {
 
   const onReset = () => {
     form.resetFields();
+    handleRefresh();
   };
   const handleCancel = () => {
     setVisible(false);
@@ -111,7 +124,14 @@ const ModelList = props => {
   };
 
   const onFinish = values => {
-    console.log(values.modelName);
+    dispatch({
+      type: 'modelList/fetch',
+      payload: {
+        pageNum: pageParams.pageNum,
+        pageSize: pageParams.pageSize,
+        name: values.modelName     
+      }
+    });    
   };
 
   const handleRefresh = () => {
@@ -124,13 +144,8 @@ const ModelList = props => {
     });
   };
 
-  const downloadModel = (item) => {
-    dispatch({
-      type: 'modelList/download',
-      payload: {
-        id: item.id
-      }
-    });
+  const handleDownload = async (item) => {
+    window.open(`/ai_arts/api/files/download/model/${item.id}`, '_blank')
   };
 
   const createInference = (item) => {
@@ -157,7 +172,7 @@ const ModelList = props => {
           payload: {
             id: item.id
           }
-        }).then(({ error, data }) => {
+        }).then(({ error }) => {
           if (error === null) {
             message.success(`删除成功`);
             handleRefresh();
@@ -235,12 +250,12 @@ const ModelList = props => {
         </Card>
       </PageHeaderWrapper>
 
-      <ModalForm
+      {visible && <ModalForm
         current={current}
         visible={visible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
-      />
+      />}
     </>
   );
 };
