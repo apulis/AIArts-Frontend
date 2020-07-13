@@ -6,35 +6,30 @@ const CodeCreate = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
   const { TextArea } = Input;
-  const [deviceTypeArr, setDeviceTypeArr] = useState([])
+  let [data, setData] = useState(null)
+  console.log('render')
+  const [deviceTypeArr, setDeviceTypeArr] = useState([])// 更新状态是异步的
   const [deviceNumArr, setDeviceNumArr] = useState([])
   const [engineTypeArr, setEngineTypeArr] = useState([])
+  const [engineNameArr, setengineNameArr] = useState([])
   const [modelVisible, setModelVisible] = useState(false)
   const [codePathPrefix, setCodePathPrefix] = useState('')
   useEffect(() => {// 初始化处理
     renderForm()
   }, [])// 更新处理
-  const renderForm = () => {
-    // todo
-    // const result = apiGetResource()
-    const result = {
-      codePathPrefix: 'xxx/xxx/xxx/',
-      deviceTypeArr: [{ value: 'one', name: 'one' }, { value: 'two', name: 'two' }, { value: 'three', name: 'three' }],
-      deviceNumArr: [{ value: 'one', name: 'one' }, { value: 'two', name: 'two' }, { value: 'three', name: 'three' }],
-      engineTypeArr: [{ value: 'one', name: 'one' }, { value: 'two', name: 'two' }, { value: 'three', name: 'three' }],
+  const renderForm = async () => {
+    const result = await apiGetResource()
+    if(result){
+      setData(result)
+      setCodePathPrefix(result.codePathPrefix)
+      setEngineTypeArr(Object.keys(result.aiFrameworks))
+      setDeviceTypeArr(result.deviceList.map((item) => (item.deviceType)))
     }
-    setCodePathPrefix(result.codePathPrefix)
-    setDeviceTypeArr(result.deviceTypeArr)
-    setDeviceNumArr(result.deviceNumArr)
-    setEngineTypeArr(result.engineTypeArr)
   }
-  const apiPostCode = async (data) => {
-    console.log('formData', data)
-    // todo 
-    // const obj = await postCode(data)
-    // const {code,data,msg} = obj
-    // if(code===0){
-    if (1) {
+  const apiPostCode = async (values) => {
+    const obj = await postCode(values)
+    const {code,data,msg} = obj
+    if(code===0){
       // 创建成功后跳转
       showModal()
     } else {
@@ -42,18 +37,18 @@ const CodeCreate = () => {
     }
   }
   const apiGetResource = async () => {
-    // todo
-    // const obj = await getResource()
-    // const {code,data,msg} = obj
-    // if(code===0){
-    // return data
-    // }else{
-    //   message.error(msg)
-    // }
+    const obj = await getResource()
+    const { code, data, msg } = obj
+    if (code === 0) {
+      return data
+    } else {
+      return null
+      message.error(msg)
+    }
   }
   const { validateFields, getFieldValue, resetFields } = form;
   const handleSubmit = async () => {
-    const values = await validateFields();// 提交前表单验证
+    const values = await validateFields();
     console.log('result', values);
     apiPostCode(values)
     resetFields()
@@ -69,6 +64,21 @@ const CodeCreate = () => {
   const handleCancel = e => {
     setModelVisible(false)
   };
+  const handleEngineTypeChange = (item) => {
+    setengineNameArr(data.aiFrameworks[item])
+  }
+  const handleDeviceTypeChange = (item,option) => {
+    const avail = data['deviceList'][option.index].avail
+    let arr = []
+    if(avail>=2){
+      arr = [1,2]
+    }else if(avail==1){
+      arr = [1]
+    }else{
+      message.info('该设备无可用资源')
+    }
+    setDeviceNumArr(arr)
+  }
   const validateMessages = {
     required: '${label} 是必填项!',
     types: {
@@ -88,6 +98,7 @@ const CodeCreate = () => {
       offset: 22
     }
   }
+
 
   return (
     <>
@@ -128,26 +139,35 @@ const CodeCreate = () => {
             <Input addonBefore={codePathPrefix} placeholder="代码存储路径" />
           </Form.Item>
           <Form.Item
-            label="引擎"
-            name="engine"
-            rules={[{ required: true, message: '请选择 引擎' }]}
-          >
-            <Select defaultValue={engineTypeArr[0] ? engineTypeArr[0].name : ''} style={{ width: "50%" }}>
+            label="引擎类型"
+            >
+            <Form.Item rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+            <Select defaultValue={engineTypeArr[0] ? engineTypeArr[0] : ''}  onChange={handleEngineTypeChange}>
               {
                 engineTypeArr.map((item) => (
-                  <Option value={item.value}>{item.name}</Option>
+                  <Option value={item}>{item}</Option>
                 ))
               }
             </Select>
+            </Form.Item>
+            <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
+            <Select defaultValue={engineNameArr[0] ? engineNameArr[0] : ''}>
+              {
+                engineNameArr.map((item) => (
+                  <Option value={item}>{item}</Option>
+                ))
+              }
+            </Select>
+            </Form.Item>
           </Form.Item>
           <Form.Item
             label="设备类型"
             name="deviceType"
             rules={[{ required: true }]}
           >
-            <Select defaultValue={deviceTypeArr[0] ? deviceTypeArr[0].name : ''} style={{ width: "50%" }}>
+            <Select defaultValue={deviceTypeArr[0] ? deviceTypeArr[0] : ''} style={{ width: "50%" }} onChange={handleDeviceTypeChange}>
               {
-                deviceTypeArr.map((item) => (<Option value={item.value}>{item.name}</Option>))
+                deviceTypeArr.map((item,index) => (<Option value={item} index={index}>{item}</Option>))
               }
             </Select>
           </Form.Item>
@@ -156,10 +176,10 @@ const CodeCreate = () => {
             name="deviceNum"
             rules={[{ required: true }]}
           >
-            <Select defaultValue={deviceNumArr[0] ? deviceNumArr[0].name : ''} style={{ width: "50%" }}>
+            <Select defaultValue={deviceNumArr[0] ? deviceNumArr[0] : ''} style={{ width: "50%" }}>
               {
                 deviceNumArr.map((item) => (
-                  <Option value={item.value}>{item.name}</Option>
+                  <Option value={item}>{item}</Option>
                 ))
               }
             </Select>

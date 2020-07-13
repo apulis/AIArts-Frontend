@@ -35,7 +35,6 @@ const CodeList = (props) => {
     const obj = await deleteCode(id)
     const { code,data, msg } = obj
     if (code === 0) {
-      message.success(msg);
       renderData();
     } else {
       message.error(msg);
@@ -86,18 +85,17 @@ const CodeList = (props) => {
     },
   ];
   const handleOpen = (item) => {
-    console.log('open', item.codeUrl)
-    window.open(item.codeUrl)
+    console.log('open', item.JupyterUrl)
+    window.open(item.JupyterUrl)
   }
   const handleDelete = (item) => {
     const id = item.id
     apiDeleteCode(item.id)
   }
   const handleSearch = (value) => {
-    alert(`search:$(value)`)
+    alert(`search:${value}`)
   }
   const handleFresh = () => {
-    alert('freshData')
     renderData()
   }
   const onPageParamsChange = (pageNum, pageSize) => {
@@ -127,7 +125,7 @@ const CodeList = (props) => {
         </Col>
       </Row>
       <Table
-        dataSource={codes.data.codesets}
+        dataSource={codes.data.CodeEnvs}
         columns={columns}
         rowKey={(r, i) => `${i}`}
         pagination={{

@@ -17,7 +17,7 @@ const genList = (current, pageSize) => {
       codePath: `storePath`,
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       desc: 'Handwritten digit classification',
-      codeUrl:'https://www.baidu.com/'
+      JupyterUrl:'https://www.baidu.com/'
     });
     // tableListDataSource.push({
     //   id: index,
@@ -65,7 +65,7 @@ function getCodes(req, res, u) {
   const result = {
     code: 0,
     data: {
-      codesets: dataSource,
+      CodeEnvs: dataSource,
       total: tableListDataSource.length,
     },
     msg: 'success'
