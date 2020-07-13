@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader } from 'antd';
+import { Form, Input, Button, Divider, Select, message, PageHeader } from 'antd';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import { generateKey } from '../ModelTraining/Submit';
 import { fetchAvilableResource } from '@/services/modelTraning';
+import { createInference } from '@/services/inferenceService';
 import { history } from 'umi';
 
 
@@ -23,7 +24,17 @@ const SubmitModelTraining = () => {
   const handleSubmit = async () => {
     const values = await validateFields();
     const cancel = message.loading('正在提交');
-    const res = await submitModelTraining(values);
+    const submitData = {};
+    submitData.image = values.frameWork;
+    submitData.jobName = values.workName;
+    submitData.model_base_path = values.moduleName;
+    submitData.device = values.deviceType;
+    submitData.desc = values.desc;
+    submitData.params = {};
+    values.runningParams && values.runningParams.forEach(p => {
+      submitData.params[p.key] = p.value;
+    });
+    const res = await createInference(submitData);
     if (res.code === 0) {
       cancel();
     }
@@ -142,7 +153,7 @@ const SubmitModelTraining = () => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select placeholder="请选择" style={{ width: '260px' }}>
             {
               deviceList.map(d => (

@@ -10,7 +10,7 @@ export async function fetchInferenceDetail(id) {
 }
 
 export async function createInference(data) {
-  return await request('/inferences', {
+  return await request('/inferences/PostInferenceJob', {
     method: 'POST',
     data,
   })
