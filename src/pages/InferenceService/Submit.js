@@ -164,7 +164,7 @@ const SubmitModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: false }]}>
           <Select placeholder="请选择" style={{ width: '260px' }}>
             {
               deviceList.map(d => (
