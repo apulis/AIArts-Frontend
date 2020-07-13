@@ -4,7 +4,9 @@ import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined }
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import { generateKey } from '../ModelTraining/Submit';
+import { fetchAvilableResource } from '@/services/modelTraning';
 import { history } from 'umi';
+
 
 import styles from './index.less'
 
@@ -13,6 +15,9 @@ const { TextArea } = Input;
 
 const SubmitModelTraining = () => {
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  
+  const [frameWorks, setFrameWorks] = useState([]);
+  const [deviceList, setDeviceList] = useState([]);
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const handleSubmit = async () => {
@@ -23,6 +28,22 @@ const SubmitModelTraining = () => {
       cancel();
     }
   }
+  const getAvailableResource = async () => {
+    const res = await fetchAvilableResource();
+    if (res.code === 0) {
+      let { data: { aiFrameworks, deviceList } } = res;
+      let aiFrameworkList = []
+      Object.keys(aiFrameworks).forEach(val => {
+        aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
+      })
+      console.log('aiFrameworkList', aiFrameworkList)
+      setFrameWorks(aiFrameworkList);
+      setDeviceList(deviceList);
+    }
+  }
+  useEffect(() => {
+    getAvailableResource();
+  }, [])
   const addParams = () => {
     const newRunningParams = runningParams.concat({
       key: '',
@@ -41,6 +62,7 @@ const SubmitModelTraining = () => {
     })
     callback();
   }
+  
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('runningParams');
     [...runningParams].forEach((param, index) => {
@@ -54,16 +76,6 @@ const SubmitModelTraining = () => {
       runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
     })
   }
-  const frameWorks = [
-    {
-      name: 'name1',
-      value: 'value1'
-    },
-    {
-      name: 'name2',
-      value: 'value2'
-    },
-  ]
 
   const commonLayout = {
     labelCol: { span: 4 },
@@ -91,7 +103,7 @@ const SubmitModelTraining = () => {
           <Select>
             {
               frameWorks.map(f => (
-                <Option value={f.value}>{f.name}</Option>
+                <Option value={f}>{f}</Option>
               ))
             }
           </Select>
@@ -130,8 +142,8 @@ const SubmitModelTraining = () => {
         <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{ width: '260px' }}>
             {
-              frameWorks.map(f => (
-                <Option value={f.value}>{f.name}</Option>
+              deviceList.map(d => (
+                <Option value={d.deviceType}>{d.deviceType}</Option>
               ))
             }
           </Select>

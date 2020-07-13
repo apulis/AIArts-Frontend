@@ -31,6 +31,13 @@ const List = () => {
       getTrainingList();
     }
   }
+  const searchList = (s) => {
+    const searchResult = trainingWorkList.filter(t => {
+      if (t.name.includes(s)) {
+        return t;
+      }
+    })
+  }
   const columns = [
     {
       dataIndex: 'name',
@@ -79,7 +86,7 @@ const List = () => {
       <Link to="/model-training/submit">
         <Button href="">创建训练作业</Button>
       </Link>
-      <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" />
+      <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" onSearch={searchList} />
       <Table loading={tableLoading} style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
     </PageHeaderWrapper>
   )
