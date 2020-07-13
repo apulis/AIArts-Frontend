@@ -23,49 +23,51 @@ const InferenceList = props => {
     dispatch({
       type: 'inferenceList/fetch',
       payload: {
-        current: pageParams.page,
-        pageSize: pageParams.size
+        pageNum: pageParams.pageNum,
+        pageSize: pageParams.pageSize
       },
     });
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
-    setPageParams({ page: page, size: size });
+    setPageParams({ pageNum: page, pageSize: size });
   };
 
   const columns = [
     {
       title: '作业名称',
-      dataIndex: 'name',
+      dataIndex: 'jobName',
       // ellipsis: true,
       // width: 150
       render(_text, item) {
         return (
-          <Link to={`/Inference/${item.id}/detail`}>{item.name}</Link>
+          <Link to={`/Inference/${item.jobId}/detail`}>{item.jobName}</Link>
         )
       }
     },
     {
       title: '使用模型',
-      dataIndex: 'model',
+      // dataIndex: 'model',
       // ellipsis: true,
       // width: 100
+      render: (text, item) => item.jobParams?.model_base_path
     },
     {
       title: '状态',
-      dataIndex: 'status',
+      dataIndex: 'jobStatus',
       // ellipsis: true,
       // width: 100
     },
     {
       title: '引擎类型',
-      dataIndex: 'engineType',
+      // dataIndex: 'engineType',
       // ellipsis: true,
       // width: 100,
+      render: (text, item) => item.jobParams?.framework
     },
     {
       title: '创建时间',
-      dataIndex: 'createTime',
+      dataIndex: 'jobTime',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
       // ellipsis: true,
       // width: 150,
@@ -78,15 +80,17 @@ const InferenceList = props => {
     },
     {
       title: '服务地址',
-      dataIndex: 'serverAddr',
+      // dataIndex: 'serverAddr',
       // ellipsis: true,
       // width: 100,
+      render: (text, item) => item.jobParams.inference-url ? item.jobParams.inference-url : ''
     },
     {
       title: '描述',
       dataIndex: 'desc',
       // ellipsis: true,
       // width: 150
+      render: (text, item) => item.jobParams?.desc
     },
     {
       title: '操作',
@@ -131,8 +135,8 @@ const InferenceList = props => {
     dispatch({
       type: 'inferenceList/fetch',
       payload: {
-        current: pageParams.page,
-        pageSize: pageParams.size
+        pageNum: pageParams.pageNum,
+        pageSize: pageParams.pageSize
       },
     });
   };
