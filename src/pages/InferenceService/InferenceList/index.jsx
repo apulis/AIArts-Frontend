@@ -99,7 +99,7 @@ const InferenceList = props => {
         return (
           <Space size="middle">
             <a onClick={() => stopJob(item)}>停止</a>
-            <a onClick={() => deleteJob(item)}>删除</a>
+            {/* <a onClick={() => deleteJob(item)}>删除</a> */}
           </Space>
         );
       },
