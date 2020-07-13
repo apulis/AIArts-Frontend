@@ -15,11 +15,11 @@ const { TextArea } = Input;
 
 const SubmitModelTraining = () => {
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
-  
   const [frameWorks, setFrameWorks] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
+
   const handleSubmit = async () => {
     const values = await validateFields();
     const cancel = message.loading('正在提交');
@@ -28,6 +28,7 @@ const SubmitModelTraining = () => {
       cancel();
     }
   }
+
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -36,14 +37,15 @@ const SubmitModelTraining = () => {
       Object.keys(aiFrameworks).forEach(val => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
       })
-      console.log('aiFrameworkList', aiFrameworkList)
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
     }
   }
+
   useEffect(() => {
     getAvailableResource();
   }, [])
+
   const addParams = () => {
     const newRunningParams = runningParams.concat({
       key: '',
@@ -52,6 +54,7 @@ const SubmitModelTraining = () => {
     });
     setRunningParams(newRunningParams);
   }
+
   const validateRunningParams = async (index, propertyName, ...args) => {
     const [rule, value, callback] = [...args];
     const runningParams = await getFieldValue('runningParams');
@@ -70,7 +73,6 @@ const SubmitModelTraining = () => {
       param.value = values[index].value;
     })
     const newRunningParams = [...runningParams].filter((param) => param.createTime !== key)
-    console.log('newRunningParams', newRunningParams)
     setRunningParams(newRunningParams)
     setFieldsValue({
       runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
@@ -81,6 +83,7 @@ const SubmitModelTraining = () => {
     labelCol: { span: 4 },
     wrapperCol: { span: 8 }
   }
+
   return (
     <PageHeader
       ghost={false}
@@ -100,7 +103,7 @@ const SubmitModelTraining = () => {
       <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
       <Form form={form}>
         <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
-          <Select>
+          <Select placeholder="请选择">
             {
               frameWorks.map(f => (
                 <Option value={f}>{f}</Option>
@@ -140,7 +143,7 @@ const SubmitModelTraining = () => {
           </div>
         </FormItem>
         <FormItem label="计算节点规格" name="computingNode" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{ width: '260px' }}>
+          <Select placeholder="请选择" style={{ width: '260px' }}>
             {
               deviceList.map(d => (
                 <Option value={d.deviceType}>{d.deviceType}</Option>
