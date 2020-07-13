@@ -72,6 +72,7 @@ const InferenceDetail = () => {
         l && l.scrollTo(0, 100000000);
       }, 120);
     }
+    return res;
   }
   const handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -102,9 +103,11 @@ const InferenceDetail = () => {
   }
   const getLateastLogs = async () => {
     const cancel = message.loading('获取日志中')
-    await getInferenceLog()
+    const res = await getInferenceLog()
     cancel();
-    message.success('成功获取日志')
+    if (res.code === 0) {
+      message.success('成功获取日志')
+    }
   }
   const uploadButton = (
     <div>

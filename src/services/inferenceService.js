@@ -25,5 +25,9 @@ export async function startRecognition(id) {
 
 
 export async function fetchInferenceLog(id) {
-  return await request(`/inferences/GetJobLog/${id}`)
+  return await request(`/inferences/GetJobLog`, {
+    params: {
+      jobId: id,
+    }
+  })
 }
