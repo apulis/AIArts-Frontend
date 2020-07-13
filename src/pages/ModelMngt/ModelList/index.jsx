@@ -95,6 +95,7 @@ const ModelList = props => {
           <Space size="middle">
             <a onClick={() => handleDownload(item)}>模型下载</a>
             <a onClick={() => createInference(item)}>创建推理</a>
+            {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
             <a onClick={() => deleteModel(item)}>删除</a>
           </Space>
         );
@@ -102,7 +103,7 @@ const ModelList = props => {
     },
   ];
 
-  const showEditModal = (item) => {
+  const modifyModel = (item) => {
     setVisible(true);
     setCurrent(item);
   };
@@ -115,13 +116,25 @@ const ModelList = props => {
     setVisible(false);
   };
 
-  const handleSubmit = values => {
+  const handleSubmit = async (values) => {
     const id = current ? current.id : '';
-    const params = {id, ...values }
-    dispatch({
-      type: 'modelList/update',
-      payload: params
-    });
+
+    if(id){
+      const { description } = values;
+
+      const { error, msg } = await dispatch({
+        type: 'modelList/update',
+        payload: { id, description }
+      });
+
+      if(error === null){
+        message.success(`编辑成功`);
+        handleRefresh();
+      }else{
+        msg && message.error(`编辑失败:${msg}`);        
+      }
+      setVisible(false);
+    }
   };
 
   const onFinish = values => {
