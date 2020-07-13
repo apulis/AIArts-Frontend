@@ -25,14 +25,7 @@ export default {
       },
     },
     '/custom-user-dashboard-backend/': {
-      target: 'https://atlas02.sigsus.cn/',
-      changeOrigin: true,
-      pathRewrite: {
-        '^': '',
-      },
-    },
-    '/endpoints/grafana/api/datasources/proxy/1/api/v1': {
-      target: 'https://atlas02.sigsus.cn/',
+      target: 'http://sandbox2-master.sigsus.cn:52080/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',

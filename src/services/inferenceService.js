@@ -6,7 +6,11 @@ export async function fetchInferenceList() {
 }
 
 export async function fetchInferenceDetail(id) {
-  return await request('/inferences/' + id)
+  return await request('/inferences/GetJobDetail', {
+    params: {
+      jobId: id
+    }
+  })
 }
 
 export async function createInference(data) {

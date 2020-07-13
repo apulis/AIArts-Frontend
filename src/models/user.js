@@ -4,7 +4,7 @@ const UserModel = {
   namespace: 'user',
   state: {
     currentUser: {
-      userName: 'User',
+      userName: '',
       id: undefined,
       permissionList: [],
       nickName: undefined,
