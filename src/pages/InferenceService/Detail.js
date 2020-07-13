@@ -57,10 +57,17 @@ const InferenceDetail = () => {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => {
-        setImageUrl(imageUrl);
+      let imageBase64 = info.file.response.data
+      if (typeof imageBase64 !== 'string') {
+        getBase64(info.file.originFileObj, imageUrl => {
+          setImageUrl(imageUrl);
+          setLoading(false);
+        });
+      } else {
+        setImageUrl(imageBase64);
         setLoading(false);
-      });
+      }
+      
     }
   }
   const beforeUpload = (file) => {
@@ -94,11 +101,14 @@ const InferenceDetail = () => {
   return (
     <PageHeaderWrapper>
       <Upload
-        name="avatar"
+        headers={{
+          Authorization: `Bearer ${localStorage.token}`
+        }}
+        name="image"
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action={`/inferences/${id}/upload_image`}
+        action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
