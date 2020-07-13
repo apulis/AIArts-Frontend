@@ -9,7 +9,6 @@ import { submitModelTraining, fetchAvilableResource } from '../../services/model
 
 import styles from './index.less';
 
-
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -162,7 +161,7 @@ const ModelTraining = () => {
         >
           <Input addonBefore={codePathPrefix} style={{ width: 300 }} />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }}label="启动文件"  name="startupFile">
+        <FormItem labelCol={{ span: 3 }} label="启动文件"  name="startupFile" rules={[{required: true}, {pattern: /\.py$/, message: '需要填写一个python 文件'}]}>
           <Input  addonBefore={codePathPrefix} style={{ width: 300 }} />
         </FormItem>
         <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>

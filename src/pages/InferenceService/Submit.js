@@ -6,7 +6,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import { generateKey } from '../ModelTraining/Submit';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { createInference } from '@/services/inferenceService';
-import { history } from 'umi';
+import { history, withRouter } from 'umi';
 
 
 import styles from './index.less'
@@ -14,10 +14,13 @@ import styles from './index.less'
 
 const { TextArea } = Input; 
 
-const SubmitModelTraining = () => {
+const SubmitModelTraining = (props) => {
+  const query = props.location.query;
+  
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [frameWorks, setFrameWorks] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
+  const [initialModelPath, setInitialModelPath] = useState(decodeURIComponent(query.modelPath || ''));
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
 
@@ -27,7 +30,7 @@ const SubmitModelTraining = () => {
     const submitData = {};
     submitData.image = values.frameWork;
     submitData.jobName = values.workName;
-    submitData.model_base_path = values.moduleName;
+    submitData.model_base_path = values.modelName;
     submitData.device = values.deviceType;
     submitData.desc = values.desc;
     submitData.params = {};
@@ -37,6 +40,8 @@ const SubmitModelTraining = () => {
     const res = await createInference(submitData);
     if (res.code === 0) {
       cancel();
+      message.success('成功提交');
+      history.push('/Inference/list')
     }
   }
 
@@ -94,7 +99,7 @@ const SubmitModelTraining = () => {
     labelCol: { span: 4 },
     wrapperCol: { span: 8 }
   }
-
+  console.log('initialModelPath', initialModelPath)
   return (
     <PageHeader
       ghost={false}
@@ -123,10 +128,16 @@ const SubmitModelTraining = () => {
           </Select>
         </FormItem>
         <FormItem labelCol={{span: 4}} label="使用模型">
-          <FormItem name="modelName" noStyle rules={[{ required: true }]}>
-            
-            <Input placeholder="请输入使用模型" style={{width: '260px'}} />
-          </FormItem>
+          {
+            initialModelPath ? (<FormItem name="modelName" noStyle initialValue={initialModelPath} rules={[{ required: true }]}>
+              <Input placeholder="请输入使用模型" style={{width: '260px'}} />
+            </FormItem>) : (
+            <FormItem name="modelName" noStyle rules={[{ required: true }]}>
+              <Input placeholder="请输入使用模型" style={{width: '260px'}} />
+            </FormItem>
+            )
+          }
+          
           <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />}></Button>
         </FormItem>
         <FormItem label="作业参数" labelCol={{ span: 4 }} >
@@ -135,7 +146,7 @@ const SubmitModelTraining = () => {
               return (
                 <>
                   <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args) } }]} name={['runningParams', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input  style={{width: '260px'}}/>
+                    <Input style={{width: '260px'}} />
                   </FormItem>
                   <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
                   <FormItem initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args) } }]} name={['runningParams', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
@@ -170,4 +181,4 @@ const SubmitModelTraining = () => {
 }
 
 
-export default SubmitModelTraining;
+export default withRouter(SubmitModelTraining);

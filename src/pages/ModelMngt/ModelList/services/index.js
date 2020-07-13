@@ -20,9 +20,9 @@ export async function addModel(data) {
 }
 
 export async function updateModel(params = {}) {
-  return await request(`/models/${params.modelId}`, {
+  return await request(`/models/${params.id}`, {
     method: 'POST',
-    params
+    data: {description: params.description}
   });
 }
 

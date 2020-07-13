@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
-
+import { stringify } from 'querystring';
 import { USER_DASHBOARD_PATH } from '@/utils/const';
 
 const prefix = '/ai_arts/api'

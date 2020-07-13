@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Descriptions, message, Upload, Button } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useParams } from 'umi';
 
-import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition } from '../../services/inferenceService';
+import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition, fetchInferenceLog } from '../../services/inferenceService';
 
 import styles from './index.less';
 
@@ -58,10 +58,22 @@ const testLog = `
 const InferenceDetail = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const logEl = useRef(null);
   const [beginAnalizeLoading, setBeginAnalizeLoading] = useState(false);
   const params = useParams()
   const id = params.id;
   const [logs, setLogs] = useState(testLog);
+  const getInferenceLog = async () => {
+    const res = await fetchInferenceLog(id);
+    const l = logEl.current;
+    if (res.code === 0) {
+      setLogs(res.data.log);
+      setTimeout(() => {
+        l && l.scrollTo(0, 100000000);
+      }, 120);
+    }
+    return res;
+  }
   const handleChange = info => {
     if (info.file.status === 'uploading') {
       setLoading(true);
@@ -80,17 +92,22 @@ const InferenceDetail = () => {
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
     }
-    const isLt2M = file.size / 1024 / 1024 < 5;
-    if (!isLt2M) {
-      message.error('Image must smaller than 5MB!');
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('图片不能大于5M');
     }
-    return isJpgOrPng && isLt2M;
+    return isJpgOrPng && isLt5M;
   }
   const beginAnalyze = () => {
     setBeginAnalizeLoading(true)
   }
-  const getLateastLogs = () => {
-    //
+  const getLateastLogs = async () => {
+    const cancel = message.loading('获取日志中')
+    const res = await getInferenceLog()
+    cancel();
+    if (res.code === 0) {
+      message.success('成功获取日志')
+    }
   }
   const uploadButton = (
     <div>
@@ -128,9 +145,9 @@ const InferenceDetail = () => {
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
       <Button onClick={getLateastLogs}>点击获取最新日志</Button>
-      <pre className={styles.logs}>
+      {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
         {logs}
-      </pre>
+      </pre> : <LoadingOutlined />}
 
     </PageHeaderWrapper>
   )
