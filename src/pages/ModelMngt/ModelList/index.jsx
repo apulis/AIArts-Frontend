@@ -23,6 +23,8 @@ const ModelList = props => {
   const [form] = Form.useForm();
 
   useEffect(() => {
+    console.log('---useEffect---');
+    
     dispatch({
       type: 'modelList/fetch',
       payload: {
@@ -34,6 +36,7 @@ const ModelList = props => {
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
+    // console.log('---pageParamsChange---')
     setPageParams({ pageNum: page, pageSize: size });
     // dispatch({
     //   type: 'modelList/fetch',
@@ -247,12 +250,12 @@ const ModelList = props => {
         </Card>
       </PageHeaderWrapper>
 
-      <ModalForm
+      {visible && <ModalForm
         current={current}
         visible={visible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
-      />
+      />}
     </>
   );
 };

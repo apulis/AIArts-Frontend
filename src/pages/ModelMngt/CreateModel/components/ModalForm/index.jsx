@@ -12,7 +12,8 @@ const TrainingJobModal = props => {
     jobList: { data },
     onCancel,
     onSubmit,
-    visible = true
+    visible = true,
+
   } = props;
 
   const [pageParams, setPageParams] = useState(PAGEPARAMS);

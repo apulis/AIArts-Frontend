@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
-import { FolderOpenOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { FolderOpenOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 
@@ -109,7 +109,6 @@ const CreateModel = props => {
           </Form.Item>          
           <Form.Item
             {...layout}
-            name='jobWrapper'
             label="选择训练作业"
             // rules={[{ required: true, message: '训练作业不能为空!' }]}
           >
@@ -141,12 +140,14 @@ const CreateModel = props => {
       </div>
     </PageHeader>
     {/* 选择训练作业弹框 */}
-    <ModalForm
+    {
+      visible && <ModalForm
       // current={current}
       visible={visible}
       onCancel={handleCancel}
       onSubmit={handleSubmit}
     />
+    }
     </>  
   );
 };
