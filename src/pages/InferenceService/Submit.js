@@ -37,6 +37,8 @@ const SubmitModelTraining = () => {
     const res = await createInference(submitData);
     if (res.code === 0) {
       cancel();
+      message.success('成功提交');
+      history.push('/Inference/list')
     }
   }
 
