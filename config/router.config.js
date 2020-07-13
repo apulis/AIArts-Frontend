@@ -32,7 +32,7 @@ export default [
             path: '/CodeList',
             name: 'codeDevelopment',
             icon: 'EditOutlined',
-            component: './CodeDevelopment/CodeList'
+            component: './CodeDevelopment/CodeList',
           },  
           {
             path: '/CodeCreate',

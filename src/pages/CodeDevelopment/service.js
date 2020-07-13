@@ -1,8 +1,8 @@
 import request from '@/utils/request';
 
-export async function getCodes(pageNum, pageSize) {
+export async function getCodes(params) {
   return request('/codes', {
-    params: { pageNum, pageSize },
+    params,
   });
 }
 

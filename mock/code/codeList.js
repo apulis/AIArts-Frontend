@@ -17,7 +17,7 @@ const genList = (current, pageSize) => {
       codePath: `storePath`,
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       desc: 'Handwritten digit classification',
-      codeUrl:'http://xxxx'
+      codeUrl:'https://www.baidu.com/'
     });
     // tableListDataSource.push({
     //   id: index,
@@ -73,68 +73,23 @@ function getCodes(req, res, u) {
   return res.json(result);
 }
 
-function postCode(req, res, u, b) {
-  let realUrl = u;
-
-  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
-    realUrl = req.url;
-  }
-
-  const body = (b && b.body) || req.body;
-  const { method, name, desc, key } = body;
-
-  switch (method) {
-    /* eslint no-case-declarations:0 */
-    case 'delete':
-      tableListDataSource = tableListDataSource.filter((item) => key.indexOf(item.key) === -1);
-      break;
-
-    case 'post':
-      (() => {
-        const i = Math.ceil(Math.random() * 10000);
-        const newRule = {
-          key: tableListDataSource.length,
-          name: `Project ${tableListDataSource.length}`,
-          desc: '这是一段描述',
-          creator: Mock.mock('@cname'),
-          latestTime: new Date()
-        };
-        tableListDataSource.unshift(newRule);
-        return res.json(newRule);
-      })();
-
-      return;
-
-    case 'update':
-      (() => {
-        let newRule = {};
-        tableListDataSource = tableListDataSource.map((item) => {
-          if (item.key === key) {
-            newRule = { ...item, desc, name };
-            return { ...item, desc, name };
-          }
-
-          return item;
-        });
-        return res.json(newRule);
-      })();
-
-      return;
-
-    default:
-      break;
-  }
-
+function postCode(req, res) {
   const result = {
-    list: tableListDataSource,
-    pagination: {
-      total: tableListDataSource.length,
+    code:0,
+    data:{
+      id:'1'
     },
+    msg:"success"
   };
   res.json(result);
+}
+
+function deleteCode(req, res, u, b){
+
 }
 
 export default {
   'GET /ai_arts/api/codes': getCodes,
   'POST /ai_arts/api/code': postCode,
+  'DELETE /ai_arts/api/code':deleteCode// code/??动态路由匹配
 };
