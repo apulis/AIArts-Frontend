@@ -1,4 +1,4 @@
-import { Tooltip, Tag } from 'antd';
+import { Button, Tag } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
 import { connect } from 'umi';
@@ -21,7 +21,8 @@ const GlobalHeaderRight = (props) => {
   }
 
   return (
-    <div className={className}>
+    <div className={className} style={{display: 'flex', alignItems: 'center'}}>
+      <Button href="/">专家页面</Button>
       <Avatar menu />
       {REACT_APP_ENV && (
         <span>
