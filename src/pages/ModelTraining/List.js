@@ -12,12 +12,14 @@ const { Search } = Input;
 
 const List = () => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
+  const [totalTrainingWorkList, setTotalTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const getTrainingList = async () => {
     const res = await fetchTrainingList();
     if (res.code === 0) {
       const trainings = (res.data && res.data.Trainings) || [];
-      setTrainingWorkList(trainings);
+      setTotalTrainingWorkList(trainings);
+      setTrainingWorkList(trainings)
       setTableLoading(false)
     }
   }
@@ -32,11 +34,15 @@ const List = () => {
     }
   }
   const searchList = (s) => {
-    const searchResult = trainingWorkList.filter(t => {
+    if (!s) {
+      setTrainingWorkList(totalTrainingWorkList);
+    }
+    const searchResult = totalTrainingWorkList.filter(t => {
       if (t.name.includes(s)) {
         return t;
       }
     })
+    setTrainingWorkList(searchResult);
   }
   const columns = [
     {
