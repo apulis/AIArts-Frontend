@@ -7,7 +7,7 @@ import { notification, message } from 'antd';
 
 import { USER_DASHBOARD_PATH } from '@/utils/const';
 
-const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1'
+const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1';
 
 export const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -88,8 +88,7 @@ request.interceptors.request.use(async (url, options) => {
   if (token) {
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + token,
+      Accept: 'application/json'
     };
     return {
       url: url,
