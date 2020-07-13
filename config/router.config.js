@@ -40,7 +40,7 @@ export default [
           },  
           {
             path: '/dataManage',
-            name: 'DataManage',
+            name: 'dataManage',
             icon: 'ReadOutlined',
             routes: [
               {
@@ -96,7 +96,13 @@ export default [
           {
             path: '/Inference/:id/detail',
             component: './InferenceService/Detail',
-          },                        
+          },     
+          {
+            path: '/ResourceMonitoring',
+            name: 'resourceMonitoring',
+            icon: 'DashboardOutlined',
+            component: './ResourceMonitoring'
+          },                    
           {
             path: '/',
             redirect: '/CodeList',

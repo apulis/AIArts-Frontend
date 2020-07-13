@@ -50,7 +50,6 @@ const DataSetList = () => {
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = null, text = '';
-      values.Creator = 'zzzz'
       setBtnLoading(true);
       if (modalType) {
         text = '编辑';
