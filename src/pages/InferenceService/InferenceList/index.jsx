@@ -85,7 +85,7 @@ const InferenceList = props => {
       // dataIndex: 'serverAddr',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => item.jobParams.inference-url ? item.jobParams.inference-url : ''
+      render: (text, item) => item.jobParams['inference-url'] ? item.jobParams['inference-url'] : ''
     },
     {
       title: '描述',
