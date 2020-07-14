@@ -5,10 +5,10 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS } from '@/utils/const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
-import { formatDate } from '@/utils/time';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { downloadModel } from '../ModelList/services';
 import { stringify } from 'querystring';
+import moment from 'moment';
 
 const { confirm } = Modal;
 
@@ -66,7 +66,7 @@ const ModelList = props => {
     {
       title: '创建时间',
       dataIndex: 'createdAt',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+      render: text => moment(text).format('YYYY-MM-DD HH:MM:SS'),
       ellipsis: true,
       width: 150,
     },
