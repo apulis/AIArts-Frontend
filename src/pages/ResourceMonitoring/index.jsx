@@ -1,6 +1,6 @@
 import { Card, Select  } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './index.less';
 import { Pie, ChartCard } from '../../components/Charts';
 import axios from 'axios';
@@ -26,7 +26,7 @@ const ResourceMonitoring = () => {
     getIPData();
   }, []);
 
-  const getIPData = async () => {
+  const getIPData = () => {
     setLoading(true);
     const nowTime = new Date().getTime();
     const start = Math.round((nowTime - 3600000)/1000).toString();
@@ -102,7 +102,7 @@ const ResourceMonitoring = () => {
             total={() => (
               <span>{data.reduce((pre, now) => now.y + pre, 0)} ({unit})</span>
             )}
-            valueFormat={val => <span dangerouslySetInnerHTML={{ __html: `${unit !== '%' ? val : ''}${unit !== '%' ? unit : ''}` }} />}
+            valueFormat={val => <span>{unit !== '%' ? val : ''}{unit !== '%' ? unit : ''}</span>}
           />
         </Card>
       )
