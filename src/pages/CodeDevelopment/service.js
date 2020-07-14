@@ -1,36 +1,26 @@
 import request from '@/utils/request';
 
-export async function getCodes(page, count) {
+export async function getCodes(params) {
   return request('/codes', {
-    params: { page, pageSize:count },
+    params,
   });
 }
 
-export async function getDatasetDetail(id) {
-  return request(`/api/datasets/${id}`);
+export async function deleteCode(id) {
+  return request(`/codes/${id}`, { method: 'DELETE'})
+}
+export async function getJupyterUrl(id) {
+  return request(`/codes/${id}/jupyter`)
 }
 
-export async function edit(id, data) {
-  return await request(`/api/dataset/${id}`, {
-    method: 'POST',
-    data: data,
+export async function getResource() {
+  return await request(`/common/resource`, {
   });
 }
 
-export async function deleteDataSet(id) {
-  return request(`/api/datasets/${id}`, { method: 'DELETE' })
-}
-
-export async function upload(data) {
-  return await request(`/api/dataset/upload`, {
-    method: 'POST',
-    data: data,
-  });
-}
-
-export async function add(data) {
-  return await request(`/api/dataset`, {
-    method: 'POST',
-    data: data,
+export async function postCode(data) {
+  return request(`/codes`,{
+    method:'POST',
+    data
   });
 }

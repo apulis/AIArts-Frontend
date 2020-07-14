@@ -11,13 +11,23 @@ const genList = (current, pageSize) => {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
       id: index,
-      devName: `debug_job_001`,
+      name: `debug_job_001`,
       status: `status`,
-      engineType: `engineType`,
-      codeStorePath: `storePath`,
+      engine: `engineType`,
+      codePath: `storePath`,
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      desc: 'Handwritten digit classification'
+      desc: 'Handwritten digit classification',
+      JupyterUrl:'https://www.baidu.com/'
     });
+    // tableListDataSource.push({
+    //   id: index,
+    //   devName: `debug_job_001`,
+    //   status: `status`,
+    //   engineType: `engineType`,
+    //   codeStorePath: `storePath`,
+    //   createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+    //   desc: 'Handwritten digit classification',
+    // });
   }
 
   // tableListDataSource.reverse();
@@ -33,9 +43,9 @@ function getCodes(req, res, u) {
     realUrl = req.url;
   }
 
-  const { current = 1, pageSize = 10 } = req.query;// 请求参数
+  const { pageNum = 1, pageSize = 10 } = req.query;// 请求参数
   const params = parse(realUrl, true).query;
-  let dataSource = [...tableListDataSource].slice((current - 1) * pageSize, current * pageSize);
+  let dataSource = [...tableListDataSource].slice((pageNum - 1) * pageSize, pageNum * pageSize);
 
   if (params.sorter) {
     const s = params.sorter.split('_');
@@ -55,80 +65,31 @@ function getCodes(req, res, u) {
   const result = {
     code: 0,
     data: {
-      list: dataSource,
-      // pagination: {
-        total: tableListDataSource.length,
-        pageSize: parseInt(`${params.pageSize}`, 10) || 10,
-        current: parseInt(`${params.current}`, 10) || 1,
-      // }
+      CodeEnvs: dataSource,
+      total: tableListDataSource.length,
     },
     msg: 'success'
   };
   return res.json(result);
 }
 
-function postCode(req, res, u, b) {
-  let realUrl = u;
-
-  if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
-    realUrl = req.url;
-  }
-
-  const body = (b && b.body) || req.body;
-  const { method, name, desc, key } = body;
-
-  switch (method) {
-    /* eslint no-case-declarations:0 */
-    case 'delete':
-      tableListDataSource = tableListDataSource.filter((item) => key.indexOf(item.key) === -1);
-      break;
-
-    case 'post':
-      (() => {
-        const i = Math.ceil(Math.random() * 10000);
-        const newRule = {
-          key: tableListDataSource.length,
-          name: `Project ${tableListDataSource.length}`,
-          desc: '这是一段描述',
-          creator: Mock.mock('@cname'),
-          latestTime: new Date()
-        };
-        tableListDataSource.unshift(newRule);
-        return res.json(newRule);
-      })();
-
-      return;
-
-    case 'update':
-      (() => {
-        let newRule = {};
-        tableListDataSource = tableListDataSource.map((item) => {
-          if (item.key === key) {
-            newRule = { ...item, desc, name };
-            return { ...item, desc, name };
-          }
-
-          return item;
-        });
-        return res.json(newRule);
-      })();
-
-      return;
-
-    default:
-      break;
-  }
-
+function postCode(req, res) {
   const result = {
-    list: tableListDataSource,
-    pagination: {
-      total: tableListDataSource.length,
+    code:0,
+    data:{
+      id:'1'
     },
+    msg:"success"
   };
   res.json(result);
+}
+
+function deleteCode(req, res, u, b){
+
 }
 
 export default {
   'GET /ai_arts/api/codes': getCodes,
   'POST /ai_arts/api/code': postCode,
+  'DELETE /ai_arts/api/code':deleteCode// code/??动态路由匹配
 };
