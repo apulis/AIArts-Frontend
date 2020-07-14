@@ -18,6 +18,7 @@ export function getBase64(img, callback) {
 
 const InferenceDetail = () => {
   const [imageUrl, setImageUrl] = useState('');
+  const [tempImageUrl, setTempImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [jobDetail, setJobDetail] = useState({});
   const logEl = useRef(null);
@@ -60,11 +61,11 @@ const InferenceDetail = () => {
       let imageBase64 = info.file.response.data
       if (typeof imageBase64 !== 'string') {
         getBase64(info.file.originFileObj, imageUrl => {
-          setImageUrl(imageUrl);
+          setTempImageUrl(imageUrl);
           setLoading(false);
         });
       } else {
-        setImageUrl(imageBase64);
+        setTempImageUrl(imageBase64);
         setLoading(false);
       }
       
@@ -82,7 +83,10 @@ const InferenceDetail = () => {
     return isJpgOrPng && isLt5M;
   }
   const beginAnalyze = () => {
-    setBeginAnalizeLoading(true)
+    setBeginAnalizeLoading(true);
+    setTimeout(() => {
+      setImageUrl(tempImageUrl)
+    }, 1000);
   }
   const getLateastLogs = async () => {
     const cancel = message.loading('获取日志中')
