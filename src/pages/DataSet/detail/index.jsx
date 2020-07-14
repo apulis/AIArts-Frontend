@@ -48,14 +48,14 @@ const DataSetDetail = () => {
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {
-            const { creator, path, created_at, updated_at, description, version } = item;
+            const { creator, path, createdAt, updatedAt, description, version } = item;
             return (
               <Panel header={getPanelHeader(index, version)} key={index}>
                 <Descriptions size="small" column={2}>
                   <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
                   <Descriptions.Item label="Storage Path">{path}</Descriptions.Item>
-                  <Descriptions.Item label="创建时间">{formatDate(created_at, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="更新时间">{formatDate(updated_at, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="创建时间">{formatDate(createdAt, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="更新时间">{formatDate(updatedAt, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
                   <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
