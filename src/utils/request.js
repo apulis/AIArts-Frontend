@@ -47,7 +47,7 @@ export const errorHandler = async (error) => {
   }
   const CODE = _response.code;
   if (CODE === 30005) {
-    message.error('该存储路径下没有可用的数据集！');
+    message.error('该存储路径下没有文件！');
     return response;
   } else if (CODE === 20001) {
     message.error('请求参数错误！');
