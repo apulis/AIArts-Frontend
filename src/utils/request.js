@@ -65,7 +65,7 @@ export const errorHandler = async (error) => {
         const queryString = stringify({
           redirect: window.location.href,
         });
-        window.location.href = `${USER_LOGIN_URL}/user/login?` + queryString;
+        window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
     notification.error({
