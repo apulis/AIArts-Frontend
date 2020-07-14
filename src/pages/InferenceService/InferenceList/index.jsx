@@ -64,7 +64,7 @@ const InferenceList = props => {
       // dataIndex: 'engineType',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => item.jobParams?.framework
+      render: (text, item) => item?.jobParams?.framework
     },
     {
       title: '创建时间',
@@ -100,7 +100,7 @@ const InferenceList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled()}>停止</Button>
+            <Button type="link" onClick={() => stopJob(item)} disabled={() => isStopDisabled(item)}>停止</Button>
             {/* <a onClick={() => stopJob(item)}>停止</a> */}
             {/* <a onClick={() => deleteJob(item)}>删除</a> */}
           </Space>
