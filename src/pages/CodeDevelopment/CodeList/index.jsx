@@ -5,7 +5,7 @@ import { Table, Space, Button, Row, Col, Input,message } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { formatDate } from '@/utils/time';
 import { PAGEPARAMS } from '../../../const';
-import { getCodes,deleteCode } from '../service.js'
+import { getCodes,deleteCode,getJupyterUrl} from '../service.js'
 const CodeList = (props) => {
   const { Search } = Input;
   const [codes, setCodes] = useState({ data: [], total: 0 });
@@ -30,6 +30,28 @@ const CodeList = (props) => {
     } else {
       message.error(msg);
     }
+  }
+  const apiOpenJupyter = async ()=>{
+    const {code,data,msg} = await getJupyterUrl(id)
+    if(code===0){
+      const endpoints = data.endpoints
+      let url = ''
+      let flag = false
+      endpoints.forEach((obj)=>{
+        if(!flag && obj.name==='ipython' && obj.status==='running'){
+          flag = true
+          url = domain
+        }
+      })
+      if(flag){
+        window.open(url)
+      }else{
+        message.info('跳转失败，请稍后再试')
+      }
+    }else{
+      message.error(msg)
+    }
+
   }
   const apiDeleteCode = async(id)=>{
     const obj = await deleteCode(id)
@@ -85,8 +107,7 @@ const CodeList = (props) => {
     },
   ];
   const handleOpen = (item) => {
-    console.log('open', item.JupyterUrl)
-    window.open(item.JupyterUrl)
+    apiOpenJupyter(item.id)
   }
   const handleDelete = (item) => {
     const id = item.id

@@ -7,7 +7,6 @@ const CodeCreate = () => {
   const { Option } = Select;
   const { TextArea } = Input;
   let [data, setData] = useState(null)
-  console.log('render')
   const [deviceTypeArr, setDeviceTypeArr] = useState([])// 更新状态是异步的
   const [deviceNumArr, setDeviceNumArr] = useState([])
   const [engineTypeArr, setEngineTypeArr] = useState([])

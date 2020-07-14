@@ -9,6 +9,9 @@ export async function getCodes(params) {
 export async function deleteCode(id) {
   return request(`/codes/${id}`, { method: 'DELETE'})
 }
+export async function getJupyterUrl(id) {
+  return request(`/codes/${id}/jupyter`)
+}
 
 export async function getResource() {
   return await request(`/common/resource`, {
