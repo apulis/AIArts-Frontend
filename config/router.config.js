@@ -40,12 +40,12 @@ export default [
           },  
           {
             path: '/dataManage',
-            name: 'DataManage',
+            name: 'dataManage',
             icon: 'ReadOutlined',
             routes: [
               {
                 path: '/dataManage/dataSet',
-                name: 'DataSet',
+                name: 'dataSet',
                 component: './DataSet',
               },
               {
@@ -55,7 +55,7 @@ export default [
               {
                 path: 'https://www.baidu.com/',
                 target: '_blank',
-                name: 'ImageLabel',
+                name: 'imageLabel',
               },
             ],
           },
@@ -96,7 +96,13 @@ export default [
           {
             path: '/Inference/:id/detail',
             component: './InferenceService/Detail',
-          },                        
+          },
+          {
+            path: '/ResourceMonitoring',
+            name: 'resourceMonitoring',
+            icon: 'DashboardOutlined',
+            component: './ResourceMonitoring'
+          },                    
           {
             path: '/',
             redirect: '/CodeList',
