@@ -24,8 +24,6 @@ const ModelList = props => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // console.log('---useEffect---');
-    
     dispatch({
       type: 'modelList/fetch',
       payload: {
@@ -33,19 +31,10 @@ const ModelList = props => {
         pageSize: pageParams.pageSize
       },
     });
-  // }, [1]);
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
-    // console.log('---pageParamsChange---')
     setPageParams({ pageNum: page, pageSize: size });
-    // dispatch({
-    //   type: 'modelList/fetch',
-    //   payload: {
-    //     pageNum: page,
-    //     pageSize: size
-    //   }
-    // });
   };
 
   const columns = [
