@@ -8,8 +8,21 @@ import { PAGEPARAMS } from '../../../const';
 import { getCodes,deleteCode,getJupyterUrl} from '../service.js'
 const CodeList = (props) => {
   const { Search } = Input;
+  const statusMap = {
+    unapproved:'未批准',
+    queued :'队列中',
+    scheduling :'调度中',
+    running :'运行中',
+    finished :'已完成',
+    failed:'已失败',
+    pausing:'暂停中',
+    paused:'已暂停',
+    killing :'关闭中',
+    killed:'已关闭',
+  }
+  const canOpenStatus = new Set(['running'])
+  const canStopStatus = new Set(['unapproved','queued','scheduling','running'])
   const [data, setData] = useState({ codeEnvs: [], total: 0 });
-  console.log('data',data)
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);// 页长
   useEffect(() => {// componentDidMount()
@@ -58,18 +71,13 @@ const CodeList = (props) => {
     const { code,data, msg } = obj
     if (code === 0) {
       renderData();
+      message.success('停止成功');
     } else {
       message.error(msg);
     }
   }
   const formatStatus = (status)=>{
-    const map = {
-      pending:'pending',
-      running:'运行中',
-      error:'错误',
-      failed:'不可用',
-    }
-    return status
+    return statusMap[status]
   }
   const columns = [
     {
@@ -109,8 +117,8 @@ const CodeList = (props) => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => handleOpen(item)} disabled={item.status!=='running'}>打开</a>
-            <a onClick={() => handleStop(item)} disabled={item.status!=='running'}>停止</a>
+            <a onClick={() => handleOpen(item)} disabled={!canOpenStatus.has(item.status)}>打开</a>
+            <a onClick={() => handleStop(item)} disabled={!canStopStatus.has(item.status)}>停止</a>
           </Space>
         );
       },
