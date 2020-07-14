@@ -182,11 +182,11 @@ const ModelTraining = () => {
         <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
           <Select
-            style={{width: '400px'}}
+            style={{width: '300px'}}
           >
             {
               datasets.map(d => (
-                <Option value={d.path}>{d.path}</Option>
+                <Option value={d.path}>{d.name}</Option>
               ))
             }
           </Select>
@@ -215,7 +215,7 @@ const ModelTraining = () => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{width: '300px'}} onChange={onDeviceTypeChange}>
             {
               deviceList.map(d => (
@@ -225,7 +225,7 @@ const ModelTraining = () => {
           </Select>
         </FormItem>
         <FormItem
-          label="计算节点个数"
+          label="设备数量"
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}

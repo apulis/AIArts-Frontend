@@ -5,7 +5,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stopInference } from './services';
 import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
-import { formatDate } from '@/utils/time';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
@@ -69,7 +68,7 @@ const InferenceList = props => {
     {
       title: '创建时间',
       dataIndex: 'jobTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+      render: text => moment(text).format('YYYY-MM-DD hh:mm:ss'),
       // ellipsis: true,
       // width: 150,
     },
