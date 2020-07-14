@@ -76,7 +76,7 @@ const ResourceMonitoring = () => {
     let obj = {
       'CPU': [{x: '已用', y: dataArr[0]}, {x: '可用', y: 100 - dataArr[0]}], 
       'GPU': [{x: '已用', y: dataArr[1]}, {x: '可用', y: dataArr[2] - dataArr[1]}],
-      '内存': [{x: '已用', y: gbFormat(dataArr[3])}, {x: '可用', y: gbFormat(dataArr[4]) - gbFormat(dataArr[3])}], 
+      '内存': [{x: '已用', y: gbFormat(dataArr[3])}, {x: '可用', y: Number((gbFormat(dataArr[4]) - gbFormat(dataArr[3])).toFixed(2))}], 
       '硬盘': [{x: '已用', y: gbFormat(dataArr[6]) - gbFormat(dataArr[5])}, {x: '可用', y: gbFormat(dataArr[5])}]
     }
     setPieData(obj);
@@ -111,7 +111,7 @@ const ResourceMonitoring = () => {
 
   const handleSelect = v => {
     setNodeIp(v);
-    getPieData(nodeIp);
+    getPieData(v);
   }
 
   const getSelect = () => {
