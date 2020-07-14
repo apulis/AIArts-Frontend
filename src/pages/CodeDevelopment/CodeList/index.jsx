@@ -8,46 +8,46 @@ import { PAGEPARAMS } from '../../../const';
 import { getCodes,deleteCode,getJupyterUrl} from '../service.js'
 const CodeList = (props) => {
   const { Search } = Input;
-  const [codes, setCodes] = useState({ data: [], total: 0 });
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({ codeEnvs: [], total: 0 });
+  console.log('data',data)
+  const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);// 页长
   useEffect(() => {// componentDidMount()
     renderData();
   }, [pageParams])// pageParams改变触发的componentwillUpdate()
-  const renderData = async () => {
-    setLoading(true);
-    apiGetCodes(pageParams)
+  const renderData = async (success) => {
+    setLoading(true)
+    const apiData = await apiGetCodes(pageParams)
+    if(apiData){
+      setData({
+        codeEnvs:apiData.CodeEnvs,
+        total:apiData.total
+      })
+      if(success){
+        success()
+      }
+    }
     setLoading(false);
   };
   const apiGetCodes = async (pageParams)=>{
     const obj = await getCodes(pageParams);
     const { code, data, msg } = obj
     if (code === 0) {
-      setCodes({
-        data: data,
-        total: data.total,
-      });
+      return data
     } else {
       message.error(msg);
+      return null
     }
   }
-  const apiOpenJupyter = async ()=>{
+  const apiOpenJupyter = async (id)=>{
     const {code,data,msg} = await getJupyterUrl(id)
     if(code===0){
-      const endpoints = data.endpoints
-      let url = ''
-      let flag = false
-      endpoints.forEach((obj)=>{
-        if(!flag && obj.name==='ipython' && obj.status==='running'){
-          flag = true
-          url = domain
-        }
-      })
-      if(flag){
-        window.open(url)
-      }else{
-        message.info('跳转失败，请稍后再试')
+      if(data.status==='running'){
+        window.open(data.accessPoint)
       }
+     else{
+      message.error('打开失败，请稍后重试')
+     }
     }else{
       message.error(msg)
     }
@@ -62,6 +62,15 @@ const CodeList = (props) => {
       message.error(msg);
     }
   }
+  const formatStatus = (status)=>{
+    const map = {
+      pending:'pending',
+      running:'运行中',
+      error:'错误',
+      failed:'不可用',
+    }
+    return status
+  }
   const columns = [
     {
       title: '开发环境名称',
@@ -72,6 +81,7 @@ const CodeList = (props) => {
       title: '状态',
       dataIndex: 'status',
       ellipsis: true,
+      render:text=>formatStatus(text)
     },
     {
       title: '引擎类型',
@@ -99,8 +109,8 @@ const CodeList = (props) => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => handleOpen(item)}>打开</a>
-            <a onClick={() => handleDelete(item)}>删除</a>
+            <a onClick={() => handleOpen(item)} disabled={item.status!=='running'}>打开</a>
+            <a onClick={() => handleStop(item)} disabled={item.status!=='running'}>停止</a>
           </Space>
         );
       },
@@ -109,15 +119,16 @@ const CodeList = (props) => {
   const handleOpen = (item) => {
     apiOpenJupyter(item.id)
   }
-  const handleDelete = (item) => {
+  const handleStop = (item) => {
     const id = item.id
     apiDeleteCode(item.id)
   }
   const handleSearch = (value) => {
-    alert(`search:${value}`)
+    // alert(`search:${value}`)
+    message.info('搜索功能，暂不支持')
   }
   const handleFresh = () => {
-    renderData()
+    renderData(()=>{message.success('刷新成功')})
   }
   const onPageParamsChange = (pageNum, pageSize) => {
     setPageParams({ pageNum, pageSize});
@@ -146,11 +157,11 @@ const CodeList = (props) => {
         </Col>
       </Row>
       <Table
-        dataSource={codes.data.CodeEnvs}
+        dataSource={data.codeEnvs}
         columns={columns}
         rowKey={(r, i) => `${i}`}
         pagination={{
-          total: codes.data.total,
+          total: data.total,
           showTotal: (total) => `总共 ${total} 条`,
           showQuickJumper: true,
           showSizeChanger: true,

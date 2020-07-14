@@ -11,7 +11,6 @@ const CodeCreate = () => {
   const [deviceNumArr, setDeviceNumArr] = useState([])
   const [engineTypeArr, setEngineTypeArr] = useState([])
   const [engineNameArr, setengineNameArr] = useState([])
-  const [modelVisible, setModelVisible] = useState(false)
   const [codePathPrefix, setCodePathPrefix] = useState('')
   useEffect(() => {// 初始化处理
     renderForm()
@@ -29,8 +28,8 @@ const CodeCreate = () => {
     const obj = await postCode(values)
     const {code,data,msg} = obj
     if(code===0){
-      // 创建成功后跳转
-      showModal()
+      message.success('创建成功')
+      history.push('/CodeList')
     } else {
       message.error(msg)
     }
@@ -41,28 +40,16 @@ const CodeCreate = () => {
     if (code === 0) {
       return data
     } else {
-      return null
       message.error(msg)
+      return null
     }
   }
-  const { validateFields, getFieldValue, resetFields } = form;
+  const { validateFields } = form;
   const handleSubmit = async () => {
     const values = await validateFields();
-    console.log('result', values);
     apiPostCode(values)
-    resetFields()
   }
-  const showModal = () => {
-    setModelVisible(true)
-  };
-  const handleOk = e => {
-    setModelVisible(false)
-    history.push('/CodeList')
-  };
 
-  const handleCancel = e => {
-    setModelVisible(false)
-  };
   const handleEngineTypeChange = (item) => {
     setengineNameArr(data.aiFrameworks[item])
   }
@@ -70,9 +57,9 @@ const CodeCreate = () => {
     const avail = data['deviceList'][option.index].avail
     let arr = []
     if(avail>=2){
-      arr = [1,2]
+      arr = [0,1,2]
     }else if(avail==1){
-      arr = [1]
+      arr = [0,1]
     }else{
       message.info('该设备无可用资源')
     }
@@ -188,14 +175,6 @@ const CodeCreate = () => {
           </Form.Item>
         </Form>
       </div>
-      <Modal
-        title="创建成功"
-        visible={modelVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <p>点击确定跳转回列表页面</p>
-      </Modal>
     </>
   )
 
