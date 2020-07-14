@@ -2,7 +2,7 @@ import { Link, history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { PAGEPARAMS } from '../../../const';
+import { PAGEPARAMS } from '@/utils/const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';

@@ -2,7 +2,7 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import moment from 'moment';
 import { Modal, Form, DatePicker, Input, Table } from 'antd';
 import styles from './index.less';
-import { PAGEPARAMS } from '../../../../../const';
+import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
 
 const TrainingJobModal = props => {
