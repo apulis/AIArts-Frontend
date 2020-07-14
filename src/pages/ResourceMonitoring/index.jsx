@@ -67,7 +67,7 @@ const ResourceMonitoring = () => {
     const res = await Promise.all([getPie(usedCPU), getPie(canUseGPU), getPie(totalGPU), getPie(usedRAM), getPie(totalRAM),  getPie(canUseHD), getPie(totalHD)]);
     const dataArr = res.map(i => {
       const result = i.data.result;
-      if (result) {
+      if (result.length) {
         return Number((Number(result[0].value[1])).toFixed(2));
       } else {
         return 0;
