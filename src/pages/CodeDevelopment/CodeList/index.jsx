@@ -100,7 +100,7 @@ const CodeList = (props) => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      render: text => moment(text).format('YYYY-MM-DD HH:MM:SS'),
+      render: text => moment(text).format('YYYY-MM-DD hh:mm:ss'),
       ellipsis: true,
     },
     {
