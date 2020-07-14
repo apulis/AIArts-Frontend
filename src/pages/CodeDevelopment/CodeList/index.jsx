@@ -3,9 +3,10 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Link } from 'umi';
 import { Table, Space, Button, Row, Col, Input,message } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
-import { formatDate } from '@/utils/time';
 import { PAGEPARAMS } from '@/utils/const';
-import { getCodes,deleteCode,getJupyterUrl} from '../service.js'
+import { getCodes,deleteCode,getJupyterUrl} from '../service.js';
+import moment from 'moment';
+
 const CodeList = (props) => {
   const { Search } = Input;
   const statusMap = {
@@ -99,7 +100,7 @@ const CodeList = (props) => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
+      render: text => moment(text).format('YYYY-MM-DD HH:MM:SS'),
       ellipsis: true,
     },
     {
