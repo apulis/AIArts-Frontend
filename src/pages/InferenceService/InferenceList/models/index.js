@@ -22,7 +22,7 @@ export default {
     *fetch ({ payload = {} }, { call, put, select }) {
       try {
         const pagination = yield select(state => state.inferenceList.data.pagination)
-        const { pageNum = pagination.current, pageSize = pagination.pageSize, ...restParams } = payload
+        const { pageNum = pagination.pageNum, pageSize = pagination.pageSize, ...restParams } = payload
         const params = {
           ...restParams,
           pageNum,
@@ -31,10 +31,16 @@ export default {
         const {
           code, data, msg
         } = yield call(getInferences, params)
-        // console.log(code, data, msg)
         let error = null
         if (code === 0) {
-          const result = normalizeTableResult(data)
+          const result = {
+            list: data.inferences || [],
+            pagination: {
+              current: data.pageNum || 1,
+              pageSize: data.pageSize || 10,
+              total: data.total
+            }
+          }          
           yield put({
             type: 'save',
             payload: result

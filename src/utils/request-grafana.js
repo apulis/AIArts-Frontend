@@ -4,10 +4,10 @@
  */
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
-import { stringify } from 'querystring';
+
 import { USER_DASHBOARD_PATH } from '@/utils/const';
 
-const prefix = '/ai_arts/api'
+const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1';
 
 export const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -88,8 +88,7 @@ request.interceptors.request.use(async (url, options) => {
   if (token) {
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      Accept: 'application/json',
-      Authorization: 'Bearer ' + token,
+      Accept: 'application/json'
     };
     return {
       url: url,

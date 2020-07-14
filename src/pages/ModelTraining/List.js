@@ -1,40 +1,56 @@
-import React, { useState } from 'react';
-import { Button, Table, Input } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Table, Input, message } from 'antd';
 import { Link } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-
 import moment from 'moment';
+
+import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
 
 const { Search } = Input;
 
-const trainingWork = [{
-  id: 10000,
-  workName: '作业名称',
-  status: '已完成',
-  engineType: 'mxnet, mx-1.5.9',
-  createTime: '1594122050517',
-  runningTime: '1000000',
-  desc: '训练作业',
-}]
-
-for (let i = 0; i < 30; i ++) {
-  trainingWork.push({
-    ...trainingWork[i],
-    id: i + trainingWork[i].id,
-    createTime: trainingWork[i].createTime - 0 + 10000000,
-  })
-}
 
 
 const List = () => {
-  const [trainingWorkList, setTrainingWorkList] = useState(trainingWork);
+  const [trainingWorkList, setTrainingWorkList] = useState([]);
+  const [totalTrainingWorkList, setTotalTrainingWorkList] = useState([]);
+  const [tableLoading, setTableLoading] = useState(true);
+  const getTrainingList = async () => {
+    const res = await fetchTrainingList();
+    if (res.code === 0) {
+      const trainings = (res.data && res.data.Trainings) || [];
+      setTotalTrainingWorkList(trainings);
+      setTrainingWorkList(trainings)
+      setTableLoading(false)
+    }
+  }
+  useEffect(() => {
+    getTrainingList()
+  }, [])
+  const removeTraining = async (id) => {
+    const res = await removeTrainings(id);
+    if (res.code === 0) {
+      message.success('成功删除');
+      getTrainingList();
+    }
+  }
+  const searchList = (s) => {
+    if (!s) {
+      setTrainingWorkList(totalTrainingWorkList);
+    }
+    const searchResult = totalTrainingWorkList.filter(t => {
+      if (t.name.includes(s)) {
+        return t;
+      }
+    })
+    setTrainingWorkList(searchResult);
+  }
   const columns = [
     {
-      dataIndex: 'workName',
+      dataIndex: 'name',
       title: '作业名称',
       render(_text, item) {
         return (
-          <Link to={`/model-training/${item.id}/detail`}>{item.workName}</Link>
+          <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
         )
       }
     },
@@ -43,7 +59,7 @@ const List = () => {
       title: '状态'
     },
     {
-      dataIndex: 'engineType',
+      dataIndex: 'engine',
       title: '引擎类型',
     },
     {
@@ -51,13 +67,9 @@ const List = () => {
       title: '创建时间',
       render(_text, item) {
         return (
-          <div>{moment(item.createTime - 0).format('MMMM Do YYYY, h:mm:ss')}</div>
+          <div>{moment(item.createTime).format('MMMM Do YYYY, hh:mm:ss')}</div>
         )
       }
-    },
-    {
-      dataIndex: 'runningTime',
-      title: '运行时长'
     },
     {
       dataIndex: 'desc',
@@ -65,11 +77,10 @@ const List = () => {
     },
     {
       title: '操作',
-      render() {
+      render(_text, item) {
         return (
           <>
-            <a style={{marginLeft: '-20px'}}>停止</a>
-            <a style={{marginLeft: '20px'}}>删除</a>
+            <a onClick={() => removeTraining(item.id)}>删除</a>
           </>
         )
       }
@@ -81,8 +92,8 @@ const List = () => {
       <Link to="/model-training/submit">
         <Button href="">创建训练作业</Button>
       </Link>
-      <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" />
-      <Table style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
+      <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" onSearch={searchList} />
+      <Table loading={tableLoading} style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
     </PageHeaderWrapper>
   )
 }

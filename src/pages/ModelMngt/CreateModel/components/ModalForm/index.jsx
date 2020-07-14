@@ -12,7 +12,8 @@ const TrainingJobModal = props => {
     jobList: { data },
     onCancel,
     onSubmit,
-    visible = true
+    visible = true,
+
   } = props;
 
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
@@ -61,7 +62,7 @@ const TrainingJobModal = props => {
     },
     {
       title: '引擎类型',
-      dataIndex: 'engineType',
+      dataIndex: 'engine',
       ellipsis: true,
       width: 100,
     },

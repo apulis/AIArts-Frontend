@@ -60,8 +60,6 @@ export default {
           code, data, msg
         } = yield call(addModel, payload)
 
-        // console.log('======', code, data, msg)
-
         let error = null
         if (code !== 0) {
           error = { code, msg }
@@ -77,7 +75,7 @@ export default {
     *update ({ payload }, { call }) {
       try {
         const {
-          data: { code, data, msg }
+          code, data, msg
         } = yield call(updateModel, payload)
         let error = null
         if (code !== 0) {

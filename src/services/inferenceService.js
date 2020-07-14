@@ -6,11 +6,15 @@ export async function fetchInferenceList() {
 }
 
 export async function fetchInferenceDetail(id) {
-  return await request('/inferences/' + id)
+  return await request('/inferences/GetJobDetail', {
+    params: {
+      jobId: id
+    }
+  })
 }
 
 export async function createInference(data) {
-  return await request('/inferences', {
+  return await request('/inferences/PostInferenceJob', {
     method: 'POST',
     data,
   })
@@ -20,5 +24,14 @@ export async function startRecognition(id) {
   return await request(`/inferences/${id}/recognition`, {
     method: 'POST',
     data,
+  })
+}
+
+
+export async function fetchInferenceLog(id) {
+  return await request(`/inferences/GetJobLog`, {
+    params: {
+      jobId: id,
+    }
   })
 }

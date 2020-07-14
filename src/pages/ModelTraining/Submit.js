@@ -5,10 +5,9 @@ import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined }
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 
-import { submitModelTraining } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource } from '../../services/modelTraning';
 
 import styles from './index.less';
-
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -25,22 +24,49 @@ export const generateKey = () => {
 const ModelTraining = () => {
   const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
   const [form] = useForm();
+  const [frameWorks, setFrameWorks] = useState([]);
+  const [codePathPrefix, setCodePathPrefix] = useState('');
   const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
   const [bootFileModalVisible, setBootFileModalVisible] = useState(false);
   const [outputPathModalVisible, setOutputPathModalVisible] = useState(false);
   const [trainingDataSetModalVisible, setTrainingDataSetModalVisible] = useState(false);
+  const [deviceList, setDeviceList] = useState([]);
+  const [availableDeviceNumList, setAvailableDeviceNumList] = useState([]);
+  
   const { validateFields, getFieldValue, setFieldsValue } = form;
+  const getAvailableResource = async () => {
+    const res = await fetchAvilableResource();
+    if (res.code === 0) {
+      let { data: { aiFrameworks, deviceList, codePathPrefix } } = res;
+      setCodePathPrefix(codePathPrefix + '/');
+      let aiFrameworkList = []
+      Object.keys(aiFrameworks).forEach(val => {
+        aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
+      })
+      setFrameWorks(aiFrameworkList);
+      setDeviceList(deviceList);
+    }
+  }
+
+  useEffect(() => {
+    getAvailableResource()
+  }, [])
   const handleSubmit = async () => {
     const values = await validateFields();
     let params = {}
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     })
+    values.codePath = codePathPrefix + values.codePath;
+    values.startupFile = codePathPrefix + values.startupFile;
+    values.outputPath = codePathPrefix + values.outputPath;
     values.params = params;
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
+    cancel();
     if (res.code === 0) {
-      cancel();
+      message.success('成功创建');
+      history.push('/model-training/list')
     }
   }
   const addParams = () => {
@@ -64,7 +90,6 @@ const ModelTraining = () => {
     const runningParams = await getFieldValue('params');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        console.log(r[propertyName], value)
         callback('不能输入相同的参数名称');
       }
     })
@@ -77,29 +102,29 @@ const ModelTraining = () => {
       param.value = values[index].value;
     })
     const newRunningParams = [...runningParams].filter((param) => param.createTime !== key)
-    console.log('newRunningParams', newRunningParams)
     setRunningParams(newRunningParams)
     setFieldsValue({
       runningParams: newRunningParams.map(params => ({key: params.key, value: params.value}))
     })
   }
-  const frameWorks = [
-    {
-      name: 'name1',
-      value: 'value1'
-    },
-    {
-      name: 'name2',
-      value: 'value2'
-    },
-  ]
 
   const commonLayout = {
     labelCol: { span: 3 }, 
     wrapperCol: { span: 8 }
   }
-  const onSelectCodeDir = () => {
-
+  const onDeviceTypeChange = (value) => {
+    const deviceType = value;
+    const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
+    const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
+    if (deviceNumMax > 0) {
+      const list = [];
+      let current = 1;
+      while (current <= deviceNumMax) {
+        list.push(current);
+        current = current * 2
+      }
+      setAvailableDeviceNumList(list);
+    }
   }
   return (
     <div className={styles.modelTraining}>
@@ -111,7 +136,7 @@ const ModelTraining = () => {
       />
       <Form form={form}>
         <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }]}>
-          <Input style={{ width: 260 }}  placeholder="请输入作业名称" />
+          <Input style={{ width: 300 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
@@ -120,59 +145,42 @@ const ModelTraining = () => {
       <Divider style={{borderColor: '#cdcdcd'}} />
       <div className="ant-page-header-heading-title" style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</div>
       <Form form={form}>
-        <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
-          <Select style={{ width: 260 }} >
+        <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
+          <Select style={{ width: 300 }} >
             {
               frameWorks.map(f => (
-                <Option value={f.value}>{f.name}</Option>
+                <Option value={f}>{f}</Option>
               ))
             }
           </Select>
         </FormItem>
         <FormItem 
           labelCol={{ span: 3 }}
-          label="代码目录">
-          <FormItem
-            name="codePath"
-            noStyle
-          >
-            <Input style={{ width: 260 }} />
-          </FormItem>
-          <Button style={{marginLeft: '15px', display: 'inline-block'}} onClick={() => setCodeDirModalVisible(true)} icon={<FolderOpenOutlined />}></Button>
+          name="codePath"
+          label="代码目录"
+        >
+          <Input addonBefore={codePathPrefix} style={{ width: 300 }} />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }}label="启动文件">
-          
-          <FormItem name="startupFile" noStyle>
-            <Input style={{ width: 260 }} />
-          </FormItem>
-          
-          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />} onClick={() => setBootFileModalVisible(true)}></Button>
+        <FormItem labelCol={{ span: 3 }} label="启动文件"  name="startupFile" rules={[{required: true}, {pattern: /\.py$/, message: '需要填写一个python 文件'}]}>
+          <Input  addonBefore={codePathPrefix} style={{ width: 300 }} />
         </FormItem>
-        <FormItem className="ant-form-item-required" labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>
-          
-          <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} noStyle>
-            <Input style={{ width: 260 }} />
-          </FormItem>
-          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />} onClick={() => setOutputPathModalVisible(true)}></Button>
+        <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>
+          <Input addonBefore={codePathPrefix}  style={{ width: 300 }} />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }} label="训练数据集">
-          
-          <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} noStyle>
-            <Input style={{ width: 260 }} />
-          </FormItem>
-          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined onClick={() => setTrainingDataSetModalVisible(true)} />}></Button>
+        <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
+          <Input style={{ width: 300 }} />
         </FormItem>
         <FormItem label="运行参数" labelCol={{ span: 3 }} >
           {
             runningParams.map((param, index) => {
               return (
                 <>
-                  <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
-                    <Input />
+                  <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                    <Input style={{ width: 300 }} />
                   </FormItem>
                   <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
-                  <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['params', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block', width: 'calc(50% - 30px)' }}>
-                    <Input />
+                  <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['params', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                    <Input style={{ width: 300 }} />
                   </FormItem>
                   {
                     runningParams.length > 1 && <DeleteOutlined style={{marginLeft: '10px', cursor: 'pointer'}} onClick={() => removeRuningParams(param.createTime)} />
@@ -187,19 +195,24 @@ const ModelTraining = () => {
           </div>
         </FormItem>
         <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{width: '260px'}}>
+          <Select style={{width: '300px'}} onChange={onDeviceTypeChange}>
             {
-              frameWorks.map(f => (
-                <Option value={f.value}>{f.name}</Option>
+              deviceList.map(d => (
+                <Option value={d.deviceType}>{d.deviceType}</Option>
               ))
             }
           </Select>
         </FormItem>
-        <FormItem label="计算节点个数" name="deviceNum" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{width: '260px'}}>
+        <FormItem
+          label="计算节点个数"
+          name="deviceNum"
+          {...commonLayout}
+          rules={[{ required: true }]}
+        >
+          <Select style={{width: '300px'}} >
             {
-              [1, 2, 4, 8].map(f => (
-                <Option value={f}>{f}</Option>
+              availableDeviceNumList.map(avail => (
+                <Option value={avail}>{avail}</Option>
               ))
             }
           </Select>

@@ -1,67 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Descriptions, message, Upload, Button } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useParams } from 'umi';
+import moment from 'moment';
 
-import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition } from '../../services/inferenceService';
+import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition, fetchInferenceLog } from '../../services/inferenceService';
 
 import styles from './index.less';
+import { getJobStatus } from '@/utils/utils';
 
 export function getBase64(img, callback) {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
-const testLog = `
-[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
-[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
-[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
-[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
-[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
-[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
-[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
-[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
-[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
-[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
-[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login
-[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
-[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
-[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
-[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
-[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
-[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login[I 11:41:59.446 NotebookApp] [nb_conda_kernels] enabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels foundenabled, 2 kernels found
-[W 11:42:00.091 NotebookApp] WARNING: The notebook server is listening on all IP addresses and not using encryption. This is not recommended.
-[I 11:42:00.157 NotebookApp] ✓ nbpresent HTML export ENABLED
-[W 11:42:00.157 NotebookApp] ✗ nbpresent PDF export DISABLED: No module named nbbrowserpdf.exporters.pdf
-[I 11:42:00.217 NotebookApp] [nb_anacondacloud] enabled
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.222 NotebookApp] Serving notebooks from local directory: /run/user/0/.jupyter
-[I 11:42:00.223 NotebookApp] The Jupyter Notebook is running at: http://[all ip addresses on your system]:10055/
-[I 11:42:00.223 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[W 11:42:14.721 NotebookApp] 401 POST /login?next=%2F (10.177.22.82) 1.86ms referer=http://10.186.61.102:10055/login
-
-`
 
 const InferenceDetail = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [jobDetail, setJobDetail] = useState({});
+  const logEl = useRef(null);
   const [beginAnalizeLoading, setBeginAnalizeLoading] = useState(false);
   const params = useParams()
   const id = params.id;
-  const [logs, setLogs] = useState(testLog);
+  const [logs, setLogs] = useState('');
+  const getInferenceLog = async () => {
+    const res = await fetchInferenceLog(id);
+    const l = logEl.current;
+    if (res.code === 0) {
+      let log = res.data.log;
+      if (typeof log === 'object') {
+        log = '';
+      }
+      setLogs(log);
+      setTimeout(() => {
+        l && l.scrollTo(0, 100000000);
+      }, 120);
+    }
+    return res;
+  }
+  const getInferenceDetail = async () => {
+    const res = await fetchInferenceDetail(id)
+    if (res.code === 0) {
+      setJobDetail(res.data);
+    }
+  }
+  useEffect(() => {
+    getInferenceDetail();
+    getInferenceLog();
+  }, [])
   const handleChange = info => {
     if (info.file.status === 'uploading') {
       setLoading(true);
@@ -69,10 +57,17 @@ const InferenceDetail = () => {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => {
-        setImageUrl(imageUrl);
+      let imageBase64 = info.file.response.data
+      if (typeof imageBase64 !== 'string') {
+        getBase64(info.file.originFileObj, imageUrl => {
+          setImageUrl(imageUrl);
+          setLoading(false);
+        });
+      } else {
+        setImageUrl(imageBase64);
         setLoading(false);
-      });
+      }
+      
     }
   }
   const beforeUpload = (file) => {
@@ -80,17 +75,22 @@ const InferenceDetail = () => {
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
     }
-    const isLt2M = file.size / 1024 / 1024 < 5;
-    if (!isLt2M) {
-      message.error('Image must smaller than 5MB!');
+    const isLt5M = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      message.error('图片不能大于5M');
     }
-    return isJpgOrPng && isLt2M;
+    return isJpgOrPng && isLt5M;
   }
   const beginAnalyze = () => {
     setBeginAnalizeLoading(true)
   }
-  const getLateastLogs = () => {
-    //
+  const getLateastLogs = async () => {
+    const cancel = message.loading('获取日志中')
+    const res = await getInferenceLog()
+    cancel();
+    if (res.code === 0) {
+      message.success('成功获取日志')
+    }
   }
   const uploadButton = (
     <div>
@@ -101,11 +101,14 @@ const InferenceDetail = () => {
   return (
     <PageHeaderWrapper>
       <Upload
-        name="avatar"
+        headers={{
+          Authorization: `Bearer ${localStorage.token}`
+        }}
+        name="image"
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action={`/inferences/${id}/upload_image`}
+        action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
@@ -113,24 +116,26 @@ const InferenceDetail = () => {
       </Upload>
       <Button loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
-        <Descriptions.Item label="作业名称">Zhou Maomao</Descriptions.Item>
-        <Descriptions.Item label="作业状态">运行中</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">Hangzhou, Zhejiang</Descriptions.Item>
-        <Descriptions.Item label="ID">empty</Descriptions.Item>
-        <Descriptions.Item label="创建时间">test</Descriptions.Item>
-        <Descriptions.Item label="运行时长">test</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">test</Descriptions.Item>
-        <Descriptions.Item label="使用模型">test</Descriptions.Item>
-        <Descriptions.Item label="计算节点个数">test</Descriptions.Item>
-        <Descriptions.Item label="作业参数">test</Descriptions.Item>
-        <Descriptions.Item label="服务地址">test</Descriptions.Item>
-        <Descriptions.Item label="描述">test</Descriptions.Item>
+        <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
+        <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.image}</Descriptions.Item>
+        <Descriptions.Item label="ID">{jobDetail.jobId}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{moment(jobDetail.jobTime).format('YYYY-MM-DD HH:mm')}</Descriptions.Item>
+        <Descriptions.Item label="计算节点规格">{jobDetail.jobParams?.gpuType}</Descriptions.Item>
+        <Descriptions.Item label="使用模型">{jobDetail.jobParams?.model_base_path}</Descriptions.Item>
+        <Descriptions.Item label="计算节点个数">{jobDetail.jobParams?.resourcegpu}</Descriptions.Item>
+        {/* <Descriptions.Item label="作业参数"></Descriptions.Item> */}
+        {/* <Descriptions.Item label="服务地址">test</Descriptions.Item> */}
+        <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
       <Button onClick={getLateastLogs}>点击获取最新日志</Button>
-      <pre className={styles.logs}>
-        {logs}
-      </pre>
+      <div>
+        {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+          {logs}
+        </pre> : <LoadingOutlined />}
+      </div>
+
 
     </PageHeaderWrapper>
   )
