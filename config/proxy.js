@@ -23,6 +23,13 @@ export default {
         '^': '',
       },
     },
+    '/endpoints/grafana/api/datasources/proxy/1/api/v1': {
+      target: 'https://atlas02.sigsus.cn/',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    },
   },
   test: {
     '/api/': {
