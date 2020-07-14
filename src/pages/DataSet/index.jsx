@@ -90,7 +90,7 @@ const DataSetList = () => {
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
-      render: text => moment(text).format('YYYY-MM-DD HH:MM:SS')
+      render: text => moment(text).format('YYYY-MM-DD hh:mm:ss')
     },
     {
       title: '更新版本',
