@@ -14,10 +14,13 @@ const CodeList = (props) => {
   useEffect(() => {// componentDidMount()
     renderData();
   }, [pageParams])// pageParams改变触发的componentwillUpdate()
-  const renderData = async () => {
+  const renderData = async (callback) => {
     setLoading(true);
     apiGetCodes(pageParams)
     setLoading(false);
+    if(callback){
+      callback()
+    }
   };
   const apiGetCodes = async (pageParams)=>{
     const obj = await getCodes(pageParams);
@@ -114,10 +117,11 @@ const CodeList = (props) => {
     apiDeleteCode(item.id)
   }
   const handleSearch = (value) => {
-    alert(`search:${value}`)
+    // alert(`search:${value}`)
+    message.info('搜索功能，暂不支持')
   }
   const handleFresh = () => {
-    renderData()
+    renderData(()=>{message.success('刷新成功')})
   }
   const onPageParamsChange = (pageNum, pageSize) => {
     setPageParams({ pageNum, pageSize});
