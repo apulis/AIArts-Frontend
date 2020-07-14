@@ -7,6 +7,7 @@ import { PAGEPARAMS } from '../../../const';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
 import { SyncOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const InferenceList = props => {
   const {
@@ -74,9 +75,10 @@ const InferenceList = props => {
     },
     {
       title: '运行时长',
-      dataIndex: 'runDuration',
+      // dataIndex: 'runDuration',
       // ellipsis: true,
       // width: 100,
+      render: (text, item) => moment.duration(Date.now()-item.jobTime)
     },
     {
       title: '服务地址',
