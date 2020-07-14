@@ -66,7 +66,7 @@ const ModelList = props => {
     {
       title: '创建时间',
       dataIndex: 'createdAt',
-      render: text => moment(text).format('YYYY-MM-DD hh:mm:ss'),
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 150,
     },
