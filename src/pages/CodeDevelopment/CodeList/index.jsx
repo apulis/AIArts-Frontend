@@ -68,9 +68,8 @@ const CodeList = (props) => {
       running:'运行中',
       error:'错误',
       failed:'不可用',
-
     }
-    return map[status]
+    return status
   }
   const columns = [
     {
