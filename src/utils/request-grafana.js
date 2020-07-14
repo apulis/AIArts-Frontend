@@ -60,7 +60,7 @@ export const errorHandler = async (error) => {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
         const queryString = stringify({
-          redirect: encodeURIComponent(window.location.href),
+          redirect: window.location.href,
         });
         window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }

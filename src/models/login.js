@@ -16,7 +16,7 @@ const Model = {
       yield call(userLogout);
       localStorage.removeItem('token');
       const queryString = stringify({
-        redirect: encodeURIComponent(redirect || window.location.href),
+        redirect: redirect || window.location.href,
       });
       window.location.href = USER_LOGIN_URL + '?' + queryString
     },

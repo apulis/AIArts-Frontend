@@ -7,7 +7,7 @@ import { USER_LOGIN_URL } from '@/utils/const';
 
 
 const queryString = stringify({
-  redirect: encodeURIComponent(window.location.href),
+  redirect: window.location.href,
 });
 export default () => {
   
