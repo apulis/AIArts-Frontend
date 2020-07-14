@@ -182,11 +182,11 @@ const ModelTraining = () => {
         <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
           <Select
-            style={{width: '400px'}}
+            style={{width: '300px'}}
           >
             {
               datasets.map(d => (
-                <Option value={d.path}>{d.path}</Option>
+                <Option value={d.path}>{d.name}</Option>
               ))
             }
           </Select>
