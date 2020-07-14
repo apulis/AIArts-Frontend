@@ -24,7 +24,7 @@ const ModelList = props => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    console.log('---useEffect---');
+    // console.log('---useEffect---');
     
     dispatch({
       type: 'modelList/fetch',

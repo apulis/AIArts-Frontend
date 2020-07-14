@@ -209,7 +209,7 @@ const InferenceList = props => {
         <Table
           columns={columns}
           dataSource={data.list}
-          rowKey={(r, i) => `${i}`}
+          rowKey={r => r.jobId}
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,
