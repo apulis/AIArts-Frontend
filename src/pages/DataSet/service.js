@@ -34,3 +34,7 @@ export async function add(data) {
     data: data,
   });
 }
+
+export async function download(id) {
+  return request(`/files/download/dataset/${id}`);
+}

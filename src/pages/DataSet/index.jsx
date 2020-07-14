@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDatasets, edit, deleteDataSet, add } from './service';
+import { getDatasets, edit, deleteDataSet, add, download } from './service';
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import { Link } from 'umi';
@@ -111,8 +111,11 @@ const DataSetList = () => {
     },
   ];
 
-  const handleDownload = (id) => {
-    window.open(`/ai_arts/api/files/download/dataset/${id}`, '_blank');
+  const handleDownload = async (id) => {
+    // const res = await download(id);
+    // let blob = new Blob([res], {type: "application/octet-stream"});
+    // const url = window.URL.createObjectURL(blob);
+    window.open(`/ai_arts/api/files/download/dataset/${id}`);
   };
 
   const onEditClick = item => {
