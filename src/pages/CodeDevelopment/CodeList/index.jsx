@@ -4,7 +4,7 @@ import { Link } from 'umi';
 import { Table, Space, Button, Row, Col, Input,message } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { formatDate } from '@/utils/time';
-import { PAGEPARAMS } from '../../../const';
+import { PAGEPARAMS } from '@/utils/const';
 import { getCodes,deleteCode,getJupyterUrl} from '../service.js'
 const CodeList = (props) => {
   const { Search } = Input;

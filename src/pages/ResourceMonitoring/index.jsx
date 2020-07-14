@@ -1,11 +1,12 @@
 import { Card, Select  } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getIP, getPie } from './service';
 import styles from './index.less';
 import { Pie, ChartCard } from '../../components/Charts';
+import axios from 'axios';
 
 const { Option } = Select;
+const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1';
 
 const ResourceMonitoring = () => {
   const [loading, setLoading] = useState(false);
@@ -32,19 +33,31 @@ const ResourceMonitoring = () => {
   const getIPData = async () => {
     setLoading(true);
     const nowTime = new Date().getTime();
-    const res = await getIP(Math.round((nowTime - 3600000)/1000).toString(), Math.round(nowTime/1000).toString());
-    const { status, data } = res;
-    if (status === 'success' && data) {
-      const _ip = data[0].instance.split(':')[0];
-      setIPOptions(data);
-      setNodeIp(_ip);
-      getPieData(_ip)
-    }
-    setLoading(false);
+    const start = Math.round((nowTime - 3600000)/1000).toString();
+    const end = Math.round(nowTime/1000).toString();
+    axios.get(`${prefix}/series?match[]=node_uname_info&start=${start}&end=${end}`)
+    .then(res => {
+      const { status, data } = res;
+      if (status === 200 && data.data) {
+        const _ip = data.data[0].instance.split(':')[0];
+        setIPOptions(data.data);
+        setNodeIp(_ip);
+        getPieData(_ip);
+      }
+    })
+  }
+
+  const getPie = query => {
+    return new Promise((resolve, reject) =>{        
+      axios.get(`${prefix}/query?query=${query}`).then(res => {
+        resolve(res.data);
+      }).catch(err =>{
+        reject(err.data)        
+      })    
+    });
   }
 
   const getPieData = async (_ip) => {
-    // setLoading(true);
     const URL = {
       usedCPU: `100 - (avg by (instance)(irate(node_cpu_seconds_total{mode="idle",instance=~"${_ip}(:[0-9]*)?$"}[300s])) * 100)`,
       canUseGPU: `k8s_node_device_available{device_str='nvidia.com/gpu',host_ip='${_ip}'} OR on() vector(0)`,
@@ -64,11 +77,7 @@ const ResourceMonitoring = () => {
       '硬盘': [{x: '已用', y: gbFormat(dataArr[6]) - gbFormat(dataArr[5])}, {x: '可用', y: gbFormat(dataArr[5])}]
     }
     setPieData(obj);
-    // res.forEach((m, i) => {
-    //   const num =  Number((Number(m.data.result[0].value[1])).toFixed(2));
-    //   console.log(`------${i}`, num)
-    // })
-    // setLoading(false);
+    setLoading(false);
   }
 
   const gbFormat = val => {
