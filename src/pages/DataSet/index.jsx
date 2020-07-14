@@ -7,8 +7,8 @@ import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
-import { formatDate } from '@/utils/time';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const { confirm } = Modal;
 
@@ -90,7 +90,7 @@ const DataSetList = () => {
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
-      render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS')
+      render: text => moment(text).format('YYYY-MM-DD HH:MM:SS')
     },
     {
       title: '更新版本',

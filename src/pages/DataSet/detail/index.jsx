@@ -3,7 +3,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import React, { useState, useEffect } from 'react';
 import styles from './index.less';
-import { formatDate } from '@/utils/time';
 import { getDatasetDetail } from '../service';
 import { PageLoading } from '@ant-design/pro-layout';
 
@@ -54,8 +53,8 @@ const DataSetDetail = () => {
                 <Descriptions size="small" column={2}>
                   <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
                   <Descriptions.Item label="Storage Path">{path}</Descriptions.Item>
-                  <Descriptions.Item label="创建时间">{formatDate(createdAt, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="更新时间">{formatDate(updatedAt, 'YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="创建时间">{moment(createdAt).format('YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="更新时间">{moment(updatedAt).format('YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
                   <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
