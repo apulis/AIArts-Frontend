@@ -55,7 +55,7 @@ const CodeList = (props) => {
   const apiOpenJupyter = async (id)=>{
     const {code,data,msg} = await getJupyterUrl(id)
     if(code===0){
-      if(data.status==='running'){
+      if(data.name==='ipython' && data.status==='running'){
         window.open(data.accessPoint)
       }
      else{
