@@ -103,8 +103,8 @@ const DataSetList = () => {
         return (
           <>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            <a onClick={() => handleDownload(id)}>下载</a>
-            <a style={{ margin: '0 16px', color: 'red' }} onClick={() => onDelete(id)}>删除</a>
+            <a style={{ margin: '0 16px' }} onClick={() => handleDownload(id)}>下载</a>
+            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>
           </>
         )
       },
