@@ -30,6 +30,13 @@ export default {
         '^': '',
       },
     },
+    '/apis': {
+      target: 'http://huawei-infra01.sigsus.cn',
+      changeOrigin: true,
+      pathRewrite: {
+        '^': '',
+      },
+    }
   },
   test: {
     '/api/': {

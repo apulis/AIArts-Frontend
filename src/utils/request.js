@@ -5,7 +5,7 @@
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { stringify } from 'querystring';
-import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { USER_LOGIN_URL } from '@/utils/const';
 
 const prefix = '/ai_arts/api'
 
@@ -52,6 +52,9 @@ export const errorHandler = async (error) => {
   } else if (CODE === 20001) {
     message.error('请求参数错误！');
     return response;
+  } else if (CODE === 30007) {
+    message.error(_response.msg);
+    return response;
   }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
@@ -60,9 +63,9 @@ export const errorHandler = async (error) => {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
         const queryString = stringify({
-          redirect: encodeURIComponent(window.location.href),
+          redirect: window.location.href,
         });
-        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+        window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
     notification.error({

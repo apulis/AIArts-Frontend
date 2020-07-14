@@ -2,7 +2,7 @@ import { Link, history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { getProjects, deleteProject, addProject, updateProject } from './services';
+import { stopInference } from './services';
 import { PAGEPARAMS } from '../../../const';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
@@ -85,7 +85,7 @@ const InferenceList = props => {
       // dataIndex: 'serverAddr',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => item.jobParams.inference-url ? item.jobParams.inference-url : ''
+      render: (text, item) => item.jobParams['inference-url'] ? item.jobParams['inference-url'] : ''
     },
     {
       title: '描述',
@@ -100,7 +100,8 @@ const InferenceList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => stopJob(item)}>停止</a>
+            <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled()}>停止</Button>
+            {/* <a onClick={() => stopJob(item)}>停止</a> */}
             {/* <a onClick={() => deleteJob(item)}>删除</a> */}
           </Space>
         );
@@ -143,13 +144,26 @@ const InferenceList = props => {
     });
   };
 
-  const stopJob = (item) => {
-    dispatch({
-      type: 'inferenceList/stop',
-      payload: {
-        id: item.id
+  const isStopDisabled = item =>{
+    if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
+      return false;
+    }else{
+      return true;
+    }
+  }
+
+  const stopJob = async (item) => {
+    if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
+      const params = {jobId: item.jobId};
+      const {code, msg, data} = await stopInference(params);
+      if(code === 0){
+        message.success(`Job成功停止！`);
+      }else{
+        message.error(`Job停止错误：${msg}。`);
       }
-    });
+    }else{
+      message.error('Job无法停止！');
+    }
   };
 
   const deleteJob = (item) => {
@@ -209,7 +223,7 @@ const InferenceList = props => {
         <Table
           columns={columns}
           dataSource={data.list}
-          rowKey={(r, i) => `${i}`}
+          rowKey={r => r.jobId}
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,

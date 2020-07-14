@@ -5,7 +5,7 @@
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 
-import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { USER_LOGIN_URL } from '@/utils/const';
 
 const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1';
 
@@ -60,9 +60,8 @@ export const errorHandler = async (error) => {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
         const queryString = stringify({
-          redirect: encodeURIComponent(window.location.href),
         });
-        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+        window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
     notification.error({
@@ -88,7 +87,8 @@ request.interceptors.request.use(async (url, options) => {
   if (token) {
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
-      Accept: 'application/json'
+      Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
     };
     return {
       url: url,
