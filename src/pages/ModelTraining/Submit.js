@@ -215,7 +215,7 @@ const ModelTraining = () => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="计算节点规格" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{width: '300px'}} onChange={onDeviceTypeChange}>
             {
               deviceList.map(d => (
@@ -225,7 +225,7 @@ const ModelTraining = () => {
           </Select>
         </FormItem>
         <FormItem
-          label="计算节点个数"
+          label="设备数量"
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}
