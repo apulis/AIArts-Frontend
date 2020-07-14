@@ -52,6 +52,9 @@ export const errorHandler = async (error) => {
   } else if (CODE === 20001) {
     message.error('请求参数错误！');
     return response;
+  } else if (CODE === 30007) {
+    message.error(_response.msg);
+    return response;
   }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
