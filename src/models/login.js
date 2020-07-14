@@ -1,7 +1,7 @@
 import { stringify } from 'querystring';
 import { getPageQuery } from '@/utils/utils';
 
-import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { USER_LOGIN_URL } from '@/utils/const';
 import { userLogout } from '@/services/login'; 
 
 
@@ -18,7 +18,7 @@ const Model = {
       const queryString = stringify({
         redirect: encodeURIComponent(redirect || window.location.href),
       });
-      window.location.href = USER_DASHBOARD_PATH + '?' + queryString
+      window.location.href = USER_LOGIN_URL + '?' + queryString
     },
   },
   reducers: {},

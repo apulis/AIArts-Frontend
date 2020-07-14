@@ -5,7 +5,7 @@
 import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { stringify } from 'querystring';
-import { USER_DASHBOARD_PATH } from '@/utils/const';
+import { USER_LOGIN_URL } from '@/utils/const';
 
 const prefix = '/ai_arts/api'
 
@@ -62,7 +62,7 @@ export const errorHandler = async (error) => {
         const queryString = stringify({
           redirect: encodeURIComponent(window.location.href),
         });
-        window.location.href = `${USER_DASHBOARD_PATH}/user/login?` + queryString;
+        window.location.href = `${USER_LOGIN_URL}/user/login?` + queryString;
       }
     }
     notification.error({
