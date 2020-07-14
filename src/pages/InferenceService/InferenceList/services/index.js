@@ -7,6 +7,12 @@ export async function getInferences(params) {
   });
 }
 
+export async function stopInference(params) {
+  return request(`/inferences/KillJob`, {
+    params
+  });
+}
+
 export async function deleteInference(projectId) {
   return request(`/api/inferences/${projectId}`, {
     method: 'DELETE',

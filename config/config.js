@@ -79,6 +79,7 @@ export default defineConfig({
     basePath: '/',
   },
   base: '/AIarts',
+  publicPath: '/AIarts/',
   proxy: proxy[REACT_APP_ENV || 'dev'],
   chainWebpack: webpackPlugin,
 });
