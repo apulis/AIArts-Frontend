@@ -62,7 +62,8 @@ const CodeCreate = () => {
     }else if(avail==1){
       arr = [0,1]
     }else{
-      message.info('该设备无可用资源')
+      // message.info('该设备无可用资源')
+      arr = [0]
     }
     setDeviceNumArr(arr)
   }

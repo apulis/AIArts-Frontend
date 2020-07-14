@@ -20,6 +20,7 @@ const CodeList = (props) => {
     paused:'已暂停',
     killing :'关闭中',
     killed:'已关闭',
+    error:'错误',
   }
   const canOpenStatus = new Set(['running'])
   const canStopStatus = new Set(['unapproved','queued','scheduling','running'])
@@ -100,7 +101,7 @@ const CodeList = (props) => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      render: text => moment(text).format('YYYY-MM-DD hh:mm:ss'),
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
     },
     {

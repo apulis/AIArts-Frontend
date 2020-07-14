@@ -67,7 +67,7 @@ const List = () => {
       title: '创建时间',
       render(_text, item) {
         return (
-          <div>{moment(item.createTime).format('MMMM Do YYYY, hh:mm:ss')}</div>
+          <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
         )
       }
     },

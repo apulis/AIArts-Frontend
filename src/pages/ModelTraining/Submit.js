@@ -39,7 +39,11 @@ const ModelTraining = () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
       let { data: { aiFrameworks, deviceList, codePathPrefix } } = res;
-      setCodePathPrefix(codePathPrefix + '/');
+      if (!/\/$/.test(codePathPrefix)) {
+        codePathPrefix = codePathPrefix + '/' 
+      }
+      
+      setCodePathPrefix(codePathPrefix);
       let aiFrameworkList = []
       Object.keys(aiFrameworks).forEach(val => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
@@ -128,8 +132,8 @@ const ModelTraining = () => {
     const deviceType = value;
     const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
     const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
-    if (deviceNumMax > 0) {
-      const list = [];
+    if (deviceNumMax >= 0) {
+      const list = [0];
       let current = 1;
       while (current <= deviceNumMax) {
         list.push(current);
