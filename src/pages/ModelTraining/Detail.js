@@ -71,7 +71,7 @@ const Detail = () => {
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.status)}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('MMMM Do YYYY, hh:mm:ss')}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('MMMM Do YYYY, HH:mm:ss')}</Descriptions.Item>
         <Descriptions.Item label="运行参数">{jobDetail.params}</Descriptions.Item>
         <Descriptions.Item label="代码目录">{jobDetail.codePath}</Descriptions.Item>
         <Descriptions.Item label="计算节点个数">{jobDetail.deviceNum}</Descriptions.Item>
