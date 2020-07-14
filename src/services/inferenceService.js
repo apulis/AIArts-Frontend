@@ -35,3 +35,11 @@ export async function fetchInferenceLog(id) {
     }
   })
 }
+
+export async function getAllSupportInference() {
+  return await request('/inferences/GetAllSupportInference')
+}
+
+export async function getAllComputedDevice() {
+  return await request('/inferences/GetAllDevice')
+}
