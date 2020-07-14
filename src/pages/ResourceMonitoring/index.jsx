@@ -26,10 +26,6 @@ const ResourceMonitoring = () => {
     getIPData();
   }, []);
 
-  useEffect(() => {
-    if (nodeIp) getPieData(nodeIp);
-  }, [nodeIp]);
-
   const getIPData = async () => {
     setLoading(true);
     const nowTime = new Date().getTime();
@@ -69,7 +65,14 @@ const ResourceMonitoring = () => {
     };
     const { totalGPU, canUseGPU, usedCPU, usedRAM, totalRAM, canUseHD, totalHD } = URL;
     const res = await Promise.all([getPie(usedCPU), getPie(canUseGPU), getPie(totalGPU), getPie(usedRAM), getPie(totalRAM),  getPie(canUseHD), getPie(totalHD)]);
-    const dataArr = res.map(i => Number((Number(i.data.result[0].value[1])).toFixed(2)));
+    const dataArr = res.map(i => {
+      const result = i.data.result;
+      if (result) {
+        return Number((Number(result[0].value[1])).toFixed(2));
+      } else {
+        return 0;
+      }
+    });
     let obj = {
       'CPU': [{x: '已用', y: dataArr[0]}, {x: '可用', y: 100 - dataArr[0]}], 
       'GPU': [{x: '已用', y: dataArr[1]}, {x: '可用', y: dataArr[2] - dataArr[1]}],
@@ -106,9 +109,14 @@ const ResourceMonitoring = () => {
     })
   }
 
+  const handleSelect = v => {
+    setNodeIp(v);
+    getPieData(nodeIp);
+  }
+
   const getSelect = () => {
     return (
-      <Select value={nodeIp} size='large' style={{ width: 240, margin: '0 0 20px 20px' }} onChange={v => setNodeIp(v)}>
+      <Select value={nodeIp} size='large' style={{ width: 240, margin: '0 0 20px 20px' }} onChange={handleSelect}>
         {IPOptions.map(i => {
           const { instance, nodename } = i;
           const _instance = instance.split(':')[0];
