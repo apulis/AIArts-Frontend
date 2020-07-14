@@ -19,6 +19,9 @@ const AddModalForm = (props, ref) => {
     name: 'data',
     multiple: true,
     action: '/ai_arts/api/files/upload/dataset',
+    headers: {
+      Authorization: 'Bearer ' + window.localStorage.token,
+    },
     onChange(info) {
       const { status } = info.file;
       setBtn(true);
