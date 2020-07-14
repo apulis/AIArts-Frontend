@@ -42,7 +42,7 @@ const GlobalHeaderRight = (props) => {
           当前虚拟集群 <DownOutlined />
         </a>
       </Dropdown> */}
-      <Button href="/" style={{marginLeft: '20px'}}>专家系统</Button>
+      <Button href="/expert" style={{marginLeft: '20px'}}>专家系统</Button>
       <Avatar menu />
       {REACT_APP_ENV && (
         <span>
