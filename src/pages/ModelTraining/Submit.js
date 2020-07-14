@@ -8,6 +8,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import { submitModelTraining, fetchAvilableResource } from '../../services/modelTraning';
 
 import styles from './index.less';
+import { getDatasets } from '../DataSet/service';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -32,7 +33,7 @@ const ModelTraining = () => {
   const [trainingDataSetModalVisible, setTrainingDataSetModalVisible] = useState(false);
   const [deviceList, setDeviceList] = useState([]);
   const [availableDeviceNumList, setAvailableDeviceNumList] = useState([]);
-  
+  const [datasets, setDatasets] = useState([]);
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
@@ -48,8 +49,19 @@ const ModelTraining = () => {
     }
   }
 
+  const fetchDataSets = async () => {
+    console.log(123123)
+    const res = await getDatasets({pageNum: 1, pageSize: 100});
+    if (res.code === 0) {
+      console.log(res)
+      const datasets = res.data.datasets;
+      setDatasets(datasets)
+    }
+  }
+
   useEffect(() => {
     getAvailableResource()
+    fetchDataSets()
   }, [])
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -168,24 +180,33 @@ const ModelTraining = () => {
           <Input addonBefore={codePathPrefix}  style={{ width: 300 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
-          <Input style={{ width: 300 }} />
+          {/* <Input style={{ width: 300 }} /> */}
+          <Select
+            style={{width: '400px'}}
+          >
+            {
+              datasets.map(d => (
+                <Option value={d.path}>{d.path}</Option>
+              ))
+            }
+          </Select>
         </FormItem>
         <FormItem label="运行参数" labelCol={{ span: 3 }} >
           {
             runningParams.map((param, index) => {
               return (
-                <>
+                <div>
                   <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input style={{ width: 300 }} />
+                    <Input style={{ width: 200 }} />
                   </FormItem>
                   <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
                   <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['params', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input style={{ width: 300 }} />
+                    <Input style={{ width: 200 }} />
                   </FormItem>
                   {
                     runningParams.length > 1 && <DeleteOutlined style={{marginLeft: '10px', cursor: 'pointer'}} onClick={() => removeRuningParams(param.createTime)} />
                   }
-                </>
+                </div>
               )
             })
           }
