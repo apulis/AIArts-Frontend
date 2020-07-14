@@ -54,8 +54,8 @@ const DataSetDetail = () => {
                 <Descriptions size="small" column={2}>
                   <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
                   <Descriptions.Item label="Storage Path">{path}</Descriptions.Item>
-                  <Descriptions.Item label="创建时间">{moment(createdAt).format('YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
-                  <Descriptions.Item label="更新时间">{moment(updatedAt).format('YYYY-MM-DD HH:MM:SS')}</Descriptions.Item>
+                  <Descriptions.Item label="创建时间">{moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+                  <Descriptions.Item label="更新时间">{moment(updatedAt).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
                   <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
