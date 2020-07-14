@@ -100,7 +100,8 @@ const InferenceList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => stopJob(item)}>停止</a>
+            <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled()}>停止</Button>
+            {/* <a onClick={() => stopJob(item)}>停止</a> */}
             {/* <a onClick={() => deleteJob(item)}>删除</a> */}
           </Space>
         );
@@ -142,6 +143,14 @@ const InferenceList = props => {
       },
     });
   };
+
+  const isStopDisabled = item =>{
+    if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
+      return false;
+    }else{
+      return true;
+    }
+  }
 
   const stopJob = async (item) => {
     if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
