@@ -1,11 +1,88 @@
-import React from 'react';
-import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal } from 'antd';
 import { history } from 'umi';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { postCode, getResource } from '../service.js'
 const CodeCreate = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
   const { TextArea } = Input;
+  let [data, setData] = useState(null)
+  const [deviceTypeArr, setDeviceTypeArr] = useState([])// 更新状态是异步的
+  const [deviceNumArr, setDeviceNumArr] = useState([])
+  const [engineTypeArr, setEngineTypeArr] = useState([])
+  const [engineNameArr, setengineNameArr] = useState([])
+  const [modelVisible, setModelVisible] = useState(false)
+  const [codePathPrefix, setCodePathPrefix] = useState('')
+  useEffect(() => {// 初始化处理
+    renderForm()
+  }, [])// 更新处理
+  const renderForm = async () => {
+    const result = await apiGetResource()
+    if(result){
+      setData(result)
+      setCodePathPrefix(result.codePathPrefix)
+      setEngineTypeArr(Object.keys(result.aiFrameworks))
+      setDeviceTypeArr(result.deviceList.map((item) => (item.deviceType)))
+    }
+  }
+  const apiPostCode = async (values) => {
+    const obj = await postCode(values)
+    const {code,data,msg} = obj
+    if(code===0){
+      // 创建成功后跳转
+      showModal()
+    } else {
+      message.error(msg)
+    }
+  }
+  const apiGetResource = async () => {
+    const obj = await getResource()
+    const { code, data, msg } = obj
+    if (code === 0) {
+      return data
+    } else {
+      return null
+      message.error(msg)
+    }
+  }
+  const { validateFields, getFieldValue, resetFields } = form;
+  const handleSubmit = async () => {
+    const values = await validateFields();
+    console.log('result', values);
+    apiPostCode(values)
+    resetFields()
+  }
+  const showModal = () => {
+    setModelVisible(true)
+  };
+  const handleOk = e => {
+    setModelVisible(false)
+    history.push('/CodeList')
+  };
+
+  const handleCancel = e => {
+    setModelVisible(false)
+  };
+  const handleEngineTypeChange = (item) => {
+    setengineNameArr(data.aiFrameworks[item])
+  }
+  const handleDeviceTypeChange = (item,option) => {
+    const avail = data['deviceList'][option.index].avail
+    let arr = []
+    if(avail>=2){
+      arr = [1,2]
+    }else if(avail==1){
+      arr = [1]
+    }else{
+      message.info('该设备无可用资源')
+    }
+    setDeviceNumArr(arr)
+  }
+  const validateMessages = {
+    required: '${label} 是必填项!',
+    types: {
+    },
+  }
   const formItemLayout = {
     labelCol: {
       span: 4
@@ -20,62 +97,8 @@ const CodeCreate = () => {
       offset: 22
     }
   }
-  const { validateFields, getFieldValue,resetFields} = form;
 
-  const engineType1 = [
-  {
-    name:'one',
-    value:'one'
-  },
-  {
-    name:'two',
-    value:'two'
-  },
-  {
-    name:'three',
-    value:'three'
-  }]
-  const engineType2 = [
-    {
-      name:'one',
-      value:'one'
-    },
-    {
-      name:'two',
-      value:'two'
-    },
-    {
-      name:'three',
-      value:'three'
-    }]
-  const nodeSpeciation = [
-    {
-      name:'one',
-      value:'one'
-    },
-    {
-      name:'two',
-      value:'two'
-    },
-    {
-      name:'three',
-      value:'three'
-    }]
 
-  const handleSubmit = async () => {
-    const values = await validateFields();// 提交前表单验证
-    console.log('result',values);
-    // if success
-    resetFields()
-  }
-  const handleChange = (value) => {
-    console.log(`selected ${value}`)
-  }
-  const validateMessages = {
-    required: '${label} 是必填项!',
-    types: {
-    },
-  }
   return (
     <>
       <PageHeader ghost={false}
@@ -86,20 +109,20 @@ const CodeCreate = () => {
         <Form
           {...formItemLayout}
           labelAlign='right'
-          onFinish = {handleSubmit}
+          onFinish={handleSubmit}
           validateMessages={validateMessages}
           form={form}
         >
           <Form.Item
             label="开发环境名称"
-            name="devName"
-            rules={[{ required: true}]}
+            name="name"
+            rules={[{ required: true }]}
           >
             <Input placeholder="请输入开发环境名称" />
           </Form.Item>
           <Form.Item
             label="描述"
-            name="description"
+            name="desc"
           >
             <TextArea
               placeholder="请输入描述信息"
@@ -108,36 +131,54 @@ const CodeCreate = () => {
             />
           </Form.Item>
           <Form.Item
-            label="引擎类型"
-            name="engineType"
+            label="代码存储路径"
+            name="codePath"
+            rules={[{ required: true }]}
           >
-            <Select style={{ width: "50%" }} onChange={handleChange}>
+            <Input addonBefore={codePathPrefix} placeholder="代码存储路径" />
+          </Form.Item>
+          <Form.Item
+            label="引擎类型"
+            >
+            <Form.Item rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+            <Select defaultValue={engineTypeArr[0] ? engineTypeArr[0] : ''}  onChange={handleEngineTypeChange}>
               {
-                engineType1.map((item)=>( <Option value={item.value}>{item.name}</Option>))
+                engineTypeArr.map((item) => (
+                  <Option value={item}>{item}</Option>
+                ))
               }
             </Select>
-            <Select style={{ width: "50%" }} onChange={handleChange}>
-            {
-                engineType2.map((item)=>(
-                <Option value={item.value}>{item.name}</Option>
+            </Form.Item>
+            <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
+            <Select defaultValue={engineNameArr[0] ? engineNameArr[0] : ''}>
+              {
+                engineNameArr.map((item) => (
+                  <Option value={item}>{item}</Option>
                 ))
+              }
+            </Select>
+            </Form.Item>
+          </Form.Item>
+          <Form.Item
+            label="设备类型"
+            name="deviceType"
+            rules={[{ required: true }]}
+          >
+            <Select defaultValue={deviceTypeArr[0] ? deviceTypeArr[0] : ''} style={{ width: "50%" }} onChange={handleDeviceTypeChange}>
+              {
+                deviceTypeArr.map((item,index) => (<Option value={item} index={index}>{item}</Option>))
               }
             </Select>
           </Form.Item>
           <Form.Item
-            label={<span>
-              计算节点规格&nbsp;
-            <Tooltip title="计算节点提示信息。。。。。">
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </span>}
-            name="nodeSpecification"
-            rules={[{ required: true,message:'请选择 计算节点规格'}]}
+            label="设备数量"
+            name="deviceNum"
+            rules={[{ required: true }]}
           >
-            <Select style={{ width: "50%" }} onChange={handleChange}>
-            {
-                nodeSpeciation.map((item)=>(
-                <Option value={item.value}>{item.name}</Option>
+            <Select defaultValue={deviceNumArr[0] ? deviceNumArr[0] : ''} style={{ width: "50%" }}>
+              {
+                deviceNumArr.map((item) => (
+                  <Option value={item}>{item}</Option>
                 ))
               }
             </Select>
@@ -147,7 +188,14 @@ const CodeCreate = () => {
           </Form.Item>
         </Form>
       </div>
-
+      <Modal
+        title="创建成功"
+        visible={modelVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p>点击确定跳转回列表页面</p>
+      </Modal>
     </>
   )
 

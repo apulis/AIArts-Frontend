@@ -5,7 +5,7 @@ import { Table, Space, Button, Row, Col, Input,message } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { formatDate } from '@/utils/time';
 import { PAGEPARAMS } from '../../../const';
-import { getCodes } from '../service.js'
+import { getCodes,deleteCode,getJupyterUrl} from '../service.js'
 const CodeList = (props) => {
   const { Search } = Input;
   const [codes, setCodes] = useState({ data: [], total: 0 });
@@ -16,55 +16,82 @@ const CodeList = (props) => {
   }, [pageParams])// pageParams改变触发的componentwillUpdate()
   const renderData = async () => {
     setLoading(true);
-    const { page, pageSize } = pageParams;
-    const obj = await getCodes(page, pageSize);
-    const { code, data, msg, total } = obj
+    apiGetCodes(pageParams)
+    setLoading(false);
+  };
+  const apiGetCodes = async (pageParams)=>{
+    const obj = await getCodes(pageParams);
+    const { code, data, msg } = obj
     if (code === 0) {
       setCodes({
         data: data,
-        total: total,
+        total: data.total,
       });
     } else {
       message.error(msg);
     }
-    setLoading(false);
-  };
+  }
+  const apiOpenJupyter = async ()=>{
+    const {code,data,msg} = await getJupyterUrl(id)
+    if(code===0){
+      const endpoints = data.endpoints
+      let url = ''
+      let flag = false
+      endpoints.forEach((obj)=>{
+        if(!flag && obj.name==='ipython' && obj.status==='running'){
+          flag = true
+          url = domain
+        }
+      })
+      if(flag){
+        window.open(url)
+      }else{
+        message.info('跳转失败，请稍后再试')
+      }
+    }else{
+      message.error(msg)
+    }
+
+  }
+  const apiDeleteCode = async(id)=>{
+    const obj = await deleteCode(id)
+    const { code,data, msg } = obj
+    if (code === 0) {
+      renderData();
+    } else {
+      message.error(msg);
+    }
+  }
   const columns = [
     {
       title: '开发环境名称',
-      dataIndex: 'devName',
-      key: 'devName',
+      dataIndex: 'name',
       ellipsis: true,
     },
     {
       title: '状态',
       dataIndex: 'status',
-      key: 'status',
       ellipsis: true,
     },
     {
       title: '引擎类型',
-      dataIndex: 'engineType',
-      key: 'engineType',
+      dataIndex: 'engine',
       ellipsis: true,
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime',
       render: text => formatDate(text, 'YYYY-MM-DD HH:MM:SS'),
       ellipsis: true,
     },
     {
       title: '代码存储目录',
-      dataIndex: 'codeStorePath',
-      key: 'codeStorePath',
+      dataIndex: 'codePath',
       ellipsis: true,
     },
     {
       title: '描述',
       dataIndex: 'desc',
-      key: 'desc',
       ellipsis: true,
     },
     {
@@ -72,30 +99,28 @@ const CodeList = (props) => {
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => onOpen(item)}>打开</a>
-            <a onClick={() => onDelete(item)}>删除</a>
+            <a onClick={() => handleOpen(item)}>打开</a>
+            <a onClick={() => handleDelete(item)}>删除</a>
           </Space>
         );
       },
     },
   ];
-  const onOpen = (item) => {
-    alert('open')
-    console.log('open', item)
+  const handleOpen = (item) => {
+    apiOpenJupyter(item.id)
   }
-  const onDelete = (item) => {
-    alert('delete')
-    console.log('delete', item)
+  const handleDelete = (item) => {
+    const id = item.id
+    apiDeleteCode(item.id)
   }
-  const onSearch = (value) => {
-    alert(value)
+  const handleSearch = (value) => {
+    alert(`search:${value}`)
   }
-  const onRefreshTable = () => {
+  const handleFresh = () => {
     renderData()
-    alert('flash Data')
   }
-  const onPageParamsChange = (page, size) => {
-    setPageParams({ page: page, pageSize: size });
+  const onPageParamsChange = (pageNum, pageSize) => {
+    setPageParams({ pageNum, pageSize});
   };
   return (
     <PageHeaderWrapper>
@@ -111,17 +136,17 @@ const CodeList = (props) => {
           <div style={{ float: "right" }}>
             <Search
               placeholder="输入开发环境名称查询"
-              onSearch={value => onSearch(value)}
+              onSearch={value => handleSearch(value)}
               style={{ width: 200 }}
             />
             <span>
-              <Button onClick={() => onRefreshTable()} icon={<ReloadOutlined />} />
+              <Button onClick={() => handleFresh()} icon={<ReloadOutlined />} />
             </span>
           </div>
         </Col>
       </Row>
       <Table
-        dataSource={codes.data.list}
+        dataSource={codes.data.CodeEnvs}
         columns={columns}
         rowKey={(r, i) => `${i}`}
         pagination={{
