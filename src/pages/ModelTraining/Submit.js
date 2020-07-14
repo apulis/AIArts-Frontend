@@ -39,7 +39,11 @@ const ModelTraining = () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
       let { data: { aiFrameworks, deviceList, codePathPrefix } } = res;
-      setCodePathPrefix(codePathPrefix + '/');
+      if (!/\/$/.test(codePathPrefix)) {
+        codePathPrefix = codePathPrefix + '/' 
+      }
+      
+      setCodePathPrefix(codePathPrefix);
       let aiFrameworkList = []
       Object.keys(aiFrameworks).forEach(val => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
