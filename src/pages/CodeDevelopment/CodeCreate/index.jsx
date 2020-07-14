@@ -47,6 +47,7 @@ const CodeCreate = () => {
   const { validateFields } = form;
   const handleSubmit = async () => {
     const values = await validateFields();
+    values.codePath = codePathPrefix+values.codePath
     apiPostCode(values)
   }
 
