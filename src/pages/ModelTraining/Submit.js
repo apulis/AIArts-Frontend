@@ -132,7 +132,7 @@ const ModelTraining = () => {
     const deviceType = value;
     const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
     const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
-    if (deviceNumMax > 0) {
+    if (deviceNumMax >= 0) {
       const list = [0];
       let current = 1;
       while (current <= deviceNumMax) {
