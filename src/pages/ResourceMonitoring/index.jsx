@@ -100,7 +100,7 @@ const ResourceMonitoring = () => {
             colors={['#d9d9d9', '#1890ff']}
             height={294}
             total={() => (
-              <span>{data.reduce((pre, now) => now.y + pre, 0)} ({unit})</span>
+              <span>{data.reduce((pre, now) => Number((now.y + pre).toFixed(2)), 0)} ({unit})</span>
             )}
             valueFormat={val => <span>{unit !== '%' ? val : ''}{unit !== '%' ? unit : ''}</span>}
           />

@@ -99,15 +99,21 @@ const DataSetList = () => {
     {
       title: '操作',
       render: item => {
+        const { id } = item;
         return (
           <>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            <a style={{ marginLeft: 16, color: 'red' }} onClick={() => onDelete(item.id)}>删除</a>
+            <a onClick={() => handleDownload(id)}>下载</a>
+            <a style={{ margin: '0 16px', color: 'red' }} onClick={() => onDelete(id)}>删除</a>
           </>
         )
       },
     },
   ];
+
+  const handleDownload = (id) => {
+    window.open(`/ai_arts/api/files/download/dataset/${id}`, '_blank');
+  };
 
   const onEditClick = item => {
     setEditData(item); 
