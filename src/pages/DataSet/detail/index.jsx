@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './index.less';
 import { getDatasetDetail } from '../service';
 import { PageLoading } from '@ant-design/pro-layout';
+import moment from 'moment';
 
 const { Panel } = Collapse;
 
