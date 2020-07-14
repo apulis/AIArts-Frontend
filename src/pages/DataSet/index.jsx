@@ -49,13 +49,13 @@ const DataSetList = () => {
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = null, text = '';
-      values.Creator = 'zzzz'
+      const { sourceType, path, file } = values;
       setBtnLoading(true);
       if (modalType) {
         text = '编辑';
         res = await edit(editData.id, values);
       } else {
-        values.path = values.file.file.response.data.path;
+        values.path = sourceType === 1 ? file.file.response.data.path : path;
         delete values.file;
         delete values.sourceType;
         text = '新增';
@@ -66,8 +66,6 @@ const DataSetList = () => {
         getData();
         message.success(`${text}成功！`);
         setModalFlag(false);
-      } else {
-        msg && message.error(msg);
       }
       setBtnLoading(false);
     });
