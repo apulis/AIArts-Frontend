@@ -60,7 +60,6 @@ export const errorHandler = async (error) => {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
         const queryString = stringify({
-          redirect: window.location.href,
         });
         window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
@@ -89,6 +88,7 @@ request.interceptors.request.use(async (url, options) => {
     const headers = {
       'Content-Type': 'application/json; charset=UTF-8',
       Accept: 'application/json',
+      Authorization: 'Bearer ' + token,
     };
     return {
       url: url,
