@@ -2,7 +2,7 @@ import { message, Table, Modal, Form, Input, Button } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatasets, edit, deleteDataSet, add } from './service';
-import { PAGEPARAMS } from '../../const';
+import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
