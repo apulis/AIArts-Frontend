@@ -53,7 +53,7 @@ export default [
                 component: './DataSet/detail',
               },
               {
-                path: 'https://www.baidu.com/',
+                path: '/image_label/project',
                 target: '_blank',
                 name: 'imageLabel',
               },

@@ -1,11 +1,12 @@
 import { Card, Select  } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef } from 'react';
-import { getIP, getPie } from './service';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './index.less';
 import { Pie, ChartCard } from '../../components/Charts';
+import axios from 'axios';
 
 const { Option } = Select;
+const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1';
 
 const ResourceMonitoring = () => {
   const [loading, setLoading] = useState(false);
@@ -25,26 +26,34 @@ const ResourceMonitoring = () => {
     getIPData();
   }, []);
 
-  useEffect(() => {
-    if (nodeIp) getPieData(nodeIp);
-  }, [nodeIp]);
-
-  const getIPData = async () => {
+  const getIPData = () => {
     setLoading(true);
     const nowTime = new Date().getTime();
-    const res = await getIP(Math.round((nowTime - 3600000)/1000).toString(), Math.round(nowTime/1000).toString());
-    const { status, data } = res;
-    if (status === 'success' && data) {
-      const _ip = data[0].instance.split(':')[0];
-      setIPOptions(data);
-      setNodeIp(_ip);
-      getPieData(_ip)
-    }
-    setLoading(false);
+    const start = Math.round((nowTime - 3600000)/1000).toString();
+    const end = Math.round(nowTime/1000).toString();
+    axios.get(`${prefix}/series?match[]=node_uname_info&start=${start}&end=${end}`)
+    .then(res => {
+      const { status, data } = res;
+      if (status === 200 && data.data) {
+        const _ip = data.data[0].instance.split(':')[0];
+        setIPOptions(data.data);
+        setNodeIp(_ip);
+        getPieData(_ip);
+      }
+    })
+  }
+
+  const getPie = query => {
+    return new Promise((resolve, reject) =>{        
+      axios.get(`${prefix}/query?query=${query}`).then(res => {
+        resolve(res.data);
+      }).catch(err =>{
+        reject(err.data)        
+      })    
+    });
   }
 
   const getPieData = async (_ip) => {
-    // setLoading(true);
     const URL = {
       usedCPU: `100 - (avg by (instance)(irate(node_cpu_seconds_total{mode="idle",instance=~"${_ip}(:[0-9]*)?$"}[300s])) * 100)`,
       canUseGPU: `k8s_node_device_available{device_str='nvidia.com/gpu',host_ip='${_ip}'} OR on() vector(0)`,
@@ -56,7 +65,14 @@ const ResourceMonitoring = () => {
     };
     const { totalGPU, canUseGPU, usedCPU, usedRAM, totalRAM, canUseHD, totalHD } = URL;
     const res = await Promise.all([getPie(usedCPU), getPie(canUseGPU), getPie(totalGPU), getPie(usedRAM), getPie(totalRAM),  getPie(canUseHD), getPie(totalHD)]);
-    const dataArr = res.map(i => Number((Number(i.data.result[0].value[1])).toFixed(2)));
+    const dataArr = res.map(i => {
+      const result = i.data.result;
+      if (result.length) {
+        return Number((Number(result[0].value[1])).toFixed(2));
+      } else {
+        return 0;
+      }
+    });
     let obj = {
       'CPU': [{x: '已用', y: dataArr[0]}, {x: '可用', y: 100 - dataArr[0]}], 
       'GPU': [{x: '已用', y: dataArr[1]}, {x: '可用', y: dataArr[2] - dataArr[1]}],
@@ -64,11 +80,7 @@ const ResourceMonitoring = () => {
       '硬盘': [{x: '已用', y: gbFormat(dataArr[6]) - gbFormat(dataArr[5])}, {x: '可用', y: gbFormat(dataArr[5])}]
     }
     setPieData(obj);
-    // res.forEach((m, i) => {
-    //   const num =  Number((Number(m.data.result[0].value[1])).toFixed(2));
-    //   console.log(`------${i}`, num)
-    // })
-    // setLoading(false);
+    setLoading(false);
   }
 
   const gbFormat = val => {
@@ -90,16 +102,21 @@ const ResourceMonitoring = () => {
             total={() => (
               <span>{data.reduce((pre, now) => now.y + pre, 0)} ({unit})</span>
             )}
-            valueFormat={val => <span dangerouslySetInnerHTML={{ __html: `${unit !== '%' ? val : ''}${unit !== '%' ? unit : ''}` }} />}
+            valueFormat={val => <span>{unit !== '%' ? val : ''}{unit !== '%' ? unit : ''}</span>}
           />
         </Card>
       )
     })
   }
 
+  const handleSelect = v => {
+    setNodeIp(v);
+    getPieData(nodeIp);
+  }
+
   const getSelect = () => {
     return (
-      <Select value={nodeIp} size='large' style={{ width: 240, margin: '0 0 20px 20px' }} onChange={v => setNodeIp(v)}>
+      <Select value={nodeIp} size='large' style={{ width: 240, margin: '0 0 20px 20px' }} onChange={handleSelect}>
         {IPOptions.map(i => {
           const { instance, nodename } = i;
           const _instance = instance.split(':')[0];
