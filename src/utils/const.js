@@ -8,5 +8,7 @@ export const PAGEPARAMS = {
   pageSize: 10,
 };
 
+export const REFRESH_INTERVAL = 3*1000;
+
 export const avatar =
   'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
