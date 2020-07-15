@@ -35,9 +35,6 @@ const InferenceDetail = () => {
         log = '';
       }
       setLogs(log);
-      setTimeout(() => {
-        l && l.scrollTo(0, 100000000);
-      }, 120);
     }
     return res;
   }
