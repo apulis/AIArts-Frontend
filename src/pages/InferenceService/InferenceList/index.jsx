@@ -23,13 +23,13 @@ const InferenceList = props => {
   useEffect(() => {
     handleRefresh();
 
-    let timer = setInterval(() => {
-      handleRefresh();
-    }, REFRESH_INTERVAL);
+    // let timer = setInterval(() => {
+    //   handleRefresh();
+    // }, REFRESH_INTERVAL);
     
-    return () => {
-      clearInterval(timer)
-    }    
+    // return () => {
+    //   clearInterval(timer)
+    // }    
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
