@@ -73,7 +73,7 @@ const ModelTraining = () => {
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     })
-    values.codePath = codePathPrefix + values.codePath;
+    values.codePath = codePathPrefix + (values.codePath || '');
     values.startupFile = codePathPrefix + values.startupFile;
     values.outputPath = codePathPrefix + (values.outputPath || '');
     values.params = params;

@@ -70,7 +70,7 @@ const Detail = () => {
       <div className={styles.topButtons}>
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
-          <Button onClick={removeTraining}>删除训练</Button>
+          {/* <Button onClick={removeTraining}>删除训练</Button> */}
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
