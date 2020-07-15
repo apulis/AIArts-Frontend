@@ -24,12 +24,14 @@ const List = () => {
     }
   }
   useEffect(() => {
-    getTrainingList()
+    setInterval(() => {
+      getTrainingList();
+    }, 3000);
   }, [])
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
-      message.success('已经成功操作，等待job停止中');
+      message.success('已成功操作');
       getTrainingList();
     }
   }
