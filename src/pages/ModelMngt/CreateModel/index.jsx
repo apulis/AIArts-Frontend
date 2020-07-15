@@ -45,8 +45,8 @@ const CreateModel = props => {
     const data = {
       name,
       description,
-      path,
-      jobId: jobId || '1'
+      path: codePathPrefix + path,
+      jobId: jobId || ''
     }
     
     const { code, msg } = await addModel(data);
