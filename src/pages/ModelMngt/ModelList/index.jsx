@@ -9,6 +9,7 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { downloadModel } from '../ModelList/services';
 import { stringify } from 'querystring';
 import moment from 'moment';
+import { getModelStatus } from '@/utils/utils';
 
 const { confirm } = Modal;
 
@@ -47,9 +48,9 @@ const ModelList = props => {
     },
     {
       title: '状态',
-      dataIndex: 'status',
       ellipsis: true,
-      width: 100
+      width: 100,
+      render: (text, item) => getModelStatus(item.status)
     },
     {
       title: '引擎类型',

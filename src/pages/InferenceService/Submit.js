@@ -21,7 +21,7 @@ const SubmitModelTraining = (props) => {
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [frameWorks, setFrameWorks] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
-  const [initialModelPath, setInitialModelPath] = useState(decodeURIComponent(query.modelPath || ''));
+  const [initialModelPath, setInitialModelPath] = useState(decodeURIComponent(query.modelPath || '').split('?')[0]);
   const [computedDeviceList, setComputedDeviceList] = useState([]);
   const [currentGpuType, setCurrentGpuType] = useState('');
   const [availImage, setAvailImage] = useState([]);
@@ -150,16 +150,14 @@ const SubmitModelTraining = (props) => {
         </FormItem>
         <FormItem labelCol={{span: 4}} label="使用模型">
           {
-            initialModelPath ? (<FormItem name="modelName" noStyle initialValue={initialModelPath} rules={[{ required: true }]}>
+            initialModelPath ? (<FormItem name="modelName" noStyle initialValue={initialModelPath} rules={[{ required: true, message: '请输入模型' }]}>
               <Input placeholder="请输入使用模型" style={{width: '260px'}} />
             </FormItem>) : (
-            <FormItem name="modelName" noStyle rules={[{ required: true }]}>
+            <FormItem name="modelName" noStyle rules={[{ required: true, message: '请输入模型' }]}>
               <Input placeholder="请输入使用模型" style={{width: '260px'}} />
             </FormItem>
             )
           }
-          
-          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />}></Button>
         </FormItem>
         <FormItem label="作业参数" labelCol={{ span: 4 }} >
           {

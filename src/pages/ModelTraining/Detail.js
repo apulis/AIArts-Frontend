@@ -22,13 +22,16 @@ const Detail = () => {
     const res = await fetchTrainingDetail(id);
     if (res.code === 0) {
       setJobDetail(res.data)
+      const status = res.data.status;
+      if (!['unapproved', 'queued', 'scheduling'].includes(status)) {
+        getTrainingLogs(id)
+      }
     }
   }
   useEffect(() => {
-    getTrainingLogs(id)
     getTrainingDetail();
   }, [])
-
+  const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status)
   const getTrainingLogs = async () => {
     const res = await fetchTrainingLog(id);
     const l = logEl.current;
@@ -61,7 +64,7 @@ const Detail = () => {
   return (
     <div className={styles.modelDetail}>
       <div className={styles.topButtons}>
-        <div className="ant-descriptions-title" style={{marginTop: '30px'}}>模型训练</div>
+        <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
           <Button onClick={removeTraining}>删除训练</Button>
         </div>
@@ -82,13 +85,21 @@ const Detail = () => {
         <Descriptions.Item label="输出路径">{jobDetail.outputPath}</Descriptions.Item>
         <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
-      <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
-      <Button onClick={handleFetchTrainingLogs}>获取训练日志</Button>
-      {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+      <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
+      {!jobStarted && <Button onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
+      {logs ? <pre ref={logEl} className={styles.logs}>
         {logs}
-      </pre> : <LoadingOutlined />}
+      </pre> : (<div>
+        {
+          jobStarted ?
+            <div>训练任务尚未开始运行</div>
+            :
+            <LoadingOutlined />
+        }
+      </div>)
+      }
     </div>
-    
+
   )
 }
 

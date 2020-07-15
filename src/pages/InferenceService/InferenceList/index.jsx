@@ -7,6 +7,7 @@ import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { getJobStatus } from '@/utils/utils';
 
 const InferenceList = props => {
   const {
@@ -54,9 +55,10 @@ const InferenceList = props => {
     },
     {
       title: '状态',
-      dataIndex: 'jobStatus',
+      // dataIndex: 'jobStatus',
       // ellipsis: true,
       // width: 100
+      render: (text, item) => getJobStatus(item.jobStatus)
     },
     {
       title: '引擎类型',
@@ -82,9 +84,9 @@ const InferenceList = props => {
     {
       title: '服务地址',
       // dataIndex: 'serverAddr',
-      // ellipsis: true,
-      // width: 100,
-      render: (text, item) => item.jobParams['inference-url'] ? item.jobParams['inference-url'] : ''
+      ellipsis: true,
+      width: 100,
+      render: (text, item) => item['inference-url'] ? item['inference-url'] : ''
     },
     {
       title: '描述',
@@ -99,7 +101,7 @@ const InferenceList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <Button type="link" onClick={() => stopJob(item)} disabled={() => isStopDisabled(item)}>停止</Button>
+            <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled(item)}>停止</Button>
             {/* <a onClick={() => stopJob(item)}>停止</a> */}
             {/* <a onClick={() => deleteJob(item)}>删除</a> */}
           </Space>
@@ -157,6 +159,7 @@ const InferenceList = props => {
       const {code, msg, data} = await stopInference(params);
       if(code === 0){
         message.success(`Job成功停止！`);
+        handleRefresh();
       }else{
         message.error(`Job停止错误：${msg}。`);
       }

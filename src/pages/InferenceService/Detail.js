@@ -57,6 +57,10 @@ const InferenceDetail = () => {
       return;
     }
     if (info.file.status === 'done') {
+      getBase64(info.file.originFileObj, imageUrl => {
+        setImageUrl(imageUrl);
+        setLoading(false);
+      });
       // Get this url from response in real world.
       let imageBase64 = info.file.response.data
       if (typeof imageBase64 !== 'string') {
@@ -85,7 +89,8 @@ const InferenceDetail = () => {
   const beginAnalyze = () => {
     setBeginAnalizeLoading(true);
     setTimeout(() => {
-      setImageUrl(tempImageUrl)
+      setImageUrl('data:image/jpg;base64,' + tempImageUrl)
+      setBeginAnalizeLoading(false)
     }, 1000);
   }
   const getLateastLogs = async () => {
@@ -116,7 +121,7 @@ const InferenceDetail = () => {
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '400px' }} /> : uploadButton}
       </Upload>
       <Button loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
