@@ -138,11 +138,16 @@ const InferenceDetail = () => {
         <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
-      <Button onClick={getLateastLogs}>点击获取最新日志</Button>
+      {!['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) &&<Button onClick={getLateastLogs}>点击获取最新日志</Button>}
       <div>
         {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}
-        </pre> : <LoadingOutlined />}
+        </pre> : (
+          ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && <div>训练任务尚未开始</div>
+        )}
+        {
+          ['failed'].includes(jobDetail.jobStatus) && <div style={{marginTop: '20px'}} >当前训练任务已失败</div>
+        }
       </div>
 
 

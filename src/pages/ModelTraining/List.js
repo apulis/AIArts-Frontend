@@ -24,12 +24,18 @@ const List = () => {
     }
   }
   useEffect(() => {
-    getTrainingList()
+    getTrainingList();
+    let timer = setInterval(() => {
+      getTrainingList();
+    }, 3000);
+    return () => {
+      clearInterval(timer)
+    }
   }, [])
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
-      message.success('成功删除');
+      message.success('已成功操作');
       getTrainingList();
     }
   }
@@ -81,7 +87,12 @@ const List = () => {
       render(_text, item) {
         return (
           <>
-            <a onClick={() => removeTraining(item.id)}>删除</a>
+          {
+            ['unapproved', 'queued', 'scheduling', 'running', ].includes(item.status)
+              ? <a onClick={() => removeTraining(item.id)}>停止</a>
+              : <span>已停止运行</span>
+          }
+            
           </>
         )
       }
