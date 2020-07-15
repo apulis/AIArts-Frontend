@@ -21,7 +21,7 @@ const SubmitModelTraining = (props) => {
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [frameWorks, setFrameWorks] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
-  const [initialModelPath, setInitialModelPath] = useState(decodeURIComponent(query.modelPath || ''));
+  const [initialModelPath, setInitialModelPath] = useState(decodeURIComponent(query.modelPath || '').split('?')[0]);
   const [computedDeviceList, setComputedDeviceList] = useState([]);
   const [currentGpuType, setCurrentGpuType] = useState('');
   const [availImage, setAvailImage] = useState([]);
@@ -158,8 +158,6 @@ const SubmitModelTraining = (props) => {
             </FormItem>
             )
           }
-          
-          <Button style={{marginLeft: '15px', display: 'inline-block'}} icon={<FolderOpenOutlined />}></Button>
         </FormItem>
         <FormItem label="作业参数" labelCol={{ span: 4 }} >
           {
