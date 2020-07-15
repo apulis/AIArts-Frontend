@@ -24,9 +24,13 @@ const List = () => {
     }
   }
   useEffect(() => {
-    setInterval(() => {
+    getTrainingList();
+    let timer = setInterval(() => {
       getTrainingList();
     }, 3000);
+    return () => {
+      clearInterval(timer)
+    }
   }, [])
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
