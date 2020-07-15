@@ -82,9 +82,9 @@ const InferenceList = props => {
     {
       title: '服务地址',
       // dataIndex: 'serverAddr',
-      // ellipsis: true,
-      // width: 100,
-      render: (text, item) => item.jobParams['inference-url'] ? item.jobParams['inference-url'] : ''
+      ellipsis: true,
+      width: 100,
+      render: (text, item) => item['inference-url'] ? item['inference-url'] : ''
     },
     {
       title: '描述',
