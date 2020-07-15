@@ -175,13 +175,13 @@ const ModelTraining = () => {
           name="codePath"
           label="代码目录"
         >
-          <Input addonBefore={codePathPrefix} style={{ width: 300 }} />
+          <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} label="启动文件"  name="startupFile" rules={[{required: true}, {pattern: /\.py$/, message: '需要填写一个python 文件'}]}>
-          <Input  addonBefore={codePathPrefix} style={{ width: 300 }} />
+          <Input  addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
         <FormItem name="outputPath" rules={[{ required: true, message: '请输入输出路径' }]} labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>
-          <Input addonBefore={codePathPrefix}  style={{ width: 300 }} />
+          <Input addonBefore={codePathPrefix}  style={{ width: 420 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
