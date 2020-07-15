@@ -150,10 +150,10 @@ const SubmitModelTraining = (props) => {
         </FormItem>
         <FormItem labelCol={{span: 4}} label="使用模型">
           {
-            initialModelPath ? (<FormItem name="modelName" noStyle initialValue={initialModelPath} rules={[{ required: true }]}>
+            initialModelPath ? (<FormItem name="modelName" noStyle initialValue={initialModelPath} rules={[{ required: true, message: '请输入模型' }]}>
               <Input placeholder="请输入使用模型" style={{width: '260px'}} />
             </FormItem>) : (
-            <FormItem name="modelName" noStyle rules={[{ required: true }]}>
+            <FormItem name="modelName" noStyle rules={[{ required: true, message: '请输入模型' }]}>
               <Input placeholder="请输入使用模型" style={{width: '260px'}} />
             </FormItem>
             )
