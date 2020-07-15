@@ -98,6 +98,7 @@ const CreateModel = props => {
         <Form
           form={form}
           onFinish={onFinish}
+          autoComplete="off"
         >
           <Form.Item
             {...layout}
