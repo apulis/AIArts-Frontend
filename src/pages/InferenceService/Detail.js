@@ -119,11 +119,12 @@ const InferenceDetail = () => {
         showUploadList={false}
         action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
         beforeUpload={beforeUpload}
+        style={{position: 'relative'}}
         onChange={handleChange}
       >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '400px' }} /> : uploadButton}
+        {(imageUrl) ? <img src={imageUrl} alt="avatar" style={{ width: '620px' }} /> : uploadButton}
       </Upload>
-      <Button loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
+      <Button disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
