@@ -99,7 +99,7 @@ const InferenceList = props => {
       render: (item) => {
         return (
           <Space size="middle">
-            <Button type="link" onClick={() => stopJob(item)} disabled={() => isStopDisabled(item)}>停止</Button>
+            <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled(item)}>停止</Button>
             {/* <a onClick={() => stopJob(item)}>停止</a> */}
             {/* <a onClick={() => deleteJob(item)}>删除</a> */}
           </Space>
@@ -157,6 +157,7 @@ const InferenceList = props => {
       const {code, msg, data} = await stopInference(params);
       if(code === 0){
         message.success(`Job成功停止！`);
+        handleRefresh();
       }else{
         message.error(`Job停止错误：${msg}。`);
       }
