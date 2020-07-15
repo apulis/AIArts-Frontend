@@ -75,7 +75,7 @@ const ModelTraining = () => {
     })
     values.codePath = codePathPrefix + values.codePath;
     values.startupFile = codePathPrefix + values.startupFile;
-    values.outputPath = codePathPrefix + values.outputPath;
+    values.outputPath = codePathPrefix + values.outputPath || '';
     values.params = params;
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
