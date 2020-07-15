@@ -7,6 +7,7 @@ import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { getJobStatus } from '@/utils/utils';
 
 const InferenceList = props => {
   const {
@@ -54,9 +55,10 @@ const InferenceList = props => {
     },
     {
       title: '状态',
-      dataIndex: 'jobStatus',
+      // dataIndex: 'jobStatus',
       // ellipsis: true,
       // width: 100
+      render: (text, item) => getJobStatus(item.jobStatus)
     },
     {
       title: '引擎类型',
