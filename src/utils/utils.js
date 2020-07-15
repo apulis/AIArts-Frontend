@@ -124,3 +124,11 @@ export const getJobStatus = (status) => {
   }
   return statusList[status] || ''
 }
+
+export const getModelStatus = (status) => {
+  const statusList = {
+    'normal': '正常',
+    'deleting': '删除中',
+  }
+  return statusList[status] || ''
+}
