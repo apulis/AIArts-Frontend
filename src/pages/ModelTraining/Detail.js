@@ -31,7 +31,7 @@ const Detail = () => {
   useEffect(() => {
     getTrainingDetail();
   }, [])
-
+  const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status)
   const getTrainingLogs = async () => {
     const res = await fetchTrainingLog(id);
     const l = logEl.current;
@@ -86,12 +86,12 @@ const Detail = () => {
         <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
-      {!['unapproved', 'queued', 'scheduling'].includes(jobDetail.status) && <Button onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
+      {!jobStarted && <Button onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
       {logs ? <pre ref={logEl} className={styles.logs}>
         {logs}
       </pre> : (<div>
         {
-          ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status) ?
+          jobStarted ?
             <div>训练任务尚未开始运行</div>
             :
             <LoadingOutlined />
