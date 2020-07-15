@@ -50,6 +50,13 @@ const InferenceDetail = () => {
   useEffect(() => {
     getInferenceDetail();
     getInferenceLog();
+    let timer = setInterval(() => {
+      getInferenceDetail();
+      getInferenceLog();
+    }, 3000)
+    return () => {
+      clearInterval(timer);
+    }
   }, [])
   const handleChange = info => {
     if (info.file.status === 'uploading') {
