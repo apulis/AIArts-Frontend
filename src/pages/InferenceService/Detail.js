@@ -90,6 +90,7 @@ const InferenceDetail = () => {
     setBeginAnalizeLoading(true);
     setTimeout(() => {
       setImageUrl('data:image/jpg;base64,' + tempImageUrl)
+      setBeginAnalizeLoading(false)
     }, 1000);
   }
   const getLateastLogs = async () => {
@@ -120,7 +121,7 @@ const InferenceDetail = () => {
         beforeUpload={beforeUpload}
         onChange={handleChange}
       >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '400px' }} /> : uploadButton}
       </Upload>
       <Button loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
