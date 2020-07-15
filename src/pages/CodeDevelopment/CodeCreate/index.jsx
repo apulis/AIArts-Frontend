@@ -128,6 +128,7 @@ const CodeCreate = () => {
           </Form.Item>
           <Form.Item
             label="引擎类型"
+            required
             >
             <Form.Item rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
             <Select defaultValue={engineTypeArr[0] ? engineTypeArr[0] : ''}  onChange={handleEngineTypeChange}>

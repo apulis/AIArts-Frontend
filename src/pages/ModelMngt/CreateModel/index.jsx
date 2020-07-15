@@ -7,6 +7,7 @@ import { formatDate } from '@/utils/time';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
+import { fetchAvilableResource } from '@/services/modelTraning';
 
 const { TextArea } = Input;
 
@@ -14,8 +15,25 @@ const CreateModel = props => {
   // const {
   //   dispatch
   // } = props;
+  const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    getAvailableResource();
+  }, []);
+
+  const getAvailableResource = async () => {
+    const res = await fetchAvilableResource();
+    if (res.code === 0) {
+      let { data: { codePathPrefix } } = res;
+      if (!/\/$/.test(codePathPrefix)) {
+        codePathPrefix = codePathPrefix + '/' 
+      }
+      
+      setCodePathPrefix(codePathPrefix);
+    }
+  }
 
   const selectTrainingJob = () => {
 
@@ -80,6 +98,7 @@ const CreateModel = props => {
         <Form
           form={form}
           onFinish={onFinish}
+          autoComplete="off"
         >
           <Form.Item
             {...layout}
@@ -104,12 +123,12 @@ const CreateModel = props => {
             label="存储路径"
             rules={[{ required: true, message: '存储路径不能为空!' }]}
           >
-            <Input placeholder="请输入存储路径" />
-          </Form.Item>          
+            <Input addonBefore={codePathPrefix} placeholder="请输入存储路径" />
+          </Form.Item>       
           <Form.Item
             {...layout}
             label="选择训练作业"
-            // rules={[{ required: true, message: '训练作业不能为空!' }]}
+            required
           >
             <Form.Item
               name="job"
