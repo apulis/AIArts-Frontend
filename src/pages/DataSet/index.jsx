@@ -164,6 +164,8 @@ const DataSetList = () => {
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
+          current: pageParams.pageNum,
+          pageSize: pageParams.pageSize
         }}
       />
       {modalFlag && (

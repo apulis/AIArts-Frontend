@@ -1,9 +1,10 @@
-import { Card, Select  } from 'antd';
+import { Card, Select, Button } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './index.less';
 import { Pie, ChartCard } from '../../components/Charts';
 import axios from 'axios';
+import { SyncOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const prefix = '/endpoints/grafana/api/datasources/proxy/1/api/v1';
@@ -75,7 +76,7 @@ const ResourceMonitoring = () => {
     });
     let obj = {
       'CPU': [{x: '已用', y: dataArr[0]}, {x: '可用', y: diffFormat(100, dataArr[0])}], 
-      'GPU': [{x: '已用', y: dataArr[1]}, {x: '可用', y: diffFormat(dataArr[2], dataArr[1])}],
+      'GPU': [{x: '已用', y: diffFormat(dataArr[2], dataArr[1])}, {x: '可用', y: dataArr[1]}],
       '内存': [{x: '已用', y: gbFormat(dataArr[3])}, {x: '可用', y: diffFormat(gbFormat(dataArr[4]), gbFormat(dataArr[3]))}], 
       '硬盘': [{x: '已用', y: diffFormat(gbFormat(dataArr[6]), gbFormat(dataArr[5]))}, {x: '可用', y: gbFormat(dataArr[5])}]
     }
@@ -138,6 +139,7 @@ const ResourceMonitoring = () => {
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '24px 0px' }}>
         {getSelect()}
+        <Button icon={<SyncOutlined />} className={styles.refreshBtn} onClick={() => getPieData(nodeIp)}></Button>
         <div className={styles.resourceMonitoringWrap}>
           <div className={styles.flexWrap}>
             {getCards(type1)}
