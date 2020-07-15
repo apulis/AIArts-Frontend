@@ -57,11 +57,11 @@ const CodeList = (props) => {
   const apiOpenJupyter = async (id)=>{
     const {code,data,msg} = await getJupyterUrl(id)
     if(code===0){
-      if(data.name==='ipython' && data.status==='running'){
+      if(data.name==='ipython' && data.status==='running' && data.accessPoint){
         window.open(data.accessPoint)
       }
      else{
-      message.error('打开失败，请稍后重试')
+      message.info('服务正在准备中，请稍候再试')
      }
     }else{
       message.error(msg)
