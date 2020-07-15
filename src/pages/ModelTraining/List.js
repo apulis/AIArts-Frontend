@@ -3,7 +3,7 @@ import { Button, Table, Input, message } from 'antd';
 import { Link } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
-
+import { getJobStatus } from '@/utils/utils';
 import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
 
 const { Search } = Input;
@@ -56,7 +56,8 @@ const List = () => {
     },
     {
       dataIndex: 'status',
-      title: '状态'
+      title: '状态',
+      render: (text, item) => getJobStatus(item.status)
     },
     {
       dataIndex: 'engine',
