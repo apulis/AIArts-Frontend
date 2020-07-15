@@ -127,7 +127,7 @@ const CreateModel = props => {
           <Form.Item
             {...layout}
             label="选择训练作业"
-            // rules={[{ required: true, message: '训练作业不能为空!' }]}
+            required
           >
             <Form.Item
               name="job"
