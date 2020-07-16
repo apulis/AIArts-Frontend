@@ -17,7 +17,9 @@ app.post('//update', (req, res) => {
       console.log('pull over')
       exec('yarn build', (err, result) => {
         if (!err) {
-          console.log('build')
+          console.log('build over')
+        } else {
+          console.log('build err', err)
         }
       })
     }
