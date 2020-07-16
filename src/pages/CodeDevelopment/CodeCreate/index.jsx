@@ -131,7 +131,7 @@ const CodeCreate = () => {
             required
             >
             <Form.Item rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-            <Select defaultValue={engineTypeArr[0] ? engineTypeArr[0] : ''}  onChange={handleEngineTypeChange}>
+            <Select value={engineTypeArr[0] ? engineTypeArr[0] : ''}  onChange={handleEngineTypeChange}>
               {
                 engineTypeArr.map((item) => (
                   <Option value={item}>{item}</Option>
@@ -140,7 +140,7 @@ const CodeCreate = () => {
             </Select>
             </Form.Item>
             <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
-            <Select defaultValue={engineNameArr[0] ? engineNameArr[0] : ''}>
+            <Select value={engineNameArr[0] ? engineNameArr[0] : ''}>
               {
                 engineNameArr.map((item) => (
                   <Option value={item}>{item}</Option>
@@ -154,7 +154,7 @@ const CodeCreate = () => {
             name="deviceType"
             rules={[{ required: true }]}
           >
-            <Select defaultValue={deviceTypeArr[0] ? deviceTypeArr[0] : ''} style={{ width: "50%" }} onChange={handleDeviceTypeChange}>
+            <Select value={deviceTypeArr[0] ? deviceTypeArr[0] : ''} style={{ width: "50%" }} onChange={handleDeviceTypeChange}>
               {
                 deviceTypeArr.map((item,index) => (<Option value={item} index={index}>{item}</Option>))
               }
@@ -165,7 +165,7 @@ const CodeCreate = () => {
             name="deviceNum"
             rules={[{ required: true }]}
           >
-            <Select defaultValue={deviceNumArr[0] ? deviceNumArr[0] : ''} style={{ width: "50%" }}>
+            <Select value={deviceNumArr[0] ? deviceNumArr[0] : ''} style={{ width: "50%" }}>
               {
                 deviceNumArr.map((item) => (
                   <Option value={item}>{item}</Option>
