@@ -10,9 +10,9 @@ const history = require('connect-history-api-fallback')
 const app = express()
 app.use(bodyParser.json())
 
-app.post('/update', (req, res) => {
+app.post('//update', (req, res) => {
+  console.log('pull start')
   exec('git pull https://cafbe4d081c2ffc3015dc82f78b1c750d245d7fd@github.com/apulis/AIArts.git', (err, result) => {
-    console.log('pull start')
     if (!err) {
       console.log('pull over')
       exec('yarn build', (err, result) => {
