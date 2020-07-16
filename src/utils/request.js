@@ -27,6 +27,11 @@ export const codeMessage = {
   504: '网关超时。',
 };
 
+export const bizCodeMessage = {
+  30005: '该存储路径下没有文件！',
+  20001: '请求参数错误！',
+}
+
 /**
  * 异常处理程序
  */
@@ -46,15 +51,9 @@ export const errorHandler = async (error) => {
     return {};
   }
   const CODE = _response.code;
-  if (CODE === 30005) {
-    message.error('该存储路径下没有文件！');
-    return response;
-  } else if (CODE === 20001) {
-    message.error('请求参数错误！');
-    return response;
-  } else if (CODE === 30007) {
-    message.error(_response.msg);
-    return response;
+  if (CODE !== 0) {
+    message.error(bizCodeMessage[CODE] || _response.msg);
+    return response
   }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
