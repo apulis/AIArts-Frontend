@@ -14,7 +14,11 @@ app.post('//update', (req, res) => {
   if (req.body.ref === 'refs/heads/master') {
     exec('git pull https://cafbe4d081c2ffc3015dc82f78b1c750d245d7fd@github.com/apulis/AIArts.git', (err, result) => {
       if (!err) {
-        exec('yarn build')
+        exec('yarn build', (err, result) => {
+          if (!err) {
+            res.send('ok')
+          }
+        })
       }
     })
   }
