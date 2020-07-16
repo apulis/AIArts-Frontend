@@ -5,6 +5,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
+import { SyncOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -25,12 +26,12 @@ const List = () => {
   }
   useEffect(() => {
     getTrainingList();
-    let timer = setInterval(() => {
-      getTrainingList();
-    }, 3000);
-    return () => {
-      clearInterval(timer)
-    }
+    // let timer = setInterval(() => {
+    //   getTrainingList();
+    // }, 3000);
+    // return () => {
+    //   clearInterval(timer)
+    // }
   }, [])
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
@@ -104,7 +105,10 @@ const List = () => {
       <Link to="/model-training/submit">
         <Button href="">创建训练作业</Button>
       </Link>
-      <Search style={{width: '200px', float: 'right'}} placeholder="输入作业名称查询" onSearch={searchList} />
+      <div style={{float: 'right', paddingRight: '20px'}}>
+        <Search style={{width: '200px'}} placeholder="输入作业名称查询" onSearch={searchList} />
+        <Button style={{left: '20px'}} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
+      </div>
       <Table loading={tableLoading} style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
     </PageHeaderWrapper>
   )

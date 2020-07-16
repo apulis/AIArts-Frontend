@@ -3,7 +3,7 @@ import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stopInference } from './services';
-import { PAGEPARAMS } from '@/utils/const';
+import { PAGEPARAMS, REFRESH_INTERVAL } from '@/utils/const';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -21,13 +21,15 @@ const InferenceList = props => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    dispatch({
-      type: 'inferenceList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
-      },
-    });
+    handleRefresh();
+
+    // let timer = setInterval(() => {
+    //   handleRefresh();
+    // }, REFRESH_INTERVAL);
+    
+    // return () => {
+    //   clearInterval(timer)
+    // }    
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {

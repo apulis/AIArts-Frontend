@@ -35,9 +35,6 @@ const InferenceDetail = () => {
         log = '';
       }
       setLogs(log);
-      setTimeout(() => {
-        l && l.scrollTo(0, 100000000);
-      }, 120);
     }
     return res;
   }
@@ -50,6 +47,13 @@ const InferenceDetail = () => {
   useEffect(() => {
     getInferenceDetail();
     getInferenceLog();
+    let timer = setInterval(() => {
+      getInferenceDetail();
+      getInferenceLog();
+    }, 3000)
+    return () => {
+      clearInterval(timer);
+    }
   }, [])
   const handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -119,11 +123,12 @@ const InferenceDetail = () => {
         showUploadList={false}
         action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
         beforeUpload={beforeUpload}
+        style={{position: 'relative'}}
         onChange={handleChange}
       >
-        {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '400px' }} /> : uploadButton}
+        {(imageUrl) ? <img src={imageUrl} alt="avatar" style={{ width: '620px' }} /> : uploadButton}
       </Upload>
-      <Button loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
+      <Button disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>

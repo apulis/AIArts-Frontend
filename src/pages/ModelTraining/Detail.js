@@ -10,6 +10,7 @@ import moment from 'moment';
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
+import { returnAtIndex } from 'lodash-decorators/utils';
 
 
 const Detail = () => {
@@ -30,6 +31,12 @@ const Detail = () => {
   }
   useEffect(() => {
     getTrainingDetail();
+    let timer = setInterval(() => {
+      getTrainingDetail()
+    }, 3000);
+    return () => {
+      clearInterval(timer)
+    }
   }, [])
   const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status)
   const getTrainingLogs = async () => {
@@ -37,9 +44,6 @@ const Detail = () => {
     const l = logEl.current;
     if (res.code === 0) {
       setLogs(res.data.log);
-      setTimeout(() => {
-        l && l.scrollTo(0, 100000000);
-      }, 120);
     }
   }
 
@@ -66,7 +70,7 @@ const Detail = () => {
       <div className={styles.topButtons}>
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
-          <Button onClick={removeTraining}>删除训练</Button>
+          {/* <Button onClick={removeTraining}>删除训练</Button> */}
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
