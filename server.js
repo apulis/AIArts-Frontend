@@ -14,7 +14,6 @@ app.post('/update', (req, res) => {
   console.log('body', req.body)
   // exec('git pull ')
 })
-
 app.use(history())
 
 app.use(ecstatic({ root: path.join(__dirname, '../dist') }))
