@@ -10,6 +10,7 @@ import { history, withRouter } from 'umi';
 
 
 import styles from './index.less'
+import { jobNameReg } from '@/utils/reg';
 
 
 const { TextArea } = Input; 
@@ -145,7 +146,7 @@ const SubmitModelTraining = (props) => {
     >
     <div className={styles.modelTraining}>
       <Form form={form}>
-        <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }]}>
+        <FormItem {...commonLayout} name="workName" label="作业名称" rules={[{ required: true }, {...jobNameReg}]}>
           <Input placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>

@@ -88,7 +88,7 @@ const List = () => {
           {
             ['unapproved', 'queued', 'scheduling', 'running', ].includes(item.status)
               ? <a onClick={() => removeTraining(item.id)}>停止</a>
-              : <span>已停止运行</span>
+              : <span>已停止</span>
           }
             
           </>

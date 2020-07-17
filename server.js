@@ -24,7 +24,7 @@ app.post('//update', (req, res) => {
         }
       })
     } else {
-      console.log('pull error', error)
+      console.log('pull error', err)
     }
   })
 })

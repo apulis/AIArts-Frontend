@@ -9,6 +9,7 @@ import { submitModelTraining, fetchAvilableResource } from '../../services/model
 
 import styles from './index.less';
 import { getDatasets } from '../DataSet/service';
+import { jobNameReg } from '@/utils/reg';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -150,7 +151,7 @@ const ModelTraining = () => {
         title='创建训练作业'
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }]}>
+        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }, {...jobNameReg}]}>
           <Input style={{ width: 300 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
