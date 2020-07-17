@@ -28,7 +28,7 @@ export const codeMessage = {
 };
 
 export const bizCodeMessage = {
-  30005: '该存储路径下没有文件！',
+  30005: '文件或路径不存在！',
   20001: '请求参数错误！',
 }
 

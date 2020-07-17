@@ -24,7 +24,9 @@ const TrainingJobModal = props => {
       type: 'jobList/fetch',
       payload: {
         pageNum: pageParams.pageNum,
-        pageSize: 5
+        pageSize: 5,
+        //TODO: JobStatus == finished
+        // JobStatus: 5?
       },
     });
   }, [pageParams]);
