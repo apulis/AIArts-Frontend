@@ -10,7 +10,6 @@ import { history, withRouter } from 'umi';
 
 
 import styles from './index.less'
-import { get } from 'lodash';
 
 
 const { TextArea } = Input; 
@@ -66,6 +65,11 @@ const SubmitModelTraining = (props) => {
         framework = [framework]
       }
       setFrameWorks(framework);
+      if (device.length > 0) {
+        setFieldsValue({
+          deviceType: device[0]
+        })
+      }
       setDeviceList(device);
     }
   }
@@ -73,6 +77,12 @@ const SubmitModelTraining = (props) => {
     const res = await getAllComputedDevice();
     if (res.code === 0) {
       const computedDeviceList = Object.keys(res.data);
+      console.log('computedDeviceList', computedDeviceList);
+      if (computedDeviceList.length > 0) {
+        setFieldsValue({
+          gpuType: computedDeviceList[0]
+        })
+      }
       setComputedDeviceList(computedDeviceList)
     }
   }
@@ -154,10 +164,8 @@ const SubmitModelTraining = (props) => {
             }
           </Select>
         </FormItem>
-        <FormItem labelCol={{span: 4}} label="使用模型">
-          <FormItem name="modelName" noStyle rules={[{ required: true, message: '请输入模型' }]}>
-            <Input placeholder="请输入使用模型" style={{width: '260px'}} />
-          </FormItem>
+        <FormItem {...commonLayout}  label="使用模型" name="modelName" rules={[{ required: true, message: '请输入模型' }]}>
+          <Input placeholder="请输入使用模型" style={{width: '260px'}} />
         </FormItem>
         <FormItem label="作业参数" labelCol={{ span: 4 }} >
           {
