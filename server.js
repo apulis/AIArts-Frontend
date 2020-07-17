@@ -23,6 +23,8 @@ app.post('//update', (req, res) => {
           console.log('build err', err)
         }
       })
+    } else {
+      console.log('pull error', error)
     }
   })
 })
