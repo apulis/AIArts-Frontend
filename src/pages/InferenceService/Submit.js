@@ -77,7 +77,7 @@ const SubmitModelTraining = (props) => {
     }
   }
   const initModelPath = () => {
-    const initialModelPath = decodeURIComponent(query.modelPath || '').split('?')[0]
+    const initialModelPath = decodeURIComponent(query.modelPath || '').split('?')[0];
     if (initialModelPath) {
       setFieldsValue({
         modelName: initialModelPath,
