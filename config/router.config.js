@@ -33,11 +33,11 @@ export default [
             name: 'codeDevelopment',
             icon: 'EditOutlined',
             component: './CodeDevelopment/CodeList',
-          },  
+          },
           {
             path: '/CodeCreate',
             component: './CodeDevelopment/CodeCreate'
-          },  
+          },
           {
             path: '/dataManage',
             name: 'dataManage',
@@ -60,23 +60,35 @@ export default [
             ],
           },
           {
-            path: '/model-training/modelTraining',
+            path: '/model-training',
             name: 'modelTraining',
             icon: 'FireOutlined',
-            component: './ModelTraining/ModelTraining',
+            routes: [
+              {
+                path: '/model-training/modelTraining',
+                name: 'modelTraining',
+                component: './ModelTraining/List',
+              },
+              {
+                path: '/model-training/paramsManage',
+                name: 'paramsManage',
+                component: './ModelTraining/ParamsManage/ParamsManage'
+              },
+              {
+                path: '/model-training/submit',
+                component: './ModelTraining/Submit',
+              },
+              {
+                path: '/model-training/createJobWithParam/:id',
+                component: './ModelTraining/Submit',
+              },
+    
+              {
+                path: '/model-training/:id/detail',
+                component: './ModelTraining/Detail',
+              },
+            ]
           },
-          {
-            path: '/model-training/submit',
-            component: './ModelTraining/Submit',
-          },
-          {
-            path: '/model-training/createJobWithParam/:id',
-            component: './ModelTraining/Submit',
-          },
-          {
-            path: '/model-training/:id/detail',
-            component: './ModelTraining/Detail',
-          },          
           {
             path: '/ModelList',
             name: 'modelManagement',
@@ -106,7 +118,7 @@ export default [
             name: 'resourceMonitoring',
             icon: 'DashboardOutlined',
             component: './ResourceMonitoring'
-          },                    
+          },
           {
             path: '/',
             redirect: '/CodeList',
