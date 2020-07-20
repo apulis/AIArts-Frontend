@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Input, message } from 'antd';
 import { Link } from 'umi';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
-
-
 
 const List = () => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
@@ -101,7 +98,7 @@ const List = () => {
   ]
 
   return (
-    <PageHeaderWrapper>
+    <>
       <Link to="/model-training/submit">
         <Button href="">创建训练作业</Button>
       </Link>
@@ -110,14 +107,8 @@ const List = () => {
         <Button style={{left: '20px'}} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
       </div>
       <Table loading={tableLoading} style={{marginTop: '30px'}} columns={columns} dataSource={trainingWorkList} />
-    </PageHeaderWrapper>
+    </>
   )
 }
-
-
-
-
-
-
 
 export default List;
