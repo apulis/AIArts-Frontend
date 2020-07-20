@@ -88,7 +88,7 @@ const PretrainedModelList = props => {
       dataIndex: 'createdAt',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
-      width: 150,
+      width: 200,
     },
     {
       title: '操作',
@@ -189,7 +189,7 @@ const PretrainedModelList = props => {
           loading={loading}
           expandable={{
             expandedRowRender: record => ExpandDetails(record)
-          }}          
+          }}
         />
       </Card>
     </PageHeaderWrapper>
