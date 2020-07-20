@@ -130,5 +130,5 @@ export const getModelStatus = (status) => {
     'normal': '正常',
     'deleting': '删除中',
   }
-  return statusList[status] || ''
+  return statusList[status] || '';
 }

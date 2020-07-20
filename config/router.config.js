@@ -60,13 +60,17 @@ export default [
             ],
           },
           {
-            path: '/model-training/list',
+            path: '/model-training/modelTraining',
             name: 'modelTraining',
             icon: 'FireOutlined',
-            component: './ModelTraining/List',
+            component: './ModelTraining/ModelTraining',
           },
           {
             path: '/model-training/submit',
+            component: './ModelTraining/Submit',
+          },
+          {
+            path: '/model-training/createJobWithParam/:id',
             component: './ModelTraining/Submit',
           },
           {

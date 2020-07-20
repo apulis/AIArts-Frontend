@@ -9,6 +9,7 @@ import { submitModelTraining, fetchAvilableResource } from '../../services/model
 
 import styles from './index.less';
 import { getDatasets } from '../DataSet/service';
+import { jobNameReg } from '@/utils/reg';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -82,7 +83,7 @@ const ModelTraining = () => {
     cancel();
     if (res.code === 0) {
       message.success('成功创建');
-      history.push('/model-training/list')
+      history.push('/model-training/modelTraining')
     }
   }
   const addParams = () => {
@@ -146,12 +147,11 @@ const ModelTraining = () => {
     <div className={styles.modelTraining}>
       <PageHeader
         className="site-page-header"
-        onBack={() => history.push('/model-training/list')}
+        onBack={() => history.push('/model-training/modelTraining')}
         title='创建训练作业'
-        subTitle={<Button onClick={() => history.push('/model-training/list')}>返回训练作业列表</Button>}
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }]}>
+        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }, {...jobNameReg}]}>
           <Input style={{ width: 300 }}  placeholder="请输入作业名称" />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>

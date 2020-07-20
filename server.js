@@ -23,11 +23,13 @@ app.post('//update', (req, res) => {
           console.log('build err', err)
         }
       })
+    } else {
+      console.log('pull error', err)
     }
   })
 })
 app.use(history())
 
-app.use(ecstatic({ root: path.join(__dirname, '../dist') }))
+app.use(ecstatic({ root: path.join(__dirname, './dist') }))
 
 http.createServer(app).listen(process.argv[2] || 3084)
