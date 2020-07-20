@@ -52,12 +52,15 @@ export const errorHandler = async (error) => {
   }
   const CODE = _response.code;
   if (CODE !== 0) {
-    message.error(bizCodeMessage[CODE] || _response.msg);
-    return response
+    if (bizCodeMessage[CODE] || _response.msg) {
+      message.error(bizCodeMessage[CODE] || _response.msg);
+    }
+    // return response
   }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
+    
     if (status === 401) {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
