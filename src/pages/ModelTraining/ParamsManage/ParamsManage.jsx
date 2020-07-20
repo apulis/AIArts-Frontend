@@ -15,25 +15,33 @@ const ParamsManage = () => {
     return (
       <Descriptions>
         <Descriptions.Item label="参数配置名称">{record.configName}</Descriptions.Item>
-        <Descriptions.Item label="启动文件">{record.startFile}</Descriptions.Item>
-        <Descriptions.Item label="计算节点数">{record.computeNodeNum}</Descriptions.Item>
-        <Descriptions.Item label="训练数据集">{record.dataset}</Descriptions.Item>
+        <Descriptions.Item label="启动文件">{record.startupFile}</Descriptions.Item>
+        <Descriptions.Item label="计算节点数">{record.deviceNum}</Descriptions.Item>
+        <Descriptions.Item label="训练数据集">{record.datasetPath}</Descriptions.Item>
         <Descriptions.Item label="运行参数">{record.arguments}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{record.engineType}</Descriptions.Item>
-        <Descriptions.Item label="代码目录">{record.codeDirectory}</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">{record.computeNodeSpecs}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{record.engine}</Descriptions.Item>
+        <Descriptions.Item label="代码目录">{record.codePath}</Descriptions.Item>
+        <Descriptions.Item label="计算节点规格">{record.deviceType}</Descriptions.Item>
         <Descriptions.Item label="描述">{record.description}</Descriptions.Item>
       </Descriptions>
-    )
+    );
   };
 
   const handleCreateTrainJob = (item) => {
-    history.push('submit');
-    // history.push(`createJobWithParam?id=${item.id}`);
+    const path = {
+      pathname: 'createJobWithParam',
+      state: item,
+      type: 'createWithParam',
+    };
+    history.push(path);
   };
-  const handleEdit = (id) => {
-    history.push('submit');
-    // history.push(`createJobWithParam?id=${id}`);
+  const handleEdit = (item) => {
+    const path = {
+      pathname: 'createJobWithParam',
+      state: item,
+      type: 'editParam',
+    };
+    history.push(path);
   };
 
   const handleDelete = (id) => {
@@ -53,14 +61,14 @@ const ParamsManage = () => {
   const columns = [
     { title: '参数配置名称', dataIndex: 'configName', key: 'configName' },
     { title: '类型', dataIndex: 'type', key: 'type' },
-    { title: '引擎类型', dataIndex: 'engineType', key: 'engineType' },
+    { title: '引擎类型', dataIndex: 'engine', key: 'engine' },
     { title: '创建时间', dataIndex: 'createTime', key: 'createTime' },
     {
       title: '描述',
       width: '25%',
       render: item => {
         const { description } = item;
-        return omitText(description, 30)
+        return omitText(description, 30);
       }
     },
     {
@@ -70,10 +78,10 @@ const ParamsManage = () => {
         return (
           <>
             <a onClick={() => handleCreateTrainJob(item)}>创建训练作业</a>
-            <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
+            <a style={{ margin: '0 16px' }} onClick={() => handleEdit(item)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
           </>
-        )
+        );
       },
     },
   ];
@@ -83,32 +91,63 @@ const ParamsManage = () => {
       id: 1,
       configName: 'train_job_config_001',
       type: '训练',
-      engineType: 'tensorflow , tf-1.8.0-py2.7',
+      engine: 'tensorflow , tf-1.8.0-py2.7',
       createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
       description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-      startFile: '/start.sh',
-      computeNodeNum: 3,
-      dataset: 'train.csv',
-      arguments: 'learning_rate:0.01',
-      engineType: 'tensorflow',
-      codeDirectory: '/home/code/',
-      computeNodeSpecs: '1核 | 16GB | 1*AI加速卡	'
+      startupFile: '/start.sh',
+      deviceNum: 3,
+      datasetPath: 'train.csv',
+      arguments: [
+        {
+          key: 'learning_rate',
+          value: 0.01,
+          createTime: 4242142
+        },
+        {
+          key: 'epoch',
+          value: 20,
+          createTime: 4242442
+        },
+        {
+          key: 'dropout',
+          value: 0.5,
+          createTime: 4242443
+        },
+      ],
+      engine: 'tensorflow',
+      codePath: '/home/code/',
+      deviceType: '1核 | 16GB | 1*AI加速卡	'
     },
     {
       key: 2,
       id: 2,
       configName: 'train_job_config_001',
       type: '训练',
-      engineType: 'tensorflow , tf-1.8.0-py2.7',
+      engine: 'tensorflow , tf-1.8.0-py2.7',
       createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
       description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-      startFile: '/start.sh',
-      computeNodeNum: 3,
-      dataset: 'train.csv',
-      arguments: 'learning_rate:0.01',
-      engineType: 'tensorflow',
-      codeDirectory: '/home/code/',
-      computeNodeSpecs: '1核 | 16GB | 1*AI加速卡	'
+      startupFile: '/start.sh',
+      deviceNum: 3,
+      datasetPath: 'train.csv',
+      arguments: [
+        {
+          key: 'learning_rate',
+          value: 0.01,
+          createTime: 4242142
+        },
+        {
+          key: 'epoch',
+          value: 20,
+          createTime: 4242442
+        },
+        {
+          key: 'dropout',
+          value: 0.5,
+          createTime: 4242443
+        },
+      ], engine: 'tensorflow',
+      codePath: '/home/code/',
+      deviceType: '1核 | 16GB | 1*AI加速卡	'
     },
   ];
   const searchList = () => {
@@ -150,7 +189,7 @@ const ParamsManage = () => {
         </Row>
       </Card>
     </PageHeaderWrapper>
-  )
-}
+  );
+};
 
-export default ParamsManage
+export default ParamsManage;

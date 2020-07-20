@@ -79,10 +79,9 @@ export default [
                 component: './ModelTraining/Submit',
               },
               {
-                path: '/model-training/createJobWithParam/:id',
+                path: '/model-training/createJobWithParam',
                 component: './ModelTraining/Submit',
               },
-    
               {
                 path: '/model-training/:id/detail',
                 component: './ModelTraining/Detail',

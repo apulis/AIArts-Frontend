@@ -21,10 +21,25 @@ const layout = {
 
 export const generateKey = () => {
   return new Date().getTime();
-}
+};
 
-const ModelTraining = () => {
-  const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
+const ModelTraining = (props) => {
+  // 请求类型，根据参数创建作业，type为createWithParam；编辑参数type为editParam
+  const requestType = props.location.type;
+  let readParam, createDisable, editDisable, params;
+  if (requestType) {
+    readParam = true;
+    params = props.location.state;
+  }
+  if (requestType === 'createWithParam') {
+    createDisable = true;
+  }
+  if (requestType === 'editParam') {
+    editDisable = true;
+  }
+  const goBackPath = readParam ? '/model-training/paramsManage' : '/model-training/modelTraining';
+
+  const [runningParams, setRunningParams] = useState([]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
@@ -36,44 +51,50 @@ const ModelTraining = () => {
   const [availableDeviceNumList, setAvailableDeviceNumList] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const { validateFields, getFieldValue, setFieldsValue } = form;
+
+  // set default value
+  if (readParam) {
+    form.setFieldsValue(params);
+  }
+
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
       let { data: { aiFrameworks, deviceList, codePathPrefix } } = res;
       if (!/\/$/.test(codePathPrefix)) {
-        codePathPrefix = codePathPrefix + '/' 
+        codePathPrefix = codePathPrefix + '/';
       }
-      
       setCodePathPrefix(codePathPrefix);
-      let aiFrameworkList = []
+      let aiFrameworkList = [];
       Object.keys(aiFrameworks).forEach(val => {
-        aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val])
-      })
+        aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
+      });
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
     }
-  }
+  };
 
   const fetchDataSets = async () => {
-    console.log(123123)
-    const res = await getDatasets({pageNum: 1, pageSize: 100});
+    const res = await getDatasets({ pageNum: 1, pageSize: 100 });
     if (res.code === 0) {
-      console.log(res)
       const datasets = res.data.datasets;
-      setDatasets(datasets)
+      setDatasets(datasets);
     }
-  }
+  };
 
   useEffect(() => {
-    getAvailableResource()
-    fetchDataSets()
-  }, [])
+    getAvailableResource();
+    fetchDataSets();
+    if (readParam) {
+      setRunningParams(params.arguments);
+    }
+  }, []);
   const handleSubmit = async () => {
     const values = await validateFields();
-    let params = {}
+    let params = {};
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
-    })
+    });
     values.codePath = codePathPrefix + (values.codePath || '');
     values.startupFile = codePathPrefix + values.startupFile;
     values.outputPath = codePathPrefix + (values.outputPath || '');
@@ -83,17 +104,17 @@ const ModelTraining = () => {
     cancel();
     if (res.code === 0) {
       message.success('成功创建');
-      history.push('/model-training/modelTraining')
+      history.push(goBackPath);
     }
-  }
+  };
   const addParams = () => {
     const newRunningParams = runningParams.concat({
       key: '',
       value: '',
       createTime: generateKey(),
-    }); 
+    });
     setRunningParams(newRunningParams);
-  }
+  };
   const validateRunningParams = async (index, propertyName, ...args) => {
     const [rule, value, callback] = [...args];
     if (propertyName === 'value') {
@@ -109,26 +130,26 @@ const ModelTraining = () => {
       if (r[propertyName] === value && index !== i) {
         callback('不能输入相同的参数名称');
       }
-    })
+    });
     callback();
-  }
+  };
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('runningParams');
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
-    })
-    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key)
-    setRunningParams(newRunningParams)
+    });
+    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key);
+    setRunningParams(newRunningParams);
     setFieldsValue({
-      runningParams: newRunningParams.map(params => ({key: params.key, value: params.value}))
-    })
-  }
+      runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+    });
+  };
 
   const commonLayout = {
-    labelCol: { span: 3 }, 
+    labelCol: { span: 3 },
     wrapperCol: { span: 8 }
-  }
+  };
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
@@ -138,55 +159,55 @@ const ModelTraining = () => {
       let current = 1;
       while (current <= deviceNumMax) {
         list.push(current);
-        current = current * 2
+        current = current * 2;
       }
       setAvailableDeviceNumList(list);
     }
-  }
+  };
   return (
     <div className={styles.modelTraining}>
       <PageHeader
         className="site-page-header"
-        onBack={() => history.push('/model-training/modelTraining')}
+        onBack={() => history.push(goBackPath)}
         title='创建训练作业'
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{marginTop: '30px'}} name="name" label="作业名称" rules={[{ required: true }, {...jobNameReg}]}>
-          <Input style={{ width: 300 }}  placeholder="请输入作业名称" />
+        <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={editDisable ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>
+          <Input style={{ width: 300 }} placeholder={editDisable ? "请输入参数配置名称" : "请输入作业名称"} disabled={editDisable} />
         </FormItem>
         <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
         </FormItem>
       </Form>
-      <Divider style={{borderColor: '#cdcdcd'}} />
-      <div className="ant-page-header-heading-title" style={{marginLeft: '38px', marginBottom: '20px'}}>参数配置</div>
+      <Divider style={{ borderColor: '#cdcdcd' }} />
+      <div className="ant-page-header-heading-title" style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</div>
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
-          <Select style={{ width: 300 }} >
+          <Select style={{ width: 300 }} disabled={createDisable} >
             {
               frameWorks.map(f => (
-                <Option value={f}>{f}</Option>
+                <Option value={f} key={f}>{f}</Option>
               ))
             }
           </Select>
         </FormItem>
-        <FormItem 
+        <FormItem
           labelCol={{ span: 3 }}
           name="codePath"
           label="代码目录"
         >
+          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
+        </FormItem>
+        <FormItem labelCol={{ span: 3 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个python 文件' }]}>
+          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
+        </FormItem>
+        <FormItem name="outputPath" labelCol={{ span: 3 }} label="输出路径" style={{ marginTop: '50px' }}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
-        </FormItem>
-        <FormItem labelCol={{ span: 3 }} label="启动文件"  name="startupFile" rules={[{required: true}, {pattern: /\.py$/, message: '需要填写一个python 文件'}]}>
-          <Input  addonBefore={codePathPrefix} style={{ width: 420 }} />
-        </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 3 }} label="输出路径" style={{marginTop: '50px'}}>
-          <Input addonBefore={codePathPrefix}  style={{ width: 420 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
           <Select
-            style={{width: '300px'}}
+            style={{ width: '300px' }}
           >
             {
               datasets.map(d => (
@@ -200,27 +221,27 @@ const ModelTraining = () => {
             runningParams.map((param, index) => {
               return (
                 <div>
-                  <FormItem initialValue={runningParams[index].key} rules={[{validator(...args) {validateRunningParams(index, 'key', ...args)}}]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                  <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args); } }]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
                     <Input style={{ width: 200 }} />
                   </FormItem>
-                  <PauseOutlined rotate={90} style={{marginTop: '8px', width: '30px'}} />
-                  <FormItem initialValue={runningParams[index].value} rules={[{validator(...args) {validateRunningParams(index, 'value', ...args)}}]} name={['params', index, 'value']}  wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                  <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                  <FormItem initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args); } }]} name={['params', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
                     <Input style={{ width: 200 }} />
                   </FormItem>
                   {
-                    runningParams.length > 1 && <DeleteOutlined style={{marginLeft: '10px', cursor: 'pointer'}} onClick={() => removeRuningParams(param.createTime)} />
+                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
                   }
                 </div>
-              )
+              );
             })
           }
           <div className={styles.addParams} onClick={addParams}>
-            <PlusSquareOutlined fill="#1890ff" style={{color: '#1890ff', marginRight: '10px'}} />
+            <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
             <a>点击增加参数</a>
           </div>
         </FormItem>
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{width: '300px'}} onChange={onDeviceTypeChange}>
+          <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {
               deviceList.map(d => (
                 <Option value={d.deviceType}>{d.deviceType}</Option>
@@ -234,7 +255,7 @@ const ModelTraining = () => {
           {...commonLayout}
           rules={[{ required: true }]}
         >
-          <Select style={{width: '300px'}} >
+          <Select style={{ width: '300px' }} >
             {
               availableDeviceNumList.map(avail => (
                 <Option value={avail}>{avail}</Option>
@@ -271,11 +292,11 @@ const ModelTraining = () => {
       >
 
       </Modal>
-      <Button type="primary" style={{float: 'right'}} onClick={handleSubmit}>立即创建</Button>
+      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
     </div>
-    
-  )
-}
+
+  );
+};
 
 
 export default ModelTraining;
