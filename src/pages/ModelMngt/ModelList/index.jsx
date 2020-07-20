@@ -1,5 +1,5 @@
 import { Link, history } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, REFRESH_INTERVAL } from '@/utils/const';
@@ -12,6 +12,7 @@ import moment from 'moment';
 import { getModelStatus } from '@/utils/utils';
 
 const { confirm } = Modal;
+const { Option } = Select;
 
 const ModelList = props => {
   const {
@@ -22,7 +23,14 @@ const ModelList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  // const [modelStatus, setModelStatus] = useState([]);
   const [form] = Form.useForm();
+
+  const statusList = [
+    { en: 'all', cn: '全部' },
+    { en: 'normal', cn: '正常'},
+    { en: 'deleting', cn: '删除中'},
+  ]
 
   useEffect(() => {
     handleRefresh();
@@ -54,12 +62,12 @@ const ModelList = props => {
       width: 100,
       render: (text, item) => getModelStatus(item.status)
     },
-    {
-      title: '引擎类型',
-      dataIndex: 'type',
-      ellipsis: true,
-      width: 100,
-    },
+    // {
+    //   title: '引擎类型',
+    //   dataIndex: 'type',
+    //   ellipsis: true,
+    //   width: 100,
+    // },
     {
       title: '存储路径',
       dataIndex: 'path',
@@ -116,7 +124,7 @@ const ModelList = props => {
 
       const { error, msg } = await dispatch({
         type: 'modelList/update',
-        payload: { id, description }
+        payload: { id, description },
       });
 
       if(error === null){
@@ -136,7 +144,7 @@ const ModelList = props => {
         pageNum: pageParams.pageNum,
         pageSize: pageParams.pageSize,
         name: values.modelName     
-      }
+      },
     });    
   };
 
@@ -146,7 +154,7 @@ const ModelList = props => {
       payload: {
         pageNum: pageParams.pageNum,
         pageSize: pageParams.pageSize
-      },
+      }
     });
   };
 
@@ -193,7 +201,9 @@ const ModelList = props => {
   const createModel = (item) => {
     history.push('/ModelMngt/CreateModel')
   };
+  const handleChange = (status) => {
 
+  }
   return (
     <>
       <PageHeaderWrapper>
@@ -218,6 +228,17 @@ const ModelList = props => {
                 form={form}
                 onFinish={onFinish}
               >
+                <Form.Item
+                  name="status"
+                >
+                  <Select defaultValue="all" style={{ width: 180 }} onChange={handleChange}>
+                    {
+                      statusList.map((item) => (
+                        <Option key= {item.en} value={item.en}>{item.cn}</Option>
+                      ))
+                    }
+                  </Select>
+                </Form.Item>
                 <Form.Item
                   name="modelName" 
                   label="模型名称"
