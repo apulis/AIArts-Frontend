@@ -74,10 +74,24 @@ export default [
             component: './ModelTraining/Detail',
           },          
           {
-            path: '/ModelList',
+            path: '/ModelManagement',
             name: 'modelManagement',
             icon: 'CodepenOutlined',
-            component: './ModelMngt/ModelList'
+            // component: './ModelMngt/ModelList'
+            routes: [
+              {
+                path: '/modelManagement/MyModels',
+                name: 'myModels',
+                icon: 'CodepenOutlined',
+                component: './ModelMngt/ModelList',
+              },
+              {
+                path: '/modelManagement/PretrainedModels',
+                name: 'pretraindedModels',
+                icon: 'CodepenOutlined',
+                component: './ModelMngt/PretrainedModel',
+              },
+            ],            
           },
           {
             path: '/ModelMngt/CreateModel',
