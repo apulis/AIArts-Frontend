@@ -109,8 +109,8 @@ export default [
               },
               {
                 path: '/ModelManagement/CreateEvaluation',
-                name: 'modelEvaluation',
-                icon: 'CodepenOutlined',                
+                // name: 'modelEvaluation',
+                // icon: 'CodepenOutlined',           
                 component: './ModelMngt/ModelEvaluation'
               },             
             ],            
@@ -120,7 +120,7 @@ export default [
             component: './ModelMngt/CreateModel'
           },
           // {
-          //   path: '/ModelMngt/CreateEvaluation',
+          //   path: '/ModelManagement/CreateEvaluation',
           //   component: './ModelMngt/ModelEvaluation'
           // },
           {
