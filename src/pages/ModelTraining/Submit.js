@@ -39,7 +39,7 @@ const ModelTraining = (props) => {
   }
   const goBackPath = readParam ? '/model-training/paramsManage' : '/model-training/modelTraining';
 
-  const [runningParams, setRunningParams] = useState([]);
+  const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
