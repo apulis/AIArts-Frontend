@@ -99,21 +99,16 @@ const ModelEvaluation = props => {
           >
             <Input placeholder="请输入模型名称" />
           </Form.Item>
-          <Form.Item
-            labelCol={{ span: 3 }} 
-            wrapperCol={{ span: 14 }}
-            name="description"
-            label="描述"
-            rules={[{ max: 256 }]}
+          {/* <Form.Item
+            {...layout}
+            name="name"
+            label="名称"
+            rules={[{ required: true, message: '名称不能为空!' }]}
           >
-            <TextArea rows={4} placeholder="请输入描述信息" />
-          </Form.Item>
-          {/* <Form.Item label="模型文件" rules={[{ required: true }]} name="sourceType">
-            <Radio.Group onChange={e => setSourceType(e.target.value)}>
-              <Radio value={1}>输入模型路径</Radio>
-              <Radio value={2}>上传模型文件</Radio>
-            </Radio.Group>
+            <Input placeholder="请输入模型名称" />
           </Form.Item> */}
+
+
           <Form.Item
             {...layout}
             name="path"
