@@ -1,5 +1,5 @@
 import { history } from 'umi';
-import { message, Modal, Form, Input, Button, Card, PageHeader, Radio } from 'antd';
+import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { FolderOpenOutlined } from '@ant-design/icons';
 // import ModalForm from './components/ModalForm';
@@ -11,6 +11,8 @@ const { TextArea } = Input;
 const ModelEvaluation = props => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
+  const [frameWorks, setFrameWorks] = useState([]);
+  const [datasets, setDatasets] = useState([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -71,7 +73,7 @@ const ModelEvaluation = props => {
 
   const layout = {
     labelCol: { span: 3 },
-    wrapperCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
 
   return (
@@ -99,48 +101,37 @@ const ModelEvaluation = props => {
           >
             <Input placeholder="请输入模型名称" />
           </Form.Item>
-          {/* <Form.Item
-            {...layout}
-            name="name"
-            label="名称"
-            rules={[{ required: true, message: '名称不能为空!' }]}
-          >
-            <Input placeholder="请输入模型名称" />
-          </Form.Item> */}
-
-
-          <Form.Item
-            {...layout}
-            name="path"
-            label="存储路径"
-            rules={[{ required: true, message: '存储路径不能为空!' }]}
-          >
-            <Input addonBefore={codePathPrefix} placeholder="请输入存储路径" />
+          <Form.Item {...layout} name="engine" label="引擎" rules={[{ required: true }]}>
+            <Select>
+              {
+                frameWorks.map(f => (
+                  <Option value={f} key={f}>{f}</Option>
+                ))
+              }
+            </Select>
           </Form.Item>
+          <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="训练数据集">
+            <Select>
+              {
+                datasets.map(d => (
+                  <Option value={d.path}>{d.name}</Option>
+                ))
+              }
+            </Select>
+          </Form.Item>          
           <Form.Item
             {...layout}
-            label="选择训练作业"
-            required
+            name="codePath"
+            label="代码目录"
           >
-            <Form.Item
-              name="job"
-              rules={[{ required: true, message: '训练作业不能为空!' }]}
-              style={{ display: 'inline-block', width: 'calc(95% - 4px)' }}              
-            >
-              <Input placeholder="请选择训练作业名称" />
-            </Form.Item>
-            <Form.Item
-              style={{ display: 'inline-block', width: 'calc(5% - 4px)', margin: '0 0 0 8px' }}
-            >
-              <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
-            </Form.Item>
+            <Input addonBefore={codePathPrefix} />
           </Form.Item>
-          <Form.Item
-              name="jobId"
-              hidden            
-            >
-              <Input type="hidden"/>
-            </Form.Item>          
+          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个python 文件' }]}>
+            <Input addonBefore={codePathPrefix} />
+          </Form.Item>
+          <Form.Item name="outputPath" {...layout} label="输出路径" >
+            <Input addonBefore={codePathPrefix} />
+          </Form.Item>
           <Form.Item
             style={{ float: 'right' }}
           >
