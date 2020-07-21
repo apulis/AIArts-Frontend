@@ -227,12 +227,12 @@ const ModelList = props => {
                 layout='inline'
                 form={form}
                 onFinish={onFinish}
-                // initialValues={}
+                initialValues={{status: 'all'}}
               >
                 <Form.Item
                   name="status"
                 >
-                  <Select defaultValue="all" style={{ width: 180 }} onChange={handleChange}>
+                  <Select style={{ width: 180 }} onChange={handleChange}>
                     {
                       statusList.map((item) => (
                         <Option key= {item.en} value={item.en}>{item.cn}</Option>
