@@ -1,23 +1,24 @@
 import { Link, history } from 'umi';
-import { message, Table, Modal, Form, Input, Button, Space, Card, PageHeader, Tooltip } from 'antd';
+import { message, Modal, Form, Input, Button, Card, PageHeader, Tooltip, Radio, Upload } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'umi';
 import { formatDate } from '@/utils/time';
-import { FolderOpenOutlined } from '@ant-design/icons';
+import { FolderOpenOutlined, InboxOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 
 const { TextArea } = Input;
+const { Dragger } = Upload;
 
 const CreateModel = props => {
-  // const {
-  //   dispatch
-  // } = props;
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
+  const [sourceType, setSourceType] = useState(1);
+  const [btnDisabled, setBtnDisabled] = useState(false);
+  const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     getAvailableResource();
@@ -46,14 +47,14 @@ const CreateModel = props => {
       name,
       description,
       path: codePathPrefix + path,
-      jobId: jobId || ''
+      jobId: jobId || '',
     }
     
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
       message.success(`创建成功`);
-      history.push('/ModelList')
+      history.push('/ModelList');
     } else {
       msg && message.error(`创建失败:${msg}`);
     }
@@ -78,9 +79,50 @@ const CreateModel = props => {
     setVisible(false);
   };
 
+  const uploadProps = {
+    name: 'data',
+    multiple: false,
+    action: '/ai_arts/api/files/upload/dataset',
+    headers: {
+      Authorization: 'Bearer ' + window.localStorage.token,
+    },
+    onChange(info) {
+      const { status } = info.file;
+      setBtnDisabled(true);
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        setFileList(info.fileList);
+        setBtnDisabled(false);
+        message.success(`${info.file.name}文件上传成功！`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} 文件上传失败！`);
+        setBtnDisabled(false);
+      }
+    },
+    beforeUpload(file) {
+      const { type, size } = file;
+      const isOverSize = size / 1024 / 1024 / 1024 > 2; 
+      return new Promise((resolve, reject) => {
+        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip') && !isOverSize) {
+          resolve(file);
+        } else {
+          let text = '';
+          text = isOverSize ? '2GB以内的文件' : `${fileList.length ?  '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
+          message.warning(`只支持上传 ${text}！`);
+          reject(file);
+        }
+      });
+    },
+    onRemove(file) {
+      if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
+    }
+  };
+
   const layout = {
     labelCol: { span: 3 },
-    wrapperCol: { span: 8 }
+    wrapperCol: { span: 8 },
   };
 
   return (
@@ -99,6 +141,7 @@ const CreateModel = props => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
+          initialValues={{ sourceType: sourceType }}
         >
           <Form.Item
             {...layout}
@@ -117,14 +160,36 @@ const CreateModel = props => {
           >
             <TextArea rows={4} placeholder="请输入描述信息" />
           </Form.Item>
-          <Form.Item
+          <Form.Item label="模型文件" rules={[{ required: true }]} name="sourceType">
+            <Radio.Group onChange={e => setSourceType(e.target.value)}>
+              <Radio value={1}>输入模型路径</Radio>
+              <Radio value={2}>上传模型文件</Radio>
+            </Radio.Group>
+          </Form.Item>
+          {sourceType == 1 &&<Form.Item
             {...layout}
             name="path"
             label="存储路径"
             rules={[{ required: true, message: '存储路径不能为空!' }]}
           >
             <Input addonBefore={codePathPrefix} placeholder="请输入存储路径" />
-          </Form.Item>       
+          </Form.Item>}       
+          {sourceType == 2 && <Form.Item
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 14 }}
+            label="上传文件"
+            name="file"
+            rules={[{ required: true, message: '请上传文件！' }]}
+            valuePropName="file"
+          >
+            <Dragger {...uploadProps}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">请点击或拖入文件上传</p>
+              <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件，且最大不能超过2GB）</p>
+            </Dragger>
+          </Form.Item>}
           <Form.Item
             {...layout}
             label="选择训练作业"
@@ -152,7 +217,7 @@ const CreateModel = props => {
           <Form.Item
             style={{ float: 'right' }}
           >
-            <Button type="primary" htmlType="submit">立即创建</Button>
+            <Button type="primary" htmlType="submit" disabled={btnDisabled}>立即创建</Button>
           </Form.Item>
         </Form>
       </div>
