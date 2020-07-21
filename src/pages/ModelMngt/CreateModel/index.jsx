@@ -13,16 +13,13 @@ const { TextArea } = Input;
 const { Dragger } = Upload;
 
 const CreateModel = props => {
-  // const {
-  //   dispatch
-  // } = props;
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [sourceType, setSourceType] = useState(1);
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [fileList, setFileList] = useState([]);
-  
+
   useEffect(() => {
     getAvailableResource();
   }, []);
@@ -50,14 +47,14 @@ const CreateModel = props => {
       name,
       description,
       path: codePathPrefix + path,
-      jobId: jobId || ''
+      jobId: jobId || '',
     }
     
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
       message.success(`创建成功`);
-      history.push('/ModelList')
+      history.push('/ModelList');
     } else {
       msg && message.error(`创建失败:${msg}`);
     }
@@ -84,7 +81,7 @@ const CreateModel = props => {
 
   const uploadProps = {
     name: 'data',
-    multiple: true,
+    multiple: false,
     action: '/ai_arts/api/files/upload/dataset',
     headers: {
       Authorization: 'Bearer ' + window.localStorage.token,
@@ -125,7 +122,7 @@ const CreateModel = props => {
 
   const layout = {
     labelCol: { span: 3 },
-    wrapperCol: { span: 8 }
+    wrapperCol: { span: 8 },
   };
 
   return (
@@ -178,8 +175,8 @@ const CreateModel = props => {
             <Input addonBefore={codePathPrefix} placeholder="请输入存储路径" />
           </Form.Item>}       
           {sourceType == 2 && <Form.Item
-            labelCol={{ span: 3 }} 
-            wrapperCol={{ span: 14 }}    
+            labelCol={{ span: 3 }}
+            wrapperCol={{ span: 14 }}
             label="上传文件"
             name="file"
             rules={[{ required: true, message: '请上传文件！' }]}
