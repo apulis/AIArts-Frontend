@@ -134,7 +134,8 @@ const ModelTraining = (props) => {
     callback();
   };
   const removeRuningParams = async (key) => {
-    const values = await getFieldValue('runningParams');
+    const values = await getFieldValue('params');
+    console.log('values', values);
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
