@@ -1,16 +1,14 @@
-FROM nginx:alpine
-# configure ports and listeners with custom nginx.conf
-RUN rm /etc/nginx/conf.d/default.conf
-ADD default.conf /etc/nginx/conf.d/
+FROM node:12
 
-# copy from dist to nginx root dir
-COPY dist/ /usr/share/nginx/html
+RUN mkdir -p /home/AIArts
+WORKDIR /home/AIArts
+COPY . /home/AIArts
 
-ADD start.sh /
+RUN yarn config set registry 'https://registry.npm.taobao.org'
+RUN yarn
+RUN yarn build
 
-RUN chmod +x /start.sh
-# expose port 6511
-EXPOSE 6511
-# run nginx in foreground
-ENTRYPOINT ./start.sh
 
+EXPOSE 3084
+
+CMD ["node", "server.js"]

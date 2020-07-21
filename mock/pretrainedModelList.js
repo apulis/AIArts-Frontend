@@ -11,13 +11,12 @@ const genList = (current, pageSize) => {
     const index = (current - 1) * 10 + i;
     tableListDataSource.push({
       id: index,
-      name: `inference_job_${index}`,
-      model: `model_001`,
-      status: `status`,
-      engineType: `engineType`,
+      name: `model_00${index}`,
+      use: `图像分类`,
+      engineType: `tensorflow , tf-1.8.0-py2.7`,
+      precision: `25.6%`,
+      size: '157.79MB',
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-      serverAddr: `atlas800.huawei.com/dls`,
-      desc: 'this is inference job'
     });
   }
 
@@ -27,7 +26,7 @@ const genList = (current, pageSize) => {
 
 let tableListDataSource = genList(1, 50);
 
-function getInferences(req, res, u) {
+function getModels(req, res, u) {
   let realUrl = u;
 
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
@@ -68,7 +67,7 @@ function getInferences(req, res, u) {
   return res.json(result);
 }
 
-function postInference(req, res, u, b) {
+function postModel(req, res, u, b) {
   let realUrl = u;
 
   if (!realUrl || Object.prototype.toString.call(realUrl) !== '[object String]') {
@@ -130,6 +129,6 @@ function postInference(req, res, u, b) {
 }
 
 export default {
-  'GET /inferences/ListInferenceJob': getInferences,
-  'POST /inferences': postInference,
+  'GET /ai_arts/api/pretrainedModels': getModels,
+  'POST /ai_arts/api/pretrainedMdels': postModel,
 };

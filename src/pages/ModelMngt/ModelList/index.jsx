@@ -227,6 +227,7 @@ const ModelList = props => {
                 layout='inline'
                 form={form}
                 onFinish={onFinish}
+                // initialValues={}
               >
                 <Form.Item
                   name="status"
