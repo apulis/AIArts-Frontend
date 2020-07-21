@@ -29,6 +29,7 @@ export const codeMessage = {
 
 export const bizCodeMessage = {
   30005: '文件或路径不存在！',
+  30007: '该数据集路径不符合规则！',
   20001: '请求参数错误！',
 }
 
@@ -52,10 +53,10 @@ export const errorHandler = async (error) => {
   }
   const CODE = _response.code;
   if (CODE !== 0) {
-    if (bizCodeMessage[CODE] || _response.msg) {
+    const hasMessage = bizCodeMessage[CODE] || _response.msg;
+    if (hasMessage) {
       message.error(bizCodeMessage[CODE] || _response.msg);
     }
-    // return response
   }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
@@ -70,7 +71,7 @@ export const errorHandler = async (error) => {
         window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
-    notification.error({
+    !hasMessage && notification.error({
       message: `请求错误 ${status}: ${url}`,
       description: errorText,
     });
