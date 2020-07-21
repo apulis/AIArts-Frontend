@@ -90,9 +90,28 @@ export default [
           },
           {
             path: '/ModelList',
+            path: '/model-training/:id/detail',
+            component: './ModelTraining/Detail',
+          },          
+          {
+            path: '/ModelManagement',
             name: 'modelManagement',
             icon: 'CodepenOutlined',
-            component: './ModelMngt/ModelList'
+            // component: './ModelMngt/ModelList'
+            routes: [
+              {
+                path: '/modelManagement/MyModels',
+                name: 'myModels',
+                icon: 'CodepenOutlined',
+                component: './ModelMngt/ModelList',
+              },
+              {
+                path: '/modelManagement/PretrainedModels',
+                name: 'pretraindedModels',
+                icon: 'CodepenOutlined',
+                component: './ModelMngt/PretrainedModel',
+              },
+            ],            
           },
           {
             path: '/ModelMngt/CreateModel',

@@ -46,6 +46,8 @@ export default {
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
   'menu.modelManagement': 'Model Management',
+  'menu.modelManagement.myModels': 'My Models',
+  'menu.modelManagement.pretraindedModels': 'Pretrained Models',
   'menu.inferenceService': 'Inference Service',
   'menu.inferenceService.list': 'Inference Service List',
   'menu.modelTraining': 'Model Training'
