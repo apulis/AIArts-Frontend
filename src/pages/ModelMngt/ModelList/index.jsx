@@ -97,6 +97,7 @@ const ModelList = props => {
             <a onClick={() => createInference(item)}>创建推理</a>
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
             <a onClick={() => deleteModel(item)}>删除</a>
+            <a onClick={() => evaluateModel(item)}>模型评估</a>
           </Space>
         );
       },
@@ -167,6 +168,14 @@ const ModelList = props => {
       modelPath: encodeURIComponent(item.path)
     });
     history.push((`/Inference/submit/?${queryString}`))
+  };
+
+  const evaluateModel = (item) => {
+    const queryString = stringify({
+      modelName: encodeURIComponent(item.name),
+      modelId: encodeURIComponent(item.id),
+    });
+    history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
   };
 
   const deleteModel = (item) => {
