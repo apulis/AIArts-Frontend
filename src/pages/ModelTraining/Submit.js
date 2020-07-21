@@ -169,7 +169,7 @@ const ModelTraining = (props) => {
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title='创建训练作业'
+        title={editDisable?'编辑训练参数':'创建训练作业'}
       />
       <Form form={form}>
         <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={editDisable ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>

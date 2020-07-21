@@ -29,7 +29,7 @@ const ParamsManage = () => {
 
   const handleCreateTrainJob = (item) => {
     const path = {
-      pathname: 'createJobWithParam',
+      pathname: 'submit',
       state: item,
       type: 'createWithParam',
     };
@@ -37,7 +37,7 @@ const ParamsManage = () => {
   };
   const handleEdit = (item) => {
     const path = {
-      pathname: 'createJobWithParam',
+      pathname: 'submit',
       state: item,
       type: 'editParam',
     };
