@@ -148,7 +148,7 @@ const InferenceDetail = () => {
         <Descriptions.Item label="计算节点个数">{jobDetail.jobParams?.resourcegpu}</Descriptions.Item>
         {/* <Descriptions.Item label="作业参数"></Descriptions.Item> */}
         {/* <Descriptions.Item label="服务地址">test</Descriptions.Item> */}
-        <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
+        <Descriptions.Item label="描述">{jobDetail.jobParams?.desc}</Descriptions.Item>
       </Descriptions>
       {
         logs && <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
