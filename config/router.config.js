@@ -79,6 +79,10 @@ export default [
                 component: './ModelTraining/Submit',
               },
               {
+                path: '/model-training/paramManage/:id/:type',
+                component: './ModelTraining/Submit',
+              },
+              {
                 path: '/model-training/:id/detail',
                 component: './ModelTraining/Detail',
               },
