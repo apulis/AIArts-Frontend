@@ -31,7 +31,7 @@ const ModelTraining = (props) => {
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
   let readParam, createDisable, editDisable, params;
-
+  const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
   }
@@ -254,12 +254,12 @@ const ModelTraining = (props) => {
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
       <div className="ant-page-header-heading-title" style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</div>
-      <FormItem {...commonLayout} label="参数来源">
+      {isSubmitPage && <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
           <Radio.Button value={2} onClick={() => {setPresetParamsVisible(true)}}>导入参数配置</Radio.Button>
         </Radio.Group>
-      </FormItem>
+      </FormItem>}
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
           <Select style={{ width: 300 }} disabled={createDisable} >
