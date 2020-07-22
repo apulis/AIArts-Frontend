@@ -7,16 +7,17 @@ import { addModel } from '../ModelList/services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 
 const { TextArea } = Input;
+const { Option } = Select;
 
 const ModelEvaluation = props => {
   const query = props.location.query;
-  debugger
   const modelName = decodeURIComponent(query.modelName);
   const modelId = decodeURIComponent(query.modelId);
 
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
-  const [frameWorks, setFrameWorks] = useState([]);
+  const [frameWorks, setFrameWorks] = useState(null);
+  const [engines, setEngines] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [form] = Form.useForm();
 
@@ -27,12 +28,15 @@ const ModelEvaluation = props => {
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { codePathPrefix } } = res;
+      let { data: { codePathPrefix, aiFrameworks } } = res;
       if (!/\/$/.test(codePathPrefix)) {
-        codePathPrefix = codePathPrefix + '/' 
+        codePathPrefix = codePathPrefix + '/'
       }
-      
       setCodePathPrefix(codePathPrefix);
+      setFrameWorks(aiFrameworks);
+      // if (Object.keys(aiFrameworks).length > 0){
+      //   setEngineTypes(Object.keys(aiFrameworks))
+      // }
     }
   }
 
@@ -76,6 +80,10 @@ const ModelEvaluation = props => {
     setVisible(false);
   };
 
+  const handleEngineTypeChange = value => {
+    setEngines(frameWorks[value]);
+  }
+
   const layout = {
     labelCol: { span: 3 },
     wrapperCol: { span: 12 },
@@ -107,14 +115,36 @@ const ModelEvaluation = props => {
           >
             <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
-          <Form.Item {...layout} name="engine" label="引擎" rules={[{ required: true }]}>
-            <Select>
-              {
-                frameWorks.map(f => (
-                  <Option value={f} key={f}>{f}</Option>
-                ))
-              }
-            </Select>
+          <Form.Item
+            {...layout}
+            label="引擎"
+            required
+          >
+            <Form.Item name="engineType" 
+              rules={[{ required: true }]}
+              style={{ display: 'inline-block', width: 'calc(50% - 4px)' }}
+              onChange={handleEngineTypeChange}
+            >
+              <Select>
+                {
+                  frameWorks && Object.keys(frameWorks).map(f => (
+                    <Option value={f} key={f}>{f}</Option>
+                  ))
+                }
+              </Select>
+            </Form.Item>
+            <Form.Item name="engine" 
+              rules={[{ required: true }]}
+              style={{ display: 'inline-block', width: 'calc(50% - 4px)', marginLeft: '8px' }}
+            >
+              <Select>
+                {
+                  engines && engines.map(f => (
+                    <Option value={f} key={f}>{f}</Option>
+                  ))
+                }
+              </Select>
+            </Form.Item>
           </Form.Item>
           <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="训练数据集">
             <Select>
@@ -142,8 +172,6 @@ const ModelEvaluation = props => {
             <Tag color="success">success</Tag>
             <Tag color="processing">processing</Tag>
             <Tag color="error">error</Tag>
-            {/* <Tag color="warning">warning</Tag>
-            <Tag color="default">default</Tag> */}
           </Form.Item>
           <Form.Item
             style={{ float: 'right' }}
