@@ -1,5 +1,5 @@
 import { history } from 'umi';
-import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select } from 'antd';
+import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select, Tag } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { FolderOpenOutlined } from '@ant-design/icons';
 // import ModalForm from './components/ModalForm';
@@ -9,6 +9,11 @@ import { fetchAvilableResource } from '@/services/modelTraning';
 const { TextArea } = Input;
 
 const ModelEvaluation = props => {
+  const query = props.location.query;
+  debugger
+  const modelName = decodeURIComponent(query.modelName);
+  const modelId = decodeURIComponent(query.modelId);
+
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [frameWorks, setFrameWorks] = useState([]);
@@ -92,6 +97,7 @@ const ModelEvaluation = props => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
+          initialValues={{name: modelName}}
         >
           <Form.Item
             {...layout}
@@ -99,7 +105,7 @@ const ModelEvaluation = props => {
             label="名称"
             rules={[{ required: true, message: '名称不能为空!' }]}
           >
-            <Input placeholder="请输入模型名称" />
+            <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
           <Form.Item {...layout} name="engine" label="引擎" rules={[{ required: true }]}>
             <Select>
@@ -131,6 +137,13 @@ const ModelEvaluation = props => {
           </Form.Item>
           <Form.Item name="outputPath" {...layout} label="输出路径" >
             <Input addonBefore={codePathPrefix} />
+          </Form.Item>
+          <Form.Item name="status" {...layout} label="评估状态" >
+            <Tag color="success">success</Tag>
+            <Tag color="processing">processing</Tag>
+            <Tag color="error">error</Tag>
+            {/* <Tag color="warning">warning</Tag>
+            <Tag color="default">default</Tag> */}
           </Form.Item>
           <Form.Item
             style={{ float: 'right' }}
