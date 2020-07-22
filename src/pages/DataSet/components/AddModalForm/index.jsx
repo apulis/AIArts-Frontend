@@ -39,14 +39,12 @@ const AddModalForm = (props, ref) => {
     },
     beforeUpload(file) {
       const { type, size } = file;
-      const isOverSize = size / 1024 / 1024 / 1024 > 2; 
+      // const isOverSize = size / 1024 / 1024 / 1024 > 2;
       return new Promise((resolve, reject) => {
-        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip') && !isOverSize) {
+        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
           resolve(file);
         } else {
-          let text = '';
-          text = isOverSize ? '2GB以内的文件' : `${fileList.length ?  '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
-          message.warning(`只支持上传 ${text}！`);
+          message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
           reject(file);
         }
       });
