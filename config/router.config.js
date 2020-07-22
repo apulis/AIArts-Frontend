@@ -147,12 +147,12 @@ export default [
             icon: 'DashboardOutlined',
             component: './ResourceMonitoring'
           },
-          // {
-          //   path: '/EdgeInference',
-          //   name: 'edgeInference',
-          //   icon: 'DashboardOutlined',
-          //   component: './EdgeInference'
-          // },
+          {
+            path: '/EdgeInference',
+            name: 'edgeInference',
+            icon: 'ApartmentOutlined',
+            component: './EdgeInference'
+          },
           {
             path: '/',
             redirect: '/CodeList',
