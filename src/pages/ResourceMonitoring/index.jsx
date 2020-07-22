@@ -1,20 +1,17 @@
-import { Card, Select, Button } from 'antd';
-import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef, useCallback, useMemo, useContext } from 'react';
-import styles from './index.less';
-import { Pie, ChartCard } from '../../components/Charts';
-import axios from 'axios';
-import { SyncOutlined } from '@ant-design/icons';
+import { Card } from 'antd';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import React from 'react';
 import Iframe from "react-iframe";
 
-const { Option } = Select;
-
 const ResourceMonitoring = () => {
-
-  const protocol = <window className="location protocol"></window>;
-  const host = <window className="location host"></window>;
-  const grafana = protocol + '//' + host + '/endpoints/grafana/'
-  // const grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
+  let grafana;
+  if (process.env.NODE_ENV === 'development') {
+    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
+  } else {
+    const protocol = window.location.protocol;
+    const host = window.location.host;
+    grafana = protocol + '//' + host + '/endpoints/grafana/';
+  }
   const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}`;
   const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}`;
   return (
