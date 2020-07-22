@@ -18,6 +18,7 @@ const Detail = () => {
   const params = useParams();
   const logEl = useRef(null);
   const [form] = useForm();
+  const { validateFields } = form;
   const id = params.id;
   const [logs, setLogs] = useState('');
   const [jobDetail, setJobDetail] = useState({});
@@ -58,8 +59,9 @@ const Detail = () => {
     message.success('成功获取日志')
   }
 
-  const saveTrainingDetail = () => {
-
+  const saveTrainingDetail = async () => {
+    const values = await validateFields();
+    //
   }
 
 

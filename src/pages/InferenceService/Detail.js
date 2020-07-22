@@ -140,7 +140,7 @@ const InferenceDetail = () => {
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.image}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.framework}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.jobId}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.jobTime).format('YYYY-MM-DD HH:mm')}</Descriptions.Item>
         <Descriptions.Item label="计算节点规格">{jobDetail.jobParams?.gpuType}</Descriptions.Item>
@@ -148,7 +148,7 @@ const InferenceDetail = () => {
         <Descriptions.Item label="计算节点个数">{jobDetail.jobParams?.resourcegpu}</Descriptions.Item>
         {/* <Descriptions.Item label="作业参数"></Descriptions.Item> */}
         {/* <Descriptions.Item label="服务地址">test</Descriptions.Item> */}
-        <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
+        <Descriptions.Item label="描述">{jobDetail.jobParams?.desc}</Descriptions.Item>
       </Descriptions>
       {
         logs && <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
