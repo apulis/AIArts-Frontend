@@ -20,24 +20,38 @@ const ModelEvaluation = props => {
   const [engineTypes, setEngineTypes] = useState([]);
   const [engines, setEngines] = useState([]);
   const [datasets, setDatasets] = useState([]);
+  const [deviceTypes, setDeviceTypes] = useState([]);
+  const [deviceNums, setDeviceNums] = useState([]);
+  const [deviceList, setDeviceList] = useState([]);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
     getAvailableResource();
   }, []);
 
+  // useEffect(() => {
+  //   let nums = getDeviceNums(form.deviceType);
+  //   console.log(111, nums, form.deviceType)
+  //   form.setFieldsValue({
+  //     deviceNum: nums.length > 0 ? nums[0] : 0,
+  //   });
+  // }, [form.deviceType]);
+
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { codePathPrefix, aiFrameworks } } = res;
+      let { data: { codePathPrefix, aiFrameworks, deviceList } } = res;
       if (!/\/$/.test(codePathPrefix)) {
         codePathPrefix = codePathPrefix + '/'
       }
       setCodePathPrefix(codePathPrefix);
       setFrameWorks(aiFrameworks);
+      setDeviceList(deviceList);
 
+      // 获取引擎类型
       let types = Object.keys(aiFrameworks);      
-      if (types.length > 0){
+      if (types.length > 0) {
         setEngineTypes(types);
         let defaultType = types[0];
         form.setFieldsValue({
@@ -45,6 +59,20 @@ const ModelEvaluation = props => {
           engine: aiFrameworks[defaultType].length > 0 ? aiFrameworks[defaultType][0] : ''
         });
       }
+      // 设备类型
+      let deviceTypes = deviceList.map(d => d.deviceType);
+      if (deviceTypes.length > 0) {
+        setDeviceTypes(deviceTypes);
+        // let defaultDeviceType = deviceTypes[0];
+        // handleDeviceTypeChange(defaultDeviceType);
+        // let firstDevice = deviceList.find(item => item.deviceType === defaultDeviceType);
+
+        // form.setFieldsValue({
+        //   deviceType: defaultDeviceType,
+        //   // deviceNum: firstDevice ?.avail || 0,
+        // });
+      }
+
     }
   }
 
@@ -94,6 +122,40 @@ const ModelEvaluation = props => {
     form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
   }
 
+  const handleDeviceTypeChange = value => {
+    const selected = deviceList.find(item => item.deviceType === value);
+    const avail = selected ?.avail || 0;
+
+    // let nums = getDeviceNums(value);
+    let nums = [];
+
+    if (avail >= 2){
+      nums = [0, 1, 2];
+    }else if (avail === 1 ){
+      nums = [0, 1];
+    }else{
+      nums = [0];
+    }
+    setDeviceNums(nums);
+  }
+
+  const getDeviceNums = value => {
+    const selected = deviceList.find(item => item.deviceType === value);
+    const avail = selected ?.avail || 0;
+
+    let nums = [];
+
+    if (avail >= 2){
+      nums = [0, 1, 2];
+    }else if (avail === 1 ){
+      nums = [0, 1];
+    }else{
+      nums = [0];
+    }
+    
+    return nums;
+  }
+
   const layout = {
     labelCol: { span: 3 },
     wrapperCol: { span: 12 },
@@ -124,6 +186,34 @@ const ModelEvaluation = props => {
             rules={[{ required: true, message: '名称不能为空!' }]}
           >
             <Input placeholder="请输入模型名称" disabled/>
+          </Form.Item>
+          <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="训练数据集">
+            <Select>
+              {
+                datasets.map(d => (
+                  <Option key={d.path} value={d.path}>{d.name}</Option>
+                ))
+              }
+            </Select>
+          </Form.Item>          
+          <Form.Item
+            {...layout}
+            name="codePath"
+            label="代码目录"
+            rules={[{ required: true }]}
+          >
+            <Input addonBefore={codePathPrefix} />
+          </Form.Item>
+          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个python 文件' }]}>
+            <Input addonBefore={codePathPrefix} />
+          </Form.Item>
+          <Form.Item 
+            {...layout} 
+            label="输出路径"
+            name="outputPath"
+            rules={[{ required: true }]}
+          >
+            <Input addonBefore={codePathPrefix} />
           </Form.Item>
           <Form.Item
             {...layout}
@@ -158,28 +248,34 @@ const ModelEvaluation = props => {
               </Select>
             </Form.Item>
           </Form.Item>
-          <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="训练数据集">
-            <Select>
+          <Form.Item
+            {...layout}
+            label="设备类型"
+            name="deviceType"
+            rules={[{ required: true }]}
+          >
+            <Select onChange={handleDeviceTypeChange}>
               {
-                datasets.map(d => (
-                  <Option value={d.path}>{d.name}</Option>
+                deviceTypes.map((item) => (
+                  <Option key={item} value={item}>{item}</Option>
                 ))
               }
             </Select>
-          </Form.Item>          
+          </Form.Item>
           <Form.Item
             {...layout}
-            name="codePath"
-            label="代码目录"
+            label="设备数量"
+            name="deviceNum"
+            rules={[{ required: true }]}
           >
-            <Input addonBefore={codePathPrefix} />
-          </Form.Item>
-          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个python 文件' }]}>
-            <Input addonBefore={codePathPrefix} />
-          </Form.Item>
-          <Form.Item name="outputPath" {...layout} label="输出路径" >
-            <Input addonBefore={codePathPrefix} />
-          </Form.Item>
+            <Select>
+              {
+                deviceNums.map((item) => (
+                  <Option key={item} value={item}>{item}</Option>
+                ))
+              }
+            </Select>
+          </Form.Item>                 
           <Form.Item name="status" {...layout} label="评估状态" >
             <Tag color="success">success</Tag>
             <Tag color="processing">processing</Tag>
