@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, Button, Select, Row, Col, Descriptions, Card } from 'antd';
+import { Table, Input, Button, Select, Row, Col, Descriptions, Card, Popover } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -12,13 +12,28 @@ const ParamsManage = () => {
 
   const ExpandDetail = (props) => {
     const record = props.record;
+    const argumentsContent = (
+      <div>
+        {record.arguments.map(item => {
+          return <p>{item.key + ':' + item.value}</p>;
+        })}
+      </div>
+    );
     return (
       <Descriptions>
         <Descriptions.Item label="参数配置名称">{record.configName}</Descriptions.Item>
         <Descriptions.Item label="启动文件">{record.startupFile}</Descriptions.Item>
         <Descriptions.Item label="计算节点数">{record.deviceNum}</Descriptions.Item>
         <Descriptions.Item label="训练数据集">{record.datasetPath}</Descriptions.Item>
-        <Descriptions.Item label="运行参数">{record.arguments}</Descriptions.Item>
+        <Descriptions.Item label="运行参数">
+          <Popover title="训练参数" content={argumentsContent}>
+            {record.arguments.map((item) => {
+              return (
+                <div>{item.key + ': ' + item.value + '; '}</div>
+              );
+            })}
+          </Popover>
+        </Descriptions.Item>
         <Descriptions.Item label="引擎类型">{record.engine}</Descriptions.Item>
         <Descriptions.Item label="代码目录">{record.codePath}</Descriptions.Item>
         <Descriptions.Item label="计算节点规格">{record.deviceType}</Descriptions.Item>
@@ -27,21 +42,11 @@ const ParamsManage = () => {
     );
   };
 
-  const handleCreateTrainJob = (item) => {
-    const path = {
-      pathname: 'submit',
-      state: item,
-      type: 'createWithParam',
-    };
-    history.push(path);
+  const handleCreateTrainJob = (id) => {
+    history.push(`paramManage/${id}/createJobWithParam`);
   };
-  const handleEdit = (item) => {
-    const path = {
-      pathname: 'submit',
-      state: item,
-      type: 'editParam',
-    };
-    history.push(path);
+  const handleEdit = (id) => {
+    history.push(`paramManage/${id}/editParam`);
   };
 
   const handleDelete = (id) => {
@@ -77,8 +82,8 @@ const ParamsManage = () => {
         const { id } = item;
         return (
           <>
-            <a onClick={() => handleCreateTrainJob(item)}>创建训练作业</a>
-            <a style={{ margin: '0 16px' }} onClick={() => handleEdit(item)}>编辑</a>
+            <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
+            <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
           </>
         );

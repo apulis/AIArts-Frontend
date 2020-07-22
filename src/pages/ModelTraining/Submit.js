@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader, Modal } from 'antd';
-import { history } from 'umi';
+import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
@@ -25,13 +25,14 @@ export const generateKey = () => {
 
 const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createWithParam；编辑参数type为editParam
-  const requestType = props.location.type;
+  const requestType = props.match.params.type;
+  const paramsId = props.match.params.id;
   let readParam, createDisable, editDisable, params;
+
   if (requestType) {
     readParam = true;
-    params = props.location.state;
   }
-  if (requestType === 'createWithParam') {
+  if (requestType === 'createJobWithParam') {
     createDisable = true;
   }
   if (requestType === 'editParam') {
@@ -39,7 +40,7 @@ const ModelTraining = (props) => {
   }
   const goBackPath = readParam ? '/model-training/paramsManage' : '/model-training/modelTraining';
 
-  const [runningParams, setRunningParams] = useState([]);
+  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
@@ -52,10 +53,7 @@ const ModelTraining = (props) => {
   const [datasets, setDatasets] = useState([]);
   const { validateFields, getFieldValue, setFieldsValue } = form;
 
-  // set default value
-  if (readParam) {
-    form.setFieldsValue(params);
-  }
+
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
@@ -82,13 +80,54 @@ const ModelTraining = (props) => {
     }
   };
 
+  const fetchParams = async () => {
+    let data;
+    await setTimeout(() => {
+      data = {
+        key: 1,
+        id: 1,
+        configName: 'train_job_config_001',
+        type: '训练',
+        engine: 'tensorflow , tf-1.8.0-py2.7',
+        createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
+        description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+        startupFile: '/start.sh',
+        deviceNum: 3,
+        datasetPath: 'train.csv',
+        params: [
+          {
+            key: 'learning_rate',
+            value: 0.01,
+            createTime: 2323233
+          },
+          {
+            key: 'epoch',
+            value: 20,
+            createTime: 4242442
+          },
+          {
+            key: 'dropout',
+            value: 0.5,
+            createTime: 4242443
+          },
+        ],
+        engine: 'tensorflow',
+        codePath: '/home/code/',
+        deviceType: '1核 | 16GB | 1*AI加速卡	'
+      };
+      setRunningParams(data.params);
+      form.setFieldsValue(data);
+    }, 0);
+
+  };
+
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
-    if (readParam) {
-      setRunningParams(params.arguments);
-    }
+    // set default value
+    if (readParam) { fetchParams(); }
   }, []);
+
   const handleSubmit = async () => {
     const values = await validateFields();
     let params = {};
@@ -134,7 +173,8 @@ const ModelTraining = (props) => {
     callback();
   };
   const removeRuningParams = async (key) => {
-    const values = await getFieldValue('runningParams');
+    const values = await getFieldValue('params');
+    console.log('values', values);
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
@@ -169,7 +209,7 @@ const ModelTraining = (props) => {
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title={editDisable?'编辑训练参数':'创建训练作业'}
+        title={editDisable ? '编辑训练参数' : '创建训练作业'}
       />
       <Form form={form}>
         <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={editDisable ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>
