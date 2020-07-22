@@ -16,7 +16,7 @@ app.post('//update', (req, res) => {
   exec('git pull https://cafbe4d081c2ffc3015dc82f78b1c750d245d7fd@github.com/apulis/AIArts.git', (err, result) => {
     if (!err) {
       console.log('pull over')
-      exec('yarn build', (err, result) => {
+      exec('yarn;yarn build', (err, result) => {
         if (!err) {
           console.log('build over')
         } else {
