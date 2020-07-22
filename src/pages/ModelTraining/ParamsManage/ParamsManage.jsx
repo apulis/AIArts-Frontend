@@ -18,7 +18,13 @@ const ParamsManage = () => {
         <Descriptions.Item label="启动文件">{record.startupFile}</Descriptions.Item>
         <Descriptions.Item label="计算节点数">{record.deviceNum}</Descriptions.Item>
         <Descriptions.Item label="训练数据集">{record.datasetPath}</Descriptions.Item>
-        <Descriptions.Item label="运行参数">{record.arguments}</Descriptions.Item>
+        <Descriptions.Item label="运行参数">
+          {record.arguments.map((item) => {
+            return (
+              <div>{item.key+': '+ item.value+'; '}</div>
+            );
+          })}
+        </Descriptions.Item>
         <Descriptions.Item label="引擎类型">{record.engine}</Descriptions.Item>
         <Descriptions.Item label="代码目录">{record.codePath}</Descriptions.Item>
         <Descriptions.Item label="计算节点规格">{record.deviceType}</Descriptions.Item>

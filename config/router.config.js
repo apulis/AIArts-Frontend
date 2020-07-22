@@ -96,23 +96,33 @@ export default [
             // component: './ModelMngt/ModelList'
             routes: [
               {
-                path: '/modelManagement/MyModels',
+                path: '/ModelManagement/MyModels',
                 name: 'myModels',
                 icon: 'CodepenOutlined',
                 component: './ModelMngt/ModelList',
               },
               {
-                path: '/modelManagement/PretrainedModels',
+                path: '/ModelManagement/PretrainedModels',
                 name: 'pretraindedModels',
                 icon: 'CodepenOutlined',
                 component: './ModelMngt/PretrainedModel',
               },
+              {
+                path: '/ModelManagement/CreateEvaluation',
+                // name: 'modelEvaluation',
+                // icon: 'CodepenOutlined',           
+                component: './ModelMngt/ModelEvaluation'
+              },             
             ],            
           },
           {
             path: '/ModelMngt/CreateModel',
             component: './ModelMngt/CreateModel'
           },
+          // {
+          //   path: '/ModelManagement/CreateEvaluation',
+          //   component: './ModelMngt/ModelEvaluation'
+          // },
           {
             path: '/Inference/list',
             name: 'inferenceService',

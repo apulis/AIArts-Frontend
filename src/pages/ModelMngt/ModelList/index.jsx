@@ -97,6 +97,7 @@ const ModelList = props => {
             <a onClick={() => createInference(item)}>创建推理</a>
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
             <a onClick={() => deleteModel(item)}>删除</a>
+            <a onClick={() => evaluateModel(item)}>模型评估</a>
           </Space>
         );
       },
@@ -169,6 +170,14 @@ const ModelList = props => {
     history.push((`/Inference/submit/?${queryString}`))
   };
 
+  const evaluateModel = (item) => {
+    const queryString = stringify({
+      modelName: encodeURIComponent(item.name),
+      modelId: encodeURIComponent(item.id),
+    });
+    history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
+  };
+
   const deleteModel = (item) => {
     confirm({
       title: '删除模型',
@@ -227,12 +236,12 @@ const ModelList = props => {
                 layout='inline'
                 form={form}
                 onFinish={onFinish}
-                // initialValues={}
+                initialValues={{status: 'all'}}
               >
                 <Form.Item
                   name="status"
                 >
-                  <Select defaultValue="all" style={{ width: 180 }} onChange={handleChange}>
+                  <Select style={{ width: 180 }} onChange={handleChange}>
                     {
                       statusList.map((item) => (
                         <Option key= {item.en} value={item.en}>{item.cn}</Option>
