@@ -237,6 +237,12 @@ const ModelTraining = (props) => {
     setCurrentSelectedPresetParamsId(current);
   }
 
+  const handleClickDeviceNum = (e) => {
+    if (!getFieldValue('deviceType')) {
+      message.error('需要先选择设置类型');
+    }
+  }
+
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -334,7 +340,7 @@ const ModelTraining = (props) => {
           {...commonLayout}
           rules={[{ required: true }]}
         >
-          <Select style={{ width: '300px' }} >
+          <Select style={{ width: '300px' }} onClick={handleClickDeviceNum} >
             {
               availableDeviceNumList.map(avail => (
                 <Option value={avail}>{avail}</Option>
