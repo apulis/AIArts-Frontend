@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Descriptions, Divider } from 'antd';
+import { Button, Descriptions, Modal } from 'antd';
 import { useParams } from 'umi';
-import { message } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { message, Form, Input } from 'antd';
+import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
@@ -10,15 +10,18 @@ import moment from 'moment';
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
-import { returnAtIndex } from 'lodash-decorators/utils';
 
+const { useForm } = Form;
+const FormItem = Form.Item;
 
 const Detail = () => {
   const params = useParams();
   const logEl = useRef(null);
+  const [form] = useForm();
   const id = params.id;
   const [logs, setLogs] = useState('');
   const [jobDetail, setJobDetail] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
   const getTrainingDetail = async () => {
     const res = await fetchTrainingDetail(id);
     if (res.code === 0) {
@@ -39,6 +42,7 @@ const Detail = () => {
     }
   }, [])
   const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status)
+  const jobFailed = ['failed'].includes(jobDetail.status)
   const getTrainingLogs = async () => {
     const res = await fetchTrainingLog(id);
     const l = logEl.current;
@@ -54,10 +58,19 @@ const Detail = () => {
     message.success('成功获取日志')
   }
 
+  const saveTrainingDetail = () => {
+
+  }
+
 
   const stopTraining = () => {
     //
   }
+
+  const commonLayout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 15 }
+  };
 
   const removeTraining = async () => {
     const res = await removeTrainings(id);
@@ -71,6 +84,7 @@ const Detail = () => {
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
           {/* <Button onClick={removeTraining}>删除训练</Button> */}
+          <Button onClick={() => setModalVisible(true)}>保存训练参数</Button>
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
@@ -90,7 +104,7 @@ const Detail = () => {
         <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
-      {!jobStarted && <Button onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
+      {!jobStarted && !jobFailed && <Button onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
       {logs ? <pre ref={logEl} className={styles.logs}>
         {logs}
       </pre> : (<div>
@@ -101,6 +115,54 @@ const Detail = () => {
             <LoadingOutlined />
         }
       </div>)
+      }
+      {modalVisible &&
+        <Modal
+          visible={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          onOk={saveTrainingDetail}
+          title="保存至"
+        >
+          <Form
+            form={form}
+          >
+            <FormItem
+              {...commonLayout}
+              name="configName"
+              label="配置名称"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="请输入配置名称" />
+            </FormItem>
+            <FormItem
+              {...commonLayout}
+              name="type"
+              label="类型"
+              initialValue="训练"
+              rules={[{ required: true }]}
+            >
+              <Input disabled />
+            </FormItem>
+            <FormItem
+              {...commonLayout}
+              name="engine"
+              label="引擎类型"
+              initialValue={jobDetail.engine}
+              rules={[{ required: true }]}
+            >
+              <Input disabled />
+            </FormItem>
+            <FormItem
+              {...commonLayout}
+              name="desc"
+              label="描述"
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea />
+            </FormItem>
+
+          </Form>
+        </Modal>
       }
     </div>
 

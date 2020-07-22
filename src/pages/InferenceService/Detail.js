@@ -105,30 +105,38 @@ const InferenceDetail = () => {
       message.success('成功获取日志')
     }
   }
+  const jobRunning = jobDetail.jobStatus === 'running'
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div className="ant-upload-text">上传图片</div>
     </div>
   );
+  
+  const jobEnded = ['finished', 'failed', 'killed', 'error'].includes(jobDetail.jobStatus)
   return (
     <PageHeaderWrapper>
-      <Upload
-        headers={{
-          Authorization: `Bearer ${localStorage.token}`
-        }}
-        name="image"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
-        beforeUpload={beforeUpload}
-        style={{position: 'relative'}}
-        onChange={handleChange}
-      >
-        {(imageUrl) ? <img src={imageUrl} alt="avatar" style={{ width: '620px' }} /> : uploadButton}
-      </Upload>
-      <Button disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
+      {
+        jobRunning && <Upload
+          headers={{
+            Authorization: `Bearer ${localStorage.token}`
+          }}
+          name="image"
+          listType="picture-card"
+          className="avatar-uploader"
+          showUploadList={false}
+          action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
+          beforeUpload={beforeUpload}
+          style={{position: 'relative'}}
+          onChange={handleChange}
+        >
+          {(imageUrl) ? <img src={imageUrl} alt="avatar" style={{ width: '620px' }} /> : uploadButton}
+        </Upload>
+      }
+      {
+        jobRunning && <Button disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
+      }
+      
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
@@ -142,8 +150,10 @@ const InferenceDetail = () => {
         {/* <Descriptions.Item label="服务地址">test</Descriptions.Item> */}
         <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
       </Descriptions>
-      <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
-      {!['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) &&<Button onClick={getLateastLogs}>点击获取最新日志</Button>}
+      {
+        logs && <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
+      }
+      {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && <Button onClick={getLateastLogs}>点击获取最新日志</Button>}
       <div>
         {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}

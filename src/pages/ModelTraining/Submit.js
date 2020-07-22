@@ -39,7 +39,7 @@ const ModelTraining = (props) => {
   }
   const goBackPath = readParam ? '/model-training/paramsManage' : '/model-training/modelTraining';
 
-  const [runningParams, setRunningParams] = useState([]);
+  const [runningParams, setRunningParams] = useState([{key: '', value: '', createTime: generateKey()}]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
@@ -134,7 +134,8 @@ const ModelTraining = (props) => {
     callback();
   };
   const removeRuningParams = async (key) => {
-    const values = await getFieldValue('runningParams');
+    const values = await getFieldValue('params');
+    console.log('values', values);
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
