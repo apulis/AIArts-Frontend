@@ -52,8 +52,9 @@ export const errorHandler = async (error) => {
     return {};
   }
   const CODE = _response.code;
+  let hasMessage;
   if (CODE !== 0) {
-    const hasMessage = bizCodeMessage[CODE] || _response.msg;
+    hasMessage = bizCodeMessage[CODE] || _response.msg;
     if (hasMessage) {
       message.error(bizCodeMessage[CODE] || _response.msg);
     }
