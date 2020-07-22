@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Col, Row, message, PageHeader, Modal } from 'antd';
+import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row } from 'antd';
 import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
@@ -13,6 +13,7 @@ import { jobNameReg } from '@/utils/reg';
 
 const { TextArea } = Input;
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 const layout = {
   labelCol: { span: 8 },
@@ -22,6 +23,8 @@ const layout = {
 export const generateKey = () => {
   return new Date().getTime();
 };
+
+
 
 const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createWithParam；编辑参数type为editParam
@@ -51,9 +54,10 @@ const ModelTraining = (props) => {
   const [deviceList, setDeviceList] = useState([]);
   const [availableDeviceNumList, setAvailableDeviceNumList] = useState([]);
   const [datasets, setDatasets] = useState([]);
+  const [presetParamsVisible, setPresetParamsVisible] = useState(false);
+  const [presetRunningParams, setPresetRunningParams] = useState([]);  
   const { validateFields, getFieldValue, setFieldsValue } = form;
-
-
+  const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
@@ -127,6 +131,23 @@ const ModelTraining = (props) => {
     // set default value
     if (readParam) { fetchParams(); }
   }, []);
+
+  useEffect(() => {
+    if (presetParamsVisible) {
+      setPresetRunningParams([{
+        name: 'test',
+        deviceNum: 10,
+        startupFile: 'aaa.py',
+        codePath: '/adsf/',
+        datasetPath: '/afd/',
+        outputPath: '/asdf',
+        params: 'aaa=1',
+        deviceType: 'device',
+        engine: 'tensor',
+        id: '23312-123123-41224',
+      }])
+    }
+  }, [presetParamsVisible])
 
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -204,6 +225,18 @@ const ModelTraining = (props) => {
       setAvailableDeviceNumList(list);
     }
   };
+  const handleConfirmPresetParams = () => {
+    const currentSelected = presetRunningParams.find(p => p.id === currentSelectedPresetParamsId);
+    if (currentSelected) {
+      setFieldsValue(currentSelected);
+      setPresetParamsVisible(false)
+    }
+  }
+
+  const handleSelectPresetParams = (current) => {
+    setCurrentSelectedPresetParamsId(current);
+  }
+
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -221,6 +254,12 @@ const ModelTraining = (props) => {
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
       <div className="ant-page-header-heading-title" style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</div>
+      <FormItem {...commonLayout} label="参数来源">
+        <Radio.Group defaultValue={1} buttonStyle="solid">
+          <Radio.Button value={1}>手动参数配置</Radio.Button>
+          <Radio.Button value={2} onClick={() => {setPresetParamsVisible(true)}}>导入参数配置</Radio.Button>
+        </Radio.Group>
+      </FormItem>
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
           <Select style={{ width: 300 }} disabled={createDisable} >
@@ -238,7 +277,7 @@ const ModelTraining = (props) => {
         >
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个python 文件' }]}>
+        <FormItem labelCol={{ span: 3 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 3 }} label="输出路径" style={{ marginTop: '50px' }}>
@@ -330,6 +369,89 @@ const ModelTraining = (props) => {
         forceRender
         onCancel={() => setTrainingDataSetModalVisible(false)}
       >
+
+      </Modal>
+      <Modal
+        visible={presetParamsVisible}
+        onCancel={() => setPresetParamsVisible(false)}
+        onOk={handleConfirmPresetParams}
+        title="导入训练参数配置"
+        forceRender
+      >
+        <Form
+          form={form}
+        >
+          <Tabs defaultActiveKey={presetRunningParams[0] && presetRunningParams[0].id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+            {presetRunningParams.map(p => (
+              <TabPane tab={p.name} key={p.id}>
+                <Row>
+                  <Col span={8}>
+                    计算节点个数
+                  </Col>
+                  <Col span={16}>
+                    {p.deviceNum}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                  启动文件
+                  </Col>
+                  <Col span={16}>
+                    {p.startupFile}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    代码目录
+                  </Col>
+                  <Col span={16}>
+                    {p.codePath}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    训练数据集
+                  </Col>
+                  <Col span={16}>
+                    {p.datasetPath}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    输出路径
+                  </Col>
+                  <Col span={16}>
+                    {p.outputPath}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    运行参数
+                  </Col>
+                  <Col span={16}>
+                    {p.params}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    计算节点规格
+                  </Col>
+                  <Col span={16}>
+                    {p.deviceType}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    引擎类型
+                  </Col>
+                  <Col span={16}>
+                    {p.engine}
+                  </Col>
+                </Row>
+              </TabPane>
+            ))}
+          </Tabs>
+        </Form>
 
       </Modal>
       <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
