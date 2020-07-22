@@ -79,6 +79,10 @@ export default [
                 component: './ModelTraining/Submit',
               },
               {
+                path: '/model-training/paramManage/:id/:type',
+                component: './ModelTraining/Submit',
+              },
+              {
                 path: '/model-training/:id/detail',
                 component: './ModelTraining/Detail',
               },
@@ -143,6 +147,12 @@ export default [
             icon: 'DashboardOutlined',
             component: './ResourceMonitoring'
           },
+          // {
+          //   path: '/EdgeInference',
+          //   name: 'edgeInference',
+          //   icon: 'DashboardOutlined',
+          //   component: './EdgeInference'
+          // },
           {
             path: '/',
             redirect: '/CodeList',
