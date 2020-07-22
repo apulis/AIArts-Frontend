@@ -17,6 +17,7 @@ const ModelEvaluation = props => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [frameWorks, setFrameWorks] = useState(null);
+  const [engineTypes, setEngineTypes] = useState([]);
   const [engines, setEngines] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [form] = Form.useForm();
@@ -34,9 +35,16 @@ const ModelEvaluation = props => {
       }
       setCodePathPrefix(codePathPrefix);
       setFrameWorks(aiFrameworks);
-      // if (Object.keys(aiFrameworks).length > 0){
-      //   setEngineTypes(Object.keys(aiFrameworks))
-      // }
+
+      let types = Object.keys(aiFrameworks);      
+      if (types.length > 0){
+        setEngineTypes(types);
+        let defaultType = types[0];
+        form.setFieldsValue({
+          engineType: defaultType,
+          engine: aiFrameworks[defaultType].length > 0 ? aiFrameworks[defaultType][0] : ''
+        });
+      }
     }
   }
 
@@ -81,7 +89,9 @@ const ModelEvaluation = props => {
   };
 
   const handleEngineTypeChange = value => {
-    setEngines(frameWorks[value]);
+    let selectedType = frameWorks[value];
+    setEngines(selectedType);
+    form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
   }
 
   const layout = {
@@ -123,11 +133,12 @@ const ModelEvaluation = props => {
             <Form.Item name="engineType" 
               rules={[{ required: true }]}
               style={{ display: 'inline-block', width: 'calc(50% - 4px)' }}
-              onChange={handleEngineTypeChange}
             >
-              <Select>
+              <Select
+                onChange={handleEngineTypeChange}
+              >
                 {
-                  frameWorks && Object.keys(frameWorks).map(f => (
+                  engineTypes && engineTypes.map(f => (
                     <Option value={f} key={f}>{f}</Option>
                   ))
                 }
@@ -137,7 +148,8 @@ const ModelEvaluation = props => {
               rules={[{ required: true }]}
               style={{ display: 'inline-block', width: 'calc(50% - 4px)', marginLeft: '8px' }}
             >
-              <Select>
+              <Select
+              >
                 {
                   engines && engines.map(f => (
                     <Option value={f} key={f}>{f}</Option>
