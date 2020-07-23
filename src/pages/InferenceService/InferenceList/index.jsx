@@ -8,6 +8,7 @@ import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
+import { formatDuration } from '@/utils/time';
 
 const { Option } = Select;
 
@@ -90,7 +91,7 @@ const InferenceList = props => {
       // dataIndex: 'runDuration',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => moment.duration(Date.now()-item.jobTime)
+      render: (text, item) => formatDuration(moment.duration(Date.now()-item.jobTime))
     },
     {
       title: '服务地址',
