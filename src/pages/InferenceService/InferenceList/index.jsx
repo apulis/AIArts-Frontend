@@ -24,8 +24,17 @@ const InferenceList = props => {
 
   const statusList = [
     { en: 'all', cn: '全部' },
-    { en: 'normal', cn: '正常'},
-    { en: 'deleting', cn: '删除中'},
+    { en: 'unapproved', cn: '未批准'},
+    { en: 'queued', cn: '队列中'},
+    { en: 'scheduling', cn: '调度中'},
+    { en: 'running', cn: '运行中'},
+    { en: 'finished', cn: '已完成'},
+    { en: 'failed', cn: '已失败'},
+    { en: 'pausing', cn: '暂停中'},
+    { en: 'paused', cn: '已暂停'},
+    { en: 'killing', cn: '关闭中'},
+    { en: 'killed', cn: '已关闭'},
+    { en: 'error', cn: '错误'},
   ]
 
   useEffect(() => {
