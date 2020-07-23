@@ -1,5 +1,5 @@
 import { Link, history } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stopInference } from './services';
@@ -8,6 +8,8 @@ import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
+
+const { Option } = Select;
 
 const InferenceList = props => {
   const {
@@ -20,16 +22,14 @@ const InferenceList = props => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [form] = Form.useForm();
 
+  const statusList = [
+    { en: 'all', cn: '全部' },
+    { en: 'normal', cn: '正常'},
+    { en: 'deleting', cn: '删除中'},
+  ]
+
   useEffect(() => {
     handleRefresh();
-
-    // let timer = setInterval(() => {
-    //   handleRefresh();
-    // }, REFRESH_INTERVAL);
-    
-    // return () => {
-    //   clearInterval(timer)
-    // }    
   }, [pageParams]);
 
   const pageParamsChange = (page, size) => {
@@ -183,6 +183,10 @@ const InferenceList = props => {
     history.push('/Inference/submit')
   };
 
+  const handleStatusChange = (status) => {
+
+  };
+
   return (
     <PageHeaderWrapper>
       <Card bordered={false}
@@ -205,7 +209,19 @@ const InferenceList = props => {
               layout='inline'
               form={form}
               onFinish={onFinish}
+              initialValues={{status: 'all'}}
             >
+              <Form.Item
+                name="status"
+              >
+                <Select style={{ width: 180 }} onChange={handleStatusChange}>
+                  {
+                    statusList.map((item) => (
+                      <Option key= {item.en} value={item.en}>{item.cn}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>              
               <Form.Item
                 name="jobName" 
                 label="作业名称"
