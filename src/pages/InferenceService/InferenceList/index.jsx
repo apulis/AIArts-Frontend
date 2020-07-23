@@ -21,6 +21,7 @@ const InferenceList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [formValues, setFormValues] = useState({});  
   const [form] = Form.useForm();
 
   const statusList = [
@@ -39,8 +40,8 @@ const InferenceList = props => {
   ]
 
   useEffect(() => {
-    handleRefresh();
-  }, [pageParams]);
+    handleSearch();
+  }, [pageParams, formValues]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -128,6 +129,7 @@ const InferenceList = props => {
 
   const onReset = () => {
     form.resetFields();
+    setFormValues({status: 'all', name:''});
   };
   const handleCancel = () => {
     setVisible(false);
@@ -143,32 +145,36 @@ const InferenceList = props => {
   };
 
   const onFinish = values => {
+    let queryClauses = {};
+
+    if (values.jobName) {
+      queryClauses.name = values.jobName;
+    }
+
+    if (values.status) {
+      queryClauses.status = values.status;
+    }
+
+    setFormValues({...formValues, ...queryClauses});
+  };
+
+  const handleSearch = () => {
     const params = {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
     };
 
-    if (values.jobName) {
-      params.name = values.jobName;
+    if (formValues.status && formValues.status !== 'all') {
+      params.status = formValues.status;
     }
 
-    if (values.status && values.status !== 'all') {
-      params.status = values.status;
+    if (formValues.name) {
+      params.name = formValues.name;
     }
 
     dispatch({
       type: 'inferenceList/fetch',
       payload: params,
-    });
-  };
-
-  const handleRefresh = () => {
-    dispatch({
-      type: 'inferenceList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
-      },
     });
   };
 
@@ -186,7 +192,7 @@ const InferenceList = props => {
       const {code, msg, data} = await stopInference(params);
       if(code === 0){
         message.success(`Job成功停止！`);
-        handleRefresh();
+        handleSearch();
       }else{
         message.error(`Job停止错误：${msg}。`);
       }
@@ -260,7 +266,7 @@ const InferenceList = props => {
                 <Button type="primary" htmlType="submit">查询</Button>
               </Form.Item>
               <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
               </Form.Item>
             </Form>
           </div>            
