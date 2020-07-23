@@ -134,6 +134,13 @@ const PretrainedModelList = props => {
     history.push((`/Inference/submit/?${queryString}`))
   };
 
+  const addPretrainedModel = (item) => {
+    // const queryString = stringify({
+    //   modelPath: encodeURIComponent(item.path)
+    // });
+    // history.push((`/Inference/submit/?${queryString}`))
+  };
+
   return (
     <PageHeaderWrapper>
       <Card bordered={false}
@@ -146,6 +153,7 @@ const PretrainedModelList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
+          <Button type="default" onClick={addPretrainedModel}>录入模型</Button>
           <div
             style={{
               float: "right",
