@@ -122,7 +122,7 @@ const CreateModel = props => {
 
   const layout = {
     labelCol: { span: 3 },
-    wrapperCol: { span: 8 },
+    wrapperCol: { span: 14 },
   };
 
   return (
@@ -152,14 +152,13 @@ const CreateModel = props => {
               <Input placeholder="请输入模型名称" />
             </Form.Item>
             <Form.Item
-              labelCol={{ span: 3 }} 
-              wrapperCol={{ span: 14 }}
+              {...layout}     
               name="description"
               label="描述"
               rules={[{ max: 256 }]}
             >
               <TextArea rows={4} placeholder="请输入描述信息" />
-            </Form.Item>
+            </Form.Item>          
             <Form.Item
               {...layout}
               label="模型文件" 
@@ -167,17 +166,27 @@ const CreateModel = props => {
               rules={[{ required: true }]} 
             >
               <Radio.Group onChange={e => setSourceType(e.target.value)}>
-                <Radio value={1}>输入模型路径</Radio>
+                <Radio value={1}>选择模型文件</Radio>
                 <Radio value={2}>上传模型文件</Radio>
               </Radio.Group>
             </Form.Item>
-            {sourceType == 1 &&<Form.Item
-              {...layout}
-              name="path"
-              label="存储路径"
-              rules={[{ required: true, message: '存储路径不能为空!' }]}
-            >
-              <Input addonBefore={codePathPrefix} placeholder="请输入存储路径" />
+            {sourceType == 1 && <Form.Item
+                {...layout}
+                label="训练作业"
+                required
+              >
+                <Form.Item
+                  name="job"
+                  rules={[{ required: true, message: '训练作业不能为空!' }]}
+                  style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}              
+                >
+                  <Input placeholder="请选择训练作业名称" disabled/>
+                </Form.Item>
+                <Form.Item
+                  style={{ display: 'inline-block', width: 'calc(10% - 4px)', margin: '0 0 0 8px' }}
+                >
+                  <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
+                </Form.Item>
             </Form.Item>}       
             {sourceType == 2 && <Form.Item
               labelCol={{ span: 3 }}
@@ -197,23 +206,12 @@ const CreateModel = props => {
             </Form.Item>}
             <Form.Item
               {...layout}
-              wrapperCol={{ span: 9 }}
-              label="选择训练作业"
-              required
+              name="path"
+              label="模型参数文件"
+              rules={[{ required: true, message: '模型参数文件不能为空!' }]}
             >
-              <Form.Item
-                name="job"
-                rules={[{ required: true, message: '训练作业不能为空!' }]}
-                style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}              
-              >
-                <Input placeholder="请选择训练作业名称" />
-              </Form.Item>
-              <Form.Item
-                style={{ display: 'inline-block', width: 'calc(10% - 4px)', margin: '0 0 0 8px' }}
-              >
-                <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
-              </Form.Item>
-            </Form.Item>
+              <Input addonBefore={codePathPrefix} placeholder="请输入模型参数文件" />
+            </Form.Item>            
             <Form.Item
                 name="jobId"
                 hidden            
