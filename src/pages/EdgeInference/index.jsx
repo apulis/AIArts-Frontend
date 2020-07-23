@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button, Select } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDatasets, edit, deleteDataSet, add, download } from './service';
+import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './service';
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import moment from 'moment';
@@ -12,15 +12,10 @@ const { Option } = Select;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
-  const [jobs, setJobs] = useState([]);
-  const [type, setType] = useState('');
-  const [fdInfo, setFdInfo] = useState({
-    username: '',
-    url: '',
-    password: ''
-  });
+  const [jobs, setJobs] = useState({ data: [], total: 0 });
+  const [types, setTypes] = useState('');
+  const [fdInfo, setFdInfo] = useState({ username: '', url: '', password: '' });
   const [pushId, setPushId] = useState('');
-  const [convertionTypes, setConvertionTypes] = useState([]);
   const [modalFlag1, setModalFlag1] = useState(false);
   const [modalFlag2, setModalFlag2] = useState(false);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
@@ -31,17 +26,21 @@ const EdgeInference = () => {
     // getData();
   }, [pageParams]);
 
+  // useInterval(() => {
+  //   getData();
+  // }, pollInterval);
+
   const getData = async () => {
     setLoading(true);
-    const { code, data, msg } = await getDatasets(pageParams);
+    const { code, data, msg } = await getEdgeInferences(pageParams);
     if (code === 0 && data) {
       const { total, datasets } = data;
-      setDataSets({
+      setJobs({
         data: datasets,
         total: total,
       });
     } else {
-      msg && message.error(msg);
+      message.error(msg);
     }
     setLoading(false);
   };
@@ -51,9 +50,18 @@ const EdgeInference = () => {
   };
 
   const onSubmit = () => {
+    setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      
+      const { code, data, msg } = await submit();
+      if (code === 0) {
+        message.success('提交成功！');
+        getData();
+        setModalFlag1(false);
+      } else {
+        message.error(msg);
+      }
     });
+    setBtnLoading(false);
   };
 
   const columns = [
@@ -91,34 +99,67 @@ const EdgeInference = () => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled = (!(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId);
         return (
-          <CloudUploadOutlined disabled={disabled} onClick={() => onPush(jobId)} title="开始推理" />
+          <CloudUploadOutlined disabled={disabled} onClick={() => onPush(jobId)} title="推理推送" />
         )
       },
     },
   ];
 
-  const getFdInfo = () => {
+  const getFdInfo = async () => {
     let info = {};
+    const { code, data, msg } = await getFD();
+    if (code === 0) {
+      info = data;
+      setFdInfo(data);
+    } else {
+      message.error(msg);
+    }
+    return info;
   }
 
   const onPush = async (id) => {
     const info = await getFdInfo();
+    if (info) {
+      setPushId(id);
+      const { code, data, msg } = await push({ id: id });
+      if (code === 0) {
+        getData();
+        message.success('推送成功！');
+      } else {
+        setPushId('');
+        message.error(msg);
+      }
+    } else {
+      message.warning('请先填写设置！');
+      setModalFlag2(true);
+    }
   }
 
   const openSettings = async () => {
-    // await getFdInfo();
+    await getFdInfo();
     setModalFlag2(true);
   }
 
-  const openInference = () => {
-    
+  const openInference = async () => {
     setModalFlag1(true);
+    const { code, data, msg } = await getTypes();
+    if (code === 0) {
+      setTypes(data);
+    } else {
+      message.error(msg);
+    }
   }
 
-  const onSubmitSettings = () => {
+  const onSubmitFD = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-
+      const { code, data, msg } = await submitFD();
+      if (code === 0) {
+        message.success('设置成功！');
+        setModalFlag2(false);
+      } else {
+        message.error(msg);
+      }
     })
     setBtnLoading(false);
   }
@@ -132,12 +173,12 @@ const EdgeInference = () => {
       <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>
       <Table
         columns={columns}
-        dataSource={jobs}
+        dataSource={jobs.data}
         rowKey={r => r.jobId}
         pagination={{
-          // total: dataSets.total,
+          total: jobs.total,
           showQuickJumper: true,
-          // showTotal: total => `总共 ${total} 条`,
+          showTotal: total => `总共 ${total} 条`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
@@ -175,7 +216,7 @@ const EdgeInference = () => {
               name="conversionType"
               rules={[{ required: true, message: '请选择类型！' }]}>
                 <Select placeholder="请选择类型">
-                  {convertionTypes.map(i => <Option value={i}>{i}</Option>)}
+                  {types.map(i => <Option value={i}>{i}</Option>)}
                 </Select>
             </Form.Item>
             <Form.Item
@@ -205,7 +246,7 @@ const EdgeInference = () => {
           className="settingModal"
           footer={[
             <Button onClick={() => setModalFlag2(false)}>取消</Button>,
-            <Button type="primary" loading={btnLoading} onClick={onSubmitSettings}>保存</Button>,
+            <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>保存</Button>,
           ]}
         >
           <Form form={form} initialValues={fdInfo}>

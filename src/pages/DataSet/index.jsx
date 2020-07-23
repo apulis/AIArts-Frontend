@@ -22,23 +22,25 @@ const DataSetList = () => {
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState('');
   const addModalFormRef = useRef();
 
   useEffect(() => {
     getData();
-  }, [pageParams]);
+  }, [pageParams, name]);
 
-  const getData = async () => {
+  const getData = async (text) => {
     setLoading(true);
-    const { code, data, msg } = await getDatasets(pageParams);
+    const { code, data, msg } = await getDatasets({ ...pageParams, name });
     if (code === 0 && data) {
       const { total, datasets } = data;
       setDataSets({
         data: datasets,
         total: total,
       });
+      text && message.success(text);
     } else {
-      msg && message.error(msg);
+      message.error(msg);
     }
     setLoading(false);
   };
@@ -104,20 +106,13 @@ const DataSetList = () => {
         return (
           <>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            <a style={{ margin: '0 16px' }} onClick={() => handleDownload(id)}>下载</a>
+            <a style={{ margin: '0 16px' }} onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}>下载</a>
             <a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>
           </>
         )
       },
     },
   ];
-
-  const handleDownload = async (id) => {
-    // const res = await download(id);
-    // let blob = new Blob([res], {type: "application/octet-stream"});
-    // const url = window.URL.createObjectURL(blob);
-    window.open(`/ai_arts/api/files/download/dataset/${id}`);
-  };
 
   const onEditClick = item => {
     setEditData(item); 
@@ -138,7 +133,7 @@ const DataSetList = () => {
           message.success('删除成功！');
           getData();
         } else {
-          msg && message.error(msg);
+          message.error(msg);
         }
       },
       onCancel() {}
@@ -157,8 +152,8 @@ const DataSetList = () => {
       <div className={styles.datasetWrap}>
         <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
         <div className={styles.searchWrap}>
-          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={value => handleSearch(value)} />
-          <Button onClick={() => handleFresh()} icon={<SyncOutlined />} />
+          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={v => setName(v)} />
+          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table
           columns={columns}

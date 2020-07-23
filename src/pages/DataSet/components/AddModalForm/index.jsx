@@ -10,6 +10,7 @@ const AddModalForm = (props, ref) => {
   const { modalType, editData, setBtn } = props;
   const [fileList, setFileList] = useState([]);
   const [sourceType, setSourceType] = useState(1);
+  const [isPrivate, setIsPrivate] = useState(true);
 
   useImperativeHandle(ref, () => ({ 
     form: form
@@ -55,7 +56,7 @@ const AddModalForm = (props, ref) => {
   };
 
   return (
-    <Form form={form} className={styles.modalFormWrap} initialValues={modalType ? editData : { sourceType: sourceType }}>
+    <Form form={form} className={styles.modalFormWrap} initialValues={modalType ? editData : { sourceType: sourceType, isPrivate: isPrivate }}>
       <Form.Item
         label="数据集名称"
         name="name"
@@ -69,6 +70,12 @@ const AddModalForm = (props, ref) => {
         rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]} 
       >
         <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
+      </Form.Item>
+      <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
+        <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
+          <Radio value={true}>私有</Radio>
+          <Radio value={false}>公有</Radio>
+        </Radio.Group>
       </Form.Item>
       {!modalType && <Form.Item label="数据源" rules={[{ required: true }]} name="sourceType">
         <Radio.Group onChange={e => setSourceType(e.target.value)}>
