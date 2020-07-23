@@ -210,9 +210,11 @@ const ModelList = props => {
   const createModel = (item) => {
     history.push('/ModelMngt/CreateModel')
   };
+
   const handleChange = (status) => {
 
-  }
+  };
+
   return (
     <>
       <PageHeaderWrapper>

@@ -92,10 +92,10 @@ const ModelEvaluation = props => {
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
-      message.success(`创建成功`);
+      message.success(`创建评估成功`);
       history.push('/ModelManagement/MyModels');
     } else {
-      msg && message.error(`创建失败:${msg}`);
+      msg && message.error(`创建评估失败:${msg}`);
     }
   };
 
