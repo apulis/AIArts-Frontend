@@ -8,7 +8,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import { submitModelTraining, fetchAvilableResource } from '../../services/modelTraning';
 
 import styles from './index.less';
-import { getDatasets } from '../DataSet/service';
+import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
 
 const { TextArea } = Input;
@@ -77,7 +77,7 @@ const ModelTraining = (props) => {
   };
 
   const fetchDataSets = async () => {
-    const res = await getDatasets({ pageNum: 1, pageSize: 100 });
+    const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
     if (res.code === 0) {
       const datasets = res.data.datasets;
       setDatasets(datasets);
@@ -237,6 +237,12 @@ const ModelTraining = (props) => {
     setCurrentSelectedPresetParamsId(current);
   }
 
+  const handleClickDeviceNum = (e) => {
+    if (!getFieldValue('deviceType')) {
+      message.error('需要先选择设置类型');
+    }
+  }
+
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -290,7 +296,7 @@ const ModelTraining = (props) => {
           >
             {
               datasets.map(d => (
-                <Option value={d.path}>{d.name}</Option>
+                <Option value={d.dataSetPath}>{d.name}</Option>
               ))
             }
           </Select>
@@ -334,7 +340,7 @@ const ModelTraining = (props) => {
           {...commonLayout}
           rules={[{ required: true }]}
         >
-          <Select style={{ width: '300px' }} >
+          <Select style={{ width: '300px' }} onClick={handleClickDeviceNum} >
             {
               availableDeviceNumList.map(avail => (
                 <Option value={avail}>{avail}</Option>

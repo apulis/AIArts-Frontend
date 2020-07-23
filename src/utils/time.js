@@ -87,4 +87,12 @@ export const toMoment = value => {
   return tempDate
 }
 
+/**
+ * 格式化duration
+ * @param {Number|String|Date} duration
+ */
+export const formatDuration = duration => {
+  return `${duration.hours()}:${duration.minutes()}:${duration.seconds()}`;
+}
+
 export default moment
