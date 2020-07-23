@@ -117,6 +117,10 @@ export default [
                 // icon: 'CodepenOutlined',           
                 component: './ModelMngt/ModelEvaluation'
               },             
+              {
+                path: '/ModelManagement/CreatePretrained',
+                component: './ModelMngt/CreatePretrained'
+              },
             ],            
           },
           {
