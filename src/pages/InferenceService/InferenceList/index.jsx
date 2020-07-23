@@ -21,7 +21,7 @@ const InferenceList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
-  const [formValues, setFormValues] = useState({});  
+  const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
 
   const statusList = [
