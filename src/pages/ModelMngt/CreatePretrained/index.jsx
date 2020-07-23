@@ -1,5 +1,5 @@
 import { Link, history } from 'umi';
-import { message, Modal, Form, Input, Button, Card, PageHeader, Tooltip, Radio, Upload } from 'antd';
+import { message, Modal, Form, Input, Button, Card, PageHeader, Tooltip, Select, Upload } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'umi';
@@ -11,14 +11,25 @@ import { fetchAvilableResource } from '@/services/modelTraning';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
+const { Option } = Select;
 
-const CreateModel = props => {
+const CreatePretrained = props => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
   const [sourceType, setSourceType] = useState(1);
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [fileList, setFileList] = useState([]);
+
+  const usages = [
+    { key: 'ImageClassification',label: '图像分类' }, 
+    { key: 'ObjectDetection',label: '物体检测' }, 
+  ];
+
+  const engineTypes = [
+    { key: '1',label: 'tensorflow , tf-1.8.0-py2.7' }, 
+    { key: '2',label: 'tensorflow , tf-1.8.0-py2.7' }, 
+  ];
 
   useEffect(() => {
     getAvailableResource();
@@ -129,8 +140,8 @@ const CreateModel = props => {
     <>
       <PageHeader
         ghost={false}
-        onBack={() => history.push('/ModelManagement/MyModels')}
-        title="创建模型"
+        onBack={() => history.push('/ModelManagement/PretrainedModels')}
+        title="录入预置模型"
       >
         <div
           style={{
@@ -146,78 +157,71 @@ const CreateModel = props => {
             <Form.Item
               {...layout}
               name="name"
-              label="名称"
+              label="模型名称"
               rules={[{ required: true, message: '名称不能为空!' }]}
             >
               <Input placeholder="请输入模型名称" />
             </Form.Item>
             <Form.Item
-              {...layout}     
-              name="description"
-              label="描述"
-              rules={[{ max: 256 }]}
-            >
-              <TextArea rows={4} placeholder="请输入描述信息" />
-            </Form.Item>          
-            <Form.Item
               {...layout}
-              label="模型文件" 
-              name="sourceType"
-              rules={[{ required: true }]} 
+              name="usage"
+              label="模型用途"
+              rules={[{ required: true, message: '用途不能为空!' }]}
             >
-              <Radio.Group onChange={e => setSourceType(e.target.value)}>
-                <Radio value={1}>选择模型文件</Radio>
-                <Radio value={2}>上传模型文件</Radio>
-              </Radio.Group>
+              <Select>
+                {
+                  usages.map(u => (
+                    <Option key={u.key} value={u.key}>{u.label}</Option>
+                  ))
+                }
+              </Select>
             </Form.Item>
-            {sourceType == 1 && <Form.Item
-                {...layout}
-                label="训练作业"
-                required
-              >
-                <Form.Item
-                  name="job"
-                  rules={[{ required: true, message: '训练作业不能为空!' }]}
-                  style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}              
-                >
-                  <Input placeholder="请选择训练作业名称" disabled/>
-                </Form.Item>
-                <Form.Item
-                  style={{ display: 'inline-block', width: 'calc(10% - 4px)', margin: '0 0 0 8px' }}
-                >
-                  <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
-                </Form.Item>
-            </Form.Item>}       
-            {sourceType == 2 && <Form.Item
-              labelCol={{ span: 3 }}
-              wrapperCol={{ span: 14 }}
-              label="上传文件"
-              name="file"
-              rules={[{ required: true, message: '请上传文件！' }]}
-              valuePropName="file"
+            <Form.Item
+              {...layout} 
+              label="引擎类型"
+              name="engineType" 
+              rules={[{ required: true, message: '请选择引擎类型' }]} 
             >
-              <Dragger {...uploadProps}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">请点击或拖入文件上传</p>
-                <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件，且最大不能超过2GB）</p>
-              </Dragger>
-            </Form.Item>}
+              <Select>
+                {
+                  engineTypes.map(type => (
+                    <Option key={type.key} value={type.key}>{type.label}</Option>
+                  ))
+                }
+              </Select>
+            </Form.Item>
             <Form.Item
               {...layout}
-              name="path"
-              label="模型参数文件"
-              rules={[{ required: true, message: '模型参数文件不能为空!' }]}
+              name="precision"
+              label="模型精度"
+              rules={[{ required: true, message: '模型精度为空!' }]}
             >
-              <Input addonBefore={codePathPrefix} placeholder="请输入模型参数文件" />
-            </Form.Item>            
+              <Input placeholder="请输入模型精度" />
+            </Form.Item>                     
             <Form.Item
-                name="jobId"
-                hidden            
-              >
-                <Input type="hidden"/>
-              </Form.Item>          
+              {...layout}
+              name="size"
+              label="模型大小"
+              rules={[{ required: true, message: '模型大小不能为空!' }]}
+            >
+              <Input placeholder="请输入模型大小" />
+            </Form.Item>                     
+            <Form.Item
+              {...layout}
+              name="dataset"
+              label="训练数据集"
+              rules={[{ required: true, message: '训练数据集不能为空!' }]}
+            >
+              <Input placeholder="请输入训练数据集" />
+            </Form.Item>                     
+            <Form.Item
+              {...layout}
+              name="dataFormat"
+              label="数据格式"
+              rules={[{ required: true, message: '数据格式不能为空!' }]}
+            >
+              <Input placeholder="请输入数据格式" />
+            </Form.Item>                     
             <Form.Item
               style={{ float: 'right' }}
             >
@@ -226,7 +230,7 @@ const CreateModel = props => {
           </Form>
         </div>
       </PageHeader>
-      {/* 选择训练作业弹框 */}
+      {/* 选择训练数据集弹框 */}
       {
         visible && <ModalForm
         // current={current}
@@ -239,4 +243,4 @@ const CreateModel = props => {
   );
 };
 
-export default CreateModel;
+export default CreatePretrained;

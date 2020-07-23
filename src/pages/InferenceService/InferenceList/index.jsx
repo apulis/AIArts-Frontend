@@ -1,5 +1,5 @@
 import { Link, history } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stopInference } from './services';
@@ -8,6 +8,9 @@ import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
+import { formatDuration } from '@/utils/time';
+
+const { Option } = Select;
 
 const InferenceList = props => {
   const {
@@ -18,19 +21,27 @@ const InferenceList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    handleRefresh();
+  const statusList = [
+    { en: 'all', cn: '全部' },
+    { en: 'unapproved', cn: '未批准'},
+    { en: 'queued', cn: '队列中'},
+    { en: 'scheduling', cn: '调度中'},
+    { en: 'running', cn: '运行中'},
+    { en: 'finished', cn: '已完成'},
+    { en: 'failed', cn: '已失败'},
+    { en: 'pausing', cn: '暂停中'},
+    { en: 'paused', cn: '已暂停'},
+    { en: 'killing', cn: '关闭中'},
+    { en: 'killed', cn: '已关闭'},
+    { en: 'error', cn: '错误'},
+  ]
 
-    // let timer = setInterval(() => {
-    //   handleRefresh();
-    // }, REFRESH_INTERVAL);
-    
-    // return () => {
-    //   clearInterval(timer)
-    // }    
-  }, [pageParams]);
+  useEffect(() => {
+    handleSearch();
+  }, [pageParams, formValues]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -81,7 +92,7 @@ const InferenceList = props => {
       // dataIndex: 'runDuration',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => moment.duration(Date.now()-item.jobTime)
+      render: (text, item) => formatDuration(moment.duration(Date.now()-item.jobTime))
     },
     {
       title: '服务地址',
@@ -102,11 +113,10 @@ const InferenceList = props => {
       width: 120,
       render: (item) => {
         return (
-          <Space size="middle">
+          <>
             <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled(item)}>停止</Button>
             <Button type="link" onClick={() => deleteJob(item)}>删除</Button>
-            {/* <a onClick={() => deleteJob(item)}>删除</a> */}
-          </Space>
+          </>
         );
       },
     },
@@ -119,6 +129,7 @@ const InferenceList = props => {
 
   const onReset = () => {
     form.resetFields();
+    setFormValues({status: 'all', name:''});
   };
   const handleCancel = () => {
     setVisible(false);
@@ -134,16 +145,36 @@ const InferenceList = props => {
   };
 
   const onFinish = values => {
-    console.log(values.jobName);
+    let queryClauses = {};
+
+    if (values.jobName) {
+      queryClauses.name = values.jobName;
+    }
+
+    if (values.status) {
+      queryClauses.status = values.status;
+    }
+
+    setFormValues({...formValues, ...queryClauses});
   };
 
-  const handleRefresh = () => {
+  const handleSearch = () => {
+    const params = {
+      pageNum: pageParams.pageNum,
+      pageSize: pageParams.pageSize,
+    };
+
+    if (formValues.status && formValues.status !== 'all') {
+      params.status = formValues.status;
+    }
+
+    if (formValues.name) {
+      params.name = formValues.name;
+    }
+
     dispatch({
       type: 'inferenceList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
-      },
+      payload: params,
     });
   };
 
@@ -161,7 +192,7 @@ const InferenceList = props => {
       const {code, msg, data} = await stopInference(params);
       if(code === 0){
         message.success(`Job成功停止！`);
-        handleRefresh();
+        handleSearch();
       }else{
         message.error(`Job停止错误：${msg}。`);
       }
@@ -181,6 +212,10 @@ const InferenceList = props => {
 
   const CreateJob = (item) => {
     history.push('/Inference/submit')
+  };
+
+  const handleStatusChange = (status) => {
+
   };
 
   return (
@@ -205,7 +240,19 @@ const InferenceList = props => {
               layout='inline'
               form={form}
               onFinish={onFinish}
+              initialValues={{status: 'all'}}
             >
+              <Form.Item
+                name="status"
+              >
+                <Select style={{ width: 180 }} onChange={handleStatusChange}>
+                  {
+                    statusList.map((item) => (
+                      <Option key= {item.en} value={item.en}>{item.cn}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>              
               <Form.Item
                 name="jobName" 
                 label="作业名称"
@@ -219,7 +266,7 @@ const InferenceList = props => {
                 <Button type="primary" htmlType="submit">查询</Button>
               </Form.Item>
               <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
               </Form.Item>
             </Form>
           </div>            
