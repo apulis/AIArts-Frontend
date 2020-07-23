@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Link } from 'umi';
 import { Table, Space, Button, Row, Col, Input,message } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons';
+import { SyncOutlined } from '@ant-design/icons';
 import { PAGEPARAMS } from '@/utils/const';
 import { getCodes,deleteCode,getJupyterUrl} from '../service.js';
 import moment from 'moment';
@@ -161,7 +161,7 @@ const CodeList = (props) => {
               style={{ width: 200 }}
             />
             <span>
-              <Button onClick={() => handleFresh()} icon={<ReloadOutlined />} />
+              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} />
             </span>
           </div>
         </Col>

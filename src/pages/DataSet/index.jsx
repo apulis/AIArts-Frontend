@@ -7,10 +7,11 @@ import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { confirm } = Modal;
+const { Search } = Input;
 
 const DataSetList = () => {
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
@@ -153,22 +154,28 @@ const DataSetList = () => {
 
   return (
     <PageHeaderWrapper>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
-      <Table
-        columns={columns}
-        dataSource={dataSets.data}
-        rowKey={r => r.id}
-        pagination={{
-          total: dataSets.total,
-          showQuickJumper: true,
-          showTotal: total => `总共 ${total} 条`,
-          showSizeChanger: true,
-          onChange: pageParamsChange,
-          onShowSizeChange: pageParamsChange,
-          current: pageParams.pageNum,
-          pageSize: pageParams.pageSize
-        }}
-      />
+      <div className={styles.datasetWrap}>
+        <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
+        <div className={styles.searchWrap}>
+          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={value => handleSearch(value)} />
+          <Button onClick={() => handleFresh()} icon={<SyncOutlined />} />
+        </div>
+        <Table
+          columns={columns}
+          dataSource={dataSets.data}
+          rowKey={r => r.id}
+          pagination={{
+            total: dataSets.total,
+            showQuickJumper: true,
+            showTotal: total => `总共 ${total} 条`,
+            showSizeChanger: true,
+            onChange: pageParamsChange,
+            onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize
+          }}
+        />
+      </div>
       {modalFlag && (
         <Modal
           title={`${modalType ? '编辑' : '新增'} 数据集`}
