@@ -143,7 +143,23 @@ const InferenceList = props => {
   };
 
   const onFinish = values => {
-    console.log(values.jobName);
+    const params = {
+      pageNum: pageParams.pageNum,
+      pageSize: pageParams.pageSize,
+    };
+
+    if (values.jobName) {
+      params.name = values.jobName;
+    }
+
+    if (values.status && values.status !== 'all') {
+      params.status = values.status;
+    }
+
+    dispatch({
+      type: 'inferenceList/fetch',
+      payload: params,
+    });
   };
 
   const handleRefresh = () => {
