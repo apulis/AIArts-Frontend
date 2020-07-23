@@ -41,6 +41,7 @@ const List = () => {
   const searchList = (s) => {
     if (!s) {
       setTrainingWorkList(totalTrainingWorkList);
+      
     }
     const searchResult = totalTrainingWorkList.filter(t => {
       if (t.name.includes(s)) {
