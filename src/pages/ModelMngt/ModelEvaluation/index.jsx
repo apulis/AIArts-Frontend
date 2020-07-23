@@ -222,7 +222,7 @@ const ModelEvaluation = props => {
           >
             <Form.Item name="engineType" 
               rules={[{ required: true }]}
-              style={{ display: 'inline-block', width: 'calc(50% - 4px)' }}
+              style={{ display: 'inline-block', width: 'calc(35% - 4px)' }}
             >
               <Select
                 onChange={handleEngineTypeChange}
@@ -236,7 +236,7 @@ const ModelEvaluation = props => {
             </Form.Item>
             <Form.Item name="engine" 
               rules={[{ required: true }]}
-              style={{ display: 'inline-block', width: 'calc(50% - 4px)', marginLeft: '8px' }}
+              style={{ display: 'inline-block', width: 'calc(65% - 4px)', marginLeft: '8px' }}
             >
               <Select
               >
