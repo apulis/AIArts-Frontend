@@ -143,7 +143,8 @@ const InferenceDetail = () => {
         <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.framework}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.jobId}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.jobTime).format('YYYY-MM-DD HH:mm')}</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">{jobDetail.jobParams?.gpuType}</Descriptions.Item>
+        { jobDetail.jobParams?.device && <Descriptions.Item label="设备类型">{jobDetail.jobParams?.device}</Descriptions.Item> }
+        { jobDetail.jobParams?.gpuType && <Descriptions.Item label="GPU 类型">{jobDetail.jobParams?.gpuType }</Descriptions.Item> }
         <Descriptions.Item label="使用模型">{jobDetail.jobParams?.model_base_path}</Descriptions.Item>
         <Descriptions.Item label="计算节点个数">{jobDetail.jobParams?.resourcegpu}</Descriptions.Item>
         {/* <Descriptions.Item label="作业参数"></Descriptions.Item> */}

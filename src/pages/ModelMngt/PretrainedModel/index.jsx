@@ -1,5 +1,5 @@
 import { history } from 'umi'
-import { Table, Form, Input, Button, Card, Row, Col, Descriptions, Popover } from 'antd';
+import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS } from '@/utils/const';
@@ -7,6 +7,28 @@ import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
+
+// mock DataSource
+const genList = (current, pageSize) => {
+  const tableListDataSource = [];
+
+  for (let i = 0; i < pageSize; i += 1) {
+    const index = (current - 1) * 10 + i;
+    tableListDataSource.push({
+      id: index,
+      name: `model_00${index}`,
+      use: `图像分类`,
+      engineType: `tensorflow , tf-1.8.0-py2.7`,
+      precision: `25.6%`,
+      size: '157.79MB',
+      createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+
+  return tableListDataSource;
+};
+
+const mockDataSource = genList(1, 50);
 
 const ExpandDetails = (item) => {
   // 模拟数据
@@ -30,17 +52,17 @@ const ExpandDetails = (item) => {
     </div>
   );
 
+  const argsSuffix = item.arguments.length > 1 ? '...' : '';
+
   return (
     <Descriptions>
       <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
       <Descriptions.Item label="数据格式">{item.format}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {item.arguments.map(a => {
-            return (
-              <div>{a.key + '=' + a.value + '; '}</div>
-            );
-          })}
+          {item.arguments.length > 0 && 
+            <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
+          }
         </Popover>
       </Descriptions.Item>
       <Descriptions.Item label="引擎类型">{item.engineType}</Descriptions.Item>
@@ -164,7 +186,7 @@ const PretrainedModelList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <Button type="default" onClick={addPretrainedModel}>录入模型</Button>
+          {/* <Button type="default" onClick={addPretrainedModel}>录入模型</Button> */}
           <div
             style={{
               float: "right",
@@ -195,7 +217,8 @@ const PretrainedModelList = props => {
         </div>
         <Table
           columns={columns}
-          dataSource={data.list}
+          // dataSource={data.list}
+          dataSource={mockDataSource}
           rowKey='id'
           pagination={{
             total: data.pagination.total,
