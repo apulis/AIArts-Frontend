@@ -18,7 +18,7 @@ export async function fetchTrainingList({pageNum, pageSize, status, search}) {
       pageNum: pageNum,
       pageSize: pageSize,
       status: status || 'all',
-      search: search || undefined,
+      searchWord: search || undefined,
     }
   })
 }
