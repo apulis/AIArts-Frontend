@@ -6,6 +6,8 @@ import { getJobStatus } from '@/utils/utils';
 import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { set } from 'numeral';
+import { fetch } from 'umi-request';
 
 const { Search } = Input;
 
@@ -13,10 +15,16 @@ const List = () => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [totalTrainingWorkList, setTotalTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [total, setTotal] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNum, setPageNum] = useState(1)
   const getTrainingList = async () => {
-    const res = await fetchTrainingList();
+    const res = await fetchTrainingList({pageNum, pageSize, search});
     if (res.code === 0) {
       const trainings = (res.data && res.data.Trainings) || [];
+      const total = res.data?.total;
+      setTotal(total);
       setTotalTrainingWorkList(trainings);
       setTrainingWorkList(trainings)
       setTableLoading(false)
@@ -31,24 +39,22 @@ const List = () => {
     //   clearInterval(timer)
     // }
   }, [])
+  const onTableChange = (pagination) => {
+    console.log('pagination', pagination)
+  }
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
       message.success('已成功操作');
-      getTrainingList();
+      getTrainingList({ pageNum, pageSize, search });
     }
   }
-  const searchList = (s) => {
-    if (!s) {
-      setTrainingWorkList(totalTrainingWorkList);
-      
+  const searchList = async (s) => {
+    setSearch(s);
+    const res = await fetchTrainingList({ pageNum, pageSize, search: s });
+    if (res.code === 0) {
+      setTrainingWorkList(res.data.Trainings);
     }
-    const searchResult = totalTrainingWorkList.filter(t => {
-      if (t.name.includes(s)) {
-        return t;
-      }
-    })
-    setTrainingWorkList(searchResult);
   }
   const columns = [
     {
@@ -113,7 +119,20 @@ const List = () => {
         <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} />
         <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
       </div>
-      <Table loading={tableLoading} style={{ marginTop: '30px' }} columns={columns} dataSource={trainingWorkList} />
+      <Table
+        loading={tableLoading}
+        style={{ marginTop: '30px' }}
+        columns={columns}
+        dataSource={trainingWorkList}
+        onChange={onTableChange}
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          total: total,
+          current: pageNum,
+          pageSize: pageSize,
+        }}
+      />
       </Card>
     </PageHeaderWrapper >
   )
