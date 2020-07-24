@@ -57,6 +57,7 @@ const ModelTraining = (props) => {
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);  
   const { validateFields, getFieldValue, setFieldsValue } = form;
+  const [distributedJob, setDistributedJob] = useState(false);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
 
   const getAvailableResource = async () => {
@@ -208,9 +209,14 @@ const ModelTraining = (props) => {
   };
 
   const commonLayout = {
-    labelCol: { span: 3 },
+    labelCol: { span: 4 },
     wrapperCol: { span: 8 }
   };
+
+  const handleDistributedJob = (type) => {
+    setDistributedJob(type);
+  }
+
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
@@ -254,7 +260,7 @@ const ModelTraining = (props) => {
         <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={editDisable ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>
           <Input style={{ width: 300 }} placeholder={editDisable ? "请输入参数配置名称" : "请输入作业名称"} disabled={editDisable} />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
+        <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
         </FormItem>
       </Form>
@@ -277,19 +283,19 @@ const ModelTraining = (props) => {
           </Select>
         </FormItem>
         <FormItem
-          labelCol={{ span: 3 }}
+          labelCol={{ span: 4 }}
           name="codePath"
           label="代码目录"
         >
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
         </FormItem>
-        <FormItem labelCol={{ span: 3 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
+        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 3 }} label="输出路径" style={{ marginTop: '50px' }}>
+        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 3 }} label="训练数据集">
+        <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 4 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
           <Select
             style={{ width: '300px' }}
@@ -301,7 +307,7 @@ const ModelTraining = (props) => {
             }
           </Select>
         </FormItem>
-        <FormItem label="运行参数" labelCol={{ span: 3 }} >
+        <FormItem label="运行参数" labelCol={{ span: 4 }} >
           {
             runningParams.map((param, index) => {
               return (
@@ -334,8 +340,14 @@ const ModelTraining = (props) => {
             }
           </Select>
         </FormItem>
+        <FormItem label="是否分布式训练" name="distributed" {...commonLayout} rules={[{required: true}]}>
+          <Select style={{width: '300px'}} defaultValue={distributedJob} onChange={handleDistributedJob}>
+            <Option value={true}>是</Option>
+            <Option value={false}>否</Option>
+          </Select>
+        </FormItem>
         <FormItem
-          label="设备数量"
+          label={ distributedJob ? "每个节点设备数量": "设备数量"}
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}
