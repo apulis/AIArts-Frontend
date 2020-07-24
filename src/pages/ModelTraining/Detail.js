@@ -7,7 +7,7 @@ import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
 
-import { fetchTrainingDetail, removeTrainings, fetchTrainingLog } from '@/services/modelTraning';
+import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
 
@@ -69,8 +69,17 @@ const Detail = () => {
 
   const saveTrainingDetail = async () => {
     const values = await validateFields(['name', 'desc', 'scope']);
-    console.log('values', values)
-    //
+    const submitData = {};
+    submitData.scope = values.scope;
+    submitData.jobType = 'artsTraining';
+    submitData.templateData = {};
+    submitData.templateData = Object.assign({}, jobDetail, values);
+    delete submitData.templateData.id;
+    console.log('submitData', submitData)
+    const res = await saveTrainingParams(submitData);
+    if (res.code === 0) {
+      setModalVisible(false);
+    }
   }
 
 
@@ -149,7 +158,7 @@ const Detail = () => {
               {...commonLayout}
               name="jobType"
               label="类型"
-              initialValue="训练"
+              initialValue="模型训练"
               rules={[{ required: true }]}
             >
               <Input disabled />
@@ -176,12 +185,12 @@ const Detail = () => {
               name="scope"
               label="是否为公开模板"
               rules={[{ required: true }]}
-              initialValue={0}
+              initialValue={2}
             >
               <Radio.Group
                 options={[
                   {value: 1, label: '是'},
-                  {value: 0, label: '否'}
+                  {value: 2, label: '否'}
                 ]}
               >
 

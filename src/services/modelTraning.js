@@ -55,3 +55,10 @@ export async function removeTemplate(id) {
     method: 'DELETE'
   });
 }
+
+export async function saveTrainingParams(data) {
+  return await request('/templates', {
+    method: 'POST',
+    data
+  })
+}

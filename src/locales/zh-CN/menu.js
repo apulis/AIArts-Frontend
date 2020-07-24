@@ -18,6 +18,7 @@ export default {
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
   'menu.codeDevelopment': '代码开发',
+  'menu.visualOperation': '可视化运维',
   'menu.modelManagement': '模型管理',
   'menu.modelManagement.myModels': '我的模型',
   'menu.modelManagement.pretraindedModels': '预置模型',
@@ -25,5 +26,6 @@ export default {
   'menu.inferenceService': '推理服务',
   'menu.inferenceService.list': '推理服务列表',
   'menu.modelTraining': '模型训练',
-  'menu.resourceMonitoring': '资源监控'
+  'menu.resourceMonitoring': '资源监控',
+  'menu.edgeInference': '边缘推理'
 };
