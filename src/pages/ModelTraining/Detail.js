@@ -69,10 +69,13 @@ const Detail = () => {
 
   const saveTrainingDetail = async () => {
     const values = await validateFields(['name', 'desc', 'scope']);
-    const submitData = Object.assign({}, jobDetail, values);
+    const submitData = {};
+    submitData.scope = values.scope;
     submitData.jobType = 'artsTraining';
+    submitData.templateData = {};
+    submitData.templateData = Object.assign({}, jobDetail, values);
+    delete submitData.templateData.id;
     console.log('submitData', submitData)
-    delete submitData.id;
     const res = await saveTrainingParams(submitData);
     if (res.code === 0) {
       setModalVisible(false);
@@ -182,12 +185,12 @@ const Detail = () => {
               name="scope"
               label="是否为公开模板"
               rules={[{ required: true }]}
-              initialValue={0}
+              initialValue={2}
             >
               <Radio.Group
                 options={[
                   {value: 1, label: '是'},
-                  {value: 0, label: '否'}
+                  {value: 2, label: '否'}
                 ]}
               >
 
