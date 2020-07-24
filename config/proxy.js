@@ -8,9 +8,9 @@
 export default {
   dev: {
     '/ai_arts/api/': {
-      // target: 'http://apulis-test.sigsus1.cn:51443',
+      // target: 'http://10.31.3.146:8080/',
       // target: 'http://sandbox2-master.sigsus.cn:56511/',
-      target: 'http://10.31.3.105:9000/',
+      target: 'http://219.133.167.42:52009/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',

@@ -162,12 +162,12 @@ export default [
             component: './ResourceMonitoring',
             authority: ['AI_ARTS_ALL'],
           },
-          // {
-          //   path: '/EdgeInference',
-          //   name: 'edgeInference',
-          //   icon: 'DashboardOutlined',
-          //   component: './EdgeInference'
-          // },
+          {
+            path: '/EdgeInference',
+            name: 'edgeInference',
+            icon: 'ApartmentOutlined',
+            component: './EdgeInference'
+          },
           {
             path: '/',
             redirect: '/CodeList',
