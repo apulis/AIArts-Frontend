@@ -7,10 +7,11 @@ import styles from './index.less';
 import { Link } from 'umi';
 import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
 const { confirm } = Modal;
+const { Search } = Input;
 
 const DataSetList = () => {
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
@@ -20,24 +21,27 @@ const DataSetList = () => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [pathId, setPathId] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState('');
   const addModalFormRef = useRef();
 
   useEffect(() => {
     getData();
-  }, [pageParams]);
+  }, [pageParams, name]);
 
-  const getData = async () => {
+  const getData = async (text) => {
     setLoading(true);
-    const { code, data, msg } = await getDatasets(pageParams);
+    const { code, data, msg } = await getDatasets({ ...pageParams, name: name });
     if (code === 0 && data) {
       const { total, datasets } = data;
       setDataSets({
         data: datasets,
         total: total,
       });
+      text && message.success(text);
     } else {
-      msg && message.error(msg);
+      message.error(msg);
     }
     setLoading(false);
   };
@@ -49,14 +53,14 @@ const DataSetList = () => {
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = null, text = '';
-      const { sourceType, path, file } = values;
+      const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
         text = '编辑';
         res = await edit(editData.id, values);
       } else {
-        values.path = sourceType === 1 ? file.file.response.data.path : path;
-        delete values.file;
+        values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
+        delete values.fileLists;
         delete values.sourceType;
         text = '新增';
         res = await add(values);
@@ -103,20 +107,13 @@ const DataSetList = () => {
         return (
           <>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            <a style={{ margin: '0 16px' }} onClick={() => handleDownload(id)}>下载</a>
+            <a style={{ margin: '0 16px' }} onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}>下载</a>
             <a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>
           </>
         )
       },
     },
   ];
-
-  const handleDownload = async (id) => {
-    // const res = await download(id);
-    // let blob = new Blob([res], {type: "application/octet-stream"});
-    // const url = window.URL.createObjectURL(blob);
-    window.open(`/ai_arts/api/files/download/dataset/${id}`);
-  };
 
   const onEditClick = item => {
     setEditData(item); 
@@ -137,7 +134,7 @@ const DataSetList = () => {
           message.success('删除成功！');
           getData();
         } else {
-          msg && message.error(msg);
+          message.error(msg);
         }
       },
       onCancel() {}
@@ -146,6 +143,7 @@ const DataSetList = () => {
 
   const showModal = type => {
     setModalType(type);
+    !type && setPathId(new Date().valueOf());
     setModalFlag(true);
   }
 
@@ -153,22 +151,28 @@ const DataSetList = () => {
 
   return (
     <PageHeaderWrapper>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
-      <Table
-        columns={columns}
-        dataSource={dataSets.data}
-        rowKey={r => r.id}
-        pagination={{
-          total: dataSets.total,
-          showQuickJumper: true,
-          showTotal: total => `总共 ${total} 条`,
-          showSizeChanger: true,
-          onChange: pageParamsChange,
-          onShowSizeChange: pageParamsChange,
-          current: pageParams.pageNum,
-          pageSize: pageParams.pageSize
-        }}
-      />
+      <div className={styles.datasetWrap}>
+        <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
+        <div className={styles.searchWrap}>
+          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={v => setName(v)} />
+          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+        </div>
+        <Table
+          columns={columns}
+          dataSource={dataSets.data}
+          rowKey={r => r.id}
+          pagination={{
+            total: dataSets.total,
+            showQuickJumper: true,
+            showTotal: total => `总共 ${total} 条`,
+            showSizeChanger: true,
+            onChange: pageParamsChange,
+            onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize
+          }}
+        />
+      </div>
       {modalFlag && (
         <Modal
           title={`${modalType ? '编辑' : '新增'} 数据集`}
@@ -185,7 +189,13 @@ const DataSetList = () => {
             </Button>,
           ]}
         >
-          <AddModalForm ref={addModalFormRef} setBtn={setBtnDisabled} modalType={modalType} editData={editData}></AddModalForm>
+          <AddModalForm 
+            ref={addModalFormRef} 
+            setBtn={setBtnDisabled} 
+            modalType={modalType} 
+            editData={editData}
+            pathId={pathId}
+          />
         </Modal>
       )}
     </PageHeaderWrapper>

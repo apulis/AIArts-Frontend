@@ -7,7 +7,7 @@ import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
 
-import { fetchTrainingDetail, removeTrainings, fetchTrainingLog } from '@/services/modelTraning';
+import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
 
@@ -69,8 +69,14 @@ const Detail = () => {
 
   const saveTrainingDetail = async () => {
     const values = await validateFields(['name', 'desc', 'scope']);
-    console.log('values', values)
-    //
+    const submitData = Object.assign({}, jobDetail, values);
+    submitData.jobType = 'artsTraining';
+    console.log('submitData', submitData)
+    delete submitData.id;
+    const res = await saveTrainingParams(submitData);
+    if (res.code === 0) {
+      setModalVisible(false);
+    }
   }
 
 
@@ -149,7 +155,7 @@ const Detail = () => {
               {...commonLayout}
               name="jobType"
               label="类型"
-              initialValue="训练"
+              initialValue="模型训练"
               rules={[{ required: true }]}
             >
               <Input disabled />

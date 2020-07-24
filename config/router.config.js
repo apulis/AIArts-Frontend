@@ -177,6 +177,12 @@ export default [
             component: './VisualOperation'
           },                      
           {
+            path: '/EdgeInference',
+            name: 'edgeInference',
+            icon: 'ApartmentOutlined',
+            component: './EdgeInference'
+          },
+          {
             path: '/',
             redirect: '/CodeList',
             authority: ['AI_ARTS_ALL'],

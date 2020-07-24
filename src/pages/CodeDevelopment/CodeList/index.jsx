@@ -253,7 +253,7 @@ const CodeList = (props) => {
               style={{ width: 200 }}
             />
             <span>
-              <Button onClick={() => handleFresh()} icon={<ReloadOutlined />} />
+              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} />
             </span>
           </div>
         </Col>
