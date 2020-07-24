@@ -41,6 +41,13 @@ const List = () => {
   }, [])
   const onTableChange = (pagination) => {
     console.log('pagination', pagination)
+    const { current } = pagination;
+    fetchTrainingList({
+      pageNum: current,
+      pageSize,
+      search,
+    })
+    setPageNum(current);
   }
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
@@ -51,7 +58,7 @@ const List = () => {
   }
   const searchList = async (s) => {
     setSearch(s);
-    const res = await fetchTrainingList({ pageNum, pageSize, search: s });
+    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s });
     if (res.code === 0) {
       setTrainingWorkList(res.data.Trainings);
     }
