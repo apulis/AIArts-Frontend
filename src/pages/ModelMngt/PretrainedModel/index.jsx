@@ -8,6 +8,28 @@ import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
 
+// mock DataSource
+const genList = (current, pageSize) => {
+  const tableListDataSource = [];
+
+  for (let i = 0; i < pageSize; i += 1) {
+    const index = (current - 1) * 10 + i;
+    tableListDataSource.push({
+      id: index,
+      name: `model_00${index}`,
+      use: `图像分类`,
+      engineType: `tensorflow , tf-1.8.0-py2.7`,
+      precision: `25.6%`,
+      size: '157.79MB',
+      createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+    });
+  }
+
+  return tableListDataSource;
+};
+
+const mockDataSource = genList(1, 50);
+
 const ExpandDetails = (item) => {
   // 模拟数据
   item = {
@@ -195,7 +217,8 @@ const PretrainedModelList = props => {
         </div>
         <Table
           columns={columns}
-          dataSource={data.list}
+          // dataSource={data.list}
+          dataSource={mockDataSource}
           rowKey='id'
           pagination={{
             total: data.pagination.total,
