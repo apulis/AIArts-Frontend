@@ -1,5 +1,5 @@
 import { history } from 'umi'
-import { Table, Form, Input, Button, Card, Row, Col, Descriptions, Popover } from 'antd';
+import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS } from '@/utils/const';
@@ -36,11 +36,9 @@ const ExpandDetails = (item) => {
       <Descriptions.Item label="数据格式">{item.format}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {item.arguments.map(a => {
-            return (
-              <div>{a.key + '=' + a.value + '; '}</div>
-            );
-          })}
+          {item.arguments.length > 0 && 
+            <div>{item.arguments[0].key + '=' + item.arguments[0].value + '...'}</div>
+          }
         </Popover>
       </Descriptions.Item>
       <Descriptions.Item label="引擎类型">{item.engineType}</Descriptions.Item>
@@ -164,7 +162,7 @@ const PretrainedModelList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <Button type="default" onClick={addPretrainedModel}>录入模型</Button>
+          {/* <Button type="default" onClick={addPretrainedModel}>录入模型</Button> */}
           <div
             style={{
               float: "right",
