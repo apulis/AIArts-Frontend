@@ -168,6 +168,20 @@ export default [
             component: './ResourceMonitoring',
             authority: ['AI_ARTS_ALL'],
           },
+          // {
+          //   path: '/EdgeInference',
+          //   name: 'edgeInference',
+          //   icon: 'DashboardOutlined',
+          //   component: './EdgeInference'
+          // },
+          //   component: './ResourceMonitoring'
+          // },
+          {
+            path: '/VisualOperation',
+            name: 'visualOperation',
+            icon: 'EditOutlined',
+            component: './VisualOperation'
+          },                      
           {
             path: '/',
             redirect: '/CodeList',
