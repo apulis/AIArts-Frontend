@@ -146,6 +146,12 @@ export default [
             authority: ['AI_ARTS_ALL'],
           },
           {
+            path: '/EdgeInference',
+            name: 'edgeInference',
+            icon: 'ApartmentOutlined',
+            component: './EdgeInference'
+          },
+          {
             path: '/Inference/submit',
             component: './InferenceService/Submit',
             authority: ['AI_ARTS_ALL'],
@@ -161,12 +167,6 @@ export default [
             icon: 'DashboardOutlined',
             component: './ResourceMonitoring',
             authority: ['AI_ARTS_ALL'],
-          },
-          {
-            path: '/EdgeInference',
-            name: 'edgeInference',
-            icon: 'ApartmentOutlined',
-            component: './EdgeInference'
           },
           {
             path: '/',
