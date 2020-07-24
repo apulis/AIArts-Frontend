@@ -1,5 +1,5 @@
 import { history } from 'umi'
-import { Table, Form, Input, Button, Card, Row, Col } from 'antd';
+import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS } from '@/utils/const';
@@ -9,29 +9,43 @@ import { stringify } from 'querystring';
 import moment from 'moment';
 
 const ExpandDetails = (item) => {
+  // 模拟数据
+  item = {
+    dataset: 'ILSVRC-2012 (ImageNet-1k)',
+    format: '图像，256*256',
+    arguments: [
+      {
+        key: 'learning_rate',
+        value: 0.01123123123123
+      }
+    ],
+    engineType: 'tensorflow , tf-1.8.0-py2.7',
+    output: '--',
+  }
+  const argumentsContent = (
+    <div>
+      {item.arguments.map(a => {
+        return <p>{a.key + '=' + a.value}</p>;
+      })}
+    </div>
+  );
+
+  const argsSuffix = item.arguments.length > 1 ? '...' : '';
 
   return (
-    <div
-    style={{
-      padding: '12px 24px'
-    }}>
-      <Row gutter={16}>
-        <Col span={4}>训练数据集</Col>
-        <Col span={8}>ILSVRC-2012 (ImageNet-1k)</Col>
-        <Col span={4}>数据格式</Col>
-        <Col span={8}>图像，256*256</Col>
-      </Row>
-      <Row gutter={16}>
-        <Col span={4}>运行参数</Col>
-        <Col span={8}>learning_rate=0.01123123123123</Col>
-        <Col span={4}>引擎类型</Col>
-        <Col span={8}>tensorflow , tf-1.8.0-py2.7</Col>
-      </Row>
-      <Row gutter={16}>
-        <Col span={4}>模型输出</Col>
-        <Col span={8}>--</Col>
-      </Row>
-    </div>
+    <Descriptions>
+      <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
+      <Descriptions.Item label="数据格式">{item.format}</Descriptions.Item>
+      <Descriptions.Item label="运行参数">
+        <Popover content={argumentsContent}>
+          {item.arguments.length > 0 && 
+            <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
+          }
+        </Popover>
+      </Descriptions.Item>
+      <Descriptions.Item label="引擎类型">{item.engineType}</Descriptions.Item>
+      <Descriptions.Item label="模型输出">{item.output}</Descriptions.Item>
+    </Descriptions>    
   );
 }
 
@@ -150,7 +164,7 @@ const PretrainedModelList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <Button type="default" onClick={addPretrainedModel}>录入模型</Button>
+          {/* <Button type="default" onClick={addPretrainedModel}>录入模型</Button> */}
           <div
             style={{
               float: "right",
