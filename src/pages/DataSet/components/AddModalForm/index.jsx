@@ -7,51 +7,61 @@ const { Dragger } = Upload;
 
 const AddModalForm = (props, ref) => {
   const [form] = Form.useForm();
-  const { modalType, editData, setBtn } = props;
-  const [fileList, setFileList] = useState([]);
+  const { modalType, editData, setBtn, pathId } = props;
+  const [fileLists, setFileLists] = useState([]);
   const [sourceType, setSourceType] = useState(1);
   const [isPrivate, setIsPrivate] = useState(true);
-
   useImperativeHandle(ref, () => ({ 
     form: form
   }));
 
   const uploadProps = {
     name: 'data',
+    data: {
+      dir: pathId,
+      isPrivate: isPrivate
+    },
     multiple: true,
     action: '/ai_arts/api/files/upload/dataset',
     headers: {
-      Authorization: 'Bearer ' + window.localStorage.token,
+      Authorization: 'Bearer ' + window.localStorage.token
     },
     onChange(info) {
-      const { status } = info.file;
+      const { status, name } = info.file;
       setBtn(true);
       if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
+        setBtn(false);
+        form.setFieldsValue({ fileLists: info.fileList });
+        // console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        setFileList(info.fileList);
+        setFileLists(info.fileList);
         setBtn(false);
-        message.success(`${info.file.name}文件上传成功！`);
+        message.success(`${name}文件上传成功！`);
       } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败！`);
+        message.error(`${name} 文件上传失败！`);
         setBtn(false);
       }
     },
-    beforeUpload(file) {
-      const { type, size } = file;
+    beforeUpload(file, fileList) {
+      const { type, size, name } = file;
       // const isOverSize = size / 1024 / 1024 / 1024 > 2;
       return new Promise((resolve, reject) => {
-        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
-          resolve(file);
-        } else {
+        if (fileLists.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
+          message.warning(`不能上传相同的文件！`);
+          reject(file);
+        }
+        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
           message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
           reject(file);
         }
+        resolve(file);
       });
     },
     onRemove(file) {
-      if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
+      let newFileList = fileLists;
+      newFileList.splice(fileLists.findIndex(i => i.uid === file.uid), 1);
+      setFileLists(newFileList);
     }
   };
 
@@ -71,30 +81,32 @@ const AddModalForm = (props, ref) => {
       >
         <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
       </Form.Item>
-      <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
-        <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
-          <Radio value={true}>私有</Radio>
-          <Radio value={false}>公有</Radio>
-        </Radio.Group>
-      </Form.Item>
-      {!modalType && <Form.Item label="数据源" rules={[{ required: true }]} name="sourceType">
-        <Radio.Group onChange={e => setSourceType(e.target.value)}>
-          <Radio value={1}>网页上传新数据源</Radio>
-          <Radio value={2}>使用以其它方式上传的数据源</Radio>
-        </Radio.Group>
-      </Form.Item>}
+      {!modalType && <>
+        <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
+          <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
+            <Radio value={true}>私有</Radio>
+            <Radio value={false}>公有</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item label="数据源" rules={[{ required: true }]} name="sourceType">
+          <Radio.Group onChange={e => setSourceType(e.target.value)}>
+            <Radio value={1}>网页上传新数据源</Radio>
+            <Radio value={2}>使用以其它方式上传的数据源</Radio>
+          </Radio.Group>
+        </Form.Item>
+      </>}
       {!modalType && sourceType == 1 && <Form.Item
         label="上传文件"
-        name="file"
+        name="fileLists"
         rules={[{ required: true, message: '请上传文件！' }]}
-        valuePropName="file"
+        valuePropName="fileLists"
       >
         <Dragger {...uploadProps}>
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
           </p>
           <p className="ant-upload-text">请点击或拖入文件上传</p>
-          <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件，且最大不能超过2GB）</p>
+          <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）</p>
         </Dragger>
       </Form.Item>}
       {sourceType == 2 &&<Form.Item

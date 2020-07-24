@@ -21,6 +21,7 @@ const DataSetList = () => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
+  const [pathId, setPathId] = useState(0);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const addModalFormRef = useRef();
@@ -31,7 +32,7 @@ const DataSetList = () => {
 
   const getData = async (text) => {
     setLoading(true);
-    const { code, data, msg } = await getDatasets({ ...pageParams, name });
+    const { code, data, msg } = await getDatasets({ ...pageParams, name: name });
     if (code === 0 && data) {
       const { total, datasets } = data;
       setDataSets({
@@ -52,14 +53,14 @@ const DataSetList = () => {
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = null, text = '';
-      const { sourceType, path, file } = values;
+      const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
         text = '编辑';
         res = await edit(editData.id, values);
       } else {
-        values.path = sourceType === 1 ? file.file.response.data.path : path;
-        delete values.file;
+        values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
+        delete values.fileLists;
         delete values.sourceType;
         text = '新增';
         res = await add(values);
@@ -142,6 +143,7 @@ const DataSetList = () => {
 
   const showModal = type => {
     setModalType(type);
+    !type && setPathId(new Date().valueOf());
     setModalFlag(true);
   }
 
@@ -187,7 +189,13 @@ const DataSetList = () => {
             </Button>,
           ]}
         >
-          <AddModalForm ref={addModalFormRef} setBtn={setBtnDisabled} modalType={modalType} editData={editData}></AddModalForm>
+          <AddModalForm 
+            ref={addModalFormRef} 
+            setBtn={setBtnDisabled} 
+            modalType={modalType} 
+            editData={editData}
+            pathId={pathId}
+          />
         </Modal>
       )}
     </PageHeaderWrapper>
