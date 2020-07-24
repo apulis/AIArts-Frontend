@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Link } from 'umi';
-import { Table, Select,Space, Button, Row, Col, Input,message } from 'antd';
+import { Table, Select,Space, Button, Row, Col, Input,message,Modal } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { PAGEPARAMS } from '@/utils/const';
-import { getCodes,deleteCode,getJupyterUrl} from '../service.js';
+import { getCodes,deleteCode,getJupyterUrl,getCodeCount} from '../service.js';
 import moment from 'moment';
 import { displayName } from 'react-fittext';
+import {isEmptyString} from '../util.js'
+import UploadCode from './components/UploadCode'
 
 const CodeList = (props) => {
   const { Search } = Input;
@@ -63,18 +65,26 @@ const CodeList = (props) => {
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);// 页长
   const [statusSearchArr,setStatusSearchArr] = useState([])
-  useEffect(() => {// componentDidMount()
-    getTableData();
-  }, [pageParams])// pageParams改变触发的componentwillUpdate()
+  const [curStatus,setCurStatus] = useState('')
+  const [searchName,setSearchName] = useState('')
+  const [modalFlag, setModalFlag] = useState(false);
+  const [modalData,setModalData] = useState({})
   useEffect(()=>{
-    getSelectData()
+    renderStatusSelect()
   },[])
-  const getSelectData = async ()=>{
+  useEffect(() => {// componentDidMount()
+    renderTable();
+  }, [pageParams])// pageParams改变触发的componentwillUpdate()
+  
+  const renderStatusSelect = async ()=>{
     // todo
-    const arr = ['全部(30)','创建中(1)','创建失败(15)','排队中(6)','运行中(5)','停止中(0)','排队中(6)','运行中(5)','停止中(0)','排队中(6)','运行中(5)','停止中(0)']
-    setStatusSearchArr(arr)
+    const apiData = await apiGetCodeCount()
+    if(apiData){
+      setStatusSearchArr(apiData.counts)
+      setCurStatus(apiData.counts[0])
+    }
   }
-  const getTableData = async (success) => {
+  const renderTable = async (success) => {
     setLoading(true)
     const apiData = await apiGetCodes(pageParams)
     if(apiData){
@@ -88,8 +98,23 @@ const CodeList = (props) => {
     }
     setLoading(false);
   };
+  const apiGetCodeCount = async()=>{
+    const obj = await getCodeCount()
+    const {code,data,msg} = obj
+    if (code === 0) {
+      return data
+    } else {
+      message.error(msg);
+      return null
+    }
+  }
   const apiGetCodes = async (pageParams)=>{
-    const obj = await getCodes(pageParams);
+    const params = {...pageParams}
+    params['status'] = isEmptyString(curStatus)?'all':curStatus
+    if(!isEmptyString(searchName)){
+      params['searchName'] = searchName
+    }
+    const obj = await getCodes(params);
     const { code, data, msg } = obj
     if (code === 0) {
       return data
@@ -116,11 +141,36 @@ const CodeList = (props) => {
     const obj = await deleteCode(id)
     const { code,data, msg } = obj
     if (code === 0) {
-      getTableData();
+      renderTable();
       message.success('停止成功');
     } else {
       message.error(msg);
     }
+  }
+  const handleOpen = (item) => {
+    apiOpenJupyter(item.id)
+  }
+  const handleStop = (item) => {
+    const id = item.id
+    apiDeleteCode(item.id)
+  }
+  const handleSelectChange = (selectStatus)=>{
+    setCurStatus(selectStatus)
+    renderTable()
+  }
+  const handleSearch = async (searchName) => {
+    setSearchName(searchName)
+    renderTable()
+  }
+  const handleFresh = () => {
+    renderTable(()=>{message.success('刷新成功')})
+  }
+  const handlePageParamsChange = (pageNum, pageSize) => {
+    setPageParams({ pageNum, pageSize});
+  };
+  const handleOpenModal = (codeItem)=>{
+    setModalData(codeItem)
+    setModalFlag(true)
   }
   const columns = [
     {
@@ -165,38 +215,17 @@ const CodeList = (props) => {
     },
     {
       title: '操作',
-      render: (item) => {
+      render: (codeItem) => {
         return (
           <Space size="middle">
-            <a onClick={() => handleOpen(item)} disabled={!canOpenStatus.has(item.status)}>打开</a>
-            <a onClick={() => handleStop(item)} disabled={!canStopStatus.has(item.status)}>停止</a>
+            <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
+            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)}>停止</a>
+            <a onClick={() => handleOpenModal(codeItem)}>上传代码</a>
           </Space>
         );
       },
     },
   ];
-  const handleOpen = (item) => {
-    apiOpenJupyter(item.id)
-  }
-  const handleStop = (item) => {
-    const id = item.id
-    apiDeleteCode(item.id)
-  }
-  const handleSelectChange = (item)=>{
-    message.info(`select change: ${item}`)
-    // todo 切换表格数据，setData()
-  }
-  const handleSearch = (value) => {
-    // alert(`search:${value}`)
-    message.info('搜索功能，暂不支持')
-     // todo 切换表格数据，setData()
-  }
-  const handleFresh = () => {
-    getTableData(()=>{message.success('刷新成功')})
-  }
-  const onPageParamsChange = (pageNum, pageSize) => {
-    setPageParams({ pageNum, pageSize});
-  };
   return (
     <PageHeaderWrapper>
       <Row style={{marginBottom:"20px"}}>
@@ -210,7 +239,7 @@ const CodeList = (props) => {
         <Col span={12}>
           <div style={{ float: "right" }}>
             <div style={{width:'200px',display:'inline-block'}}>
-            <Select value={statusSearchArr[0] ? statusSearchArr[0] : ''}  style={{width:'calc(100% - 8px)',margin:'0 8px 0 0'}} onChange ={handleSelectChange}>
+            <Select value={curStatus} style={{width:'calc(100% - 8px)',margin:'0 8px 0 0'}} onChange ={(item)=>handleSelectChange(item)}>
               {
                 statusSearchArr.map((item) => (
                   <Option value={item}>{item}</Option>
@@ -238,10 +267,26 @@ const CodeList = (props) => {
           showTotal: (total) => `总共 ${total} 条`,
           showQuickJumper: true,
           showSizeChanger: true,
-          onChange: onPageParamsChange,
-          onShowSizeChange: onPageParamsChange,
+          onChange: handlePageParamsChange,
+          onShowSizeChange: handlePageParamsChange,
         }}
+        pageSize={false}
         loading={loading} />
+        {modalFlag && (
+        <Modal
+          title="上传代码"
+          visible={modalFlag}
+          onCancel={() => setModalFlag(false)}
+          destroyOnClose
+          maskClosable={false}
+          width={480}
+          footer={[
+            <Button onClick={() => setModalFlag(false)}>关闭</Button>,
+          ]}
+        >
+          <UploadCode modalData={modalData}></UploadCode>
+        </Modal>
+      )}
     </PageHeaderWrapper>
   )
 

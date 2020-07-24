@@ -102,7 +102,13 @@ export default [
             name: 'resourceMonitoring',
             icon: 'DashboardOutlined',
             component: './ResourceMonitoring'
-          },                    
+          },
+          {
+            path: '/VisualOperation',
+            name: 'visualOperation',
+            icon: 'EditOutlined',
+            component: './VisualOperation'
+          },                      
           {
             path: '/',
             redirect: '/CodeList',
