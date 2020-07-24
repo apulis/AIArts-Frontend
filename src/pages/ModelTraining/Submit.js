@@ -160,7 +160,7 @@ const ModelTraining = (props) => {
     values.startupFile = codePathPrefix + values.startupFile;
     values.outputPath = codePathPrefix + (values.outputPath || '');
     values.params = params;
-    if (values.deviceTotal) {
+    if (distributedJob) {
       values.deviceNum = values.deviceTotal;
     }
     const cancel = message.loading('正在提交');
