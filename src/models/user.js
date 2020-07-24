@@ -1,4 +1,5 @@
 import { getUserInfo } from '@/services/user';
+import { setAuthority } from '@/utils/authority';
 
 const UserModel = {
   namespace: 'user',
@@ -17,6 +18,7 @@ const UserModel = {
       const res = yield call(getUserInfo);
       const { code } = res;
       if (code === 0) {
+        setAuthority(res.permissionList)
         yield put({
           type: 'updateState',
           payload: {

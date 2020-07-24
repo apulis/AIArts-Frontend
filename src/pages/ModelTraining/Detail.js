@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Descriptions, Modal } from 'antd';
 import { useParams } from 'umi';
-import { message, Form, Input } from 'antd';
+import { message, Form, Input, Radio } from 'antd';
 import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
@@ -13,6 +13,14 @@ import { getJobStatus } from '@/utils/utils';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
+
+export const formatParams = (obj) => {
+  let result = ''
+  for (let key in obj) {
+    result += `${key}=${obj[key]} `;
+  }
+  return result
+}
 
 const Detail = () => {
   const params = useParams();
@@ -60,7 +68,8 @@ const Detail = () => {
   }
 
   const saveTrainingDetail = async () => {
-    const values = await validateFields();
+    const values = await validateFields(['name', 'desc', 'scope']);
+    console.log('values', values)
     //
   }
 
@@ -95,7 +104,7 @@ const Detail = () => {
         <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-        <Descriptions.Item label="运行参数">{jobDetail.params}</Descriptions.Item>
+        <Descriptions.Item label="运行参数">{jobDetail.params && formatParams(jobDetail.params)}</Descriptions.Item>
         <Descriptions.Item label="代码目录">{jobDetail.codePath}</Descriptions.Item>
         <Descriptions.Item label="计算节点个数">{jobDetail.deviceNum}</Descriptions.Item>
         <Descriptions.Item label="启动文件">{jobDetail.startupFile}</Descriptions.Item>
@@ -130,7 +139,7 @@ const Detail = () => {
           >
             <FormItem
               {...commonLayout}
-              name="configName"
+              name="name"
               label="配置名称"
               rules={[{ required: true }]}
             >
@@ -138,7 +147,7 @@ const Detail = () => {
             </FormItem>
             <FormItem
               {...commonLayout}
-              name="type"
+              name="jobType"
               label="类型"
               initialValue="训练"
               rules={[{ required: true }]}
@@ -161,6 +170,22 @@ const Detail = () => {
               rules={[{ required: true }]}
             >
               <Input.TextArea />
+            </FormItem>
+            <FormItem
+              {...commonLayout}
+              name="scope"
+              label="是否为公开模板"
+              rules={[{ required: true }]}
+              initialValue={0}
+            >
+              <Radio.Group
+                options={[
+                  {value: 1, label: '是'},
+                  {value: 0, label: '否'}
+                ]}
+              >
+
+              </Radio.Group>
             </FormItem>
 
           </Form>

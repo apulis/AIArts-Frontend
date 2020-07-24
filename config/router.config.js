@@ -26,22 +26,25 @@ export default [
         path: '/',
         component: '../layouts/BasicLayout',
         Routes: ['src/pages/Authorized'],
-        authority: ['admin', 'user'],
+        authority: ['AI_ARTS_ALL'],
         routes: [
           {
             path: '/CodeList',
             name: 'codeDevelopment',
             icon: 'EditOutlined',
+            authority: ['AI_ARTS_ALL'],
             component: './CodeDevelopment/CodeList',
           },
           {
             path: '/CodeCreate',
-            component: './CodeDevelopment/CodeCreate'
+            component: './CodeDevelopment/CodeCreate',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/dataManage',
             name: 'dataManage',
             icon: 'ReadOutlined',
+            authority: ['AI_ARTS_ALL'],
             routes: [
               {
                 path: '/dataManage/dataSet',
@@ -63,6 +66,7 @@ export default [
             path: '/model-training',
             name: 'modelTraining',
             icon: 'FireOutlined',
+            authority: ['AI_ARTS_ALL'],
             routes: [
               {
                 path: '/model-training/modelTraining',
@@ -92,11 +96,13 @@ export default [
             path: '/ModelList',
             path: '/model-training/:id/detail',
             component: './ModelTraining/Detail',
+            authority: ['AI_ARTS_ALL'],
           },          
           {
             path: '/ModelManagement',
             name: 'modelManagement',
             icon: 'CodepenOutlined',
+            authority: ['AI_ARTS_ALL'],
             // component: './ModelMngt/ModelList'
             routes: [
               {
@@ -117,11 +123,16 @@ export default [
                 // icon: 'CodepenOutlined',           
                 component: './ModelMngt/ModelEvaluation'
               },             
+              {
+                path: '/ModelManagement/CreatePretrained',
+                component: './ModelMngt/CreatePretrained'
+              },
             ],            
           },
           {
             path: '/ModelMngt/CreateModel',
-            component: './ModelMngt/CreateModel'
+            component: './ModelMngt/CreateModel',
+            authority: ['AI_ARTS_ALL'],
           },
           // {
           //   path: '/ModelManagement/CreateEvaluation',
@@ -131,21 +142,25 @@ export default [
             path: '/Inference/list',
             name: 'inferenceService',
             icon: 'BulbOutlined',
-            component: './InferenceService/InferenceList'
+            component: './InferenceService/InferenceList',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/Inference/submit',
             component: './InferenceService/Submit',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/Inference/:id/detail',
             component: './InferenceService/Detail',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/ResourceMonitoring',
             name: 'resourceMonitoring',
             icon: 'DashboardOutlined',
-            component: './ResourceMonitoring'
+            component: './ResourceMonitoring',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/EdgeInference',
@@ -156,6 +171,7 @@ export default [
           {
             path: '/',
             redirect: '/CodeList',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             component: '404',

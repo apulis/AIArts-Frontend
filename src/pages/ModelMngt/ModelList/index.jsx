@@ -23,7 +23,7 @@ const ModelList = props => {
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
-  // const [modelStatus, setModelStatus] = useState([]);
+  const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
 
   const statusList = [
@@ -33,16 +33,8 @@ const ModelList = props => {
   ]
 
   useEffect(() => {
-    handleRefresh();
-
-    // let timer = setInterval(() => {
-    //   handleRefresh();
-    // }, REFRESH_INTERVAL);
-    
-    // return () => {
-    //   clearInterval(timer)
-    // }    
-  }, [pageParams]);
+    handleSearch();
+  }, [pageParams, formValues]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -111,7 +103,7 @@ const ModelList = props => {
 
   const onReset = () => {
     form.resetFields();
-    handleRefresh();
+    setFormValues({status: 'all', name:''});
   };
   const handleCancel = () => {
     setVisible(false);
@@ -130,7 +122,7 @@ const ModelList = props => {
 
       if(error === null){
         message.success(`编辑成功`);
-        handleRefresh();
+        handleSearch();
       }else{
         msg && message.error(`编辑失败:${msg}`);        
       }
@@ -139,23 +131,36 @@ const ModelList = props => {
   };
 
   const onFinish = values => {
-    dispatch({
-      type: 'modelList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize,
-        name: values.modelName     
-      },
-    });    
+    let queryClauses = {};
+
+    if (values.modelName) {
+      queryClauses.name = values.modelName;
+    }
+
+    if (values.status) {
+      queryClauses.status = values.status;
+    }
+
+    setFormValues({...formValues, ...queryClauses});
   };
 
-  const handleRefresh = () => {
+  const handleSearch = () => {
+    const params = {
+      pageNum: pageParams.pageNum,
+      pageSize: pageParams.pageSize,
+    };
+
+    if (formValues.status && formValues.status !== 'all') {
+      params.status = formValues.status;
+    }
+
+    if (formValues.name) {
+      params.name = formValues.name;
+    }
+
     dispatch({
       type: 'modelList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
-      }
+      payload: params,
     });
   };
 
@@ -195,7 +200,7 @@ const ModelList = props => {
         }).then(({ error }) => {
           if (error === null) {
             message.success(`删除成功`);
-            handleRefresh();
+            handleSearch();
           } else {
             message.error(`删除失败${error.msg}` || `删除失败`);
           }
@@ -264,7 +269,7 @@ const ModelList = props => {
                   <Button type="primary" htmlType="submit">查询</Button>
                 </Form.Item>
                 <Form.Item>
-                  <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                  <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
                 </Form.Item>
               </Form>
             </div>            
