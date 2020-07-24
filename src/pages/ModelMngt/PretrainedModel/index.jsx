@@ -30,6 +30,8 @@ const ExpandDetails = (item) => {
     </div>
   );
 
+  const argsSuffix = item.arguments.length > 1 ? '...' : '';
+
   return (
     <Descriptions>
       <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
@@ -37,7 +39,7 @@ const ExpandDetails = (item) => {
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
           {item.arguments.length > 0 && 
-            <div>{item.arguments[0].key + '=' + item.arguments[0].value + '...'}</div>
+            <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
           }
         </Popover>
       </Descriptions.Item>
