@@ -168,6 +168,14 @@ export default [
           //   icon: 'DashboardOutlined',
           //   component: './EdgeInference'
           // },
+          //   component: './ResourceMonitoring'
+          // },
+          {
+            path: '/VisualOperation',
+            name: 'visualOperation',
+            icon: 'EditOutlined',
+            component: './VisualOperation'
+          },                      
           {
             path: '/',
             redirect: '/CodeList',

@@ -18,6 +18,7 @@ export default {
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
   'menu.codeDevelopment': '代码开发',
+  'menu.visualOperation': '可视化运维',
   'menu.modelManagement': '模型管理',
   'menu.modelManagement.myModels': '我的模型',
   'menu.modelManagement.pretraindedModels': '预置模型',
