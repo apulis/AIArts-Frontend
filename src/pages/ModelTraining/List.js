@@ -40,7 +40,6 @@ const List = () => {
     // }
   }, [])
   const onTableChange = (pagination) => {
-    console.log('pagination', pagination)
     const { current } = pagination;
     fetchTrainingList({
       pageNum: current,
