@@ -160,6 +160,9 @@ const ModelTraining = (props) => {
     values.startupFile = codePathPrefix + values.startupFile;
     values.outputPath = codePathPrefix + (values.outputPath || '');
     values.params = params;
+    if (values.deviceTotal) {
+      values.deviceNum = values.deviceTotal;
+    }
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     cancel();
@@ -243,7 +246,7 @@ const ModelTraining = (props) => {
     setCurrentSelectedPresetParamsId(current);
   }
 
-  const handleClickDeviceNum = (e) => {
+  const handleClickDeviceNum = (e) => {h
     if (!getFieldValue('deviceType')) {
       message.error('需要先选择设置类型');
     }
@@ -387,6 +390,7 @@ const ModelTraining = (props) => {
           distributedJob && <FormItem
             {...commonLayout}
             label="设备总数"
+            name="deviceTotal"
             disabled
           >
             <Input value={deviceTotal} style={{ width: '300px' }} disabled />
