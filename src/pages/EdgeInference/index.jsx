@@ -170,7 +170,7 @@ const EdgeInference = () => {
     <PageHeaderWrapper>
       <Button type="primary" onClick={openInference}>新建推理</Button>
       <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
-      <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>
+      {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
       <Table
         columns={columns}
         dataSource={jobs.data}
