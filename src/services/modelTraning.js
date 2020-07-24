@@ -1,5 +1,4 @@
 import request from '../utils/request';
-import { PAGEPARAMS } from '@/utils/const';
 
 export async function submitModelTraining(data) {
   return await request('/trainings', {
@@ -44,15 +43,15 @@ export async function removeTrainings(id) {
 }
 
 export async function fetchTemplates(params) {
-  return await request(`/Templates`, { params });
+  return await request(`/templates`, { params });
 }
 
 export async function fetchTemplateById(id) {
-  return await request(`Templates/${id}`);
+  return await request(`templates/${id}`);
 }
 
 export async function removeTemplate(id) {
-  return await request(`/Templates/${id}`, {
+  return await request(`/templates/${id}`, {
     method: 'DELETE'
   });
 }

@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, Button, Select, Row, Col, Descriptions, Card, Popover } from 'antd';
+import { Table, Input, Button, Select, Row, Col, Descriptions, Card, Popover, Form } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-
+import { fetchTemplates, fetchTemplateById, removeTemplate } from '../../../services/modelTraning';
+import { PAGEPARAMS } from '@/utils/const';
 
 const { Search } = Input;
 const { Option } = Select;
 
 const ParamsManage = () => {
+
+  const [tableLoading, setTableLoading] = useState(true);
+  const [formValues, setFormValues] = useState({});
+  const [form] = Form.useForm();
+  const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [paramList, setParamList] = useState([]);
+  const [total, setTotal] = useState(0);
+  const { getFieldsValue } = form;
+  const statusList = [
+    { en: '0', cn: '全部' },
+    { en: '1', cn: '共有' },
+    { en: '2', cn: '私有' },
+  ];
+
+  const pageParamsChange = (page, size) => {
+    setPageParams({ pageNum: page, pageSize: size });
+  };
 
   const ExpandDetail = (props) => {
     const record = props.record;
@@ -49,8 +67,11 @@ const ParamsManage = () => {
     history.push(`paramManage/${id}/editParam`);
   };
 
-  const handleDelete = (id) => {
-
+  const handleDelete = async (id) => {
+    const res = await removeTemplate(id);
+    if (res.code === 0) {
+      message.success('删除成功');
+    }
   };
 
   const omitText = (text, length) => {
@@ -90,80 +111,115 @@ const ParamsManage = () => {
       },
     },
   ];
-  const data = [
-    {
-      key: 1,
-      id: 1,
-      configName: 'train_job_config_001',
-      type: '训练',
-      engine: 'tensorflow , tf-1.8.0-py2.7',
-      createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
-      description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-      startupFile: '/start.sh',
-      deviceNum: 3,
-      datasetPath: 'train.csv',
-      arguments: [
-        {
-          key: 'learning_rate',
-          value: 0.01,
-          createTime: 4242142
-        },
-        {
-          key: 'epoch',
-          value: 20,
-          createTime: 4242442
-        },
-        {
-          key: 'dropout',
-          value: 0.5,
-          createTime: 4242443
-        },
-      ],
-      engine: 'tensorflow',
-      codePath: '/home/code/',
-      deviceType: '1核 | 16GB | 1*AI加速卡	'
-    },
-    {
-      key: 2,
-      id: 2,
-      configName: 'train_job_config_001',
-      type: '训练',
-      engine: 'tensorflow , tf-1.8.0-py2.7',
-      createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
-      description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-      startupFile: '/start.sh',
-      deviceNum: 3,
-      datasetPath: 'train.csv',
-      arguments: [
-        {
-          key: 'learning_rate',
-          value: 0.01,
-          createTime: 4242142
-        },
-        {
-          key: 'epoch',
-          value: 20,
-          createTime: 4242442
-        },
-        {
-          key: 'dropout',
-          value: 0.5,
-          createTime: 4242443
-        },
-      ], engine: 'tensorflow',
-      codePath: '/home/code/',
-      deviceType: '1核 | 16GB | 1*AI加速卡	'
-    },
-  ];
-  const searchList = () => {
+  // const data = [
+  //   {
+  //     key: 1,
+  //     id: 1,
+  //     configName: 'train_job_config_001',
+  //     type: '训练',
+  //     engine: 'tensorflow , tf-1.8.0-py2.7',
+  //     createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
+  //     description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+  //     startupFile: '/start.sh',
+  //     deviceNum: 3,
+  //     datasetPath: 'train.csv',
+  //     arguments: [
+  //       {
+  //         key: 'learning_rate',
+  //         value: 0.01,
+  //         createTime: 4242142
+  //       },
+  //       {
+  //         key: 'epoch',
+  //         value: 20,
+  //         createTime: 4242442
+  //       },
+  //       {
+  //         key: 'dropout',
+  //         value: 0.5,
+  //         createTime: 4242443
+  //       },
+  //     ],
+  //     engine: 'tensorflow',
+  //     codePath: '/home/code/',
+  //     deviceType: '1核 | 16GB | 1*AI加速卡	'
+  //   },
+  //   {
+  //     key: 2,
+  //     id: 2,
+  //     configName: 'train_job_config_001',
+  //     type: '训练',
+  //     engine: 'tensorflow , tf-1.8.0-py2.7',
+  //     createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
+  //     description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+  //     startupFile: '/start.sh',
+  //     deviceNum: 3,
+  //     datasetPath: 'train.csv',
+  //     arguments: [
+  //       {
+  //         key: 'learning_rate',
+  //         value: 0.01,
+  //         createTime: 4242142
+  //       },
+  //       {
+  //         key: 'epoch',
+  //         value: 20,
+  //         createTime: 4242442
+  //       },
+  //       {
+  //         key: 'dropout',
+  //         value: 0.5,
+  //         createTime: 4242443
+  //       },
+  //     ], engine: 'tensorflow',
+  //     codePath: '/home/code/',
+  //     deviceType: '1核 | 16GB | 1*AI加速卡	'
+  //   },
+  // ];
+
+  const onReset = () => {
+    form.resetFields();
+    setFormValues({ status: '0', name: '' });
+  };
+
+  const handleSearch = async () => {
+    const params = {
+      pageNum: pageParams.pageNum,
+      pageSize: pageParams.pageSize,
+    };
+
+
+    const value = getFieldsValue();
+
+    if (value.status && value.status !== '0') {
+      params.status = value.status;
+    }
+
+    if (value.name) {
+      params.name = value.name;
+    }
+
+    console.log(params);
+    const res = await getParamsList(params);
 
   };
-  const getParamsList = () => {
 
+  const getParamsList = async (params) => {
+    const res = await fetchTemplates(params);
+    setTableLoading(false);
+    if (res.code === 0) {
+      const paramList = (res.data && res.data.Trainings) || [];
+      setParamList(paramList);
+    }
   };
+
   const handleTypeChange = (value) => {
-    console.log(`selected ${value}`);
+
   };
+
+  useEffect(() => {
+    handleSearch();
+  }, [pageParams, formValues]);
 
   return (
     <PageHeaderWrapper>
@@ -172,23 +228,56 @@ const ParamsManage = () => {
           padding: '8'
         }}
       >
-        <Row gutter={[0, 16]} justify="end">
+        <Row gutter={[0, 16]} justify='end'>
           <Col>
-            <Select defaultValue="all" style={{ width: 200 }} onChange={handleTypeChange}>
-              <Option value="all">全部</Option>
-              <Option value="train">训练</Option>
-              <Option value="inference">推理</Option>
-            </Select>
-            <Search style={{ width: '200px', marginLeft: '20px' }} placeholder="输入参数配置名称" onSearch={searchList} />
-            <Button style={{ marginLeft: '20px' }} icon={<SyncOutlined />} onClick={() => getParamsList()}></Button>
+            <Form
+              layout='inline'
+              form={form}
+              initialValues={{ status: '0' }}
+            >
+              <Form.Item
+                name="status"
+                label="权限"
+              >
+                <Select style={{ width: 180 }} onChange={handleTypeChange}>
+                  {
+                    statusList.map((item) => (
+                      <Option key={item.en} value={item.en}>{item.cn}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="name"
+                label="参数配置名称"
+              >
+                <Search style={{ width: '200px' }} placeholder="输入参数配置名称" onSearch={handleSearch} />
+              </Form.Item>
+              <Form.Item>
+                <Button htmlType="button" onClick={onReset}>重置</Button>
+              </Form.Item>
+              <Form.Item>
+                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+              </Form.Item>
+            </Form>
           </Col>
           <Col span={24}>
             <Table
               columns={columns}
+              rowKey='id'
+              pagination={{
+                total: total,
+                showQuickJumper: true,
+                showTotal: (total) => `总共 ${total} 条`,
+                showSizeChanger: true,
+                onChange: pageParamsChange,
+                onShowSizeChange: pageParamsChange,
+              }}
               expandable={{
                 expandedRowRender: record => <ExpandDetail record={record} />
               }}
-              dataSource={data}
+              dataSource={paramList}
+              loading={tableLoading}
             />
           </Col>
         </Row>
