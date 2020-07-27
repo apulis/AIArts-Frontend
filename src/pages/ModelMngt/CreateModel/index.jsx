@@ -116,7 +116,7 @@ const CreateModel = props => {
       const { type, size } = file;
       // const isOverSize = size / 1024 / 1024 / 1024 > 2; 
       return new Promise((resolve, reject) => {
-        if (fileLists.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
+        if (fileList.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
           message.warning(`不能上传相同的文件！`);
           reject(file);
         }

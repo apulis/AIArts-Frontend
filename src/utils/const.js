@@ -20,3 +20,8 @@ export const NameErrorText = '名称只能由字母，数字，下划线或横�
 export const pollInterval = 3000;
 
 export const modelTrainingType = 'artsTraining';
+
+export const sortText = {
+  ascend: 'asc',
+  descend: 'desc'
+}

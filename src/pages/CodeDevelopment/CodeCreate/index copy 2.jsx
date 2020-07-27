@@ -11,7 +11,7 @@ const CodeCreate = () => {
   const [deviceTypeArr, setDeviceTypeArr] = useState([])// 更新状态是异步的
   const [deviceNumArr, setDeviceNumArr] = useState([])
   const [engineTypeArr, setEngineTypeArr] = useState([])
-  const [jobTrainingType, setJobTrainingType] = useState('RegularJob');
+  const [jobTraingType, setJobTraingType] = useState(0);// 1为常规任务，2为分布式任务
   const [engineNameArr, setEngineNameArr] = useState([])
   const [codePathPrefix, setCodePathPrefix] = useState('')
   const [maxNodeNum,setMaxNodeNum] = useState([1])
@@ -20,7 +20,6 @@ const CodeCreate = () => {
     renderForm()
   }, [])// 更新处理
   const renderForm = async () => {
-    // setFieldsValue({jobTrainingType:'RegularJob'})
     const result = await apiGetResource()
     if (result) {
       setData(result)
@@ -33,11 +32,12 @@ const CodeCreate = () => {
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
+      setJobTraingType(1)
       setDeviceTypeArr(deviceTypeArrData)
       setMaxNodeNum(maxNodeNumData)
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
       setDeviceNumArr(deviceNumArrData)
-      setFieldsValue({'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0], 'deviceNum': deviceNumArrData[0],'numPs':1,'numPsWorker': deviceNumPerNodeArrData[0]})
+      setFieldsValue({'jobTraingType':'RegularJob','engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0], 'deviceNum': deviceNumArrData[0],'numPs':1,'numPsWorker': deviceNumPerNodeArrData[0]})
     }
   }
   const apiPostCode = async (values) => {
@@ -74,7 +74,6 @@ const CodeCreate = () => {
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
-    delete values["engineType"]
     values.codePath = codePathPrefix + values.codePath
     apiPostCode(values)
   }
@@ -91,7 +90,7 @@ const CodeCreate = () => {
     setDeviceNumArr(arr)
   }
   const handleCaclTotalDeviceNum = (nodeNum,perNodeDeviceNum)=>{
-    setFieldsValue({'deviceNum':nodeNum * perNodeDeviceNum})
+    setFieldsValue({'totalDeviceNum':nodeNum * perNodeDeviceNum})
   }
   const validateMessages = {
     required: '${label} 是必填项!',
@@ -126,7 +125,6 @@ const CodeCreate = () => {
           labelAlign='right'
           onFinish={handleSubmit}
           validateMessages={validateMessages}
-          initialValues = {{jobTrainingType:'RegularJob'}}
           form={form}
         >
           <Form.Item
@@ -178,10 +176,10 @@ const CodeCreate = () => {
           </Form.Item>
           <Form.Item
               label="任务类型" 
-              name="jobTrainingType"
+              name="jobTraingType"
               rules={[{ required: true }]} 
             >
-              <Radio.Group onChange={e => setJobTrainingType(e.target.value)}>
+              <Radio.Group onChange={e => setJobTraingType(e.target.value)}>
                 <Radio value='RegularJob'>常规任务</Radio>
                 <Radio value='PSDistJob'>分布式任务</Radio>
               </Radio.Group>
@@ -197,7 +195,7 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' &&  <Form.Item
+          {jobTraingType == 1 &&  <Form.Item
             label="设备数量"
             name="deviceNum"
             rules={[{ required: true }]}
@@ -210,7 +208,7 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&<Form.Item
+          {jobTraingType == 2 &&<Form.Item
             label="节点数量"
             name="numPs"
             rules={[{ required: true }]}
@@ -219,7 +217,7 @@ const CodeCreate = () => {
             <InputNumber  style={{ width: "50%" }} min={1} max={maxNodeNum} placeholder="请输入节点数量" onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
             </InputNumber>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&<Form.Item
+          {jobTraingType == 2 &&<Form.Item
             label="单节点设备数量"
             name="numPsWorker"
             rules={[{ required: true }]}
@@ -233,9 +231,9 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&  <Form.Item
+          {jobTraingType == 2 &&  <Form.Item
             label="全部设备数量"
-            name="deviceNum"
+            name="totalDeviceNum"
           >
             <Input  style={{ width: "50%" }} disabled>
             </Input>

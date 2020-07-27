@@ -2,7 +2,7 @@ import { message, Table, Modal, Form, Input, Button } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatasets, edit, deleteDataSet, add, download } from './service';
-import { PAGEPARAMS } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
 import styles from './index.less';
 import { Link } from 'umi';
 import AddModalForm from './components/AddModalForm';
@@ -24,14 +24,24 @@ const DataSetList = () => {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const addModalFormRef = useRef();
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
 
   useEffect(() => {
     getData();
-  }, [pageParams, name]);
+  }, [pageParams, name, sortedInfo]);
 
   const getData = async (text) => {
     setLoading(true);
-    const { code, data, msg } = await getDatasets({ ...pageParams, name: name });
+    const params = { 
+      ...pageParams, 
+      name: name, 
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
+    const { code, data, msg } = await getDatasets(params);
     if (code === 0 && data) {
       const { total, datasets } = data;
       setDataSets({
@@ -48,6 +58,10 @@ const DataSetList = () => {
   const pageParamsChange = (page, count) => {
     setPageParams({ pageNum: page, pageSize: count });
   };
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
 
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
@@ -78,7 +92,8 @@ const DataSetList = () => {
     {
       title: '数据集名称',
       key: 'name',
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       render: item => <Link to={{ pathname: '/dataManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
@@ -93,8 +108,10 @@ const DataSetList = () => {
     },
     {
       title: '更新时间',
+      key: 'updatedAt',
       dataIndex: 'updatedAt',
-      sorter: (a, b) => a.updatedAt - b.updatedAt,
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'updatedAt' && sortedInfo.order,
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
@@ -160,6 +177,7 @@ const DataSetList = () => {
           columns={columns}
           dataSource={dataSets.data}
           rowKey={r => r.id}
+          onChange={onSortChange}
           pagination={{
             total: dataSets.total,
             showQuickJumper: true,
