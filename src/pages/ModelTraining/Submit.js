@@ -354,15 +354,6 @@ const ModelTraining = (props) => {
             <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
         </FormItem>
-        <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
-            {
-              deviceList.map(d => (
-                <Option value={d.deviceType}>{d.deviceType}</Option>
-              ))
-            }
-          </Select>
-        </FormItem>
         {
           distributedJob && <FormItem
             labelCol={{ span: 4 }}
@@ -370,6 +361,7 @@ const ModelTraining = (props) => {
             {...commonLayout}
             name="numPsWorker"
             rules={[
+              {required: true},
               {type: 'number', message: '需要填写一个数字'},
               {validator(rule, value, callback) {
                 if (Number(value) > totalNodes) {
@@ -387,6 +379,15 @@ const ModelTraining = (props) => {
             />
           </FormItem>
         }
+        <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+          <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
+            {
+              deviceList.map(d => (
+                <Option value={d.deviceType}>{d.deviceType}</Option>
+              ))
+            }
+          </Select>
+        </FormItem>
         <FormItem
           label={distributedJob ? "每个节点设备数量" : "设备数量"}
           name="deviceNum"
