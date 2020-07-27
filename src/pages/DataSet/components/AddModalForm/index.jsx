@@ -18,8 +18,7 @@ const AddModalForm = (props, ref) => {
   const uploadProps = {
     name: 'data',
     data: {
-      dir: pathId,
-      isPrivate: isPrivate
+      dir: pathId
     },
     multiple: true,
     action: '/ai_arts/api/files/upload/dataset',
@@ -32,7 +31,6 @@ const AddModalForm = (props, ref) => {
       if (status !== 'uploading') {
         setBtn(false);
         form.setFieldsValue({ fileLists: info.fileList });
-        // console.log(info.file, info.fileList);
       }
       if (status === 'done') {
         setFileLists(info.fileList);

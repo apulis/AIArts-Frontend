@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 
-const prefix = 'edge_inferences'
+const prefix = 'edge_inferences';
 
 export async function getEdgeInferences(params) {
   return request(`/${prefix}`, {
@@ -32,7 +32,7 @@ export async function submitFD(data) {
 }
 
 export async function push(data) {
-  return await request(`/${prefix}/push/${data.id}`, {
+  return await request(`/${prefix}/push/${data.jobId}`, {
     method: 'POST',
     data: data,
   });
