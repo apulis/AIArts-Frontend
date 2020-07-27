@@ -83,6 +83,9 @@ const CreateModel = props => {
 
   const uploadProps = {
     name: 'data',
+    data: {
+      dir: new Date().valueOf()
+    },
     multiple: false,
     action: '/ai_arts/api/files/upload/model',
     headers: {
