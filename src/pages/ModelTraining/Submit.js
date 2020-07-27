@@ -371,6 +371,9 @@ const ModelTraining = (props) => {
                 if (Number(value) > totalNodes) {
                   callback(`不能大于 ${totalNodes}`)
                 }
+                if (Number(value) < 1) {
+                  callback(`不能小于 1`)
+                }
               }}
             ]}
             
