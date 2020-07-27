@@ -223,7 +223,7 @@ const ModelTraining = (props) => {
 
   const handleDistributedJob = (e) => {
     const type = e.target.value;
-    setDistributedJob(type);
+    setDistributedJob(type === 'PSDistJob');
   }
 
   const onDeviceTypeChange = (value) => {
@@ -252,7 +252,7 @@ const ModelTraining = (props) => {
     setCurrentSelectedPresetParamsId(current);
   }
 
-  const handleClickDeviceNum = (e) => {h
+  const handleClickDeviceNum = (e) => {
     if (!getFieldValue('deviceType')) {
       message.error('需要先选择设置类型');
     }
@@ -344,10 +344,10 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="distributed" {...commonLayout} rules={[{ required: true }]}>
-          <Radio.Group style={{ width: '300px' }} defaultValue={distributedJob} onChange={handleDistributedJob}>
-            <Radio value={true}>是</Radio>
-            <Radio value={false}>否</Radio>
+        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]}>
+          <Radio.Group style={{ width: '300px' }} defaultValue={'RegularJob'} onChange={handleDistributedJob}>
+            <Radio value={'PSDistJob'}>是</Radio>
+            <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
         </FormItem>
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
