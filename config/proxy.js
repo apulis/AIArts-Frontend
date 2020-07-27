@@ -15,13 +15,13 @@ export default {
         '^': '',
       },
     },
-    '/custom-user-dashboard-backend/': {
-      target: 'http://219.133.167.42:52009/',
-      changeOrigin: true,
-      pathRewrite: {
-        '^': '',
-      },
-    },
+    // '/custom-user-dashboard-backend/': {
+    //   target: 'http://219.133.167.42:52009/',
+    //   changeOrigin: true,
+    //   pathRewrite: {
+    //     '^': '',
+    //   },
+    // },
     '/endpoints/grafana/api/datasources/proxy/1/api/v1': {
       target: 'https://atlas02.sigsus.cn/',
       changeOrigin: true,

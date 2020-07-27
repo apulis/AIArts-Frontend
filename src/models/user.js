@@ -32,6 +32,21 @@ const UserModel = {
             }
           }
         })
+      } else {
+        setAuthority([]);
+        yield put({
+          type: 'updateState',
+          payload: {
+            currentUser: {
+              userName: '',
+              id: '',
+              permissionList: [],
+              nickName: '',
+              phone: '',
+              email: ''
+            }
+          }
+        })
       }
     },
   },
