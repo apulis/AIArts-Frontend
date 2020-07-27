@@ -62,3 +62,7 @@ export async function saveTrainingParams(data) {
     data
   })
 }
+
+export async function fetchJobStatusSumary() {
+  return await request('/common/job/summary?jobType=artsTraining');
+}
