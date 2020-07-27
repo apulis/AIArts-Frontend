@@ -2,7 +2,7 @@ import { history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { PAGEPARAMS } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -20,11 +20,16 @@ const ModelList = props => {
     dispatch,
     modelList: { data },
   } = props;
+  
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
 
   const statusList = [
     { en: 'all', cn: '全部' },
@@ -34,28 +39,31 @@ const ModelList = props => {
 
   useEffect(() => {
     handleSearch();
-  }, [pageParams, formValues]);
+  }, [pageParams, formValues, sortedInfo]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
+  };
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
   };
 
   const columns = [
     {
       title: '模型名称',
       dataIndex: 'name',
+      key: 'name',
       ellipsis: true,
       width: 150,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ['descend', 'ascend'],      
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,      
     },
     {
       title: '状态',
       ellipsis: true,
       width: 100,
       render: (text, item) => getModelStatus(item.status),
-      sorter: (a, b) => a.status.length - b.status.length,
-      sortDirections: ['descend', 'ascend'],       
     },
     // {
     //   title: '引擎类型',
@@ -72,11 +80,12 @@ const ModelList = props => {
     {
       title: '创建时间',
       dataIndex: 'createdAt',
+      key: 'createdAt',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 150,
-      sorter: (a, b) => a.createdAt - b.createdAt,
-      sortDirections: ['descend', 'ascend'],          
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,      
     },
     {
       title: '描述',
@@ -154,6 +163,8 @@ const ModelList = props => {
       isAdvance: false,
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]      
     };
 
     if (formValues.status && formValues.status !== 'all') {
@@ -284,6 +295,7 @@ const ModelList = props => {
             columns={columns}
             dataSource={data.list}
             rowKey='id'
+            onChange={onSortChange}
             pagination={{
               total: data.pagination.total,
               showQuickJumper: true,
