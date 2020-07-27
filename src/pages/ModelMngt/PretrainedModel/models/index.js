@@ -33,15 +33,15 @@ export default {
         } = yield call(getModels, params)
         let error = null
         if (code === 0) {
-          const result = normalizeTableResult(data)
-          // const result = {
-          //   list: data.models || [],
-          //   pagination: {
-          //     current: data.pageNum || 1,
-          //     pageSize: data.pageSize || 10,
-          //     total: data.total
-          //   }
-          // }
+          // const result = normalizeTableResult(data)
+          const result = {
+            list: data.models || [],
+            pagination: {
+              current: data.pageNum || 1,
+              pageSize: data.pageSize || 10,
+              total: data.total
+            }
+          }
           yield put({
             type: 'save',
             payload: result
