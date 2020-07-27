@@ -104,6 +104,9 @@ const List = () => {
         return (
           <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
         )
+      },
+      sorter(a, b) {
+        return a.name > b.name;
       }
     },
     {
