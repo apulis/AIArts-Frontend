@@ -160,9 +160,8 @@ const ModelList = props => {
 
   const handleSearch = () => {
     const params = {
+      ...pageParams,
       isAdvance: false,
-      pageNum: pageParams.pageNum,
-      pageSize: pageParams.pageSize,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]      
     };
