@@ -65,7 +65,7 @@ const ModelList = props => {
     // },
     {
       title: '存储路径',
-      dataIndex: 'path',
+      dataIndex: 'modelPath',
       ellipsis: true,
       width: 100,
     },
@@ -176,7 +176,7 @@ const ModelList = props => {
 
   const createInference = (item) => {
     const queryString = stringify({
-      modelPath: encodeURIComponent(item.path)
+      modelPath: encodeURIComponent(item.modelPath)
     });
     history.push((`/Inference/submit/?${queryString}`))
   };

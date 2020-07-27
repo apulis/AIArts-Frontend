@@ -1,19 +1,21 @@
 import { message, Table, Modal, Form, Input, Button, Select } from 'antd';
-import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './service';
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import moment from 'moment';
-import { NameReg, NameErrorText, pollInterval } from '@/utils/const';
+import { NameReg, NameErrorText, pollInterval, sortText } from '@/utils/const';
 import useInterval from '../../hooks/useInterval';
+import { CloudUploadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
+const { Search } = Input;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
-  const [jobs, setJobs] = useState({ data: [], total: 0 });
-  const [types, setTypes] = useState('');
+  const [jobs, setJobs] = useState([]);
+  const [typesData, setTypesData] = useState([]);
   const [fdInfo, setFdInfo] = useState({ username: '', url: '', password: '' });
   const [pushId, setPushId] = useState('');
   const [modalFlag1, setModalFlag1] = useState(false);
@@ -21,10 +23,26 @@ const EdgeInference = () => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState('');
+  const [type, setType] = useState('全部类型');
+  const [total, setTotal] = useState(0);
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
+  const typeText = {
+    converting: '转换中',
+    pushing: '推送中'
+  }
 
   useEffect(() => {
-    // getData();
-  }, [pageParams]);
+    getData();
+  }, [pageParams, name, type, sortedInfo]);
+
+  useEffect(() => {
+    getFdInfo();
+    getTypesData();
+  }, []);
 
   // useInterval(() => {
   //   getData();
@@ -32,13 +50,22 @@ const EdgeInference = () => {
 
   const getData = async () => {
     setLoading(true);
-    const { code, data, msg } = await getEdgeInferences(pageParams);
+    const params = { 
+      ...pageParams, 
+      name: name, 
+      type: type === '全部类型' ? '' : type,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
+    const { code, data, msg } = await getEdgeInferences(params);
     if (code === 0 && data) {
-      const { total, datasets } = data;
-      setJobs({
-        data: datasets,
-        total: total,
-      });
+      const { total, edgeInferences } = data;
+      const temp1 = jobs ? JSON.stringify(jobs.map(i => i.jobStatus)) : [];
+      const temp2 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.jobStatus)) : [];
+      const temp3 = jobs ? JSON.stringify(jobs.map(i => i.modelconversionStatus)) : [];
+      const temp4 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.modelconversionStatus)) : [];
+      if (temp1 !== temp2 || temp3 !== temp4) setJobs(edgeInferences);
+      setTotal(total);
     } else {
       message.error(msg);
     }
@@ -52,7 +79,7 @@ const EdgeInference = () => {
   const onSubmit = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const { code, data, msg } = await submit();
+      const { code, data, msg } = await submit(values);
       if (code === 0) {
         message.success('提交成功！');
         getData();
@@ -67,12 +94,15 @@ const EdgeInference = () => {
   const columns = [
     {
       title: 'ID',
-      key: 'jobId',
-      render: id => <p style={{fontFamily: 'Consolas'}}>{id}</p>
+      dataIndex: 'jobId',
+      render: id => <span style={{fontFamily: 'Consolas'}}>{id}</span>
     },
     {
       title: '推理名称',
       dataIndex: 'jobName',
+      key: 'jobName',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
     },
     {
       title: '类型',
@@ -81,16 +111,18 @@ const EdgeInference = () => {
     {
       title: '时间',
       dataIndex: 'jobTime',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      key: 'jobTime',
+      sorter: true,
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
     },
     {
       title: '状态',
-      dataIndex: 'modelconversionStatus',
       render: item => {
         const { jobStatus, modelconversionStatus } = item;
         let status = modelconversionStatus;
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : modelconversionStatus;
-        return <p>{status}</p>
+        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : typeText[modelconversionStatus];
+        return (<span>{status}</span>)
       }
     },
     {
@@ -99,7 +131,7 @@ const EdgeInference = () => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled = (!(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId);
         return (
-          <CloudUploadOutlined disabled={disabled} onClick={() => onPush(jobId)} title="推理推送" />
+          <CloudUploadOutlined style={{ fontSize: 22 }} disabled={disabled} onClick={() => onPush(jobId)} title="推理推送" />
         )
       },
     },
@@ -109,8 +141,8 @@ const EdgeInference = () => {
     let info = {};
     const { code, data, msg } = await getFD();
     if (code === 0) {
-      info = data;
-      setFdInfo(data);
+      info = data.fdinfo;
+      setFdInfo(data.fdinfo);
     } else {
       message.error(msg);
     }
@@ -121,7 +153,7 @@ const EdgeInference = () => {
     const info = await getFdInfo();
     if (info) {
       setPushId(id);
-      const { code, data, msg } = await push({ id: id });
+      const { code, data, msg } = await push({ jobId: id });
       if (code === 0) {
         getData();
         message.success('推送成功！');
@@ -140,11 +172,10 @@ const EdgeInference = () => {
     setModalFlag2(true);
   }
 
-  const openInference = async () => {
-    setModalFlag1(true);
+  const getTypesData = async () => {
     const { code, data, msg } = await getTypes();
     if (code === 0) {
-      setTypes(data);
+      setTypesData(data.conversionTypes);
     } else {
       message.error(msg);
     }
@@ -153,9 +184,10 @@ const EdgeInference = () => {
   const onSubmitFD = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const { code, data, msg } = await submitFD();
+      const { code, data, msg } = await submitFD(values);
       if (code === 0) {
         message.success('设置成功！');
+        getFdInfo();
         setModalFlag2(false);
       } else {
         message.error(msg);
@@ -164,28 +196,43 @@ const EdgeInference = () => {
     setBtnLoading(false);
   }
 
-  if (loading) return (<PageLoading />)
+  const getOptions = isFilter => {
+    let data = isFilter ? ['全部类型'].concat(typesData) : typesData;
+    return data.map(i => <Option value={i}>{i}</Option>);
+  }
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
 
   return (
     <PageHeaderWrapper>
-      <Button type="primary" onClick={openInference}>新建推理</Button>
-      <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
-      {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
-      <Table
-        columns={columns}
-        dataSource={jobs.data}
-        rowKey={r => r.jobId}
-        pagination={{
-          total: jobs.total,
-          showQuickJumper: true,
-          showTotal: total => `总共 ${total} 条`,
-          showSizeChanger: true,
-          onChange: pageParamsChange,
-          onShowSizeChange: pageParamsChange,
-          current: pageParams.pageNum,
-          pageSize: pageParams.pageSize
-        }}
-      />
+      <div className={styles.edgeInferences}>
+        <Button type="primary" onClick={() => setModalFlag1(true)}>新建推理</Button>
+        <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
+        {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
+        <div className={styles.searchWrap}>
+          <Select onChange={v => setType(v)} defaultValue={type}>{getOptions(true)}</Select>
+          <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
+        </div>
+        <Table
+          columns={columns}
+          dataSource={jobs}
+          rowKey={r => r.jobId}
+          onChange={onSortChange}
+          pagination={{
+            total: total,
+            showQuickJumper: true,
+            showTotal: total => `总共 ${total} 条`,
+            showSizeChanger: true,
+            onChange: pageParamsChange,
+            onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize
+          }}
+          loading={loading}
+        />
+      </div>
       {modalFlag1 && (
         <Modal
           title="新建推理"
@@ -214,10 +261,9 @@ const EdgeInference = () => {
             <Form.Item
               label="类型"
               name="conversionType"
-              rules={[{ required: true, message: '请选择类型！' }]}>
-                <Select placeholder="请选择类型">
-                  {types.map(i => <Option value={i}>{i}</Option>)}
-                </Select>
+              rules={[{ required: true, message: '请选择类型！' }]}
+            >
+                <Select placeholder="请选择类型">{getTypesData()}</Select>
             </Form.Item>
             <Form.Item
               label="输入路径"

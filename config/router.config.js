@@ -158,7 +158,8 @@ export default [
             path: '/EdgeInference',
             name: 'edgeInference',
             icon: 'ApartmentOutlined',
-            component: './EdgeInference'
+            component: './EdgeInference',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/Inference/submit',
@@ -189,7 +190,8 @@ export default [
             path: '/VisualOperation',
             name: 'visualOperation',
             icon: 'CloudUploadOutlined',
-            component: './VisualOperation'
+            component: './VisualOperation',
+            authority: ['AI_ARTS_ALL'],
           },                      
           {
             path: '/',
