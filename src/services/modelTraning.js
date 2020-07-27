@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import { modelTrainingType } from '@/utils/const';
 
 export async function submitModelTraining(data) {
   return await request('/trainings', {
@@ -12,7 +13,7 @@ export async function fetchAvilableResource() {
 }
 
 export async function fetchTrainingList({pageNum, pageSize, status, search}) {
-  return await request(`/trainings`, {
+  return await request(`/trainings/`, {
     params: {
       pageNum: pageNum,
       pageSize: pageSize,
@@ -61,4 +62,8 @@ export async function saveTrainingParams(data) {
     method: 'POST',
     data
   })
+}
+
+export async function fetchJobStatusSumary() {
+  return await request(`/common/job/summary?jobType=${modelTrainingType}`);
 }

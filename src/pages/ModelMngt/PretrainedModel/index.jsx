@@ -8,51 +8,28 @@ import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
 
-// mock DataSource
-const genList = (current, pageSize) => {
-  const tableListDataSource = [];
+const ExpandDetails = (item) => {
+  // 转换运行参数格式
+  let runArguments = [];
 
-  for (let i = 0; i < pageSize; i += 1) {
-    const index = (current - 1) * 10 + i;
-    tableListDataSource.push({
-      id: index,
-      name: `model_00${index}`,
-      use: `图像分类`,
-      engineType: `tensorflow , tf-1.8.0-py2.7`,
-      precision: `25.6%`,
-      size: '157.79MB',
-      createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+  if(item.arguments){
+    Object.keys(item.arguments).forEach(key => {
+      runArguments.push({
+        key: key,
+        value: item.arguments[key]
+      })
     });
   }
 
-  return tableListDataSource;
-};
-
-const mockDataSource = genList(1, 50);
-
-const ExpandDetails = (item) => {
-  // // 模拟数据
-  // item = {
-  //   dataset: 'ILSVRC-2012 (ImageNet-1k)',
-  //   format: '图像，256*256',
-  //   arguments: [
-  //     {
-  //       key: 'learning_rate',
-  //       value: 0.01123123123123
-  //     }
-  //   ],
-  //   engineType: 'tensorflow , tf-1.8.0-py2.7',
-  //   output: '--',
-  // }
   const argumentsContent = (
     <div>
-      {item.arguments && item.arguments.map(a => {
+      {runArguments && runArguments.map(a => {
         return <p>{a.key + '=' + a.value}</p>;
       })}
     </div>
   );
 
-  // const argsSuffix = item.arguments.length > 1 ? '...' : '';
+  const argsSuffix = runArguments.length > 1 ? '...' : '';
 
   return (
     <Descriptions>
@@ -60,8 +37,8 @@ const ExpandDetails = (item) => {
       <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {item.arguments && item.arguments.length > 0 && 
-            <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
+          {runArguments && runArguments.length > 0 && 
+            <div>{runArguments[0].key + '=' + runArguments[0].value + argsSuffix}</div>
           }
         </Popover>
       </Descriptions.Item>
@@ -78,11 +55,12 @@ const PretrainedModelList = props => {
     pretrainedModelList: { data },
   } = props;
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
 
   useEffect(() => {
-    handleRefresh();
-  }, [pageParams]);
+    handleSearch();
+  }, [pageParams, formValues]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -143,30 +121,34 @@ const PretrainedModelList = props => {
 
   const onReset = () => {
     form.resetFields();
-    handleRefresh();
+    setFormValues({name:''});
   };
 
   const onFinish = values => {
-    dispatch({
-      type: 'pretrainedModelList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize,
-        isAdvance: true,
-        name: values.modelName, 
-      },
-    });
+    let queryClauses = {};
+
+    if (values.modelName) {
+      queryClauses.name = values.modelName;
+    }
+
+    setFormValues({...formValues, ...queryClauses});    
   };
 
-  const handleRefresh = () => {
+  const handleSearch = () => {
+    const params = {
+      isAdvance: true,
+      pageNum: pageParams.pageNum,
+      pageSize: pageParams.pageSize,
+    };
+
+    if (formValues.name) {
+      params.name = formValues.name;
+    }
+
     dispatch({
       type: 'pretrainedModelList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize,
-        isAdvance: true,
-      }
-    });
+      payload: params,
+    });       
   };
 
   const createInference = (item) => {
@@ -216,7 +198,7 @@ const PretrainedModelList = props => {
                 <Button type="primary" htmlType="submit">查询</Button>
               </Form.Item>
               <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
               </Form.Item>
             </Form>
           </div>            
@@ -224,7 +206,6 @@ const PretrainedModelList = props => {
         <Table
           columns={columns}
           dataSource={data.list}
-          // dataSource={mockDataSource}
           rowKey='id'
           pagination={{
             total: data.pagination.total,

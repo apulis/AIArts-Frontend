@@ -29,17 +29,26 @@ export default [
         authority: ['AI_ARTS_ALL'],
         routes: [
           {
-            path: '/CodeList',
+            path: '/codeDevelopment',
             name: 'codeDevelopment',
             icon: 'EditOutlined',
             authority: ['AI_ARTS_ALL'],
-            component: './CodeDevelopment/CodeList',
+            routes:[
+              {
+                path:'/codeDevelopment',
+                redirect: '/codeDevelopment/list',
+              },
+              {
+                path:'/codeDevelopment/list',
+                component: './CodeDevelopment',
+              },
+              {
+                path: '/codeDevelopment/add',
+                component: './CodeDevelopment/CodeCreate',
+              },
+            ]
           },
-          {
-            path: '/CodeCreate',
-            component: './CodeDevelopment/CodeCreate',
-            authority: ['AI_ARTS_ALL'],
-          },
+          
           {
             path: '/dataManage',
             name: 'dataManage',
@@ -149,7 +158,8 @@ export default [
             path: '/EdgeInference',
             name: 'edgeInference',
             icon: 'ApartmentOutlined',
-            component: './EdgeInference'
+            component: './EdgeInference',
+            authority: ['AI_ARTS_ALL'],
           },
           {
             path: '/Inference/submit',
@@ -179,18 +189,13 @@ export default [
           {
             path: '/VisualOperation',
             name: 'visualOperation',
-            icon: 'EditOutlined',
-            component: './VisualOperation'
+            icon: 'CloudUploadOutlined',
+            component: './VisualOperation',
+            authority: ['AI_ARTS_ALL'],
           },                      
           {
-            path: '/warningLog',
-            name: 'warningLog',
-            icon: 'EditOutlined',
-            component: './WarningLog'
-          },   
-          {
             path: '/',
-            redirect: '/CodeList',
+            redirect: '/codeDevelopment',
             authority: ['AI_ARTS_ALL'],
           },
           {

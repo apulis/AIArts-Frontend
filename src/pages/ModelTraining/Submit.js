@@ -168,6 +168,10 @@ const ModelTraining = (props) => {
     if (distributedJob) {
       values.deviceNum = values.deviceTotal;
     }
+    if (values.jobtrainingtype === 'PSDistJob') {
+      values.numPs = 1;
+      values.numPsWorker = ''
+    }
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     cancel();
@@ -223,7 +227,7 @@ const ModelTraining = (props) => {
 
   const handleDistributedJob = (e) => {
     const type = e.target.value;
-    setDistributedJob(type);
+    setDistributedJob(type === 'PSDistJob');
   }
 
   const onDeviceTypeChange = (value) => {
@@ -252,14 +256,18 @@ const ModelTraining = (props) => {
     setCurrentSelectedPresetParamsId(current);
   }
 
-  const handleClickDeviceNum = (e) => {h
+  const handleClickDeviceNum = (e) => {
     if (!getFieldValue('deviceType')) {
       message.error('需要先选择设置类型');
     }
   }
 
   const handleDeviceChange = () => {
-    setDeviceTotal((Number(getFieldValue('nodeNum') || 0)) * (Number(getFieldValue('deviceNum') || 0)))
+    const deviceTotal = (Number(getFieldValue('numPsWorker') || 0)) * (Number(getFieldValue('deviceNum') || 0));
+    setFieldsValue({
+      deviceTotal: deviceTotal || 0,
+    })
+    setDeviceTotal(deviceTotal);
   }
 
   return (
@@ -315,7 +323,7 @@ const ModelTraining = (props) => {
           >
             {
               datasets.map(d => (
-                <Option value={d.dataSetPath}>{d.name}</Option>
+                <Option value={d.dataSetPath} key={d.dataSetId}>{d.name}</Option>
               ))
             }
           </Select>
@@ -344,12 +352,40 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="distributed" {...commonLayout} rules={[{ required: true }]}>
-          <Radio.Group style={{ width: '300px' }} defaultValue={distributedJob} onChange={handleDistributedJob}>
-            <Radio value={true}>是</Radio>
-            <Radio value={false}>否</Radio>
+        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob">
+          <Radio.Group style={{ width: '300px' }}onChange={handleDistributedJob}>
+            <Radio value={'PSDistJob'}>是</Radio>
+            <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
         </FormItem>
+        {
+          distributedJob && <FormItem
+            labelCol={{ span: 4 }}
+            label="节点数量"
+            {...commonLayout}
+            name="numPsWorker"
+            rules={[
+              {required: true},
+              {type: 'number', message: '需要填写一个数字'},
+              {validator(rule, value, callback) {
+                if (Number(value) > totalNodes) {
+                  callback(`不能大于 ${totalNodes}`)
+                }
+                if (Number(value) < 1) {
+                  callback(`不能小于 1`)
+                }
+              }}
+            ]}
+            
+            initialValue={1}
+          >
+            <InputNumber
+              onChange={handleDeviceChange}
+              min={1}
+              max={totalNodes}
+            />
+          </FormItem>
+        }
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {
@@ -359,25 +395,6 @@ const ModelTraining = (props) => {
             }
           </Select>
         </FormItem>
-        {
-          distributedJob && <FormItem
-            labelCol={{ span: 4 }}
-            label="节点数量"
-            {...commonLayout}
-            name="nodeNum"
-            rules={[
-              {type: 'number', message: '需要填写一个数字'}
-            ]}
-            
-            defaultValue={1}
-          >
-            <InputNumber
-              onChange={handleDeviceChange}
-              min={1}
-              max={totalNodes}
-            />
-          </FormItem>
-        }
         <FormItem
           label={distributedJob ? "每个节点设备数量" : "设备数量"}
           name="deviceNum"

@@ -3,11 +3,9 @@ import { Button, Table, Input, message, Card, Select } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
-import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
+import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { set } from 'numeral';
-import { fetch } from 'umi-request';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -34,6 +32,7 @@ const List = () => {
   const [pageSize, setPageSize] = useState(10);
   const [pageNum, setPageNum] = useState(1);
   const [currentStatus, setCurrentStatus] = useState('all');
+  const [jobSumary, setJobSumary] = useState([]);
   const getTrainingList = async () => {
     const res = await fetchTrainingList({pageNum, pageSize, search, status: currentStatus});
     if (res.code === 0) {
@@ -52,14 +51,27 @@ const List = () => {
     }
   }
 
+  const getJobStatusSumary = async () => {
+    const res = await fetchJobStatusSumary();
+    if (res.code === 0) {
+      const jobSumary = [{ value: 'all', label: '全部' }];
+      let total = 0;
+      Object.keys(res.data).forEach(k => {
+        let count = res.data[k]
+        total += count;
+        jobSumary.push({
+          label: statusList.find(status => status.value === k)?.label + `（${count}）`,
+          value: k
+        })
+      })
+      jobSumary[0].label = jobSumary[0].label  + `（${total}）`
+      setJobSumary(jobSumary)
+    }
+  }
+
   useEffect(() => {
     getTrainingList();
-    // let timer = setInterval(() => {
-    //   getTrainingList();
-    // }, 3000);
-    // return () => {
-    //   clearInterval(timer)
-    // }
+    getJobStatusSumary()
   }, [])
   const onTableChange = (pagination) => {
     const { current } = pagination;
@@ -97,7 +109,10 @@ const List = () => {
     {
       dataIndex: 'status',
       title: '状态',
-      render: (text, item) => getJobStatus(item.status)
+      render: (text, item) => getJobStatus(item.status),
+      sorter(a, b) {
+        return statusList.indexOf(a.status) > statusList.indexOf(b.status)
+      }
     },
     {
       dataIndex: 'engine',
@@ -110,6 +125,9 @@ const List = () => {
         return (
           <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
         )
+      },
+      sorter(a, b) {
+        return new Date(a.createTime).getTime() - new Date(b.createTime).getTime()
       }
     },
     {
@@ -146,7 +164,7 @@ const List = () => {
       <div style={{ float: 'right', paddingRight: '20px' }}>
         <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleChangeStatus}>
           {
-            statusList.map(status => (
+            jobSumary.map(status => (
               <Option value={status.value}>{status.label}</Option>
             ))
           }

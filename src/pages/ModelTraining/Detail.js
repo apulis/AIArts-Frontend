@@ -10,6 +10,7 @@ import moment from 'moment';
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
+import { modelTrainingType } from '@/utils/const';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
@@ -71,7 +72,7 @@ const Detail = () => {
     const values = await validateFields(['name', 'desc', 'scope']);
     const submitData = {};
     submitData.scope = values.scope;
-    submitData.jobType = 'artsTraining';
+    submitData.jobType = modelTrainingType;
     submitData.templateData = {};
     submitData.templateData = Object.assign({}, jobDetail, values);
     delete submitData.templateData.id;

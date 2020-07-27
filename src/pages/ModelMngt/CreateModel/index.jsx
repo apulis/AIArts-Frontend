@@ -16,7 +16,7 @@ const CreateModel = props => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-  const [sourceType, setSourceType] = useState(1);
+  const [modelFileType, setModelFileType] = useState(1);
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [fileList, setFileList] = useState([]);
 
@@ -42,19 +42,21 @@ const CreateModel = props => {
 
   const onFinish = async (values) => {
     // console.log(values);
-    const { name, description, path, jobId } = values;
+    const { name, description, argumentPath, jobId, modelPath } = values;
     const data = {
       name,
       description,
-      path: codePathPrefix + path,
+      argumentPath: codePathPrefix + argumentPath,
       jobId: jobId || '',
+      modelPath,
+      isAdvance: false,
     }
     
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
       message.success(`创建成功`);
-      history.push('/ModelList');
+      history.push('/ModelManagement/MyModels');
     } else {
       msg && message.error(`创建失败:${msg}`);
     }
@@ -82,7 +84,7 @@ const CreateModel = props => {
   const uploadProps = {
     name: 'data',
     multiple: false,
-    action: '/ai_arts/api/files/upload/dataset',
+    action: '/ai_arts/api/files/upload/model',
     headers: {
       Authorization: 'Bearer ' + window.localStorage.token,
     },
@@ -93,9 +95,15 @@ const CreateModel = props => {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
+        console.log(111, info.fileList)
         setFileList(info.fileList);
         setBtnDisabled(false);
         message.success(`${info.file.name}文件上传成功！`);
+
+        // 获取上传路径
+        const { data: { path }} = info.fileList[0].response;
+        form.setFieldsValue({modelPath: path});
+
       } else if (status === 'error') {
         message.error(`${info.file.name} 文件上传失败！`);
         setBtnDisabled(false);
@@ -141,7 +149,7 @@ const CreateModel = props => {
             form={form}
             onFinish={onFinish}
             autoComplete="off"
-            initialValues={{ sourceType: sourceType }}
+            initialValues={{ modelFileType: modelFileType }}
           >
             <Form.Item
               {...layout}
@@ -161,16 +169,16 @@ const CreateModel = props => {
             </Form.Item>          
             <Form.Item
               {...layout}
-              label="模型文件" 
-              name="sourceType"
+              label="模型文件"
+              name="modelPath"
               rules={[{ required: true }]} 
             >
-              <Radio.Group onChange={e => setSourceType(e.target.value)}>
+              <Radio.Group onChange={e => setModelFileType(e.target.value)}>
                 <Radio value={1}>选择模型文件</Radio>
                 <Radio value={2}>上传模型文件</Radio>
               </Radio.Group>
             </Form.Item>
-            {sourceType == 1 && <Form.Item
+            {modelFileType == 1 && <Form.Item
                 {...layout}
                 label="训练作业"
                 required
@@ -188,7 +196,7 @@ const CreateModel = props => {
                   <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
                 </Form.Item>
             </Form.Item>}       
-            {sourceType == 2 && <Form.Item
+            {modelFileType == 2 && <Form.Item
               labelCol={{ span: 3 }}
               wrapperCol={{ span: 14 }}
               label="上传文件"
@@ -206,7 +214,7 @@ const CreateModel = props => {
             </Form.Item>}
             <Form.Item
               {...layout}
-              name="path"
+              name="argumentPath"
               label="模型参数文件"
               rules={[{ required: true, message: '模型参数文件不能为空!' }]}
             >

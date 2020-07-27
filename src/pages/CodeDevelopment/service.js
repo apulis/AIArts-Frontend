@@ -1,4 +1,6 @@
 import request from '@/utils/request';
+import {statusMap} from './const'
+import { forEach } from 'lodash';
 
 export async function getCodes(params) {
   return request('/codes', {
@@ -34,19 +36,22 @@ export async function postCode2(data) {
     data:{},
     msg:'success'
   }
-  // return request(`/codes`,{
-  //   method:'POST',
-  //   data
-  // });
 }
-const arr = ['全部(30)','创建中(1)','创建失败(15)','排队中(6)','运行中(5)','停止中(0)','排队中(6)','运行中(5)','停止中(0)','排队中(6)','运行中(5)','停止中(0)']
 export async function getCodeCount() {
-  return {
-    code:0,
-    data:{counts:arr},
-    msg:'success'
+  const response =  await request('/common/job/summary', {
+    params:{jobType:'codeEnv'},
+  });
+  const {code,data,msg} = response
+  const myRes = {code,msg}
+  if(data){
+    const keys = Object.keys(data)
+    let allCounts = 0
+    const myData = keys.map((key)=>{
+      allCounts+=data[key]
+      return {status:key,desc:`${statusMap[key].local} (${data[key]})`}
+    })
+    myData.unshift({status:'all',desc:`全部 (${allCounts})`})
+    myRes['data'] = myData
   }
-  // return request('/codes', {
-  //   params,
-  // });
+  return myRes
 }

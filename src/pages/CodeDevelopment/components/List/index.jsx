@@ -1,72 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Link } from 'umi';
 import { Table, Select,Space, Button, Row, Col, Input,message,Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
 import { PAGEPARAMS } from '@/utils/const';
-import { getCodes,deleteCode,getJupyterUrl,getCodeCount} from '../service.js';
+import { getCodes,deleteCode,getJupyterUrl,getCodeCount} from '../../service.js';
 import moment from 'moment';
-import { displayName } from 'react-fittext';
-import {isEmptyString} from '../util.js'
-import UploadCode from './components/UploadCode'
+import {isEmptyString} from '../../util.js'
+import CodeUpload from '../UpLoad'
+import {statusMap,canOpenStatus,canStopStatus,canUploadStatus} from '../../const.js'
 
 const CodeList = (props) => {
   const { Search } = Input;
   const { Option } = Select;
-  const statusMap = {
-    unapproved:{
-      local:'未批准',
-      priority:1
-    },
-    queued :{
-      local:'队列中',
-      priority:2
-    },
-    scheduling :{
-      local:'调度中',
-      priority:3
-    },
-    running :{
-      local:'运行中',
-      priority:4
-    },
-    finished :{
-      local:'已完成',
-      priority:5
-    },
-    failed:{
-      local:'已失败',
-      priority:6
-    },
-    pausing:{
-      local:'暂停中',
-      priority:7
-    },
-    paused:{
-      local:'已暂停',
-      priority:8
-    },
-    killing :{
-      local:'关闭中',
-      priority:9
-    },
-    killed:{
-      local:'已关闭',
-      priority:10
-    },
-    error:{
-      local:'错误',
-      priority:11
-    },
-  }
-  const canOpenStatus = new Set(['running'])
-  const canStopStatus = new Set(['unapproved','queued','scheduling','running'])
   const [data, setData] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);// 页长
   const [statusSearchArr,setStatusSearchArr] = useState([])
   const [curStatus,setCurStatus] = useState('')
-  const [searchName,setSearchName] = useState('')
+  const [searchWord,setSearchName] = useState('')
   const [modalFlag, setModalFlag] = useState(false);
   const [modalData,setModalData] = useState({})
   useEffect(()=>{
@@ -74,14 +25,14 @@ const CodeList = (props) => {
   },[])
   useEffect(() => {// componentDidMount()
     renderTable();
-  }, [pageParams])// pageParams改变触发的componentwillUpdate()
+  }, [pageParams,curStatus,searchWord])// pageParams改变触发的componentwillUpdate()
   
   const renderStatusSelect = async ()=>{
     // todo
     const apiData = await apiGetCodeCount()
     if(apiData){
-      setStatusSearchArr(apiData.counts)
-      setCurStatus(apiData.counts[0])
+      setStatusSearchArr(apiData)
+      setCurStatus(apiData[0].status)
     }
   }
   const renderTable = async (success) => {
@@ -111,8 +62,8 @@ const CodeList = (props) => {
   const apiGetCodes = async (pageParams)=>{
     const params = {...pageParams}
     params['status'] = isEmptyString(curStatus)?'all':curStatus
-    if(!isEmptyString(searchName)){
-      params['searchName'] = searchName
+    if(!isEmptyString(searchWord)){
+      params['searchWord'] = searchWord
     }
     const obj = await getCodes(params);
     const { code, data, msg } = obj
@@ -156,11 +107,9 @@ const CodeList = (props) => {
   }
   const handleSelectChange = (selectStatus)=>{
     setCurStatus(selectStatus)
-    renderTable()
   }
-  const handleSearch = async (searchName) => {
-    setSearchName(searchName)
-    renderTable()
+  const handleSearch = (searchWord) => {
+    setSearchName(searchWord)
   }
   const handleFresh = () => {
     renderTable(()=>{message.success('刷新成功')})
@@ -177,6 +126,11 @@ const CodeList = (props) => {
       title: '开发环境名称',
       dataIndex: 'name',
       ellipsis: true,
+      sorter:{
+        // todo 
+        compare:(item1,item2) =>item1.name >= item2.name,
+        multiple:3
+      }
     },
     {
       title: '状态',
@@ -219,19 +173,19 @@ const CodeList = (props) => {
         return (
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
+            <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)}>停止</a>
-            <a onClick={() => handleOpenModal(codeItem)}>上传代码</a>
           </Space>
         );
       },
     },
   ];
   return (
-    <PageHeaderWrapper>
+    <>
       <Row style={{marginBottom:"20px"}}>
         <Col span={12}>
           <div style={{ float: "left"}}>
-            <Link to="/CodeCreate">
+            <Link to="/codeDevelopment/add">
               <Button href="">创建开发环境</Button>
             </Link>
           </div>
@@ -242,7 +196,7 @@ const CodeList = (props) => {
             <Select value={curStatus} style={{width:'calc(100% - 8px)',margin:'0 8px 0 0'}} onChange ={(item)=>handleSelectChange(item)}>
               {
                 statusSearchArr.map((item) => (
-                  <Option value={item}>{item}</Option>
+                  <Option value={item.status}>{item.desc}</Option>
                 ))
               }
             </Select>
@@ -284,10 +238,10 @@ const CodeList = (props) => {
             <Button onClick={() => setModalFlag(false)}>关闭</Button>,
           ]}
         >
-          <UploadCode modalData={modalData}></UploadCode>
+          <CodeUpload modalData={modalData}></CodeUpload>
         </Modal>
       )}
-    </PageHeaderWrapper>
+    </>
   )
 
 }
