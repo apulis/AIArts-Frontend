@@ -187,7 +187,7 @@ const ModelEvaluation = props => {
           >
             <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
-          <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="训练数据集">
+          <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="测试数据集">
             <Select>
               {
                 datasets.map(d => (
@@ -204,7 +204,10 @@ const ModelEvaluation = props => {
           >
             <Input addonBefore={codePathPrefix} />
           </Form.Item>
-          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个python 文件' }]}>
+          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
+            <Input addonBefore={codePathPrefix} />
+          </Form.Item>
+          <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
             <Input addonBefore={codePathPrefix} />
           </Form.Item>
           <Form.Item 
