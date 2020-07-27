@@ -28,5 +28,4 @@ export default {
   'menu.modelTraining': '模型训练',
   'menu.resourceMonitoring': '资源监控',
   'menu.edgeInference': '边缘推理',
-  'menu.warningLog':'告警日志'
 };
