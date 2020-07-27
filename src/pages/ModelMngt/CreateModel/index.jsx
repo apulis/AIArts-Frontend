@@ -83,6 +83,9 @@ const CreateModel = props => {
 
   const uploadProps = {
     name: 'data',
+    data: {
+      dir: new Date().valueOf()
+    },
     multiple: false,
     action: '/ai_arts/api/files/upload/model',
     headers: {
@@ -111,17 +114,18 @@ const CreateModel = props => {
     },
     beforeUpload(file) {
       const { type, size } = file;
-      const isOverSize = size / 1024 / 1024 / 1024 > 2; 
+      // const isOverSize = size / 1024 / 1024 / 1024 > 2; 
       return new Promise((resolve, reject) => {
-        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip') && !isOverSize) {
-          resolve(file);
-        } else {
-          let text = '';
-          text = isOverSize ? '2GB以内的文件' : `${fileList.length ?  '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
-          message.warning(`只支持上传 ${text}！`);
+        if (fileList.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
+          message.warning(`不能上传相同的文件！`);
           reject(file);
         }
-      });
+        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
+          message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
+          reject(file);
+        }
+        resolve(file);
+      });      
     },
     onRemove(file) {
       if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
@@ -209,7 +213,7 @@ const CreateModel = props => {
                   <InboxOutlined />
                 </p>
                 <p className="ant-upload-text">请点击或拖入文件上传</p>
-                <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件，且最大不能超过2GB）</p>
+                <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）</p>
               </Dragger>
             </Form.Item>}
             <Form.Item

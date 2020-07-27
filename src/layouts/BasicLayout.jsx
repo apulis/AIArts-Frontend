@@ -12,6 +12,7 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { getAuthorityFromRouter } from '@/utils/utils';
 import logo from '../assets/logo.svg';
+import { USER_LOGIN_URL } from '@/utils/const';
 
 const noMatch = (
   <Result
@@ -20,7 +21,7 @@ const noMatch = (
     subTitle="Sorry, you are not authorized to access this page."
     extra={
       <Button type="primary">
-        <Link to="/user/login">Go Login</Link>
+        <a href={USER_LOGIN_URL}>Go Login</a>
       </Button>
     }
   />
