@@ -168,6 +168,10 @@ const ModelTraining = (props) => {
     if (distributedJob) {
       values.deviceNum = values.deviceTotal;
     }
+    if (values.jobtrainingtype === 'PSDistJob') {
+      values.numPs = 1;
+      values.numPsWorker = ''
+    }
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     cancel();
@@ -259,7 +263,7 @@ const ModelTraining = (props) => {
   }
 
   const handleDeviceChange = () => {
-    setDeviceTotal((Number(getFieldValue('nodeNum') || 0)) * (Number(getFieldValue('deviceNum') || 0)))
+    setDeviceTotal((Number(getFieldValue('numPsWorker') || 0)) * (Number(getFieldValue('deviceNum') || 0)))
   }
 
   return (
@@ -344,8 +348,8 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]}>
-          <Radio.Group style={{ width: '300px' }} defaultValue={'RegularJob'} onChange={handleDistributedJob}>
+        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob">
+          <Radio.Group style={{ width: '300px' }}onChange={handleDistributedJob}>
             <Radio value={'PSDistJob'}>是</Radio>
             <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
@@ -364,7 +368,7 @@ const ModelTraining = (props) => {
             labelCol={{ span: 4 }}
             label="节点数量"
             {...commonLayout}
-            name="nodeNum"
+            name="numPsWorker"
             rules={[
               {type: 'number', message: '需要填写一个数字'},
               {validator(rule, value, callback) {
@@ -374,7 +378,7 @@ const ModelTraining = (props) => {
               }}
             ]}
             
-            defaultValue={1}
+            initialValue={1}
           >
             <InputNumber
               onChange={handleDeviceChange}
