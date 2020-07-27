@@ -263,7 +263,11 @@ const ModelTraining = (props) => {
   }
 
   const handleDeviceChange = () => {
-    setDeviceTotal((Number(getFieldValue('numPsWorker') || 0)) * (Number(getFieldValue('deviceNum') || 0)))
+    const deviceTotal = (Number(getFieldValue('numPsWorker') || 0)) * (Number(getFieldValue('deviceNum') || 0));
+    setFieldsValue({
+      deviceTotal: deviceTotal || 0,
+    })
+    setDeviceTotal(deviceTotal);
   }
 
   return (
