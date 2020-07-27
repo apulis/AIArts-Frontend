@@ -183,6 +183,12 @@ export default [
             component: './VisualOperation'
           },                      
           {
+            path: '/warningLog',
+            name: 'warningLog',
+            icon: 'EditOutlined',
+            component: './WarningLog'
+          },   
+          {
             path: '/',
             redirect: '/CodeList',
             authority: ['AI_ARTS_ALL'],

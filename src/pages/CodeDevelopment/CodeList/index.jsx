@@ -182,7 +182,7 @@ const CodeList = (props) => {
       title: '状态',
       dataIndex: 'status',
       ellipsis: true,
-      render:status=>statusMap[status].local,
+      render:status=>statusMap[status]?.local,
       sorter:{
         compare:(item1,item2) =>statusMap[item1.status].priority-statusMap[item2.status].priority,
         multiple:2
