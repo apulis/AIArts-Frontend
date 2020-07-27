@@ -5,7 +5,7 @@ import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './se
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import moment from 'moment';
-import { NameReg, NameErrorText, pollInterval } from '@/utils/const';
+import { NameReg, NameErrorText, pollInterval, sortText } from '@/utils/const';
 import useInterval from '../../hooks/useInterval';
 import { CloudUploadOutlined } from '@ant-design/icons';
 
@@ -26,6 +26,10 @@ const EdgeInference = () => {
   const [name, setName] = useState('');
   const [type, setType] = useState('全部类型');
   const [total, setTotal] = useState(0);
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: null
+  });
   const typeText = {
     converting: '转换中',
     pushing: '推送中'
@@ -33,7 +37,7 @@ const EdgeInference = () => {
 
   useEffect(() => {
     getData();
-  }, [pageParams, name, type]);
+  }, [pageParams, name, type, sortedInfo]);
 
   useEffect(() => {
     getFdInfo();
@@ -46,14 +50,20 @@ const EdgeInference = () => {
 
   const getData = async () => {
     setLoading(true);
-    const params = { ...pageParams, name: name, type: type === '全部类型' ? '' : type };
+    const params = { 
+      ...pageParams, 
+      name: name, 
+      type: type === '全部类型' ? '' : type,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
     const { code, data, msg } = await getEdgeInferences(params);
     if (code === 0 && data) {
       const { total, edgeInferences } = data;
-      const temp1 = JSON.stringify(jobs.map(i => i.jobStatus));
-      const temp2 = JSON.stringify(edgeInferences.map(i => i.jobStatus));
-      const temp3 = JSON.stringify(jobs.map(i => i.modelconversionStatus));
-      const temp4 = JSON.stringify(edgeInferences.map(i => i.modelconversionStatus));
+      const temp1 = jobs ? JSON.stringify(jobs.map(i => i.jobStatus)) : [];
+      const temp2 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.jobStatus)) : [];
+      const temp3 = jobs ? JSON.stringify(jobs.map(i => i.modelconversionStatus)) : [];
+      const temp4 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.modelconversionStatus)) : [];
       if (temp1 !== temp2 || temp3 !== temp4) setJobs(edgeInferences);
       setTotal(total);
     } else {
@@ -85,12 +95,14 @@ const EdgeInference = () => {
     {
       title: 'ID',
       dataIndex: 'jobId',
-      render: id => <p style={{fontFamily: 'Consolas'}}>{id}</p>
+      render: id => <span style={{fontFamily: 'Consolas'}}>{id}</span>
     },
     {
       title: '推理名称',
       dataIndex: 'jobName',
-      sorter: (a, b) => a.jobName.length - b.jobName.length,
+      key: 'jobName',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
     },
     {
       title: '类型',
@@ -99,8 +111,10 @@ const EdgeInference = () => {
     {
       title: '时间',
       dataIndex: 'jobTime',
+      key: 'jobTime',
+      sorter: true,
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
-      sorter: (a, b) => moment(a.jobTime) - moment(b.jobTime),
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
     },
     {
       title: '状态',
@@ -108,7 +122,7 @@ const EdgeInference = () => {
         const { jobStatus, modelconversionStatus } = item;
         let status = modelconversionStatus;
         if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : typeText[modelconversionStatus];
-        return (<p>{status}</p>)
+        return (<span>{status}</span>)
       }
     },
     {
@@ -187,18 +201,25 @@ const EdgeInference = () => {
     return data.map(i => <Option value={i}>{i}</Option>);
   }
 
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
+
   return (
     <PageHeaderWrapper>
       <div className={styles.edgeInferences}>
         <Button type="primary" onClick={() => setModalFlag1(true)}>新建推理</Button>
         <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
         {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
-        <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
-        <Select onChange={v => setType(v)} defaultValue={type}>{getOptions(true)}</Select>
+        <div className={styles.searchWrap}>
+          <Select onChange={v => setType(v)} defaultValue={type}>{getOptions(true)}</Select>
+          <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
+        </div>
         <Table
           columns={columns}
           dataSource={jobs}
           rowKey={r => r.jobId}
+          onChange={onSortChange}
           pagination={{
             total: total,
             showQuickJumper: true,

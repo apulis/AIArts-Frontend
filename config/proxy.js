@@ -8,9 +8,9 @@
 export default {
   dev: {
     '/ai_arts/api/': {
-      target: 'http://10.31.3.120:9000/',
+      // target: 'http://10.31.3.120:9000/',
       // target: 'http://sandbox2-master.sigsus.cn:56511/',
-      // target: 'http://219.133.167.42:52009/',
+      target: 'http://219.133.167.42:52009/',
       // target: 'http://10.31.3.105:9000/',
       changeOrigin: true,
       pathRewrite: {
