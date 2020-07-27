@@ -31,36 +31,36 @@ const genList = (current, pageSize) => {
 const mockDataSource = genList(1, 50);
 
 const ExpandDetails = (item) => {
-  // 模拟数据
-  item = {
-    dataset: 'ILSVRC-2012 (ImageNet-1k)',
-    format: '图像，256*256',
-    arguments: [
-      {
-        key: 'learning_rate',
-        value: 0.01123123123123
-      }
-    ],
-    engineType: 'tensorflow , tf-1.8.0-py2.7',
-    output: '--',
-  }
+  // // 模拟数据
+  // item = {
+  //   dataset: 'ILSVRC-2012 (ImageNet-1k)',
+  //   format: '图像，256*256',
+  //   arguments: [
+  //     {
+  //       key: 'learning_rate',
+  //       value: 0.01123123123123
+  //     }
+  //   ],
+  //   engineType: 'tensorflow , tf-1.8.0-py2.7',
+  //   output: '--',
+  // }
   const argumentsContent = (
     <div>
-      {item.arguments.map(a => {
+      {item.arguments && item.arguments.map(a => {
         return <p>{a.key + '=' + a.value}</p>;
       })}
     </div>
   );
 
-  const argsSuffix = item.arguments.length > 1 ? '...' : '';
+  // const argsSuffix = item.arguments.length > 1 ? '...' : '';
 
   return (
     <Descriptions>
       <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
-      <Descriptions.Item label="数据格式">{item.format}</Descriptions.Item>
+      <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {item.arguments.length > 0 && 
+          {item.arguments && item.arguments.length > 0 && 
             <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
           }
         </Popover>
@@ -94,30 +94,32 @@ const PretrainedModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '模型用途',
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
+      sorter: (a, b) => a.use.length - b.use.length,
+      sortDirections: ['descend', 'ascend'],      
     },
-    // {
-    //   title: '引擎类型',
-    //   dataIndex: 'type',
-    //   ellipsis: true,
-    //   width: 100,
-    // },
     {
       title: '模型精度',
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
+      sorter: (a, b) => a.precision - b.precision,
+      sortDirections: ['descend', 'ascend'],   
     },
     {
       title: '模型大小',
       dataIndex: 'size',
       ellipsis: true,
-      width: 150
+      width: 150,
+      sorter: (a, b) => a.size - b.size,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '创建时间',
@@ -125,6 +127,8 @@ const PretrainedModelList = props => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 200,
+      sorter: (a, b) => a.createdAt - b.createdAt,
+      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '操作',
@@ -148,9 +152,10 @@ const PretrainedModelList = props => {
       payload: {
         pageNum: pageParams.pageNum,
         pageSize: pageParams.pageSize,
-        name: values.modelName     
+        isAdvance: true,
+        name: values.modelName, 
       },
-    });    
+    });
   };
 
   const handleRefresh = () => {
@@ -158,7 +163,8 @@ const PretrainedModelList = props => {
       type: 'pretrainedModelList/fetch',
       payload: {
         pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
+        pageSize: pageParams.pageSize,
+        isAdvance: true,
       }
     });
   };
@@ -217,8 +223,8 @@ const PretrainedModelList = props => {
         </div>
         <Table
           columns={columns}
-          // dataSource={data.list}
-          dataSource={mockDataSource}
+          dataSource={data.list}
+          // dataSource={mockDataSource}
           rowKey='id'
           pagination={{
             total: data.pagination.total,

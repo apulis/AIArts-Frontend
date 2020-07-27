@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 export async function getModels(params) {
-  return request(`/pretrainedModels`, {
+  return request(`/models`, {
     params
   });
 }
