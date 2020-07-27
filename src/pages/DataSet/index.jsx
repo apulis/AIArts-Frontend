@@ -104,6 +104,7 @@ const DataSetList = () => {
     },
     {
       title: '更新时间',
+      key: 'updatedAt',
       dataIndex: 'updatedAt',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'updatedAt' && sortedInfo.order,
