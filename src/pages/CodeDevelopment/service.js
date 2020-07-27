@@ -41,12 +41,12 @@ export async function postCode2(data) {
 }
 const arr = ['全部(30)','创建中(1)','创建失败(15)','排队中(6)','运行中(5)','停止中(0)','排队中(6)','运行中(5)','停止中(0)','排队中(6)','运行中(5)','停止中(0)']
 export async function getCodeCount() {
-  return {
-    code:0,
-    data:{counts:arr},
-    msg:'success'
-  }
-  // return request('/codes', {
-  //   params,
-  // });
+  // return {
+  //   code:0,
+  //   data:{counts:arr},
+  //   msg:'success'
+  // }
+  return request('/codes', {
+    params:{jobType:'codeEnv'},
+  });
 }
