@@ -46,13 +46,16 @@ const ModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
-      // render: (text, record) => <Link to={ { pathname: '/modelList/ExperimentList', query: { id: record.id } } }>{text}</Link>
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '状态',
       ellipsis: true,
       width: 100,
-      render: (text, item) => getModelStatus(item.status)
+      render: (text, item) => getModelStatus(item.status),
+      sorter: (a, b) => a.status.length - b.status.length,
+      sortDirections: ['descend', 'ascend'],       
     },
     // {
     //   title: '引擎类型',
@@ -72,6 +75,8 @@ const ModelList = props => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 150,
+      sorter: (a, b) => a.createdAt - b.createdAt,
+      sortDirections: ['descend', 'ascend'],          
     },
     {
       title: '描述',
