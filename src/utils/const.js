@@ -18,3 +18,5 @@ export const NameReg = /^[A-Za-z0-9-_]+$/;
 export const NameErrorText = '名称只能由字母，数字，下划线或横线组成！';
 
 export const pollInterval = 3000;
+
+export const modelTrainingType = 'artsTraining';

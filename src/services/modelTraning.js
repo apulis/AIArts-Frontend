@@ -1,4 +1,5 @@
 import request from '../utils/request';
+import { modelTrainingType } from '@/utils/const';
 
 export async function submitModelTraining(data) {
   return await request('/trainings', {
@@ -64,5 +65,5 @@ export async function saveTrainingParams(data) {
 }
 
 export async function fetchJobStatusSumary() {
-  return await request('/common/job/summary?jobType=artsTraining');
+  return await request(`/common/job/summary?jobType=${modelTrainingType}`);
 }
