@@ -60,10 +60,11 @@ const ModelTraining = (props) => {
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const [distributedJob, setDistributedJob] = useState(false);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
+  const [totalNodes, setTotalNodes] = useState(0);
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { aiFrameworks, deviceList, codePathPrefix } } = res;
+      let { data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo } } = res;
       if (!/\/$/.test(codePathPrefix)) {
         codePathPrefix = codePathPrefix + '/';
       }
@@ -74,6 +75,10 @@ const ModelTraining = (props) => {
       });
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
+      const { totalNodes } = nodeInfo;
+      if (totalNodes) {
+        setTotalNodes(totalNodes);
+      }
     }
   };
 
@@ -216,7 +221,8 @@ const ModelTraining = (props) => {
     wrapperCol: { span: 8 }
   };
 
-  const handleDistributedJob = (type) => {
+  const handleDistributedJob = (e) => {
+    const type = e.target.value;
     setDistributedJob(type);
   }
 
@@ -339,10 +345,10 @@ const ModelTraining = (props) => {
           </div>
         </FormItem>
         <FormItem label="是否分布式训练" name="distributed" {...commonLayout} rules={[{ required: true }]}>
-          <Select style={{ width: '300px' }} defaultValue={distributedJob} onChange={handleDistributedJob}>
-            <Option value={true}>是</Option>
-            <Option value={false}>否</Option>
-          </Select>
+          <Radio.Group style={{ width: '300px' }} defaultValue={distributedJob} onChange={handleDistributedJob}>
+            <Radio value={true}>是</Radio>
+            <Radio value={false}>否</Radio>
+          </Radio.Group>
         </FormItem>
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
@@ -360,6 +366,7 @@ const ModelTraining = (props) => {
             {...commonLayout}
             name="nodeNum"
             rules={[
+              {type: 'number', message: '需要填写一个数字'}
             ]}
             
             defaultValue={1}
@@ -367,6 +374,7 @@ const ModelTraining = (props) => {
             <InputNumber
               onChange={handleDeviceChange}
               min={1}
+              max={totalNodes}
             />
           </FormItem>
         }
