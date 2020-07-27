@@ -178,7 +178,7 @@ const PretrainedModelList = props => {
           <div
             style={{
               float: "right",
-            }}          
+            }}
           >
             <Form
               layout='inline'
