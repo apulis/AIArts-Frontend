@@ -170,7 +170,7 @@ const ModelTraining = (props) => {
     }
     if (values.jobtrainingtype === 'PSDistJob') {
       values.numPs = 1;
-      values.numPsWorker = ''
+      values.numPsWorker = deviceNum;
     }
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
@@ -227,6 +227,7 @@ const ModelTraining = (props) => {
 
   const handleDistributedJob = (e) => {
     const type = e.target.value;
+    console.log('type',)
     setDistributedJob(type === 'PSDistJob');
   }
 
@@ -352,15 +353,14 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob">
-          <Radio.Group style={{ width: '300px' }}onChange={handleDistributedJob}>
+        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob" onChange={handleDistributedJob}>
+          <Radio.Group style={{ width: '300px' }}>
             <Radio value={'PSDistJob'}>是</Radio>
             <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
         </FormItem>
         {
           distributedJob && <FormItem
-            labelCol={{ span: 4 }}
             label="节点数量"
             {...commonLayout}
             name="numPsWorker"
@@ -370,10 +370,13 @@ const ModelTraining = (props) => {
               {validator(rule, value, callback) {
                 if (Number(value) > totalNodes) {
                   callback(`不能大于 ${totalNodes}`)
+                  return
                 }
                 if (Number(value) < 1) {
                   callback(`不能小于 1`)
+                  return
                 }
+                callback();
               }}
             ]}
             
