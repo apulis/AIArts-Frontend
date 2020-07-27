@@ -146,6 +146,12 @@ export default [
             authority: ['AI_ARTS_ALL'],
           },
           {
+            path: '/EdgeInference',
+            name: 'edgeInference',
+            icon: 'ApartmentOutlined',
+            component: './EdgeInference'
+          },
+          {
             path: '/Inference/submit',
             component: './InferenceService/Submit',
             authority: ['AI_ARTS_ALL'],
@@ -177,11 +183,11 @@ export default [
             component: './VisualOperation'
           },                      
           {
-            path: '/EdgeInference',
-            name: 'edgeInference',
-            icon: 'ApartmentOutlined',
-            component: './EdgeInference'
-          },
+            path: '/warningLog',
+            name: 'warningLog',
+            icon: 'EditOutlined',
+            component: './WarningLog'
+          },   
           {
             path: '/',
             redirect: '/CodeList',

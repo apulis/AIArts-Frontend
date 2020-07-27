@@ -66,8 +66,8 @@ const ExpandDetails = (item) => {
         </Popover>
       </Descriptions.Item>
       <Descriptions.Item label="引擎类型">{item.engineType}</Descriptions.Item>
-      <Descriptions.Item label="模型输出">{item.output}</Descriptions.Item>
-    </Descriptions>    
+      {/* <Descriptions.Item label="模型输出">{item.output}</Descriptions.Item> */}
+    </Descriptions> 
   );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row } from 'antd';
+import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row, InputNumber  } from 'antd';
 import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
@@ -55,11 +55,11 @@ const ModelTraining = (props) => {
   const [availableDeviceNumList, setAvailableDeviceNumList] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
-  const [presetRunningParams, setPresetRunningParams] = useState([]);  
+  const [deviceTotal, setDeviceTotal] = useState(0);
+  const [presetRunningParams, setPresetRunningParams] = useState([]);
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const [distributedJob, setDistributedJob] = useState(false);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
-
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -160,6 +160,9 @@ const ModelTraining = (props) => {
     values.startupFile = codePathPrefix + values.startupFile;
     values.outputPath = codePathPrefix + (values.outputPath || '');
     values.params = params;
+    if (distributedJob) {
+      values.deviceNum = values.deviceTotal;
+    }
     const cancel = message.loading('正在提交');
     const res = await submitModelTraining(values);
     cancel();
@@ -243,10 +246,14 @@ const ModelTraining = (props) => {
     setCurrentSelectedPresetParamsId(current);
   }
 
-  const handleClickDeviceNum = (e) => {
+  const handleClickDeviceNum = (e) => {h
     if (!getFieldValue('deviceType')) {
       message.error('需要先选择设置类型');
     }
+  }
+
+  const handleDeviceChange = () => {
+    setDeviceTotal((Number(getFieldValue('nodeNum') || 0)) * (Number(getFieldValue('deviceNum') || 0)))
   }
 
   return (
@@ -269,7 +276,7 @@ const ModelTraining = (props) => {
       {isSubmitPage && <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
-          <Radio.Button value={2} onClick={() => {setPresetParamsVisible(true)}}>导入参数配置</Radio.Button>
+          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true) }}>导入参数配置</Radio.Button>
         </Radio.Group>
       </FormItem>}
       <Form form={form}>
@@ -331,6 +338,12 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
+        <FormItem label="是否分布式训练" name="distributed" {...commonLayout} rules={[{ required: true }]}>
+          <Select style={{ width: '300px' }} defaultValue={distributedJob} onChange={handleDistributedJob}>
+            <Option value={true}>是</Option>
+            <Option value={false}>否</Option>
+          </Select>
+        </FormItem>
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {
@@ -340,19 +353,32 @@ const ModelTraining = (props) => {
             }
           </Select>
         </FormItem>
-        <FormItem label="是否分布式训练" name="distributed" {...commonLayout} rules={[{required: true}]}>
-          <Select style={{width: '300px'}} defaultValue={distributedJob} onChange={handleDistributedJob}>
-            <Option value={true}>是</Option>
-            <Option value={false}>否</Option>
-          </Select>
-        </FormItem>
+        {
+          distributedJob && <FormItem
+            labelCol={{ span: 4 }}
+            label="节点数量"
+            {...commonLayout}
+            name="nodeNum"
+            rules={[
+            ]}
+            
+            defaultValue={1}
+          >
+            <InputNumber
+              onChange={handleDeviceChange}
+              min={1}
+            />
+          </FormItem>
+        }
         <FormItem
-          label={ distributedJob ? "每个节点设备数量": "设备数量"}
+          label={distributedJob ? "每个节点设备数量" : "设备数量"}
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}
         >
-          <Select style={{ width: '300px' }} onClick={handleClickDeviceNum} >
+          <Select style={{ width: '300px' }}
+            onChange={handleDeviceChange}
+            onClick={handleClickDeviceNum} >
             {
               availableDeviceNumList.map(avail => (
                 <Option value={avail}>{avail}</Option>
@@ -360,6 +386,16 @@ const ModelTraining = (props) => {
             }
           </Select>
         </FormItem>
+        {
+          distributedJob && <FormItem
+            {...commonLayout}
+            label="设备总数"
+            name="deviceTotal"
+            disabled
+          >
+            <Input value={deviceTotal} style={{ width: '300px' }} disabled />
+          </FormItem>
+        }
       </Form>
       <Modal
         visible={bootFileModalVisible}
@@ -412,7 +448,7 @@ const ModelTraining = (props) => {
                 </Row>
                 <Row>
                   <Col span={8}>
-                  启动文件
+                    启动文件
                   </Col>
                   <Col span={16}>
                     {p.startupFile}
