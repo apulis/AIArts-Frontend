@@ -1,6 +1,6 @@
 import request from '@/utils/request';
 
-const prefix = 'edge_inferences'
+const prefix = 'edge_inferences';
 
 export async function getEdgeInferences(params) {
   return request(`/${prefix}`, {

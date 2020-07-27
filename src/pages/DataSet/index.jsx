@@ -79,6 +79,7 @@ const DataSetList = () => {
     {
       title: '数据集名称',
       key: 'name',
+      sorter: (a, b) => a.name.length - b.name.length,
       render: item => <Link to={{ pathname: '/dataManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
     },
     {
@@ -94,6 +95,7 @@ const DataSetList = () => {
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
+      sorter: (a, b) => a.updatedAt - b.updatedAt,
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {

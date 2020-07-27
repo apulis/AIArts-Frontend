@@ -23,7 +23,7 @@ const EdgeInference = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // getData();
+    getData();
   }, [pageParams]);
 
   // useInterval(() => {
@@ -73,6 +73,7 @@ const EdgeInference = () => {
     {
       title: '推理名称',
       dataIndex: 'jobName',
+      sorter: (a, b) => a.jobName.length - b.jobName.length,
     },
     {
       title: '类型',
