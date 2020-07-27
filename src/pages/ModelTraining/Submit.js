@@ -366,7 +366,12 @@ const ModelTraining = (props) => {
             {...commonLayout}
             name="nodeNum"
             rules={[
-              {type: 'number', message: '需要填写一个数字'}
+              {type: 'number', message: '需要填写一个数字'},
+              {validator(rule, value, callback) {
+                if (Number(value) > totalNodes) {
+                  callback(`不能大于 ${totalNodes}`)
+                }
+              }}
             ]}
             
             defaultValue={1}
