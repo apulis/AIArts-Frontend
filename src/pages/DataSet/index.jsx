@@ -1,11 +1,10 @@
 import { message, Table, Modal, Form, Input, Button } from 'antd';
-import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatasets, edit, deleteDataSet, add, download } from './service';
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import { Link } from 'umi';
-import Mock from 'mockjs';
 import AddModalForm from './components/AddModalForm';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -149,14 +148,12 @@ const DataSetList = () => {
     setModalFlag(true);
   }
 
-  if (loading) return (<PageLoading />)
-
   return (
     <PageHeaderWrapper>
       <div className={styles.datasetWrap}>
         <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
         <div className={styles.searchWrap}>
-          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={v => setName(v)} />
+          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={v => setName(v)} allowClear />
           <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table
@@ -173,6 +170,7 @@ const DataSetList = () => {
             current: pageParams.pageNum,
             pageSize: pageParams.pageSize
           }}
+          loading={loading}
         />
       </div>
       {modalFlag && (

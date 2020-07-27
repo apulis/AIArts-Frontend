@@ -32,7 +32,7 @@ export async function submitFD(data) {
 }
 
 export async function push(data) {
-  return await request(`/${prefix}/push/${data.id}`, {
+  return await request(`/${prefix}/push/${data.jobId}`, {
     method: 'POST',
     data: data,
   });
