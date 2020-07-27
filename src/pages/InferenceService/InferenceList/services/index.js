@@ -1,5 +1,4 @@
 import request from '@/utils/request';
-import { MOCK_URL } from '@/config'
 
 export async function getInferences(params) {
   return request(`/inferences/ListInferenceJob`, {
@@ -27,7 +26,7 @@ export async function addInference(data) {
 }
 
 export async function updateInference(params = {}) {
-  return await request(`${MOCK_URL}/api/inferences/update`, {
+  return await request(`/api/inferences/update`, {
     method: 'POST',
     params
   });
