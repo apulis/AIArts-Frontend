@@ -57,28 +57,36 @@ const InferenceList = props => {
         return (
           <Link to={`/Inference/${item.jobId}/detail`}>{item.jobName}</Link>
         )
-      }
+      },
+      sorter: (a, b) => a.jobName.length - b.jobName.length,
+      sortDirections: ['descend', 'ascend'], 
     },
     {
       title: '使用模型',
       // dataIndex: 'model',
       // ellipsis: true,
       // width: 100
-      render: (text, item) => item.jobParams?.model_base_path
+      render: (text, item) => item.jobParams?.model_base_path,
+      sorter: (a, b) => a.jobParams.model_base_path.length - b.jobParams.model_base_path.length,
+      sortDirections: ['descend', 'ascend'],   
     },
     {
       title: '状态',
       // dataIndex: 'jobStatus',
       // ellipsis: true,
       // width: 100
-      render: (text, item) => getJobStatus(item.jobStatus)
+      render: (text, item) => getJobStatus(item.jobStatus),
+      sorter: (a, b) => a.jobStatus.length - b.jobStatus.length,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '引擎类型',
       // dataIndex: 'engineType',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => item?.jobParams?.framework
+      render: (text, item) => item?.jobParams?.framework,
+      sorter: (a, b) => a.jobParams.framework.length - b.jobParams.framework.length,
+      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '创建时间',
@@ -86,20 +94,26 @@ const InferenceList = props => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       // ellipsis: true,
       // width: 150,
+      sorter: (a, b) => a.jobTime - b.jobTime,
+      sortDirections: ['descend', 'ascend'],    
     },
     {
       title: '运行时长',
       // dataIndex: 'runDuration',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => formatDuration(moment.duration(Date.now()-item.jobTime))
+      render: (text, item) => formatDuration(moment.duration(item.duration)),
+      sorter: (a, b) => a.duration - b.duration,
+      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '服务地址',
       // dataIndex: 'serverAddr',
       ellipsis: true,
       width: 100,
-      render: (text, item) => item['inference-url'] ? item['inference-url'] : ''
+      render: (text, item) => item['inference-url'] ? item['inference-url'] : '',
+      sorter: (a, b) => a['inference-url'].length - b['inference-url'].length,
+      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '描述',

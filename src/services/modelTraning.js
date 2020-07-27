@@ -12,7 +12,7 @@ export async function fetchAvilableResource() {
 }
 
 export async function fetchTrainingList({pageNum, pageSize, status, search}) {
-  return await request(`/trainings`, {
+  return await request(`/trainings/`, {
     params: {
       pageNum: pageNum,
       pageSize: pageSize,

@@ -8,60 +8,35 @@ import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
 
-// mock DataSource
-const genList = (current, pageSize) => {
-  const tableListDataSource = [];
-
-  for (let i = 0; i < pageSize; i += 1) {
-    const index = (current - 1) * 10 + i;
-    tableListDataSource.push({
-      id: index,
-      name: `model_00${index}`,
-      use: `图像分类`,
-      engineType: `tensorflow , tf-1.8.0-py2.7`,
-      precision: `25.6%`,
-      size: '157.79MB',
-      createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-    });
-  }
-
-  return tableListDataSource;
-};
-
-const mockDataSource = genList(1, 50);
-
 const ExpandDetails = (item) => {
-  // 模拟数据
-  item = {
-    dataset: 'ILSVRC-2012 (ImageNet-1k)',
-    format: '图像，256*256',
-    arguments: [
-      {
-        key: 'learning_rate',
-        value: 0.01123123123123
-      }
-    ],
-    engineType: 'tensorflow , tf-1.8.0-py2.7',
-    output: '--',
-  }
+  // 转换运行参数格式
+  let runArguments = [];
+
+  Object.keys(item.arguments).forEach(key => {
+    runArguments.push({
+      key: key,
+      value: item.arguments[key]
+    })
+  });
+
   const argumentsContent = (
     <div>
-      {item.arguments.map(a => {
+      {runArguments && runArguments.map(a => {
         return <p>{a.key + '=' + a.value}</p>;
       })}
     </div>
   );
 
-  const argsSuffix = item.arguments.length > 1 ? '...' : '';
+  const argsSuffix = runArguments.length > 1 ? '...' : '';
 
   return (
     <Descriptions>
       <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
-      <Descriptions.Item label="数据格式">{item.format}</Descriptions.Item>
+      <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {item.arguments.length > 0 && 
-            <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
+          {runArguments && runArguments.length > 0 && 
+            <div>{runArguments[0].key + '=' + runArguments[0].value + argsSuffix}</div>
           }
         </Popover>
       </Descriptions.Item>
@@ -78,11 +53,12 @@ const PretrainedModelList = props => {
     pretrainedModelList: { data },
   } = props;
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
 
   useEffect(() => {
-    handleRefresh();
-  }, [pageParams]);
+    handleSearch();
+  }, [pageParams, formValues]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -94,30 +70,32 @@ const PretrainedModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '模型用途',
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
+      sorter: (a, b) => a.use.length - b.use.length,
+      sortDirections: ['descend', 'ascend'],      
     },
-    // {
-    //   title: '引擎类型',
-    //   dataIndex: 'type',
-    //   ellipsis: true,
-    //   width: 100,
-    // },
     {
       title: '模型精度',
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
+      sorter: (a, b) => a.precision - b.precision,
+      sortDirections: ['descend', 'ascend'],   
     },
     {
       title: '模型大小',
       dataIndex: 'size',
       ellipsis: true,
-      width: 150
+      width: 150,
+      sorter: (a, b) => a.size - b.size,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '创建时间',
@@ -125,6 +103,8 @@ const PretrainedModelList = props => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 200,
+      sorter: (a, b) => a.createdAt - b.createdAt,
+      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '操作',
@@ -139,28 +119,34 @@ const PretrainedModelList = props => {
 
   const onReset = () => {
     form.resetFields();
-    handleRefresh();
+    setFormValues({name:''});
   };
 
   const onFinish = values => {
-    dispatch({
-      type: 'pretrainedModelList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize,
-        name: values.modelName     
-      },
-    });    
+    let queryClauses = {};
+
+    if (values.modelName) {
+      queryClauses.name = values.modelName;
+    }
+
+    setFormValues({...formValues, ...queryClauses});    
   };
 
-  const handleRefresh = () => {
+  const handleSearch = () => {
+    const params = {
+      isAdvance: true,
+      pageNum: pageParams.pageNum,
+      pageSize: pageParams.pageSize,
+    };
+
+    if (formValues.name) {
+      params.name = formValues.name;
+    }
+
     dispatch({
       type: 'pretrainedModelList/fetch',
-      payload: {
-        pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
-      }
-    });
+      payload: params,
+    });       
   };
 
   const createInference = (item) => {
@@ -210,15 +196,14 @@ const PretrainedModelList = props => {
                 <Button type="primary" htmlType="submit">查询</Button>
               </Form.Item>
               <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleRefresh()}></Button>
+                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
               </Form.Item>
             </Form>
           </div>            
         </div>
         <Table
           columns={columns}
-          // dataSource={data.list}
-          dataSource={mockDataSource}
+          dataSource={data.list}
           rowKey='id'
           pagination={{
             total: data.pagination.total,
