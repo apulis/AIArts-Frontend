@@ -56,7 +56,7 @@ const CreateModel = props => {
 
     if (code === 0) {
       message.success(`创建成功`);
-      history.push('/ModelList');
+      history.push('/ModelManagement/MyModels');
     } else {
       msg && message.error(`创建失败:${msg}`);
     }
