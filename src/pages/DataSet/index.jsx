@@ -59,6 +59,10 @@ const DataSetList = () => {
     setPageParams({ pageNum: page, pageSize: count });
   };
 
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
+
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
       let res = null, text = '';
@@ -159,10 +163,6 @@ const DataSetList = () => {
     setModalType(type);
     !type && setPathId(new Date().valueOf());
     setModalFlag(true);
-  }
-
-  const onSortChange = (pagination, filters, sorter) => {
-    setSortedInfo(sorter);
   }
 
   return (
