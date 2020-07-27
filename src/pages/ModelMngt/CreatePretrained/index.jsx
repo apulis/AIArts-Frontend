@@ -53,12 +53,18 @@ const CreatePretrained = props => {
 
   const onFinish = async (values) => {
     // console.log(values);
-    const { name, description, path, jobId } = values;
+    const { name, description, path, dataFormat, engineType, precision, use, modelArgumentPath, modelPath } = values;
     const data = {
       name,
       description,
       path: codePathPrefix + path,
-      jobId: jobId || '',
+      isAdvance: true,
+      dataFormat,
+      engineType,
+      use,
+      modelArgumentPath,
+      modelPath,
+      precision,
     }
     
     const { code, msg } = await addModel(data);
@@ -86,7 +92,7 @@ const CreatePretrained = props => {
 
   const handleSubmit = item => {
     // console.log(item)
-    form.setFieldsValue({job: item.name, jobId: item.id});
+    form.setFieldsValue({job: item.name});
     setVisible(false);
   };
 
@@ -221,6 +227,22 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '数据格式不能为空!' }]}
             >
               <Input placeholder="请输入数据格式" />
+            </Form.Item>                     
+            <Form.Item
+              {...layout}
+              name="modelPath"
+              label="模型路径"
+              rules={[{ required: true, message: '模型路径不能为空!' }]}
+            >
+              <Input placeholder="请输入模型路径" />
+            </Form.Item>                     
+            <Form.Item
+              {...layout}
+              name="modelArgumentPath"
+              label="模型参数文件"
+              rules={[{ required: true, message: '模型参数文件不能为空!' }]}
+            >
+              <Input placeholder="请输入模型参数文件路径" />
             </Form.Item>                     
             <Form.Item
               style={{ float: 'right' }}
