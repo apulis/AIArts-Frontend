@@ -26,9 +26,10 @@ const CodeCreate = () => {
       const enginTypeArrData = Object.keys(result.aiFrameworks)
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
-      const maxNodeNumData = result.totalNodes
-      const deviceNumPerNodeArrData = [1,2]
-      const deviceNumArrData = canSelectUtil(result.deviceList[0].avail) || [0]
+      const maxNodeNumData = result.nodeInfo.totalNodes
+      debugger
+      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(deviceTypeArrData[0])
+      const deviceNumArrData = utilCanSelect(result.deviceList[0].avail) || [0]
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
@@ -59,7 +60,7 @@ const CodeCreate = () => {
       return null
     }
   }
-  const canSelectUtil = (avail) => {
+  const utilCanSelect = (avail) => {
     let arr = []
     if (avail >= 2) {
       arr = [0, 1, 2]
@@ -67,6 +68,15 @@ const CodeCreate = () => {
       arr = [0, 1]
     } else {
       arr = [0]
+    }
+    return arr
+  }
+  const utilGetDeviceNumPerNodeArr = (num) =>{
+    let arr = []
+    let temp = 1
+    while(temp<num){
+      arr.push(temp)
+      temp *=2
     }
     return arr
   }
@@ -85,7 +95,7 @@ const CodeCreate = () => {
   }
   const handleDeviceTypeChange = (index) => {
     const avail = data['deviceList'][index].avail
-    const arr = canSelectUtil(avail)
+    const arr = utilCanSelect(avail)
     setFieldsValue({ 'deviceNum': arr[0]})
     setDeviceNumArr(arr)
   }
