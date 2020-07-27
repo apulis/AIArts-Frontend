@@ -94,24 +94,32 @@ const PretrainedModelList = props => {
       dataIndex: 'name',
       ellipsis: true,
       width: 150,
+      sorter: (a, b) => a.name.length - b.name.length,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '模型用途',
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
+      sorter: (a, b) => a.use.length - b.use.length,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '模型精度',
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
+      sorter: (a, b) => a.precision - b.precision,
+      sortDirections: ['descend', 'ascend'],   
     },
     {
       title: '模型大小',
       dataIndex: 'size',
       ellipsis: true,
-      width: 150
+      width: 150,
+      sorter: (a, b) => a.size - b.size,
+      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '创建时间',
@@ -119,6 +127,8 @@ const PretrainedModelList = props => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 200,
+      sorter: (a, b) => a.createdAt - b.createdAt,
+      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '操作',
