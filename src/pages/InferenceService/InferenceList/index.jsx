@@ -58,7 +58,7 @@ const InferenceList = props => {
           <Link to={`/Inference/${item.jobId}/detail`}>{item.jobName}</Link>
         )
       },
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.jobName.length - b.jobName.length,
       sortDirections: ['descend', 'ascend'], 
     },
     {
@@ -102,8 +102,7 @@ const InferenceList = props => {
       // dataIndex: 'runDuration',
       // ellipsis: true,
       // width: 100,
-      // render: (text, item) => formatDuration(moment.duration(Date.now()-item.jobTime)),
-      render: (text, item) => formatDuration(duration),
+      render: (text, item) => formatDuration(moment.duration(item.duration)),
       sorter: (a, b) => a.duration - b.duration,
       sortDirections: ['descend', 'ascend'],       
     },
