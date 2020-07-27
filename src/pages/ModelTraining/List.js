@@ -6,8 +6,6 @@ import { getJobStatus } from '@/utils/utils';
 import { fetchTrainingList, removeTrainings } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { set } from 'numeral';
-import { fetch } from 'umi-request';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -97,7 +95,10 @@ const List = () => {
     {
       dataIndex: 'status',
       title: '状态',
-      render: (text, item) => getJobStatus(item.status)
+      render: (text, item) => getJobStatus(item.status),
+      sorter(a, b) {
+        return statusList.indexOf(a.status) > statusList.indexOf(b.status)
+      }
     },
     {
       dataIndex: 'engine',
@@ -110,6 +111,9 @@ const List = () => {
         return (
           <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
         )
+      },
+      sorter(a, b) {
+        return new Date(a.createTime).getTime() - new Date(b.createTime).getTime()
       }
     },
     {
