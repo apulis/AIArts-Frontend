@@ -49,7 +49,7 @@ const CreateModel = props => {
       argumentPath: codePathPrefix + argumentPath,
       jobId: jobId || '',
       modelPath,
-      isAdvance: true,
+      isAdvance: false,
     }
     
     const { code, msg } = await addModel(data);
