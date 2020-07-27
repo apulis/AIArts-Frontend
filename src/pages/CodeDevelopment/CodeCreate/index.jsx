@@ -20,7 +20,7 @@ const CodeCreate = () => {
     renderForm()
   }, [])// 更新处理
   const renderForm = async () => {
-    setFieldsValue({jobTrainingType:'RegularJob'})
+    // setFieldsValue({jobTrainingType:'RegularJob'})
     const result = await apiGetResource()
     if (result) {
       setData(result)
@@ -33,7 +33,6 @@ const CodeCreate = () => {
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
-      setJobTrainingType(1)
       setDeviceTypeArr(deviceTypeArrData)
       setMaxNodeNum(maxNodeNumData)
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
@@ -127,6 +126,7 @@ const CodeCreate = () => {
           labelAlign='right'
           onFinish={handleSubmit}
           validateMessages={validateMessages}
+          initialValues = {{jobTrainingType:'RegularJob'}}
           form={form}
         >
           <Form.Item
