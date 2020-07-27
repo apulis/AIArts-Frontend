@@ -20,20 +20,18 @@ const CodeCreate = () => {
     renderForm()
   }, [])// 更新处理
   const renderForm = async () => {
-    setFieldsValue({jobTrainingType:'RegularJob'})
     const result = await apiGetResource()
     if (result) {
       setData(result)
       const enginTypeArrData = Object.keys(result.aiFrameworks)
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
-      const maxNodeNumData = 4
+      const maxNodeNumData = result.totalNodes
       const deviceNumPerNodeArrData = [1,2]
       const deviceNumArrData = canSelectUtil(result.deviceList[0].avail) || [0]
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
-      setJobTrainingType(1)
       setDeviceTypeArr(deviceTypeArrData)
       setMaxNodeNum(maxNodeNumData)
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
@@ -46,7 +44,7 @@ const CodeCreate = () => {
     const { code, data, msg } = obj
     if (code === 0) {
       message.success('创建成功')
-      history.push('/codeDevelopment/list')
+      history.push('/codeDevelopment')
     } else {
       message.error(msg)
     }
@@ -118,7 +116,7 @@ const CodeCreate = () => {
   return (
     <>
       <PageHeader ghost={false}
-        onBack={() => history.push('/codeDevelopment/list')}
+        onBack={() => history.push('/codeDevelopment')}
         title="返回代码开发">
       </PageHeader>
       <Card>
@@ -127,6 +125,7 @@ const CodeCreate = () => {
           labelAlign='right'
           onFinish={handleSubmit}
           validateMessages={validateMessages}
+          initialValues = {{jobTrainingType:'RegularJob'}}
           form={form}
         >
           <Form.Item

@@ -153,7 +153,7 @@ const CreateModel = props => {
             form={form}
             onFinish={onFinish}
             autoComplete="off"
-            initialValues={{ modelFileType: modelFileType }}
+            initialValues={{ modelPath: modelFileType }}
           >
             <Form.Item
               {...layout}
