@@ -51,5 +51,6 @@ export default {
   'menu.modelManagement.modelEvaluation': 'Model Evaluation',
   'menu.inferenceService': 'Inference Service',
   'menu.inferenceService.list': 'Inference Service List',
-  'menu.modelTraining': 'Model Training'
+  'menu.modelTraining': 'Model Training',
+  'menu.warningLog':'Warning Log'
 };
