@@ -31,36 +31,36 @@ const genList = (current, pageSize) => {
 const mockDataSource = genList(1, 50);
 
 const ExpandDetails = (item) => {
-  // 模拟数据
-  item = {
-    dataset: 'ILSVRC-2012 (ImageNet-1k)',
-    format: '图像，256*256',
-    arguments: [
-      {
-        key: 'learning_rate',
-        value: 0.01123123123123
-      }
-    ],
-    engineType: 'tensorflow , tf-1.8.0-py2.7',
-    output: '--',
-  }
+  // // 模拟数据
+  // item = {
+  //   dataset: 'ILSVRC-2012 (ImageNet-1k)',
+  //   format: '图像，256*256',
+  //   arguments: [
+  //     {
+  //       key: 'learning_rate',
+  //       value: 0.01123123123123
+  //     }
+  //   ],
+  //   engineType: 'tensorflow , tf-1.8.0-py2.7',
+  //   output: '--',
+  // }
   const argumentsContent = (
     <div>
-      {item.arguments.map(a => {
+      {item.arguments && item.arguments.map(a => {
         return <p>{a.key + '=' + a.value}</p>;
       })}
     </div>
   );
 
-  const argsSuffix = item.arguments.length > 1 ? '...' : '';
+  // const argsSuffix = item.arguments.length > 1 ? '...' : '';
 
   return (
     <Descriptions>
       <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
-      <Descriptions.Item label="数据格式">{item.format}</Descriptions.Item>
+      <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {item.arguments.length > 0 && 
+          {item.arguments && item.arguments.length > 0 && 
             <div>{item.arguments[0].key + '=' + item.arguments[0].value + argsSuffix}</div>
           }
         </Popover>
@@ -101,12 +101,6 @@ const PretrainedModelList = props => {
       ellipsis: true,
       width: 100,
     },
-    // {
-    //   title: '引擎类型',
-    //   dataIndex: 'type',
-    //   ellipsis: true,
-    //   width: 100,
-    // },
     {
       title: '模型精度',
       dataIndex: 'precision',
@@ -148,9 +142,10 @@ const PretrainedModelList = props => {
       payload: {
         pageNum: pageParams.pageNum,
         pageSize: pageParams.pageSize,
-        name: values.modelName     
+        isAdvance: true,
+        name: values.modelName, 
       },
-    });    
+    });
   };
 
   const handleRefresh = () => {
@@ -158,7 +153,8 @@ const PretrainedModelList = props => {
       type: 'pretrainedModelList/fetch',
       payload: {
         pageNum: pageParams.pageNum,
-        pageSize: pageParams.pageSize
+        pageSize: pageParams.pageSize,
+        isAdvance: true,
       }
     });
   };
@@ -217,8 +213,8 @@ const PretrainedModelList = props => {
         </div>
         <Table
           columns={columns}
-          // dataSource={data.list}
-          dataSource={mockDataSource}
+          dataSource={data.list}
+          // dataSource={mockDataSource}
           rowKey='id'
           pagination={{
             total: data.pagination.total,
