@@ -58,7 +58,7 @@ const InferenceList = props => {
           <Link to={`/Inference/${item.jobId}/detail`}>{item.jobName}</Link>
         )
       },
-      sorter: (a, b) => a.name.length - b.name.length,
+      sorter: (a, b) => a.jobName.length - b.jobName.length,
       sortDirections: ['descend', 'ascend'], 
     },
     {
