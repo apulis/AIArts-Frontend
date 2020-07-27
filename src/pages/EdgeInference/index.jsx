@@ -28,7 +28,7 @@ const EdgeInference = () => {
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: null
+    order: ''
   });
   const typeText = {
     converting: '转换中',

@@ -26,7 +26,7 @@ const DataSetList = () => {
   const addModalFormRef = useRef();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: null
+    order: ''
   });
 
   useEffect(() => {
