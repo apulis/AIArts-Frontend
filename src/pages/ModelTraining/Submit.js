@@ -228,7 +228,6 @@ const ModelTraining = (props) => {
 
   const handleDistributedJob = (e) => {
     const type = e.target.value;
-    console.log('type',)
     setDistributedJob(type === 'PSDistJob');
   }
 
