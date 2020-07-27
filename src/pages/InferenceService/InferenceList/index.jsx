@@ -3,7 +3,7 @@ import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stopInference } from './services';
-import { PAGEPARAMS, REFRESH_INTERVAL } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -23,6 +23,10 @@ const InferenceList = props => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
 
   const statusList = [
     { en: 'all', cn: '全部' },
@@ -41,16 +45,21 @@ const InferenceList = props => {
 
   useEffect(() => {
     handleSearch();
-  }, [pageParams, formValues]);
+  }, [pageParams, formValues, sortedInfo]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
+  };
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
   };
 
   const columns = [
     {
       title: '作业名称',
       dataIndex: 'jobName',
+      key: 'jobName',
       // ellipsis: true,
       // width: 150
       render(_text, item) {
@@ -58,8 +67,8 @@ const InferenceList = props => {
           <Link to={`/Inference/${item.jobId}/detail`}>{item.jobName}</Link>
         )
       },
-      sorter: (a, b) => a.jobName.length - b.jobName.length,
-      sortDirections: ['descend', 'ascend'], 
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,      
     },
     {
       title: '使用模型',
@@ -67,8 +76,6 @@ const InferenceList = props => {
       // ellipsis: true,
       // width: 100
       render: (text, item) => item.jobParams?.model_base_path,
-      sorter: (a, b) => a.jobParams.model_base_path.length - b.jobParams.model_base_path.length,
-      sortDirections: ['descend', 'ascend'],   
     },
     {
       title: '状态',
@@ -76,8 +83,6 @@ const InferenceList = props => {
       // ellipsis: true,
       // width: 100
       render: (text, item) => getJobStatus(item.jobStatus),
-      sorter: (a, b) => a.jobStatus.length - b.jobStatus.length,
-      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '引擎类型',
@@ -85,17 +90,16 @@ const InferenceList = props => {
       // ellipsis: true,
       // width: 100,
       render: (text, item) => item?.jobParams?.framework,
-      sorter: (a, b) => a.jobParams.framework.length - b.jobParams.framework.length,
-      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '创建时间',
       dataIndex: 'jobTime',
+      key: 'jobTime',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       // ellipsis: true,
       // width: 150,
-      sorter: (a, b) => a.jobTime - b.jobTime,
-      sortDirections: ['descend', 'ascend'],    
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,         
     },
     {
       title: '运行时长',
@@ -103,8 +107,6 @@ const InferenceList = props => {
       // ellipsis: true,
       // width: 100,
       render: (text, item) => formatDuration(moment.duration(item.duration)),
-      sorter: (a, b) => a.duration - b.duration,
-      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '服务地址',
@@ -112,8 +114,6 @@ const InferenceList = props => {
       ellipsis: true,
       width: 100,
       render: (text, item) => item['inference-url'] ? item['inference-url'] : '',
-      sorter: (a, b) => a['inference-url'].length - b['inference-url'].length,
-      sortDirections: ['descend', 'ascend'],       
     },
     {
       title: '描述',
@@ -174,8 +174,9 @@ const InferenceList = props => {
 
   const handleSearch = () => {
     const params = {
-      pageNum: pageParams.pageNum,
-      pageSize: pageParams.pageSize,
+      ...pageParams,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]      
     };
 
     if (formValues.status && formValues.status !== 'all') {
@@ -289,6 +290,7 @@ const InferenceList = props => {
           columns={columns}
           dataSource={data.list}
           rowKey={r => r.jobId}
+          onChange={onSortChange}
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,
