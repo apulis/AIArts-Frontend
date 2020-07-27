@@ -12,12 +12,14 @@ const ExpandDetails = (item) => {
   // 转换运行参数格式
   let runArguments = [];
 
-  Object.keys(item.arguments).forEach(key => {
-    runArguments.push({
-      key: key,
-      value: item.arguments[key]
-    })
-  });
+  if(item.arguments){
+    Object.keys(item.arguments).forEach(key => {
+      runArguments.push({
+        key: key,
+        value: item.arguments[key]
+      })
+    });
+  }
 
   const argumentsContent = (
     <div>
