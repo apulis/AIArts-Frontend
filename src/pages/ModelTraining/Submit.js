@@ -63,6 +63,7 @@ const ModelTraining = (props) => {
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
   const [totalNodes, setTotalNodes] = useState(0);
   const [nodeInfo, setNofeInfo] = useState([]);
+  const [currentDeviceType, setCurrentDeviceType] = useState('');
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -86,9 +87,13 @@ const ModelTraining = (props) => {
   };
   useEffect(() => {
     if (distributedJob) {
-      
+      if (!currentDeviceType) return
+      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      setAvailableDeviceNumList(list);
     } else {
-      //
+      if (!currentDeviceType) return
+      const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      setAvailableDeviceNumList(list);
     }
   }, [distributedJob, nodeInfo])
 
@@ -158,7 +163,7 @@ const ModelTraining = (props) => {
     } else {
       if (values.jobtrainingtype === 'PSDistJob') {
         values.numPs = 1;
-        values.numPsWorker = '';
+        values.numPsWorker = values.deviceNum;
       }
       const cancel = message.loading('正在提交');
       const res = await submitModelTraining(values);
@@ -221,6 +226,7 @@ const ModelTraining = (props) => {
 
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
+    setCurrentDeviceType(deviceType);
     const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
     const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
     if (deviceNumMax >= 0) {
