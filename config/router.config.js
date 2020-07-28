@@ -127,6 +127,10 @@ export default [
                 path: '/ModelManagement/CreatePretrained',
                 component: './ModelMngt/CreatePretrained'
               },
+              {
+                path: '/ModelManagement/ModelEvaluation/:id/detail',
+                component: './ModelMngt/ModelEvaluation/detail'
+              },
             ],            
           },
           {
