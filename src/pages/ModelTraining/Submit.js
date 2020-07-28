@@ -163,7 +163,6 @@ const ModelTraining = (props) => {
     } else {
       if (values.jobtrainingtype === 'PSDistJob') {
         values.numPs = 1;
-        values.numPsWorker = values.deviceNum;
       }
       const cancel = message.loading('正在提交');
       const res = await submitModelTraining(values);
