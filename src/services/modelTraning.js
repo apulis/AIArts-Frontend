@@ -19,8 +19,8 @@ export async function fetchTrainingList({pageNum, pageSize, status, search, sort
       pageSize: pageSize,
       status: status || 'all',
       searchWord: search || undefined,
-      orderBy: sortedInfo?.orderBy,
-      order: sortedInfo?.order,
+      orderBy: sortedInfo?.orderBy || undefined,
+      order: sortedInfo?.order || undefined,
     }
   });
 }
@@ -50,7 +50,7 @@ export async function fetchTemplates(params) {
 }
 
 export async function fetchTemplateById(id) {
-  return await request(`templates/${id}`);
+  return await request(`/templates/${id}`);
 }
 
 export async function removeTemplate(id) {

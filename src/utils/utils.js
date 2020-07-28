@@ -134,33 +134,39 @@ export const getModelStatus = (status) => {
 }
 // Regular任务类型，根据nodeType返回可选设备数量数组
 export const getDeviceNumArrByNodeType = (nodeTypeObj) => {
+  if (!nodeTypeObj['gpuType']) {
+    return [];
+  }
   // gpu
-  if(nodeTypeObj['gpuType']=='nvidia_gpu_amd64'){
+  if (nodeTypeObj['gpuType'] == 'nvidia_gpu_amd64') {
     const capacityObj = nodeTypeObj['gpu_capacity']
     const num = Math.max(Object.values(capacityObj))
     let arr = []
-    for(let i=0;i<=num;i++){
+    for (let i = 0; i <= num; i++) {
       arr.push(i)
     }
     return arr
   }
   // npu
-  return [1,2,4,8]
+  return [1, 2, 4, 8]
 }
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
-export const getDeviceNumPerNodeArrByNodeType = (nodeTypeObj) =>{
+export const getDeviceNumPerNodeArrByNodeType = (nodeTypeObj) => {
+  if (!nodeTypeObj['gpuType']) {
+    return [];
+  }
   // gpu
-  if(nodeTypeObj['gpuType']=='nvidia_gpu_amd64'){
+  if (nodeTypeObj['gpuType'] == 'nvidia_gpu_amd64') {
     const capacityObj = nodeTypeObj['gpu_capacity']
     const num = Math.max(Object.values(capacityObj))
     let arr = []
     let temp = 1
-    while(temp<=num){
+    while (temp <= num) {
       arr.push(temp)
-      temp *=2
+      temp *= 2
     }
     return arr
   }
   // npu
- return [8]
+  return [8]
 }
