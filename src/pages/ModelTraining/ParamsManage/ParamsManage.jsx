@@ -35,7 +35,6 @@ const ParamsManage = () => {
   };
 
   const ExpandDetail = (props) => {
-    debugger
     const record = props.record;
     const argumentsContent = (
       <div>
