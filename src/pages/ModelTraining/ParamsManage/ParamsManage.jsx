@@ -25,7 +25,7 @@ const ParamsManage = () => {
   });
   const statusList = {
     '3': '全部',
-    '1': '共有',
+    '1': '公有',
     '2': '私有',
   };
 
@@ -35,10 +35,11 @@ const ParamsManage = () => {
   };
 
   const ExpandDetail = (props) => {
+    debugger
     const record = props.record;
     const argumentsContent = (
       <div>
-        {Object.entries(record.params.params).map(item => {
+        {Object.entries(record.params).map(item => {
           return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
         })}
       </div>
@@ -52,7 +53,7 @@ const ParamsManage = () => {
         <Descriptions.Item label="运行参数">
           <Popover title="运行参数" content={argumentsContent}>
             {
-              Object.entries(record.params.params).map(item => {
+              Object.entries(record.params).map(item => {
                 return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
               })
             }
