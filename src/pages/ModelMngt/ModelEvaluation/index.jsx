@@ -213,14 +213,14 @@ const ModelEvaluation = props => {
               }
             </Select>
           </Form.Item>          
-          <Form.Item
+          {/* <Form.Item
             {...layout}
             name="codePath"
             label="代码目录"
             rules={[{ required: true }]}
           >
             <Input addonBefore={codePathPrefix} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
             <Input addonBefore={codePathPrefix} />
           </Form.Item>
@@ -295,7 +295,7 @@ const ModelEvaluation = props => {
               }
             </Select>
           </Form.Item>                 
-          <Form.Item name="status" {...layout} label="评估状态" >
+          {/* <Form.Item name="status" {...layout} label="评估状态" >
             <>
               <Tag color="success">success</Tag>
               <Tag color="processing">processing</Tag>
@@ -308,7 +308,7 @@ const ModelEvaluation = props => {
               label="评估结果"
             >
               <TextArea rows={6}/>
-            </Form.Item>         
+            </Form.Item>          */}
           <Form.Item
             style={{ float: 'right' }}
           >
