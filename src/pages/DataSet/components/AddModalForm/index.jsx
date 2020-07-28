@@ -18,7 +18,8 @@ const AddModalForm = (props, ref) => {
   const uploadProps = {
     name: 'data',
     data: {
-      dir: pathId
+      dir: pathId,
+      isPrivate: isPrivate
     },
     multiple: true,
     action: '/ai_arts/api/files/upload/dataset',
@@ -49,7 +50,7 @@ const AddModalForm = (props, ref) => {
           message.warning(`不能上传相同的文件！`);
           reject(file);
         }
-        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
+        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip' || type === 'application/zip' || type === 'application/gzip')) {
           message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
           reject(file);
         }
@@ -81,7 +82,7 @@ const AddModalForm = (props, ref) => {
       </Form.Item>
       {!modalType && <>
         <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
-          <Radio.Group onChange={e => setIsPrivate(e.target.value)}>
+          <Radio.Group onChange={e => setIsPrivate(e.target.value)} disabled={fileLists.length > 0}>
             <Radio value={true}>私有</Radio>
             <Radio value={false}>公有</Radio>
           </Radio.Group>
