@@ -69,3 +69,15 @@ export async function saveTrainingParams(data) {
 export async function fetchJobStatusSumary() {
   return await request(`/common/job/summary?jobType=${modelTrainingType}`);
 }
+
+export async function fetchPresetTemplates() {
+  return await request(`/templates`, {
+    params: {
+      pageNum: 1,
+      pageSize: 10000,
+      jobType: modelTrainingType,
+      scope: 4,
+    }
+    
+  })
+}

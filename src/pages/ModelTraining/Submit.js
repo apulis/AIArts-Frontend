@@ -5,7 +5,7 @@ import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined }
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams, fetchPresetTemplates } from '../../services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -134,20 +134,18 @@ const ModelTraining = (props) => {
 
   useEffect(() => {
     if (presetParamsVisible) {
-      setPresetRunningParams([{
-        name: 'test',
-        deviceNum: 10,
-        startupFile: 'aaa.py',
-        codePath: '/adsf/',
-        datasetPath: '/afd/',
-        outputPath: '/asdf',
-        params: 'aaa=1',
-        deviceType: 'device',
-        engine: 'tensor',
-        id: '23312-123123-41224',
-      }]);
+      fetchPresetTemplates().then(res => {
+        if (res.code === 0) {
+          const template = res.data.Templates;
+          setPresetRunningParams(template);
+          if (template.length > 0) {
+            setCurrentSelectedPresetParamsId(template[0].metaData?.id)
+          }
+        }
+      })
     }
   }, [presetParamsVisible]);
+
 
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -248,14 +246,15 @@ const ModelTraining = (props) => {
     }
   };
   const handleConfirmPresetParams = () => {
-    const currentSelected = presetRunningParams.find(p => p.id === currentSelectedPresetParamsId);
+    const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
     if (currentSelected) {
-      setFieldsValue(currentSelected);
+      setFieldsValue(currentSelected.params);
       setPresetParamsVisible(false);
     }
   };
 
   const handleSelectPresetParams = (current) => {
+    console.log(current)
     setCurrentSelectedPresetParamsId(current);
   };
 
@@ -367,19 +366,21 @@ const ModelTraining = (props) => {
             {...commonLayout}
             name="numPsWorker"
             rules={[
-              {required: true},
-              {type: 'number', message: '需要填写一个数字'},
-              {validator(rule, value, callback) {
-                if (Number(value) > totalNodes) {
-                  callback(`当前只有 ${totalNodes} 个节点`)
-                  return
+              { required: true },
+              { type: 'number', message: '需要填写一个数字' },
+              {
+                validator(rule, value, callback) {
+                  if (Number(value) > totalNodes) {
+                    callback(`当前只有 ${totalNodes} 个节点`)
+                    return
+                  }
+                  if (Number(value) < 1) {
+                    callback(`不能小于 1`)
+                    return
+                  }
+                  callback();
                 }
-                if (Number(value) < 1) {
-                  callback(`不能小于 1`)
-                  return
-                }
-                callback();
-              }}
+              }
             ]}
 
             initialValue={1}
@@ -465,80 +466,84 @@ const ModelTraining = (props) => {
         <Form
           form={form}
         >
-          <Tabs defaultActiveKey={presetRunningParams[0] && presetRunningParams[0].id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
-            {presetRunningParams.map(p => (
-              <TabPane tab={p.name} key={p.id}>
-                <Row>
-                  <Col span={8}>
-                    计算节点个数
+          {
+            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+              {presetRunningParams.map((p, index) => (
+                <TabPane tab={p.metaData.name} key={p.metaData.id}>
+                  <Row>
+                    <Col span={8}>
+                      计算节点个数
                   </Col>
-                  <Col span={16}>
-                    {p.deviceNum}
+                    <Col span={16}>
+                      {p.params.deviceNum}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      启动文件
                   </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    启动文件
+                    <Col span={16}>
+                      {p.params.startupFile}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      代码目录
                   </Col>
-                  <Col span={16}>
-                    {p.startupFile}
+                    <Col span={16}>
+                      {p.params.codePath}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      训练数据集
                   </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    代码目录
+                    <Col span={16}>
+                      {p.params.datasetPath}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      输出路径
                   </Col>
-                  <Col span={16}>
-                    {p.codePath}
+                    <Col span={16}>
+                      {p.params.outputPath}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      运行参数
                   </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    训练数据集
+                    <Col span={16}>
+                      {p.params.params}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      计算节点规格
                   </Col>
-                  <Col span={16}>
-                    {p.datasetPath}
+                    <Col span={16}>
+                      {p.params.deviceType}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span={8}>
+                      引擎类型
                   </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    输出路径
-                  </Col>
-                  <Col span={16}>
-                    {p.outputPath}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    运行参数
-                  </Col>
-                  <Col span={16}>
-                    {p.params}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    计算节点规格
-                  </Col>
-                  <Col span={16}>
-                    {p.deviceType}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8}>
-                    引擎类型
-                  </Col>
-                  <Col span={16}>
-                    {p.engine}
-                  </Col>
-                </Row>
-              </TabPane>
-            ))}
-          </Tabs>
+                    <Col span={16}>
+                      {p.params.engine}
+                    </Col>
+                  </Row>
+                </TabPane>
+              ))}
+            </Tabs>
+              : <div>暂无</div>
+          }
+
         </Form>
 
       </Modal>
-      <Button type="primary" style={{ float: 'right', marginBottom:'16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
+      <Button type="primary" style={{ float: 'right', marginBottom: '16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>
 
   );
