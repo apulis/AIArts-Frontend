@@ -1,3 +1,4 @@
+import {getDeviceNumArrByNodeType,getDeviceNumPerNodeArrByNodeType} from '../../utils/utils.js'
 export const statusMap = {
   unapproved:{
     local:'未批准',
@@ -47,33 +48,5 @@ export const statusMap = {
 export const canOpenStatus = new Set(['running'])
 export const canStopStatus = new Set(['unapproved','queued','scheduling','running'])
 export const canUploadStatus = new Set(['running'])
-export const utilGetDeviceNumArr = (nodeTypeObj) => {
-  // gpu
-  if(nodeTypeObj['gpuType']=='nvidia_gpu_amd64'){
-    const capacityObj = nodeTypeObj['gpu_capacity']
-    const num = Math.max(Object.values(capacityObj))
-    let arr = []
-    for(let i=0;i<=num;i++){
-      arr.push(i)
-    }
-    return arr
-  }
-  // npu
-  return [1,2,4,8]
-}
-export const utilGetDeviceNumPerNodeArr = (nodeTypeObj) =>{
-  // gpu
-  if(nodeTypeObj['gpuType']=='nvidia_gpu_amd64'){
-    const capacityObj = nodeTypeObj['gpu_capacity']
-    const num = Math.max(Object.values(capacityObj))
-    let arr = []
-    let temp = 1
-    while(temp<=num){
-      arr.push(temp)
-      temp *=2
-    }
-    return arr
-  }
-  // npu
- return [8]
-}
+export const utilGetDeviceNumArr = getDeviceNumArrByNodeType
+export const utilGetDeviceNumPerNodeArr = getDeviceNumPerNodeArrByNodeType
