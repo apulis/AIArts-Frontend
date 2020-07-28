@@ -206,6 +206,19 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>
+          {jobTrainingType == 'RegularJob' &&  <Form.Item
+            label="设备数量"
+            name="deviceNum"
+            rules={[{ required: true }]}
+          >
+            <Select style={{ width: "50%" }}>
+              {
+                deviceNumArr.map((item) => (
+                  <Option value={item}>{item}</Option>
+                ))
+              }
+            </Select>
+          </Form.Item>}
           {jobTrainingType == 'PSDistJob' &&<Form.Item
             label="节点数量"
             name="numPs"
@@ -229,13 +242,13 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>}
-           <Form.Item
-            label={jobTrainingType=='PSDistJob'?"全部设备数量":"设备数量"}
+          {jobTrainingType == 'PSDistJob' &&  <Form.Item
+            label="全部设备数量"
             name="deviceNum"
           >
-            <Input  style={{ width: "50%" }} disabled={jobTrainingType=='PSDistJob'}>
+            <Input  style={{ width: "50%" }} disabled>
             </Input>
-          </Form.Item>
+          </Form.Item>}
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit">立即创建</Button>
           </Form.Item>

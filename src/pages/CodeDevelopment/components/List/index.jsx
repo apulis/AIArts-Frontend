@@ -129,7 +129,7 @@ const CodeList = (props) => {
       sorter:{
         // todo 
         compare:(item1,item2) =>item1.name >= item2.name,
-        multiple:3
+        multiple:2
       }
     },
     {
@@ -137,10 +137,6 @@ const CodeList = (props) => {
       dataIndex: 'status',
       ellipsis: true,
       render:status=>statusMap[status]?.local,
-      sorter:{
-        compare:(item1,item2) =>statusMap[item1.status].priority-statusMap[item2.status].priority,
-        multiple:2
-      }
     },
     {
       title: '引擎类型',
