@@ -1,3 +1,4 @@
+import {getDeviceNumArrByNodeType,getDeviceNumPerNodeArrByNodeType} from '../../utils/utils.js'
 export const statusMap = {
   unapproved:{
     local:'未批准',
@@ -47,3 +48,5 @@ export const statusMap = {
 export const canOpenStatus = new Set(['running'])
 export const canStopStatus = new Set(['unapproved','queued','scheduling','running'])
 export const canUploadStatus = new Set(['running'])
+export const utilGetDeviceNumArr = getDeviceNumArrByNodeType
+export const utilGetDeviceNumPerNodeArr = getDeviceNumPerNodeArrByNodeType
