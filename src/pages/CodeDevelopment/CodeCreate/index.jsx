@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal,InputNumber,Card,Radio } from 'antd';
 import { history } from 'umi';
 import { postCode1,postCode2, getResource } from '../service.js'
+import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '../const.js'
 const CodeCreate = () => {
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue,getFieldValue } = form;
@@ -14,31 +15,42 @@ const CodeCreate = () => {
   const [jobTrainingType, setJobTrainingType] = useState('RegularJob');
   const [engineNameArr, setEngineNameArr] = useState([])
   const [codePathPrefix, setCodePathPrefix] = useState('')
-  const [maxNodeNum,setMaxNodeNum] = useState([1])
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([])
   useEffect(() => {// 初始化处理
-    renderForm()
+    renderInitForm()
   }, [])// 更新处理
-  const renderForm = async () => {
+  useEffect(() => {// 初始化处理deviceNum
+    if(jobTrainingType=='RegularJob'){  
+      renderInitRegularForm(deviceNumArr[0])
+    }else if(jobTrainingType=='PSDistJob'){
+      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0],deviceNumPerNodeArr[0] * 1)
+    }
+  }, [jobTrainingType])// 更新处理
+
+  const renderInitForm = async () => {
     const result = await apiGetResource()
     if (result) {
       setData(result)
       const enginTypeArrData = Object.keys(result.aiFrameworks)
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
-      const maxNodeNumData = result.nodeInfo.totalNodes
-      debugger
-      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(deviceTypeArrData[0])
-      const deviceNumArrData = utilCanSelect(result.deviceList[0].avail) || [0]
+      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo[0])
+      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo[0]) || [0]
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
       setDeviceTypeArr(deviceTypeArrData)
-      setMaxNodeNum(maxNodeNumData)
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
       setDeviceNumArr(deviceNumArrData)
-      setFieldsValue({'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0], 'deviceNum': deviceNumArrData[0],'numPs':1,'numPsWorker': deviceNumPerNodeArrData[0]})
+      setFieldsValue({'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0]})
+      renderInitRegularForm(deviceNumArrData[0])
     }
+  }
+  const renderInitRegularForm = (deviceNum)=>{
+    setFieldsValue({'deviceNum':deviceNum })
+  }
+  const renderInitPSDistJobForm = (numPs,numPsWorker,deviceNum)=>{
+    setFieldsValue({numPs,numPsWorker,deviceNum})
   }
   const apiPostCode = async (values) => {
     const obj = await postCode1(values)
@@ -60,26 +72,7 @@ const CodeCreate = () => {
       return null
     }
   }
-  const utilCanSelect = (avail) => {
-    let arr = []
-    if (avail >= 2) {
-      arr = [0, 1, 2]
-    } else if (avail == 1) {
-      arr = [0, 1]
-    } else {
-      arr = [0]
-    }
-    return arr
-  }
-  const utilGetDeviceNumPerNodeArr = (num) =>{
-    let arr = []
-    let temp = 1
-    while(temp<num){
-      arr.push(temp)
-      temp *=2
-    }
-    return arr
-  }
+ 
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
@@ -94,10 +87,17 @@ const CodeCreate = () => {
     setEngineNameArr(arr)
   }
   const handleDeviceTypeChange = (index) => {
-    const avail = data['deviceList'][index].avail
-    const arr = utilCanSelect(avail)
-    setFieldsValue({ 'deviceNum': arr[0]})
-    setDeviceNumArr(arr)
+    const type = data['nodeInfo'][index]
+    let arr = []
+    if(jobTrainingType=='RegularJob'){
+      arr = utilGetDeviceNumArr(type)
+      setFieldsValue({ 'deviceNum': arr[0]})
+      setDeviceNumArr(arr)
+    }else if(jobTrainingType=='PSDistJob'){
+      arr = utilGetDeviceNumPerNodeArr(type)
+      setFieldsValue({ 'numPsWorker': arr[0]})
+      setDeviceNumPerNodeArr(arr)
+    }
   }
   const handleCaclTotalDeviceNum = (nodeNum,perNodeDeviceNum)=>{
     setFieldsValue({'deviceNum':nodeNum * perNodeDeviceNum})
@@ -206,26 +206,13 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' &&  <Form.Item
-            label="设备数量"
-            name="deviceNum"
-            rules={[{ required: true }]}
-          >
-            <Select style={{ width: "50%" }}>
-              {
-                deviceNumArr.map((item) => (
-                  <Option value={item}>{item}</Option>
-                ))
-              }
-            </Select>
-          </Form.Item>}
           {jobTrainingType == 'PSDistJob' &&<Form.Item
             label="节点数量"
             name="numPs"
             rules={[{ required: true }]}
             
           >
-            <InputNumber  style={{ width: "50%" }} min={1} max={maxNodeNum} placeholder="请输入节点数量" onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
+            <InputNumber  style={{ width: "50%" }} min={1} placeholder="请输入节点数量" onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
             </InputNumber>
           </Form.Item>}
           {jobTrainingType == 'PSDistJob' &&<Form.Item
@@ -242,13 +229,13 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&  <Form.Item
-            label="全部设备数量"
+           <Form.Item
+            label={jobTrainingType=='PSDistJob'?"全部设备数量":"设备数量"}
             name="deviceNum"
           >
-            <Input  style={{ width: "50%" }} disabled>
+            <Input  style={{ width: "50%" }} disabled={jobTrainingType=='PSDistJob'}>
             </Input>
-          </Form.Item>}
+          </Form.Item>
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit">立即创建</Button>
           </Form.Item>
