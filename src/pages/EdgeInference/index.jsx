@@ -235,7 +235,7 @@ const EdgeInference = () => {
             <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>,
           ]}
         >
-          <Form form={form} initialValues={{}}>
+          <Form form={form} preserve={false} initialValues={{}}>
             <Form.Item
               label="推理名称"
               name="jobName"
@@ -252,7 +252,7 @@ const EdgeInference = () => {
               name="conversionType"
               rules={[{ required: true, message: '请选择类型！' }]}
             >
-                <Select placeholder="请选择类型">{getTypesData()}</Select>
+                <Select placeholder="请选择类型">{getOptions()}</Select>
             </Form.Item>
             <Form.Item
               label="输入路径"
@@ -284,7 +284,7 @@ const EdgeInference = () => {
             <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>保存</Button>,
           ]}
         >
-          <Form form={form} initialValues={fdInfo}>
+          <Form form={form} preserve={false} initialValues={fdInfo}>
             <Form.Item
               label="URL"
               name="url"

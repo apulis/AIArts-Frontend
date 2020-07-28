@@ -138,7 +138,7 @@ const DataSetList = () => {
 
   const onDelete = id => {
     confirm({
-      title: '确定要删除改数据集吗？',
+      title: '确定要删除该数据集吗？',
       icon: <ExclamationCircleOutlined />,
       okText: '删除',
       okType: 'danger',

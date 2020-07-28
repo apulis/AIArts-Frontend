@@ -10,6 +10,7 @@ import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrai
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
+import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -61,6 +62,8 @@ const ModelTraining = (props) => {
   const [distributedJob, setDistributedJob] = useState(false);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
   const [totalNodes, setTotalNodes] = useState(0);
+  const [nodeInfo, setNofeInfo] = useState([]);
+  const [currentDeviceType, setCurrentDeviceType] = useState('');
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -75,12 +78,25 @@ const ModelTraining = (props) => {
       });
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
-      const { totalNodes } = nodeInfo;
+      const totalNodes = nodeInfo.length;
       if (totalNodes) {
         setTotalNodes(totalNodes);
       }
+      setNofeInfo(nodeInfo)
     }
   };
+  useEffect(() => {
+    if (distributedJob) {
+      if (!currentDeviceType) return
+      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      setAvailableDeviceNumList(list);
+    } else {
+      if (!currentDeviceType) return
+      const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      setAvailableDeviceNumList(list);
+    }
+  }, [distributedJob, nodeInfo])
+
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
@@ -94,9 +110,18 @@ const ModelTraining = (props) => {
   const fetchParams = async () => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
-      const data = res.data.Templates;
-      setRunningParams(data.params);
-      form.setFieldsValue(data);
+      const data = res.data;
+      data.params.params = Object.entries(data.params.params).map(item => {
+        var obj = {};
+        obj['key'] = item[0];
+        obj['value'] = item[1];
+        return obj;
+      });
+      if (typeCreate) {
+        data.params.name = '';
+      }
+      form.setFieldsValue(data.params);
+      setRunningParams(data.params.params);
     }
   };
 
@@ -147,7 +172,6 @@ const ModelTraining = (props) => {
     } else {
       if (values.jobtrainingtype === 'PSDistJob') {
         values.numPs = 1;
-        values.numPsWorker = '';
       }
       const cancel = message.loading('正在提交');
       const res = await submitModelTraining(values);
@@ -210,6 +234,7 @@ const ModelTraining = (props) => {
 
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
+    setCurrentDeviceType(deviceType);
     const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
     const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
     if (deviceNumMax >= 0) {
@@ -346,7 +371,7 @@ const ModelTraining = (props) => {
               {type: 'number', message: '需要填写一个数字'},
               {validator(rule, value, callback) {
                 if (Number(value) > totalNodes) {
-                  callback(`不能大于 ${totalNodes}`)
+                  callback(`当前只有 ${totalNodes} 个节点`)
                   return
                 }
                 if (Number(value) < 1) {
@@ -513,7 +538,7 @@ const ModelTraining = (props) => {
         </Form>
 
       </Modal>
-      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>{typeEdit?'保存':'立即创建'}</Button>
+      <Button type="primary" style={{ float: 'right', marginBottom:'16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>
 
   );
