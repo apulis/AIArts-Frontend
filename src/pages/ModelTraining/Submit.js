@@ -5,12 +5,14 @@ import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined }
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams, fetchPresetTemplates } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams, fetchPresetTemplates, fetchPresetModel } from '../../services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
+import { includes } from 'lodash';
+import models from '../InferenceService/InferenceList/models';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -125,11 +127,40 @@ const ModelTraining = (props) => {
     }
   };
 
+  const getPresetModel = async () => {
+    const res = await fetchPresetModel(paramsId);
+    if (res.code === 0) {
+      console.log('data', res.data)
+      const { model } = res.data;
+      const params = Object.entries(model.arguments).map(item => {
+        var obj = {};
+        console.log('item', item)
+        obj['key'] = item[0];
+        obj['value'] = item[1];
+        return obj;
+      });
+      if (params.length === 0) {
+        params[0] = { key: '', value: '', createTime: generateKey() };
+      }
+      setRunningParams(params)
+      setFieldsValue({
+        params: params,
+        datasetPath: model.datasetName,
+        engine: model.engineType,
+        name: model.name,
+      })
+
+    }
+  }
+
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
     // set default value
-    if (readParam) { fetchParams(); }
+    if (['createJobWithParam', 'editParam'].includes(requestType)) { fetchParams(); }
+    if (['PretrainedModel'].includes(requestType)) {
+      getPresetModel()
+    }
   }, []);
 
   useEffect(() => {

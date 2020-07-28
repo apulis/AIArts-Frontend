@@ -81,3 +81,7 @@ export async function fetchPresetTemplates() {
     
   })
 }
+
+export async function fetchPresetModel(id) {
+  return request(`/models/${id}`);
+}
