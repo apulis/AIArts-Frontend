@@ -80,6 +80,7 @@ const List = () => {
     getJobStatusSumary()
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {
+    console.log('setSortedInfo', sorter)
     setSortedInfo(sorter);
     console.log('sorter', sortText[sorter.order])
     const { current } = pagination;
@@ -120,14 +121,14 @@ const List = () => {
     {
       dataIndex: 'name',
       title: '作业名称',
-      key: 'name',
+      key: 'jobName',
       render(_text, item) {
         return (
           <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
         )
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
     },
     {
       dataIndex: 'status',
@@ -141,14 +142,14 @@ const List = () => {
     {
       dataIndex: 'createTime',
       title: '创建时间',
-      key: 'createTime',
+      key: 'jobTime',
       render(_text, item) {
         return (
           <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
         )
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
     },
     {
       dataIndex: 'desc',
