@@ -3,6 +3,7 @@ import { Button, Table, Input, message, Card, Select } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
+import { sortText } from '@/utils/const';
 import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -33,8 +34,13 @@ const List = () => {
   const [pageNum, setPageNum] = useState(1);
   const [currentStatus, setCurrentStatus] = useState('all');
   const [jobSumary, setJobSumary] = useState([]);
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: '',
+    columnKey: '',
+  });
   const getTrainingList = async () => {
-    const res = await fetchTrainingList({pageNum, pageSize, search, status: currentStatus});
+    const res = await fetchTrainingList({pageNum, pageSize, search, sortedInfo, status: currentStatus});
     if (res.code === 0) {
       const trainings = (res.data && res.data.Trainings) || [];
       const total = res.data?.total;
@@ -73,20 +79,34 @@ const List = () => {
     getTrainingList();
     getJobStatusSumary()
   }, [])
-  const onTableChange = (pagination) => {
+  const onTableChange = async (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+    console.log('sorter', sortText[sorter.order])
     const { current } = pagination;
-    fetchTrainingList({
+    setPageNum(current);
+    const searchSorterInfo = {
+      ...sorter,
+      // 正序，倒序，取消排序
+      orderBy: sortText[sorter.order] && sorter.columnKey,
+      order: sortText[sorter.order],
+    }
+    const res = await fetchTrainingList({
       pageNum: current,
       pageSize,
       search,
+      status: currentStatus,
+      sortedInfo: searchSorterInfo,
     })
-    setPageNum(current);
+    if (res.code === 0) {
+      console.log('sortText[sorter.order]', res.data)
+      setTrainingWorkList(res.data.Trainings);
+    }
   }
   const removeTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
       message.success('已成功操作');
-      getTrainingList({ pageNum, pageSize, search });
+      getTrainingList();
     }
   }
   const searchList = async (s) => {
@@ -100,22 +120,19 @@ const List = () => {
     {
       dataIndex: 'name',
       title: '作业名称',
+      key: 'name',
       render(_text, item) {
         return (
           <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
         )
       },
-      sorter(a, b) {
-        return a.name > b.name;
-      }
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order
     },
     {
       dataIndex: 'status',
       title: '状态',
       render: (text, item) => getJobStatus(item.status),
-      sorter(a, b) {
-        return statusList.indexOf(a.status) > statusList.indexOf(b.status)
-      }
     },
     {
       dataIndex: 'engine',
@@ -124,14 +141,14 @@ const List = () => {
     {
       dataIndex: 'createTime',
       title: '创建时间',
+      key: 'createTime',
       render(_text, item) {
         return (
           <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
         )
       },
-      sorter(a, b) {
-        return new Date(a.createTime).getTime() - new Date(b.createTime).getTime()
-      }
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order
     },
     {
       dataIndex: 'desc',
