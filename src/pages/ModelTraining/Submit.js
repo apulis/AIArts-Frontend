@@ -356,7 +356,7 @@ const ModelTraining = (props) => {
           >
             {
               datasets.map(d => (
-                <Option value={d.dataSetPath} key={d.dataSetId}>{d.name}</Option>
+                <Option value={d.convertOutPath} key={d.dataSetId}>{d.name}</Option>
               ))
             }
           </Select>
