@@ -129,6 +129,4 @@ function postModel(req, res, u, b) {
 }
 
 export default {
-  'GET /ai_arts/api/models': getModels,
-  'POST /ai_arts/api/models': postModel,
 };
