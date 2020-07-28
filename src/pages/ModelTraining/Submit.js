@@ -85,7 +85,8 @@ const ModelTraining = (props) => {
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
     if (res.code === 0) {
-      const datasets = res.data.datasets;
+      let datasets = res.data.datasets;
+      datasets = datasets.filter(d => d.convertStatus === 'finished');
       setDatasets(datasets);
     }
   };
