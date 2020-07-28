@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row, InputNumber  } from 'antd';
+import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row, InputNumber } from 'antd';
 import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 
-import { submitModelTraining, fetchAvilableResource } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams } from '../../services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -27,19 +27,19 @@ export const generateKey = () => {
 
 
 const ModelTraining = (props) => {
-  // 请求类型，根据参数创建作业，type为createWithParam；编辑参数type为editParam
+  // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
-  let readParam, createDisable, editDisable, params;
+  let readParam, typeCreate, typeEdit, params;
   const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
   }
   if (requestType === 'createJobWithParam') {
-    createDisable = true;
+    typeCreate = true;
   }
   if (requestType === 'editParam') {
-    editDisable = true;
+    typeEdit = true;
   }
   const goBackPath = readParam ? '/model-training/paramsManage' : '/model-training/modelTraining';
 
@@ -91,44 +91,12 @@ const ModelTraining = (props) => {
   };
 
   const fetchParams = async () => {
-    let data;
-    await setTimeout(() => {
-      data = {
-        key: 1,
-        id: 1,
-        configName: 'train_job_config_001',
-        type: '训练',
-        engine: 'tensorflow , tf-1.8.0-py2.7',
-        createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
-        description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-        startupFile: '/start.sh',
-        deviceNum: 3,
-        datasetPath: 'train.csv',
-        params: [
-          {
-            key: 'learning_rate',
-            value: 0.01,
-            createTime: 2323233
-          },
-          {
-            key: 'epoch',
-            value: 20,
-            createTime: 4242442
-          },
-          {
-            key: 'dropout',
-            value: 0.5,
-            createTime: 4242443
-          },
-        ],
-        engine: 'tensorflow',
-        codePath: '/home/code/',
-        deviceType: '1核 | 16GB | 1*AI加速卡	'
-      };
+    let res = await fetchTemplateById(paramsId);
+    if (res.code === 0) {
+      const data = res.data.Templates;
       setRunningParams(data.params);
       form.setFieldsValue(data);
-    }, 0);
-
+    }
   };
 
   useEffect(() => {
@@ -151,9 +119,9 @@ const ModelTraining = (props) => {
         deviceType: 'device',
         engine: 'tensor',
         id: '23312-123123-41224',
-      }])
+      }]);
     }
-  }, [presetParamsVisible])
+  }, [presetParamsVisible]);
 
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -168,16 +136,25 @@ const ModelTraining = (props) => {
     if (distributedJob) {
       values.deviceNum = values.deviceTotal;
     }
-    if (values.jobtrainingtype === 'PSDistJob') {
-      values.numPs = 1;
-      values.numPsWorker = ''
-    }
-    const cancel = message.loading('正在提交');
-    const res = await submitModelTraining(values);
-    cancel();
-    if (res.code === 0) {
-      message.success('成功创建');
-      history.push(goBackPath);
+    if (typeEdit) {
+      //TODO: edit
+      const res = await saveTrainingParams(values);
+      if (res.code === 0) {
+        message.success('保存成功');
+        history.push(goBackPath);
+      }
+    } else {
+      if (values.jobtrainingtype === 'PSDistJob') {
+        values.numPs = 1;
+        values.numPsWorker = '';
+      }
+      const cancel = message.loading('正在提交');
+      const res = await submitModelTraining(values);
+      cancel();
+      if (res.code === 0) {
+        message.success('成功创建');
+        history.push(goBackPath);
+      }
     }
   };
   const addParams = () => {
@@ -228,7 +205,7 @@ const ModelTraining = (props) => {
   const handleDistributedJob = (e) => {
     const type = e.target.value;
     setDistributedJob(type === 'PSDistJob');
-  }
+  };
 
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
@@ -248,38 +225,38 @@ const ModelTraining = (props) => {
     const currentSelected = presetRunningParams.find(p => p.id === currentSelectedPresetParamsId);
     if (currentSelected) {
       setFieldsValue(currentSelected);
-      setPresetParamsVisible(false)
+      setPresetParamsVisible(false);
     }
-  }
+  };
 
   const handleSelectPresetParams = (current) => {
     setCurrentSelectedPresetParamsId(current);
-  }
+  };
 
   const handleClickDeviceNum = (e) => {
     if (!getFieldValue('deviceType')) {
       message.error('需要先选择设置类型');
     }
-  }
+  };
 
   const handleDeviceChange = () => {
     const deviceTotal = (Number(getFieldValue('numPsWorker') || 0)) * (Number(getFieldValue('deviceNum') || 0));
     setFieldsValue({
       deviceTotal: deviceTotal || 0,
-    })
+    });
     setDeviceTotal(deviceTotal);
-  }
+  };
 
   return (
     <div className={styles.modelTraining}>
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title={editDisable ? '编辑训练参数' : '创建训练作业'}
+        title={typeEdit ? '编辑训练参数' : '创建训练作业'}
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={editDisable ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>
-          <Input style={{ width: 300 }} placeholder={editDisable ? "请输入参数配置名称" : "请输入作业名称"} disabled={editDisable} />
+        <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={typeEdit ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>
+          <Input style={{ width: 300 }} placeholder={typeEdit ? "请输入参数配置名称" : "请输入作业名称"} disabled={typeEdit} />
         </FormItem>
         <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
@@ -290,12 +267,12 @@ const ModelTraining = (props) => {
       {isSubmitPage && <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
-          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true) }}>导入参数配置</Radio.Button>
+          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入参数配置</Radio.Button>
         </Radio.Group>
       </FormItem>}
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
-          <Select style={{ width: 300 }} disabled={createDisable} >
+          <Select style={{ width: 300 }} disabled={typeCreate} >
             {
               frameWorks.map(f => (
                 <Option value={f} key={f}>{f}</Option>
@@ -308,10 +285,10 @@ const ModelTraining = (props) => {
           name="codePath"
           label="代码目录"
         >
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
+          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
         </FormItem>
         <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={createDisable} />
+          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
@@ -353,7 +330,7 @@ const ModelTraining = (props) => {
           </div>
         </FormItem>
         <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob">
-          <Radio.Group style={{ width: '300px' }}onChange={handleDistributedJob}>
+          <Radio.Group style={{ width: '300px' }} onChange={handleDistributedJob}>
             <Radio value={'PSDistJob'}>是</Radio>
             <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
@@ -365,18 +342,20 @@ const ModelTraining = (props) => {
             {...commonLayout}
             name="numPsWorker"
             rules={[
-              {required: true},
-              {type: 'number', message: '需要填写一个数字'},
-              {validator(rule, value, callback) {
-                if (Number(value) > totalNodes) {
-                  callback(`不能大于 ${totalNodes}`)
+              { required: true },
+              { type: 'number', message: '需要填写一个数字' },
+              {
+                validator(rule, value, callback) {
+                  if (Number(value) > totalNodes) {
+                    callback(`不能大于 ${totalNodes}`);
+                  }
+                  if (Number(value) < 1) {
+                    callback(`不能小于 1`);
+                  }
                 }
-                if (Number(value) < 1) {
-                  callback(`不能小于 1`)
-                }
-              }}
+              }
             ]}
-            
+
             initialValue={1}
           >
             <InputNumber
@@ -533,7 +512,7 @@ const ModelTraining = (props) => {
         </Form>
 
       </Modal>
-      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
+      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>{typeEdit?'保存':'立即创建'}</Button>
     </div>
 
   );
