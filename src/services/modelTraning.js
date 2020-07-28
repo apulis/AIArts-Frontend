@@ -12,13 +12,15 @@ export async function fetchAvilableResource() {
   return await request('/common/resource');
 }
 
-export async function fetchTrainingList({pageNum, pageSize, status, search}) {
+export async function fetchTrainingList({pageNum, pageSize, status, search, sortedInfo}) {
   return await request(`/trainings/`, {
     params: {
       pageNum: pageNum,
       pageSize: pageSize,
       status: status || 'all',
       searchWord: search || undefined,
+      orderBy: sortedInfo?.orderBy,
+      order: sortedInfo?.order,
     }
   });
 }
