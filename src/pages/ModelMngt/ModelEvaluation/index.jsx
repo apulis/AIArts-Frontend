@@ -26,6 +26,7 @@ const ModelEvaluation = props => {
   const [deviceTypes, setDeviceTypes] = useState([]);
   const [deviceNums, setDeviceNums] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
+  const [datasetName, setDatasetName] = useState('');
 
   const [form] = Form.useForm();
 
@@ -110,6 +111,7 @@ const ModelEvaluation = props => {
       startupFile: codePathPrefix + startupFile,
       outputPath: codePathPrefix + outputPath,
       datasetPath: codePathPrefix + datasetPath,
+      datasetName,
       deviceType,
       deviceNum,
       argumentPath: codePathPrefix + argumentsFile,
@@ -147,6 +149,10 @@ const ModelEvaluation = props => {
     setEngines(selectedType);
     form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
   }
+
+  const handleDatasetChange = (value, option) => {
+    setDatasetName(option.children);
+  }  
 
   const handleDeviceTypeChange = value => {
     const selected = deviceList.find(item => item.deviceType === value);
@@ -214,7 +220,9 @@ const ModelEvaluation = props => {
             <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
           <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="测试数据集">
-            <Select>
+            <Select
+              onChange={handleDatasetChange}
+            >
               {
                 datasets.map(d => (
                   <Option key={d.dataSetPath} value={d.dataSetPath}>{d.name}</Option>
