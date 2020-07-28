@@ -2,7 +2,7 @@ import { history } from 'umi'
 import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { PAGEPARAMS } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
@@ -57,47 +57,50 @@ const PretrainedModelList = props => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
   const [form] = Form.useForm();
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
 
   useEffect(() => {
     handleSearch();
-  }, [pageParams, formValues]);
+  }, [pageParams, formValues, sortedInfo]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
+  };
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
   };
 
   const columns = [
     {
       title: '模型名称',
       dataIndex: 'name',
+      key: 'name',
       ellipsis: true,
       width: 150,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ['descend', 'ascend'],      
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,     
     },
     {
       title: '模型用途',
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
-      sorter: (a, b) => a.use.length - b.use.length,
-      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '模型精度',
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
-      sorter: (a, b) => a.precision - b.precision,
-      sortDirections: ['descend', 'ascend'],   
     },
     {
       title: '模型大小',
       dataIndex: 'size',
       ellipsis: true,
       width: 150,
-      sorter: (a, b) => a.size - b.size,
-      sortDirections: ['descend', 'ascend'],      
     },
     {
       title: '创建时间',
@@ -105,8 +108,8 @@ const PretrainedModelList = props => {
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 200,
-      sorter: (a, b) => a.createdAt - b.createdAt,
-      sortDirections: ['descend', 'ascend'],       
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,       
     },
     {
       title: '操作',
@@ -136,9 +139,10 @@ const PretrainedModelList = props => {
 
   const handleSearch = () => {
     const params = {
+      ...pageParams,
       isAdvance: true,
-      pageNum: pageParams.pageNum,
-      pageSize: pageParams.pageSize,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order],
     };
 
     if (formValues.name) {
@@ -178,7 +182,7 @@ const PretrainedModelList = props => {
           <div
             style={{
               float: "right",
-            }}          
+            }}
           >
             <Form
               layout='inline'
@@ -207,6 +211,7 @@ const PretrainedModelList = props => {
           columns={columns}
           dataSource={data.list}
           rowKey='id'
+          onChange={onSortChange}
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,

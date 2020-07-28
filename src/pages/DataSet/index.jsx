@@ -26,7 +26,7 @@ const DataSetList = () => {
   const addModalFormRef = useRef();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: null
+    order: ''
   });
 
   useEffect(() => {
@@ -49,8 +49,6 @@ const DataSetList = () => {
         total: total,
       });
       text && message.success(text);
-    } else {
-      message.error(msg);
     }
     setLoading(false);
   };
@@ -58,6 +56,10 @@ const DataSetList = () => {
   const pageParamsChange = (page, count) => {
     setPageParams({ pageNum: page, pageSize: count });
   };
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
+  }
 
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
@@ -104,6 +106,7 @@ const DataSetList = () => {
     },
     {
       title: '更新时间',
+      key: 'updatedAt',
       dataIndex: 'updatedAt',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'updatedAt' && sortedInfo.order,
@@ -146,8 +149,6 @@ const DataSetList = () => {
         if (code === 0) {
           message.success('删除成功！');
           getData();
-        } else {
-          message.error(msg);
         }
       },
       onCancel() {}
@@ -158,10 +159,6 @@ const DataSetList = () => {
     setModalType(type);
     !type && setPathId(new Date().valueOf());
     setModalFlag(true);
-  }
-
-  const onSortChange = (pagination, filters, sorter) => {
-    setSortedInfo(sorter);
   }
 
   return (

@@ -22,8 +22,6 @@ const DataSetDetail = () => {
     const { code, data, msg, total } = await getDatasetDetail(id);
     if (code === 0 && data) {
       setData([data.dataset]);
-    } else {
-      msg && message.error(msg);
     }
     setLoading(false);
   };

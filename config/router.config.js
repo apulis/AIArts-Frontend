@@ -33,22 +33,13 @@ export default [
             name: 'codeDevelopment',
             icon: 'EditOutlined',
             authority: ['AI_ARTS_ALL'],
-            routes:[
-              {
-                path:'/codeDevelopment',
-                redirect: '/codeDevelopment/list',
-              },
-              {
-                path:'/codeDevelopment/list',
-                component: './CodeDevelopment',
-              },
-              {
-                path: '/codeDevelopment/add',
-                component: './CodeDevelopment/CodeCreate',
-              },
-            ]
+            component: './CodeDevelopment',
           },
-          
+          {
+            path: '/codeDevelopment/add',
+            authority: ['AI_ARTS_ALL'],
+            component: './CodeDevelopment/CodeCreate',
+          },
           {
             path: '/dataManage',
             name: 'dataManage',

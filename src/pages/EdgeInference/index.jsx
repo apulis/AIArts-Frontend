@@ -28,7 +28,7 @@ const EdgeInference = () => {
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: null
+    order: ''
   });
   const typeText = {
     converting: '转换中',
@@ -66,8 +66,6 @@ const EdgeInference = () => {
       const temp4 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.modelconversionStatus)) : [];
       if (temp1 !== temp2 || temp3 !== temp4) setJobs(edgeInferences);
       setTotal(total);
-    } else {
-      message.error(msg);
     }
     setLoading(false);
   };
@@ -84,8 +82,6 @@ const EdgeInference = () => {
         message.success('提交成功！');
         getData();
         setModalFlag1(false);
-      } else {
-        message.error(msg);
       }
     });
     setBtnLoading(false);
@@ -143,8 +139,6 @@ const EdgeInference = () => {
     if (code === 0) {
       info = data.fdinfo;
       setFdInfo(data.fdinfo);
-    } else {
-      message.error(msg);
     }
     return info;
   }
@@ -159,7 +153,6 @@ const EdgeInference = () => {
         message.success('推送成功！');
       } else {
         setPushId('');
-        message.error(msg);
       }
     } else {
       message.warning('请先填写设置！');
@@ -176,8 +169,6 @@ const EdgeInference = () => {
     const { code, data, msg } = await getTypes();
     if (code === 0) {
       setTypesData(data.conversionTypes);
-    } else {
-      message.error(msg);
     }
   }
 
@@ -189,8 +180,6 @@ const EdgeInference = () => {
         message.success('设置成功！');
         getFdInfo();
         setModalFlag2(false);
-      } else {
-        message.error(msg);
       }
     })
     setBtnLoading(false);
