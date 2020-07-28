@@ -10,6 +10,7 @@ import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrai
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
+import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -61,6 +62,7 @@ const ModelTraining = (props) => {
   const [distributedJob, setDistributedJob] = useState(false);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
   const [totalNodes, setTotalNodes] = useState(0);
+  const [nodeInfo, setNofeInfo] = useState([]);
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -75,12 +77,21 @@ const ModelTraining = (props) => {
       });
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
-      const { totalNodes } = nodeInfo;
+      const totalNodes = nodeInfo.length;
       if (totalNodes) {
         setTotalNodes(totalNodes);
       }
+      setNofeInfo(nodeInfo)
     }
   };
+  useEffect(() => {
+    if (distributedJob) {
+      
+    } else {
+      //
+    }
+  }, [distributedJob, nodeInfo])
+
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
@@ -346,7 +357,7 @@ const ModelTraining = (props) => {
               {type: 'number', message: '需要填写一个数字'},
               {validator(rule, value, callback) {
                 if (Number(value) > totalNodes) {
-                  callback(`不能大于 ${totalNodes}`)
+                  callback(`当前只有 ${totalNodes} 个节点`)
                   return
                 }
                 if (Number(value) < 1) {
