@@ -538,7 +538,7 @@ const ModelTraining = (props) => {
         </Form>
 
       </Modal>
-      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
+      <Button type="primary" style={{ float: 'right', marginBottom:'16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>
 
   );
