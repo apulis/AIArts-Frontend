@@ -41,37 +41,29 @@ const versionLogs = [
 //   // return request('/codes');
 // }
 export async function getInitData() {
-  return {
-    code:0,
-    data:{
-      // versionList,
-      versionInfo,
-      versionLogs,
-    },
-    msg:'success'
+  const response =  await request('/version/info');
+  const {code,data,msg} = response
+  const myRes = {code,msg}
+  if(data){
+    const info = data.versionInfo
+    const logs = data.versionLogs
+    myRes['data'] = {
+      versionInfo:{
+        id:info.id,
+        name:info.version,
+        creator:info.creator,
+        time:moment(info.updatedAt).format('YYYY/MM/DD HH:MM'),
+        desc:info.description
+      },
+      versionLogs:logs.map((item)=>{
+        return `${moment(item.updatedAt).format('YYYY/MM/DD HH:MM')}，${item.creator} 将版本更新为 ${item.version}`
+      }).slice(0,10)
+    }
   }
-  // const response =  request('/version/info');
-  // const {code,data,msg} = response
-  // const myRes = {code,msg}
-  // if(data){
-  //   const info = data.versionInfo
-  //   const logs = data.versionLogs
-  //   myRes['data'] = {
-  //     versionInfo:{
-  //       id:info.id,
-  //       name:info.version,
-  //       time:moment(info.updatedAt).format('YYYYMMDD'),
-  //       desc:info.description
-  //     },
-  //     versionLogs:logs.map((item)=>{
-  //       return item.version + item.description
-  //     })
-  //   }
-  // }
-  // return myRes
+  return myRes
 }
 export async function getUpgradeInfo(){
-  const response =  request('/version/env/local');
+  const response =  await request('/version/env/local');
   const {code,data,msg} = response
   const myRes = {code,msg}
   if(data){
@@ -80,48 +72,26 @@ export async function getUpgradeInfo(){
       isLowerVersion:data.isLower
     }
   }
-  // return {
-  //   code:0,
-  //   data:{
-  //     canUpgrade:true,
-  //     isLowerVersion:true
-  //   },
-  //   msg:'success'
-  // }
   return myRes
 }
 export async function upgrade(){
-  const response =  request('/version/upgrade/local',{method:'POST'});
+  const response = await request('/version/upgrade/local',{method:'POST'});
   const {code,data,msg} = response
   const myRes = {code,msg}
   if(data){
     myRes['data'] = {}
   }
-  // return {
-  //   code:0,
-  //   data:{
-  //   },
-  //   msg:'success'
-  // }
   return myRes
 }
-export async function getProgress(){
-  const response =  request('/version/upgradeProgress');
+export async function getUpgradeLog(){
+  const response = await request('/version/upgradeLog');
   const {code,data,msg} = response
   const myRes = {code,msg}
   if(data){
     myRes['data'] = {
       status:data.status,
-      percent:data.percent
+      logs:data.logString
     }
   }
-  // return {
-  //   code:0,
-  //   data:{
-  //     status:'upgrading',
-  //     percent:30
-  //   },
-  //   msg:'success'
-  // }
   return myRes
 }

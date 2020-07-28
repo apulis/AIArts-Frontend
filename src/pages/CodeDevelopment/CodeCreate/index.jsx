@@ -16,6 +16,7 @@ const CodeCreate = () => {
   const [engineNameArr, setEngineNameArr] = useState([])
   const [codePathPrefix, setCodePathPrefix] = useState('')
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([])
+  const [maxNodeNum,setMaxNodeNum] = useState(1)
   useEffect(() => {// 初始化处理
     renderInitForm()
   }, [])// 更新处理
@@ -36,11 +37,13 @@ const CodeCreate = () => {
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
       const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo[0])
       const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo[0]) || [0]
+      const maxNodeNumData = 2  // todo 静态数据
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
       setDeviceTypeArr(deviceTypeArrData)
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
+      setMaxNodeNum(maxNodeNumData)
       setDeviceNumArr(deviceNumArrData)
       setFieldsValue({'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0]})
       renderInitRegularForm(deviceNumArrData[0])
@@ -225,7 +228,7 @@ const CodeCreate = () => {
             rules={[{ required: true }]}
             
           >
-            <InputNumber  style={{ width: "50%" }} min={1} placeholder="请输入节点数量" onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
+            <InputNumber  style={{ width: "50%" }} min={1} max={maxNodeNum} placeholder="请输入节点数量" onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
             </InputNumber>
           </Form.Item>}
           {jobTrainingType == 'PSDistJob' &&<Form.Item

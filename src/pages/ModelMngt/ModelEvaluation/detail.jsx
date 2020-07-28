@@ -1,5 +1,5 @@
 import { history } from 'umi';
-import { PageHeader, Descriptions } from 'antd';
+import { PageHeader, Descriptions, Button, message } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 // import { getEvaluationStatus } from '@/utils/utils';
 import { useParams } from 'umi';
@@ -16,8 +16,7 @@ const EvaluationDetail = props => {
   const [logs, setLogs] = useState('');
 
   const getEvaluationLog = async () => {
-    const res = await fetchEvaluationLog(id);
-    const l = logEl.current;
+    const res = await fetchEvaluationDetail(modelId);
     if (res.code === 0) {
       let log = res.data.log;
       if (typeof log === 'object') {
@@ -30,9 +29,18 @@ const EvaluationDetail = props => {
   const getEvaluationDetail = async () => {
     const res = await fetchEvaluationDetail(id)
     if (res.code === 0) {
-      setEvaluationDetail(res.data);
+      setEvaluationDetail(res.data.job);
     }
   }
+
+  const getLateastLogs = async () => {
+    const cancel = message.loading('获取结果中');
+    const res = await getEvaluationLog();
+    cancel();
+    if (res.code === 0) {
+      message.success('成功获取日志');
+    }
+  }  
 
   const evaluationDetail = {
     modelName: 'hanjf-test2',
@@ -46,6 +54,7 @@ const EvaluationDetail = props => {
 
   useEffect(() => {
     // getMockEvaluationDetail();
+    // getEvaluationDetail();
   }, []);
 
   return (
@@ -58,15 +67,15 @@ const EvaluationDetail = props => {
         <Descriptions.Item label="模型名称">{evaluationDetail.modelName}</Descriptions.Item>
         {/* <Descriptions.Item label="评估状态">{getEvaluationStatus(evaluationDetail.status)}</Descriptions.Item> */}
         <Descriptions.Item label="评估状态">{evaluationDetail.status}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{evaluationDetail.engineType}</Descriptions.Item>
-        <Descriptions.Item label="测试数据集">{evaluationDetail.dataset}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">{moment(evaluationDetail.createAt).format('YYYY-MM-DD HH:mm')}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{evaluationDetail.engine}</Descriptions.Item>
+        <Descriptions.Item label="测试数据集">{evaluationDetail.datasetPath}</Descriptions.Item>
+        {/* <Descriptions.Item label="创建时间">{moment(evaluationDetail.createAt).format('YYYY-MM-DD HH:mm')}</Descriptions.Item> */}
+        <Descriptions.Item label="创建时间">{evaluationDetail.createTime}</Descriptions.Item>
         <Descriptions.Item label="设备类型">{evaluationDetail.deviceType}</Descriptions.Item>
         <Descriptions.Item label="设备数量">{evaluationDetail.deviceNum}</Descriptions.Item>
       </Descriptions>
-      {
-        logs && <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
-      }
+      <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
+      <Button onClick={getLateastLogs}>点击获取评估结果</Button>
       <div>
         {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}

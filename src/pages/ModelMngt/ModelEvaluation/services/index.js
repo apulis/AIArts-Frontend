@@ -6,6 +6,13 @@ export async function getTrainingJobs(params) {
   });
 }
 
+export async function addEvaluation(id, data) {
+  return await request(`/models/${id}/evaluation`, {
+    method: 'POST',
+    data: data,
+  });
+}
+
 export async function fetchEvaluationLog(id) {
   return request(`/inferences/GetEvaluationLog`, {
     params: {
@@ -15,9 +22,5 @@ export async function fetchEvaluationLog(id) {
 }
 
 export async function fetchEvaluationDetail(id) {
-  return request(`/inferences/GetEvaluationDetail`, {
-    params: {
-      evaluationId: id,
-    }
-  });
+  return request(`/models/${id}/evaluation`);
 }
