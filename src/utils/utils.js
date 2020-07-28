@@ -145,7 +145,7 @@ export const getDeviceNumArrByNodeType = (nodeTypeObj) => {
     return arr
   }
   // npu
-  return [1,2,4,8]
+  return [0,1,2,4,8]
 }
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
 export const getDeviceNumPerNodeArrByNodeType = (nodeTypeObj) =>{
@@ -163,4 +163,15 @@ export const getDeviceNumPerNodeArrByNodeType = (nodeTypeObj) =>{
   }
   // npu
  return [8]
+}
+
+export const isEmptyObject = (obj)=>{
+  return Object.keys(obj).length===0
+}
+export const isEmptyString =(str)=> {
+  if (typeof str === 'undefined' || str === '') {
+    return true;
+  } else {
+    return false;
+  }
 }
