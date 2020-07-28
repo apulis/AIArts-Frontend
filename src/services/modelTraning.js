@@ -48,7 +48,7 @@ export async function fetchTemplates(params) {
 }
 
 export async function fetchTemplateById(id) {
-  return await request(`templates/${id}`);
+  return await request(`/templates/${id}`);
 }
 
 export async function removeTemplate(id) {
