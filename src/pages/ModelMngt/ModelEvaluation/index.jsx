@@ -213,14 +213,14 @@ const ModelEvaluation = props => {
               }
             </Select>
           </Form.Item>          
-          <Form.Item
+          {/* <Form.Item
             {...layout}
             name="codePath"
             label="代码目录"
             rules={[{ required: true }]}
           >
             <Input addonBefore={codePathPrefix} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
             <Input addonBefore={codePathPrefix} />
           </Form.Item>
