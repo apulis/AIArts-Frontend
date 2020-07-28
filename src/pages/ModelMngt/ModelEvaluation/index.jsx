@@ -295,7 +295,7 @@ const ModelEvaluation = props => {
               }
             </Select>
           </Form.Item>                 
-          <Form.Item name="status" {...layout} label="评估状态" >
+          {/* <Form.Item name="status" {...layout} label="评估状态" >
             <>
               <Tag color="success">success</Tag>
               <Tag color="processing">processing</Tag>
@@ -308,7 +308,7 @@ const ModelEvaluation = props => {
               label="评估结果"
             >
               <TextArea rows={6}/>
-            </Form.Item>         
+            </Form.Item>          */}
           <Form.Item
             style={{ float: 'right' }}
           >
