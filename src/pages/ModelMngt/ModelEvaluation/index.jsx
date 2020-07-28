@@ -5,6 +5,7 @@ import { FolderOpenOutlined } from '@ant-design/icons';
 // import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 import { fetchAvilableResource } from '@/services/modelTraning';
+import { getLabeledDatasets } from '@/services/datasets';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -28,6 +29,7 @@ const ModelEvaluation = props => {
 
   useEffect(() => {
     getAvailableResource();
+    getTestDatasets();
   }, []);
 
   // useEffect(() => {
@@ -73,6 +75,21 @@ const ModelEvaluation = props => {
         // });
       }
 
+    }
+  }
+
+  const getTestDatasets = async () => {
+    const params = { 
+      pageNum: 1, 
+      pageSize: 999,
+    }; 
+    const { code, data, msg } = await getLabeledDatasets(params);
+    if (code === 0 && data) {
+      const { datasets } = data;
+      const finishedDs = datasets.filter(d => d.convertStatus === 'finished');
+      setDatasets(finishedDs);
+    } else {
+      message.error(msg);
     }
   }
 
@@ -241,8 +258,7 @@ const ModelEvaluation = props => {
               rules={[{ required: true }]}
               style={{ display: 'inline-block', width: 'calc(65% - 4px)', marginLeft: '8px' }}
             >
-              <Select
-              >
+              <Select>
                 {
                   engines && engines.map(f => (
                     <Option value={f} key={f}>{f}</Option>
@@ -280,10 +296,19 @@ const ModelEvaluation = props => {
             </Select>
           </Form.Item>                 
           <Form.Item name="status" {...layout} label="评估状态" >
-            <Tag color="success">success</Tag>
-            <Tag color="processing">processing</Tag>
-            <Tag color="error">error</Tag>
+            <>
+              <Tag color="success">success</Tag>
+              <Tag color="processing">processing</Tag>
+              <Tag color="error">error</Tag>
+            </>
           </Form.Item>
+          <Form.Item
+              {...layout}     
+              name="evaluateResult"
+              label="评估结果"
+            >
+              <TextArea rows={6}/>
+            </Form.Item>         
           <Form.Item
             style={{ float: 'right' }}
           >
