@@ -110,9 +110,18 @@ const ModelTraining = (props) => {
   const fetchParams = async () => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
-      const data = res.data.Templates;
-      setRunningParams(data.params);
-      form.setFieldsValue(data);
+      const data = res.data;
+      data.params.params = Object.entries(data.params.params).map(item => {
+        var obj = {};
+        obj['key'] = item[0];
+        obj['value'] = item[1];
+        return obj;
+      });
+      if (typeCreate) {
+        data.params.name = '';
+      }
+      form.setFieldsValue(data.params);
+      setRunningParams(data.params.params);
     }
   };
 
@@ -529,7 +538,7 @@ const ModelTraining = (props) => {
         </Form>
 
       </Modal>
-      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>{typeEdit?'保存':'立即创建'}</Button>
+      <Button type="primary" style={{ float: 'right', marginBottom:'16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>
 
   );

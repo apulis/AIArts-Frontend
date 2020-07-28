@@ -1,5 +1,5 @@
 import { Link, history } from 'umi';
-import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Space, Card, Select, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, sortText } from '@/utils/const';
@@ -58,7 +58,11 @@ const ModelList = props => {
       width: 150,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>      
+      render: item => (
+        <Popover content='查看评估详情'>
+          <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
+        </Popover>
+      )
     },
     {
       title: '状态',
