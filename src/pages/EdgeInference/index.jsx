@@ -252,7 +252,7 @@ const EdgeInference = () => {
               name="conversionType"
               rules={[{ required: true, message: '请选择类型！' }]}
             >
-                <Select placeholder="请选择类型">{getTypesData()}</Select>
+                <Select placeholder="请选择类型">{getOptions()}</Select>
             </Form.Item>
             <Form.Item
               label="输入路径"
