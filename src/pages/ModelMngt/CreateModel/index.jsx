@@ -16,7 +16,7 @@ const CreateModel = props => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
-  const [modelFileType, setModelFileType] = useState(1);
+  const [modelFileType, setModelFileType] = useState('1');
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [fileList, setFileList] = useState([]);
 
@@ -178,11 +178,11 @@ const CreateModel = props => {
               rules={[{ required: true }]} 
             >
               <Radio.Group onChange={e => setModelFileType(e.target.value)}>
-                <Radio value={1}>选择模型文件</Radio>
-                <Radio value={2}>上传模型文件</Radio>
+                <Radio value={'1'}>选择模型文件</Radio>
+                <Radio value={'2'}>上传模型文件</Radio>
               </Radio.Group>
             </Form.Item>
-            {modelFileType == 1 && <Form.Item
+            {modelFileType == '1' && <Form.Item
                 {...layout}
                 label="训练作业"
                 required
@@ -200,7 +200,7 @@ const CreateModel = props => {
                   <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
                 </Form.Item>
             </Form.Item>}       
-            {modelFileType == 2 && <Form.Item
+            {modelFileType == '2' && <Form.Item
               labelCol={{ span: 3 }}
               wrapperCol={{ span: 14 }}
               label="上传文件"
