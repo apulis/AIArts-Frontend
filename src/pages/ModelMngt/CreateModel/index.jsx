@@ -47,9 +47,15 @@ const CreateModel = props => {
       name,
       description,
       argumentPath: codePathPrefix + argumentPath,
-      jobId: jobId || '',
-      modelPath,
+      // jobId: jobId || '',
+      // modelPath,
       isAdvance: false,
+    }
+
+    if (jobId) {
+      data['jobId'] = jobId;
+    } else {
+      data['modelPath'] = modelPath;
     }
     
     const { code, msg } = await addModel(data);
@@ -116,7 +122,7 @@ const CreateModel = props => {
       const { type, size } = file;
       // const isOverSize = size / 1024 / 1024 / 1024 > 2; 
       return new Promise((resolve, reject) => {
-        if (fileList.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
+        if (fileList.length && fileList.findIndex(i => i.name === name && i.type === type) > -1) {
           message.warning(`不能上传相同的文件！`);
           reject(file);
         }
