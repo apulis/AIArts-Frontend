@@ -4,8 +4,7 @@ import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams, fetchPresetTemplates, fetchPresetModel } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -224,7 +223,7 @@ const ModelTraining = (props) => {
         ...paramsDetailedData.metaData,
         templateData: values
       };
-      const res = await saveTrainingParams(editParams);
+      const res = await updateParams(editParams);
       if (res.code === 0) {
         message.success('保存成功');
         history.push(goBackPath);
