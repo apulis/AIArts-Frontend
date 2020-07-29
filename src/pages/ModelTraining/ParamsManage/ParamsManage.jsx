@@ -104,7 +104,10 @@ const ParamsManage = () => {
       key: 'configName',
     },
     {
-      title: '权限', dataIndex: ['metaData', 'scope'], key: 'type',
+      title: '权限',
+      dataIndex: ['metaData', 'scope'],
+      key: 'type',
+      width: 70,
       render: index => statusList[index]
     },
     { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine' },
@@ -124,7 +127,6 @@ const ParamsManage = () => {
     },
     {
       title: '操作',
-      width: '16%',
       render: item => {
         const id = item.metaData.id;
         return (
@@ -158,14 +160,14 @@ const ParamsManage = () => {
     if (value.name) {
       params.name = value.name;
     }
-    console.log(params)
+    console.log(params);
     const res = await getParamsList(params);
   };
 
   const getParamsList = async (params) => {
     setTableLoading(true);
     const res = await fetchTemplates(params);
-    console.log(res)
+    console.log(res);
     if (res.code === 0) {
       const paramList = (res.data && res.data.Templates) || [];
       setParamList(paramList);
@@ -214,13 +216,13 @@ const ParamsManage = () => {
                 name="name"
                 label="参数配置名称"
               >
-                <Input style={{ width: '200px' }} placeholder="输入参数配置名称"/>
+                <Input style={{ width: '200px' }} placeholder="输入参数配置名称" />
               </Form.Item>
               <Form.Item>
                 <Button htmlType="button" onClick={onReset}>重置</Button>
               </Form.Item>
               <Form.Item>
-                <Button htmlType="button" onClick={handleSearch}>查询</Button>
+                <Button type="primary" htmlType="button" onClick={handleSearch}>查询</Button>
               </Form.Item>
               <Form.Item>
                 <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
