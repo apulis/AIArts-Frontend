@@ -61,7 +61,7 @@ export async function removeTemplate(id) {
 
 export async function saveTrainingParams(data) {
   return await request('/templates', {
-    method: 'PUT',
+    method: 'POST',
     data
   })
 }
