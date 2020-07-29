@@ -359,7 +359,7 @@ const ModelTraining = (props) => {
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 4 }} label="训练数据集">
+        <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
           <Select
             style={{ width: '300px' }}
