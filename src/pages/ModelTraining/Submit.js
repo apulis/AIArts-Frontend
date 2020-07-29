@@ -118,9 +118,9 @@ const ModelTraining = (props) => {
       // check null 
       data.params.params = data.params.params || [];
       // replace path prefix
-      data.params.codePath.replace(codePathPrefix, '');
-      data.params.startupFile.replace(codePathPrefix, '');
-      data.params.outputPath.replace(codePathPrefix, '');
+      data.params.codePath = data.params.codePath.replace(codePathPrefix, '');
+      data.params.startupFile = data.params.startupFile.replace(codePathPrefix, '');
+      data.params.outputPath = data.params.outputPath.replace(codePathPrefix, '');
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -165,12 +165,11 @@ const ModelTraining = (props) => {
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
-    // set default value
     if (['createJobWithParam', 'editParam'].includes(requestType)) { fetchParams(); }
     if (['PretrainedModel'].includes(requestType)) {
       getPresetModel();
     }
-  }, []);
+  }, [codePathPrefix]);
 
   useEffect(() => {
     if (presetParamsVisible) {
