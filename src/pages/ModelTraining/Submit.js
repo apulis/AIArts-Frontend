@@ -138,7 +138,7 @@ const ModelTraining = (props) => {
       const { model } = res.data;
       // check null
       model.arguments = model.arguments || [];
-      const params = Object.entries(model.arguments).map(item => {
+      const params = Object.entries(model.arguments || {}).map(item => {
         var obj = {};
         console.log('item', item);
         obj['key'] = item[0];
