@@ -54,8 +54,8 @@ const EdgeInference = () => {
     setLoading(true);
     const params = { 
       ...pageParams, 
-      name: name, 
-      type: type === '全部类型' ? '' : type,
+      jobName: name, 
+      modelconversionType: type === '全部类型' ? '' : type,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };

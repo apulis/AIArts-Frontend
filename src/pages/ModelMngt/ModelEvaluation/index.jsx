@@ -1,21 +1,30 @@
 import { history } from 'umi';
 import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select, Tag } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-import { FolderOpenOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/icons';
 // import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 import { addEvaluation } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
 import { getDeviceNumArrByNodeType } from '@/utils/utils';
+import { generateKey } from '@/pages/ModelTraining/Submit';
 
-const { TextArea } = Input;
+import styles from '@/pages/ModelTraining/index.less';
+
 const { Option } = Select;
 
 const ModelEvaluation = props => {
-  const query = props.location.query;
-  const modelName = decodeURIComponent(query.modelName);
-  const modelId = decodeURIComponent(query.modelId);
+  // const query = props.location.query;
+  // const modelName = decodeURIComponent(query.modelName);
+  // const modelId = decodeURIComponent(query.modelId);
+  // const mockData = decodeURIComponent(query.data);
+
+  const modelName = props.location.modelName;
+  const modelId = props.location.modelId;
+  const mockData = props.location.data;
+
+  // const { modelName, modelId, data: { mockData }} = props.location;
 
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
@@ -28,9 +37,11 @@ const ModelEvaluation = props => {
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
   const [nodeInfo, setNofeInfo] = useState([]);
+  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
 
   const [form] = Form.useForm();
-
+  const { validateFields, getFieldValue, setFieldsValue } = form;
+  
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
@@ -96,19 +107,21 @@ const ModelEvaluation = props => {
 
   const onFinish = async (values) => {
     const { name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
-    const data = {
-      name,
-      engine,
-      startupFile: codePathPrefix + startupFile,
-      outputPath: codePathPrefix + outputPath,
-      datasetPath,
-      datasetName,
-      deviceType,
-      deviceNum,
-      argumentPath: codePathPrefix + argumentsFile,
-    }
+    // const data = {
+    //   name,
+    //   engine,
+    //   startupFile: codePathPrefix + startupFile,
+    //   outputPath: codePathPrefix + outputPath,
+    //   datasetPath,
+    //   datasetName,
+    //   deviceType,
+    //   deviceNum,
+    //   argumentPath: codePathPrefix + argumentsFile,
+    // }
     
-    const { code, msg } = await addEvaluation(modelId, data);
+    // const { code, msg } = await addEvaluation(modelId, data);
+    // console.log(999, mockData)
+    const { code, msg } = await addEvaluation(modelId, mockData);
 
     if (code === 0) {
       message.success(`创建评估成功`);
@@ -118,39 +131,65 @@ const ModelEvaluation = props => {
     }
   };
 
-  const showJobModal = () => {
-    setVisible(true);
-  };
-
-  const onReset = () => {
-    form.resetFields();
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
-
-  const handleSubmit = item => {
-    form.setFieldsValue({job: item.name, jobId: item.id});
-    setVisible(false);
-  };
 
   const handleEngineTypeChange = value => {
     let selectedType = frameWorks[value];
     setEngines(selectedType);
     form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
-  }
+  };
 
   const handleDatasetChange = (value, option) => {
     setDatasetName(option.children);
-  }  
+  };
 
   const handleDeviceTypeChange = value => {
     const selected = deviceList.find(item => item.deviceType === value); 
     const nums = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === selected.deviceType));
     
     setDeviceNums(nums);
-  }
+  };
+
+  const addParams = () => {
+    const newRunningParams = runningParams.concat({
+      key: '',
+      value: '',
+      createTime: generateKey(),
+    });
+    setRunningParams(newRunningParams);
+  };
+
+  const validateRunningParams = async (index, propertyName, ...args) => {
+    const [rule, value, callback] = [...args];
+    if (propertyName === 'value') {
+      callback();
+      return;
+    }
+    if (!value) {
+      callback();
+      return;
+    }
+    const runningParams = await getFieldValue('params');
+    runningParams.forEach((r, i) => {
+      if (r[propertyName] === value && index !== i) {
+        callback('不能输入相同的参数名称');
+      }
+    });
+    callback();
+  };
+
+  const removeRuningParams = async (key) => {
+    const values = await getFieldValue('params');
+    console.log('values', values);
+    [...runningParams].forEach((param, index) => {
+      param.key = values[index].key;
+      param.value = values[index].value;
+    });
+    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key);
+    setRunningParams(newRunningParams);
+    setFieldsValue({
+      runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+    });
+  };
 
   const layout = {
     labelCol: { span: 3 },
@@ -158,7 +197,6 @@ const ModelEvaluation = props => {
   };
 
   return (
-    <>
     <PageHeader
       ghost={false}
       onBack={() => history.push('/ModelManagement/MyModels')}
@@ -183,7 +221,7 @@ const ModelEvaluation = props => {
           >
             <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
-          <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="测试数据集">
+          <Form.Item {...layout} name="datasetPath" rules={[{ required: false, message: '请选择测试数据集' }]} label="测试数据集">
             <Select
               onChange={handleDatasetChange}
             >
@@ -248,6 +286,30 @@ const ModelEvaluation = props => {
               </Select>
             </Form.Item>
           </Form.Item>
+          {/* <Form.Item {...layout} label="运行参数">
+            {
+              runningParams.map((param, index) => {
+                return (
+                  <div>
+                    <Form.Item initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args); } }]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                      <Input style={{ width: 200 }} />
+                    </Form.Item>
+                    <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                    <Form.Item initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args); } }]} name={['params', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
+                      <Input style={{ width: 200 }} />
+                    </Form.Item>
+                    {
+                      runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
+                    }
+                  </div>
+                );
+              })
+            }
+            <div className={styles.addParams} onClick={addParams}>
+              <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
+              <a>点击增加参数</a>
+            </div>
+          </Form.Item>           */}
           <Form.Item
             {...layout}
             label="设备类型"
@@ -284,7 +346,6 @@ const ModelEvaluation = props => {
         </Form>
       </div>
     </PageHeader>
-    </>  
   );
 };
 
