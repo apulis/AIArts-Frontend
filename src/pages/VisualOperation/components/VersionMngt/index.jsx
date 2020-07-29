@@ -33,7 +33,7 @@ const VersionMngt = (props) => {
   const upgradIngStatusHandler = async(logData)=>{
     switch(logData.status){
       case 'not ready':
-        
+        upgradeManager('finish')
         break
       case 'upgrading':
         if(!isEmptyString(logData.logs))
@@ -132,12 +132,29 @@ const VersionMngt = (props) => {
   }
   const apiUpgrade = async () => {
     const { code, data, msg } = await upgrade()
-    if (code === 0) {
-      return true // todo 此处应该修改，响应是有效的。
-    } else {
-      message.error(msg);
-      return false
+    switch(code){
+      case 0:
+        return true
+      case 30501:
+        Modal.error({
+          title: '升级提示',
+          content: '目标文件不存在，升级失败',
+        });
+        break
+      case 30502:
+        Modal.error({
+          title: '升级提示',
+          content: '文件读取错误',
+        });
+        break
+      case 30503:
+        Modal.error({
+          title: '升级提示',
+          content: '正在升级，请等待升级结束',
+        });
+        break
     }
+    return false
   }
   const apiGetUpgradeLog = async()=>{
     const { code, data, msg } = await getUpgradeLog()
@@ -169,7 +186,7 @@ const VersionMngt = (props) => {
           {logs}
         </Paragraph>}
       </div>
-      <Title level={4} style={{ marginTop: "30px" }}>安装日志</Title>
+      <Title level={4} style={{ marginTop: "30px" }}>升级历史</Title>
       <Divider style={{ borderColor: '#cdcdcd' }} />
       <div><Timeline>
         {versionLogs.map(

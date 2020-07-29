@@ -4,8 +4,7 @@ import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams, fetchPresetTemplates, fetchPresetModel } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -27,13 +26,14 @@ export const generateKey = () => {
   return new Date().getTime();
 };
 
+let haveSetedParamsDetail = false;
 
 
 const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
-  let readParam, typeCreate, typeEdit, params;
+  let readParam, typeCreate, typeEdit;
   const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
@@ -66,6 +66,7 @@ const ModelTraining = (props) => {
   const [totalNodes, setTotalNodes] = useState(0);
   const [nodeInfo, setNofeInfo] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
+  const [paramsDetailedData, setParamsDetailedData] = useState({});
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -99,6 +100,24 @@ const ModelTraining = (props) => {
     }
   }, [distributedJob, nodeInfo]);
 
+  useEffect(() => {
+    if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
+      console.log(111, paramsDetailedData)
+      haveSetedParamsDetail = true;
+      const newParams = {
+        ...paramsDetailedData.params,
+        outputPath: paramsDetailedData.params.outputPath.replace(/\/.+?\/.+?\/.+?/, ''),
+        codePath: paramsDetailedData.params.codePath.replace(/\/.+?\/.+?\/.+?/, ''),
+        startupFile: paramsDetailedData.params.startupFile.replace(/\/.+?\/.+?\/.+?/, ''),
+      }
+      console.log('newParams', newParams)
+      setParamsDetailedData({
+        ...paramsDetailedData,
+        params: newParams
+      });
+      setFieldsValue(newParams);
+    }
+  }, [codePathPrefix, paramsDetailedData])
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
@@ -113,8 +132,13 @@ const ModelTraining = (props) => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
       const data = res.data;
+      setParamsDetailedData(data);
       // check null 
       data.params.params = data.params.params || [];
+      // replace path prefix
+      data.params.codePath = data.params.codePath.replace(codePathPrefix, '');
+      data.params.startupFile = data.params.startupFile.replace(codePathPrefix, '');
+      data.params.outputPath = data.params.outputPath.replace(codePathPrefix, '');
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -135,7 +159,7 @@ const ModelTraining = (props) => {
       const { model } = res.data;
       // check null
       model.arguments = model.arguments || [];
-      const params = Object.entries(model.arguments).map(item => {
+      const params = Object.entries(model.arguments || {}).map(item => {
         var obj = {};
         console.log('item', item);
         obj['key'] = item[0];
@@ -159,12 +183,11 @@ const ModelTraining = (props) => {
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
-    // set default value
     if (['createJobWithParam', 'editParam'].includes(requestType)) { fetchParams(); }
     if (['PretrainedModel'].includes(requestType)) {
       getPresetModel();
     }
-  }, []);
+  }, [codePathPrefix]);
 
   useEffect(() => {
     if (presetParamsVisible) {
@@ -195,8 +218,12 @@ const ModelTraining = (props) => {
       values.deviceNum = values.deviceTotal;
     }
     if (typeEdit) {
-      //TODO: edit
-      const res = await saveTrainingParams(values);
+      console.log('params:', paramsDetailedData);
+      let editParams = {
+        ...paramsDetailedData.metaData,
+        templateData: values
+      };
+      const res = await updateParams(editParams);
       if (res.code === 0) {
         message.success('保存成功');
         history.push(goBackPath);
@@ -352,7 +379,7 @@ const ModelTraining = (props) => {
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="datasetPath" rules={[{ required: true, message: '请输入训练数据集' }]} labelCol={{ span: 4 }} label="训练数据集">
+        <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
           <Select
             style={{ width: '300px' }}

@@ -66,6 +66,13 @@ export async function saveTrainingParams(data) {
   })
 }
 
+export async function updateParams(data) {
+  return await request('/templates', {
+    method: 'PUT',
+    data
+  })
+}
+
 export async function fetchJobStatusSumary() {
   return await request(`/common/job/summary?jobType=${modelTrainingType}`);
 }
