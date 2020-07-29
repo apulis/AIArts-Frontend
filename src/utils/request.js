@@ -55,7 +55,9 @@ export const errorHandler = async (error) => {
   const CODE = _response.code;
   const hasMessage = bizCodeMessage[CODE] || _response.msg;
   if (CODE !== 0 && hasMessage) {
-    message.error(hasMessage);
+    if (hasMessage.length < 30) {
+      message.error(hasMessage);
+    }
   }
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;

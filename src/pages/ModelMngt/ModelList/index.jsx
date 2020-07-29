@@ -58,11 +58,11 @@ const ModelList = props => {
       width: 150,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => (
+      render: item => !!item.evaluationId ? (
         <Popover content='查看评估详情'>
           <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
         </Popover>
-      )
+      ): (item.name)
     },
     {
       title: '状态',

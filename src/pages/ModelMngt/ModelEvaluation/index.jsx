@@ -4,8 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FolderOpenOutlined } from '@ant-design/icons';
 // import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
+import { addEvaluation } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
+import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '@/utils/utils'
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -24,6 +26,7 @@ const ModelEvaluation = props => {
   const [deviceTypes, setDeviceTypes] = useState([]);
   const [deviceNums, setDeviceNums] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
+  const [datasetName, setDatasetName] = useState('');
 
   const [form] = Form.useForm();
 
@@ -98,15 +101,23 @@ const ModelEvaluation = props => {
   };
 
   const onFinish = async (values) => {
-    const { name, description, path, jobId } = values;
+    // const { name, jobId, engine, codePath, startupFile, outputPath, datasetPath } = values;
+    const { name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const data = {
       name,
-      description,
-      path: codePathPrefix + path,
-      jobId: jobId || '',
+      // codePath: codePathPrefix + codePath,
+      // jobId: jobId || '',
+      engine,
+      startupFile: codePathPrefix + startupFile,
+      outputPath: codePathPrefix + outputPath,
+      datasetPath: codePathPrefix + datasetPath,
+      datasetName,
+      deviceType,
+      deviceNum,
+      argumentPath: codePathPrefix + argumentsFile,
     }
     
-    const { code, msg } = await addModel(data);
+    const { code, msg } = await addEvaluation(modelId, data);
 
     if (code === 0) {
       message.success(`创建评估成功`);
@@ -138,6 +149,10 @@ const ModelEvaluation = props => {
     setEngines(selectedType);
     form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
   }
+
+  const handleDatasetChange = (value, option) => {
+    setDatasetName(option.children);
+  }  
 
   const handleDeviceTypeChange = value => {
     const selected = deviceList.find(item => item.deviceType === value);
@@ -205,10 +220,12 @@ const ModelEvaluation = props => {
             <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
           <Form.Item {...layout} name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]} label="测试数据集">
-            <Select>
+            <Select
+              onChange={handleDatasetChange}
+            >
               {
                 datasets.map(d => (
-                  <Option key={d.path} value={d.path}>{d.name}</Option>
+                  <Option key={d.dataSetPath} value={d.dataSetPath}>{d.name}</Option>
                 ))
               }
             </Select>
@@ -295,20 +312,6 @@ const ModelEvaluation = props => {
               }
             </Select>
           </Form.Item>                 
-          {/* <Form.Item name="status" {...layout} label="评估状态" >
-            <>
-              <Tag color="success">success</Tag>
-              <Tag color="processing">processing</Tag>
-              <Tag color="error">error</Tag>
-            </>
-          </Form.Item>
-          <Form.Item
-              {...layout}     
-              name="evaluateResult"
-              label="评估结果"
-            >
-              <TextArea rows={6}/>
-            </Form.Item>          */}
           <Form.Item
             style={{ float: 'right' }}
           >
@@ -317,14 +320,6 @@ const ModelEvaluation = props => {
         </Form>
       </div>
     </PageHeader>
-    {/* 选择训练作业弹框 */}
-    {/* {
-      visible && <ModalForm
-      visible={visible}
-      onCancel={handleCancel}
-      onSubmit={handleSubmit}
-    />
-    } */}
     </>  
   );
 };
