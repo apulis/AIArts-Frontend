@@ -1,4 +1,5 @@
 import {getDeviceNumArrByNodeType,getDeviceNumPerNodeArrByNodeType} from '../../utils/utils.js'
+import { PAGEPARAMS,sortText } from '@/utils/const';
 export const statusMap = {
   unapproved:{
     local:'未批准',
@@ -50,3 +51,9 @@ export const canStopStatus = new Set(['unapproved','queued','scheduling','runnin
 export const canUploadStatus = new Set(['running'])
 export const utilGetDeviceNumArr = getDeviceNumArrByNodeType
 export const utilGetDeviceNumPerNodeArr = getDeviceNumPerNodeArrByNodeType
+export const sortColumnMap = {
+  name:'jobName',
+  createTime:'jobTime'
+}
+export const pageObj = PAGEPARAMS
+export const sortTextMap = sortText

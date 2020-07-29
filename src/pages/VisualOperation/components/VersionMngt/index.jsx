@@ -13,7 +13,7 @@ const VersionMngt = (props) => {
   const [versionLogs, setVersionLogs] = useState([])
   const [upgradeText, setUpgradeText] = useState('一键升级')
   const [upgrading,setUpgrading] = useState(false)
-  const [logs,setLogs] = useState('xxxxx')
+  const [logs,setLogs] = useState('')
   useEffect(() => {
     renderInit()
   }, [])
@@ -23,11 +23,17 @@ const VersionMngt = (props) => {
       setInitData(result)
       setVersionInfo(result.versionInfo)
       setVersionLogs(result.versionLogs)
+      if(result.isUpgrading){
+        upgradeManager('continue')
+      }else{
+        upgradeManager('init')
+      }
     }
   }
-  const upgradIngStatusManager = async(logData)=>{
+  const upgradIngStatusHandler = async(logData)=>{
     switch(logData.status){
-      case 'notReady':
+      case 'not ready':
+        upgradeManager('finish')
         break
       case 'upgrading':
         if(!isEmptyString(logData.logs))
@@ -43,6 +49,11 @@ const VersionMngt = (props) => {
   }
   const upgradeManager = async (step)=>{
     switch(step){
+      case 'init':
+        setUpgradeText('一键升级')
+        setUpgrading(false)
+        setLogs('')
+        break
       case 'check':
         const upgradeInfo = await apiGetUpgradeInfo()
         if (upgradeInfo.canUpgrade) {
@@ -51,7 +62,7 @@ const VersionMngt = (props) => {
               title: '升级提示',
               okText: '升级',
               cancelText: '取消',
-              content: "升级版本低于当前版本，是否确认升级？",
+              content: "升级版本低于或等于当前版本，是否确认升级？",
               onOk() {
                 upgradeManager('begin')
               },
@@ -71,23 +82,26 @@ const VersionMngt = (props) => {
         const result = await apiUpgrade()
         if(result){
           setUpgradeText('开始升级')
-          setUpgrading(true)
           logTimer = setInterval(upgradeManager.bind(this,'upgrading'),1000)
         }
         break
+      case 'continue':
+        if(logTimer) clearInterval(logTimer)
+        logTimer = setInterval(upgradeManager.bind(this,'upgrading'),1000)
+        break
       case 'upgrading':
-        setUpgradeText('正在升级')
+        if(!upgrading) setUpgrading(true)
+        if(upgradeText!=='正在升级') setUpgradeText('正在升级')
         const logData = await apiGetUpgradeLog()
         if(logData){
-          upgradIngStatusManager(logData)
+          upgradIngStatusHandler(logData)
         }
-        upgradeManager('error')
         break
       case 'finish':
         setUpgradeText('升级成功')
         if(logTimer)clearInterval(logTimer)
         message.success('升级成功')
-        renderInit()
+        location.reload()
         break
       case 'error':
         setUpgradeText('升级失败')

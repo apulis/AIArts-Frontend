@@ -33,7 +33,7 @@ const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
-  let readParam, typeCreate, typeEdit, params;
+  let readParam, typeCreate, typeEdit;
   const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
@@ -66,6 +66,7 @@ const ModelTraining = (props) => {
   const [totalNodes, setTotalNodes] = useState(0);
   const [nodeInfo, setNofeInfo] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
+  const [paramsDetailedData, setParamsDetailedData] = useState({});
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -113,6 +114,8 @@ const ModelTraining = (props) => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
       const data = res.data;
+      console.log('data', data);
+      setParamsDetailedData(data);
       // check null 
       data.params.params = data.params.params || [];
       data.params.params = Object.entries(data.params.params).map(item => {
@@ -195,8 +198,12 @@ const ModelTraining = (props) => {
       values.deviceNum = values.deviceTotal;
     }
     if (typeEdit) {
-      //TODO: edit
-      const res = await saveTrainingParams(values);
+      console.log('params:', paramsDetailedData);
+      let editParams = {
+        ...paramsDetailedData.metaData,
+        templateData: values
+      };
+      const res = await saveTrainingParams(editParams);
       if (res.code === 0) {
         message.success('保存成功');
         history.push(goBackPath);
