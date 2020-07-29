@@ -113,7 +113,8 @@ const ModelTraining = (props) => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
       const data = res.data;
-      data.params.params = Object.entries(data.params.params).map(item => {
+      console.log('data', data)
+      data.params.params = Object.entries(data.params.params || {}).map(item => {
         var obj = {};
         obj['key'] = item[0];
         obj['value'] = item[1];
