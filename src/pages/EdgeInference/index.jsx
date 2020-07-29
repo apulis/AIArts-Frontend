@@ -31,8 +31,10 @@ const EdgeInference = () => {
     order: ''
   });
   const typeText = {
-    converting: '转换中',
-    pushing: '推送中'
+    'converting': '转换中',
+    'pushing': '推送中',
+    'push success': '推送成功',
+    'push failed': '推送失败'
   }
 
   useEffect(() => {
