@@ -37,10 +37,10 @@ const ParamsManage = () => {
   const ExpandDetail = (props) => {
     const record = props.record;
     // check null
-    record.params = record.params || [];
+    record.params.params = record.params.params || [];
     const argumentsContent = (
       <div>
-        {Object.entries(record.params).map(item => {
+        {Object.entries(record.params.params).map(item => {
           return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
         })}
       </div>
@@ -54,7 +54,7 @@ const ParamsManage = () => {
         <Descriptions.Item label="运行参数">
           <Popover title="运行参数" content={argumentsContent}>
             {
-              Object.entries(record.params).map(item => {
+              Object.entries(record.params.params).map(item => {
                 return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
               })
             }
@@ -208,7 +208,7 @@ const ParamsManage = () => {
               >
                 <Select style={{ width: 180 }} onChange={handleTypeChange}>
                   <Option value='3'>全部</Option>
-                  <Option value='1'>共有</Option>
+                  <Option value='1'>公有</Option>
                   <Option value='2'>私有</Option>
                 </Select>
               </Form.Item>
