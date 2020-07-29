@@ -22,7 +22,7 @@ const EvaluationDetail = props => {
       // if (typeof log === 'object') {
       //   log = '';
       // }
-      log = `name: GeForce RTX 2070 major: 7 minor: 5 memoryClockRate(GHz): 1.62
+      let log = `name: GeForce RTX 2070 major: 7 minor: 5 memoryClockRate(GHz): 1.62
       pciBusID: 0000:01:00.0
       2020-07-29 06:41:52.143807: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
       2020-07-29 06:41:52.143814: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
@@ -120,7 +120,7 @@ const EvaluationDetail = props => {
       // if (typeof log === 'object') {
       //   log = '';
       // }
-      log = `name: GeForce RTX 2070 major: 7 minor: 5 memoryClockRate(GHz): 1.62
+      let log = `name: GeForce RTX 2070 major: 7 minor: 5 memoryClockRate(GHz): 1.62
       pciBusID: 0000:01:00.0
       2020-07-29 06:41:52.143807: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcudart.so.10.0
       2020-07-29 06:41:52.143814: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library libcublas.so.10.0
@@ -217,7 +217,7 @@ const EvaluationDetail = props => {
         <Descriptions.Item label="测试数据集">{evaluationDetail?.datasetName}</Descriptions.Item>
         {/* <Descriptions.Item label="创建时间">{moment(evaluationDetail.createAt).format('YYYY-MM-DD HH:mm')}</Descriptions.Item> */}
         <Descriptions.Item label="创建时间">{evaluationDetail?.createdAt}</Descriptions.Item>
-        <Descriptions.Item label="设备类型">{evaluationDetail?.deviceType}</Descriptions.Item>
+        <Descriptions.Item label="设备类型">{'nvidia_gpu_amd64'}</Descriptions.Item>
         <Descriptions.Item label="设备数量">{evaluationDetail?.deviceNum}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>

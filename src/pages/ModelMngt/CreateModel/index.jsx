@@ -48,7 +48,8 @@ const CreateModel = props => {
       description,
       argumentPath: codePathPrefix + argumentPath,
       jobId: jobId || '',
-      modelPath: modelPath ? modelPath : codePathPrefix + argumentPath,
+      // modelPath: modelPath ? modelPath : codePathPrefix + argumentPath,
+      modelPath: '/home/jin.li/code',
       isAdvance: false,
     }
 
