@@ -2,33 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'umi';
 import { Table, Select,Space, Button, Row, Col, Input,message,Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
+import { PAGEPARAMS } from '@/utils/const';
 import { getCodes,deleteCode,getJupyterUrl,getCodeCount} from '../../service.js';
 import moment from 'moment';
 import {isEmptyString} from '../../util.js'
 import CodeUpload from '../UpLoad'
-import {statusMap,canOpenStatus,canStopStatus,canUploadStatus,sortColumnMap, sortTextMap,pageObj} from '../../serviceController.js'
+import {statusMap,canOpenStatus,canStopStatus,canUploadStatus} from '../../const.js'
 
 const CodeList = (props) => {
   const { Search } = Input;
   const { Option } = Select;
   const [data, setData] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
-  const [pageParams, setPageParams] = useState(pageObj);// 页长
+  const [pageParams, setPageParams] = useState(PAGEPARAMS);// 页长
   const [statusSearchArr,setStatusSearchArr] = useState([])
   const [curStatus,setCurStatus] = useState('')
   const [searchWord,setSearchName] = useState('')
   const [modalFlag, setModalFlag] = useState(false);
   const [modalData,setModalData] = useState({})
-  const [sortInfo,setSortInfo] = useState({
-    orderBy:'',
-    order:''
-  })
   useEffect(()=>{
     renderStatusSelect()
-  })
+  },[])
   useEffect(() => {// componentDidMount()
     renderTable();
-  }, [pageParams,curStatus,searchWord,sortInfo])// pageParams改变触发的componentwillUpdate()
+  }, [pageParams,curStatus,searchWord])// pageParams改变触发的componentwillUpdate()
   
   const renderStatusSelect = async ()=>{
     // todo
@@ -67,10 +64,6 @@ const CodeList = (props) => {
     params['status'] = isEmptyString(curStatus)?'all':curStatus
     if(!isEmptyString(searchWord)){
       params['searchWord'] = searchWord
-    }
-    if(!isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)){
-      params['orderBy'] =sortColumnMap[sortInfo.orderBy] 
-      params['order'] = sortTextMap[sortInfo.order]
     }
     const obj = await getCodes(params);
     const { code, data, msg } = obj
@@ -128,17 +121,16 @@ const CodeList = (props) => {
     setModalData(codeItem)
     setModalFlag(true)
   }
-  const handleSortChange = (pagination, filters, sorter) => {
-    const {field:orderBy,order} = sorter
-    setSortInfo({orderBy,order});
-  }
   const columns = [
     {
       title: '开发环境名称',
       dataIndex: 'name',
       ellipsis: true,
-      sorter:true,
-      sortOrder:sortInfo.orderBy==='name' && sortInfo['order'],// name与createTime非复合排序，各自独立排序
+      sorter:{
+        // todo 
+        compare:(item1,item2) =>item1.name >= item2.name,
+        multiple:2
+      }
     },
     {
       title: '状态',
@@ -156,8 +148,10 @@ const CodeList = (props) => {
       dataIndex: 'createTime',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
-      sorter:true,
-      sortOrder:sortInfo.orderBy==='createTime' && sortInfo['order'],
+      sorter:{
+        compare:(item1,item2) =>moment(item1.createTime).valueOf()-moment(item2.createTime).valueOf(),
+        multiple:1
+      }
     },
     {
       title: '代码存储目录',
@@ -217,7 +211,6 @@ const CodeList = (props) => {
       <Table
         dataSource={data.codeEnvs}
         columns={columns}
-        onChange={handleSortChange}
         rowKey={(r, i) => `${i}`}
         pagination={{
           total: data.total,

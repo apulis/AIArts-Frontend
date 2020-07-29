@@ -25,8 +25,7 @@ const TrainingJobModal = props => {
       payload: {
         pageNum: pageParams.pageNum,
         pageSize: 5,
-        //TODO: JobStatus == finished
-        // JobStatus: 5?
+        status: 'finished'
       },
     });
   }, [pageParams]);

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, Button, Select, Row, Col, Descriptions, Card, Popover, Form } from 'antd';
-import { SyncOutlined } from '@ant-design/icons';
+import { Modal, Table, Input, Button, Select, Row, Col, Descriptions, Card, Popover, Form, message } from 'antd';
+import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { fetchTemplates, fetchTemplateById, removeTemplate } from '../../../services/modelTraning';
-import { PAGEPARAMS } from '@/utils/const';
+import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
+import { PAGEPARAMS, sortText } from '@/utils/const';
+import moment from 'moment';
 
-const { Search } = Input;
+const { confirm } = Modal;
 const { Option } = Select;
 
 const ParamsManage = () => {
@@ -18,11 +19,16 @@ const ParamsManage = () => {
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
   const { getFieldsValue } = form;
-  const statusList = [
-    { en: '0', cn: '全部' },
-    { en: '1', cn: '共有' },
-    { en: '2', cn: '私有' },
-  ];
+  const [sortedInfo, setSortedInfo] = useState({
+    orderBy: '',
+    order: ''
+  });
+  const statusList = {
+    '3': '全部',
+    '1': '公有',
+    '2': '私有',
+  };
+
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -30,32 +36,34 @@ const ParamsManage = () => {
 
   const ExpandDetail = (props) => {
     const record = props.record;
+    // check null
+    record.params.params = record.params.params || [];
     const argumentsContent = (
       <div>
-        {record.arguments.map(item => {
-          return <p>{item.key + ':' + item.value}</p>;
+        {Object.entries(record.params.params).map(item => {
+          return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
         })}
       </div>
     );
     return (
       <Descriptions>
-        <Descriptions.Item label="参数配置名称">{record.configName}</Descriptions.Item>
-        <Descriptions.Item label="启动文件">{record.startupFile}</Descriptions.Item>
-        <Descriptions.Item label="计算节点数">{record.deviceNum}</Descriptions.Item>
-        <Descriptions.Item label="训练数据集">{record.datasetPath}</Descriptions.Item>
+        <Descriptions.Item label="参数配置名称">{record.params.name}</Descriptions.Item>
+        <Descriptions.Item label="启动文件">{record.params.startupFile}</Descriptions.Item>
+        <Descriptions.Item label="计算节点数">{record.params.deviceNum}</Descriptions.Item>
+        <Descriptions.Item label="训练数据集">{record.params.datasetPath}</Descriptions.Item>
         <Descriptions.Item label="运行参数">
-          <Popover title="训练参数" content={argumentsContent}>
-            {record.arguments.map((item) => {
-              return (
-                <div>{item.key + ': ' + item.value + '; '}</div>
-              );
-            })}
+          <Popover title="运行参数" content={argumentsContent}>
+            {
+              Object.entries(record.params.params).map(item => {
+                return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
+              })
+            }
           </Popover>
         </Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{record.engine}</Descriptions.Item>
-        <Descriptions.Item label="代码目录">{record.codePath}</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">{record.deviceType}</Descriptions.Item>
-        <Descriptions.Item label="描述">{record.description}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{record.params.engine}</Descriptions.Item>
+        <Descriptions.Item label="代码目录">{record.params.codePath}</Descriptions.Item>
+        <Descriptions.Item label="计算节点规格">{record.params.deviceType}</Descriptions.Item>
+        <Descriptions.Item label="描述">{record.params.desc}</Descriptions.Item>
       </Descriptions>
     );
   };
@@ -68,39 +76,61 @@ const ParamsManage = () => {
   };
 
   const handleDelete = async (id) => {
-    const res = await removeTemplate(id);
-    if (res.code === 0) {
-      message.success('删除成功');
-    }
-  };
-
-  const omitText = (text, length) => {
-    if (text == null) {
-      return "";
-    }
-    if (text.length > length) {
-      return text.substring(0, length - 1) + "...";
-    }
-    return text;
+    confirm({
+      title: '删除参数配置',
+      icon: <ExclamationCircleOutlined />,
+      content: '删除操作无法恢复，是否继续？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        const res = await removeTemplate(id);
+        if (res.code === 0) {
+          message.success('删除成功');
+          handleSearch();
+        } else {
+          message.error(`删除失败${error.msg}` || `删除失败`);
+        }
+      },
+      onCancel() {
+      },
+    });
   };
 
   const columns = [
-    { title: '参数配置名称', dataIndex: 'configName', key: 'configName' },
-    { title: '类型', dataIndex: 'type', key: 'type' },
-    { title: '引擎类型', dataIndex: 'engine', key: 'engine' },
-    { title: '创建时间', dataIndex: 'createTime', key: 'createTime' },
+    {
+      title: '参数配置名称',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'configName' && sortedInfo.order,
+      dataIndex: ['params', 'name'],
+      key: 'configName',
+    },
+    {
+      title: '权限',
+      dataIndex: ['metaData', 'scope'],
+      key: 'type',
+      width: 70,
+      render: index => statusList[index]
+    },
+    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine' },
+    {
+      title: '创建时间',
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order,
+      dataIndex: ['metaData', 'createdAt'],
+      key: 'createdAt',
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
     {
       title: '描述',
       width: '25%',
-      render: item => {
-        const { description } = item;
-        return omitText(description, 30);
-      }
+      ellipsis: true,
+      dataIndex: ['params', 'desc']
     },
     {
       title: '操作',
       render: item => {
-        const { id } = item;
+        const id = item.metaData.id;
         return (
           <>
             <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
@@ -111,115 +141,52 @@ const ParamsManage = () => {
       },
     },
   ];
-  // const data = [
-  //   {
-  //     key: 1,
-  //     id: 1,
-  //     configName: 'train_job_config_001',
-  //     type: '训练',
-  //     engine: 'tensorflow , tf-1.8.0-py2.7',
-  //     createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
-  //     description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-  //     startupFile: '/start.sh',
-  //     deviceNum: 3,
-  //     datasetPath: 'train.csv',
-  //     arguments: [
-  //       {
-  //         key: 'learning_rate',
-  //         value: 0.01,
-  //         createTime: 4242142
-  //       },
-  //       {
-  //         key: 'epoch',
-  //         value: 20,
-  //         createTime: 4242442
-  //       },
-  //       {
-  //         key: 'dropout',
-  //         value: 0.5,
-  //         createTime: 4242443
-  //       },
-  //     ],
-  //     engine: 'tensorflow',
-  //     codePath: '/home/code/',
-  //     deviceType: '1核 | 16GB | 1*AI加速卡	'
-  //   },
-  //   {
-  //     key: 2,
-  //     id: 2,
-  //     configName: 'train_job_config_001',
-  //     type: '训练',
-  //     engine: 'tensorflow , tf-1.8.0-py2.7',
-  //     createTime: 'Aug 5, 2017 7:20:57 AM GMT+08:00',
-  //     description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-  //     startupFile: '/start.sh',
-  //     deviceNum: 3,
-  //     datasetPath: 'train.csv',
-  //     arguments: [
-  //       {
-  //         key: 'learning_rate',
-  //         value: 0.01,
-  //         createTime: 4242142
-  //       },
-  //       {
-  //         key: 'epoch',
-  //         value: 20,
-  //         createTime: 4242442
-  //       },
-  //       {
-  //         key: 'dropout',
-  //         value: 0.5,
-  //         createTime: 4242443
-  //       },
-  //     ], engine: 'tensorflow',
-  //     codePath: '/home/code/',
-  //     deviceType: '1核 | 16GB | 1*AI加速卡	'
-  //   },
-  // ];
 
   const onReset = () => {
     form.resetFields();
-    setFormValues({ status: '0', name: '' });
+    setFormValues({ scope: '3', name: '' });
   };
 
   const handleSearch = async () => {
     const params = {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
+      jobType: 'artsTraining',
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
     };
-
-
     const value = getFieldsValue();
-
-    if (value.status && value.status !== '0') {
-      params.status = value.status;
+    if (value.scope) {
+      params.scope = value.scope;
     }
-
     if (value.name) {
       params.name = value.name;
     }
-
-    console.log(params);
     const res = await getParamsList(params);
-
   };
 
   const getParamsList = async (params) => {
+    setTableLoading(true);
     const res = await fetchTemplates(params);
-    setTableLoading(false);
     if (res.code === 0) {
-      const paramList = (res.data && res.data.Trainings) || [];
+      const paramList = (res.data && res.data.Templates) || [];
       setParamList(paramList);
+      const total = (res.data && res.data.total) || 0;
+      setTotal(total);
     }
+    setTableLoading(false);
+  };
+
+  const onSortChange = (pagination, filters, sorter) => {
+    setSortedInfo(sorter);
   };
 
   const handleTypeChange = (value) => {
-
   };
 
   useEffect(() => {
     handleSearch();
-  }, [pageParams, formValues]);
+  }, [pageParams, formValues, sortedInfo]);
 
   return (
     <PageHeaderWrapper>
@@ -233,28 +200,29 @@ const ParamsManage = () => {
             <Form
               layout='inline'
               form={form}
-              initialValues={{ status: '0' }}
+              initialValues={{ scope: '3' }}
             >
               <Form.Item
-                name="status"
+                name="scope"
                 label="权限"
               >
                 <Select style={{ width: 180 }} onChange={handleTypeChange}>
-                  {
-                    statusList.map((item) => (
-                      <Option key={item.en} value={item.en}>{item.cn}</Option>
-                    ))
-                  }
+                  <Option value='3'>全部</Option>
+                  <Option value='1'>公有</Option>
+                  <Option value='2'>私有</Option>
                 </Select>
               </Form.Item>
               <Form.Item
                 name="name"
                 label="参数配置名称"
               >
-                <Search style={{ width: '200px' }} placeholder="输入参数配置名称" onSearch={handleSearch} />
+                <Input style={{ width: '200px' }} placeholder="输入参数配置名称" />
               </Form.Item>
               <Form.Item>
                 <Button htmlType="button" onClick={onReset}>重置</Button>
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="button" onClick={handleSearch}>查询</Button>
               </Form.Item>
               <Form.Item>
                 <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
@@ -264,7 +232,8 @@ const ParamsManage = () => {
           <Col span={24}>
             <Table
               columns={columns}
-              rowKey='id'
+              rowKey={record => record.metaData.id}
+              onChange={onSortChange}
               pagination={{
                 total: total,
                 showQuickJumper: true,

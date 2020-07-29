@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import {statusMap} from './const'
+import {statusMap} from './serviceController'
 import { forEach } from 'lodash';
 
 export async function getCodes(params) {
@@ -29,13 +29,6 @@ export async function postCode1(data) {
     method:'POST',
     data
   });
-}
-export async function postCode2(data) {
-  return {
-    coded:0,
-    data:{},
-    msg:'success'
-  }
 }
 export async function getCodeCount() {
   const response =  await request('/common/job/summary', {

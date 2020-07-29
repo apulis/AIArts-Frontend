@@ -87,6 +87,10 @@ export default [
                 component: './ModelTraining/Submit',
               },
               {
+                path: '/model-training/ModelManage/:id/:type',
+                component: './ModelTraining/Submit',
+              },
+              {
                 path: '/model-training/:id/detail',
                 component: './ModelTraining/Detail',
               },
@@ -126,6 +130,10 @@ export default [
               {
                 path: '/ModelManagement/CreatePretrained',
                 component: './ModelMngt/CreatePretrained'
+              },
+              {
+                path: '/ModelManagement/ModelEvaluation/:id/detail',
+                component: './ModelMngt/ModelEvaluation/detail'
               },
             ],            
           },

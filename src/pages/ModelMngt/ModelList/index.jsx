@@ -1,5 +1,5 @@
-import { history } from 'umi'
-import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
+import { Link, history } from 'umi';
+import { message, Table, Modal, Form, Input, Button, Space, Card, Select, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, sortText } from '@/utils/const';
@@ -52,12 +52,17 @@ const ModelList = props => {
   const columns = [
     {
       title: '模型名称',
-      dataIndex: 'name',
+      // dataIndex: 'name',
       key: 'name',
       ellipsis: true,
       width: 150,
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,      
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
+      render: item => !!item.evaluationId ? (
+        <Popover content='查看评估详情'>
+          <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
+        </Popover>
+      ): (item.name)
     },
     {
       title: '状态',
@@ -104,6 +109,7 @@ const ModelList = props => {
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
             <a onClick={() => deleteModel(item)}>删除</a>
             <a onClick={() => evaluateModel(item)}>模型评估</a>
+            {/* <a onClick={() => evaluateDetail(item)}>评估详情</a> */}
           </Space>
         );
       },
@@ -192,6 +198,14 @@ const ModelList = props => {
   };
 
   const evaluateModel = (item) => {
+    const queryString = stringify({
+      modelName: encodeURIComponent(item.name),
+      modelId: encodeURIComponent(item.id),
+    });
+    history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
+  };
+
+  const evaluateDetail = (item) => {
     const queryString = stringify({
       modelName: encodeURIComponent(item.name),
       modelId: encodeURIComponent(item.id),
