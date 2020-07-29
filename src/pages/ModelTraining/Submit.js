@@ -27,6 +27,7 @@ export const generateKey = () => {
   return new Date().getTime();
 };
 
+let haveSetedParamsDetail = false;
 
 
 const ModelTraining = (props) => {
@@ -100,6 +101,24 @@ const ModelTraining = (props) => {
     }
   }, [distributedJob, nodeInfo]);
 
+  useEffect(() => {
+    if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
+      console.log(111, paramsDetailedData)
+      haveSetedParamsDetail = true;
+      const newParams = {
+        ...paramsDetailedData.params,
+        outputPath: paramsDetailedData.params.outputPath.replace(/\/.+?\/.+?\/.+?/, ''),
+        codePath: paramsDetailedData.params.codePath.replace(/\/.+?\/.+?\/.+?/, ''),
+        startupFile: paramsDetailedData.params.startupFile.replace(/\/.+?\/.+?\/.+?/, ''),
+      }
+      console.log('newParams', newParams)
+      setParamsDetailedData({
+        ...paramsDetailedData,
+        params: newParams
+      });
+      setFieldsValue(newParams);
+    }
+  }, [codePathPrefix, paramsDetailedData])
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
