@@ -121,8 +121,8 @@ const EdgeInference = () => {
       title: '状态',
       render: item => {
         const { jobStatus, modelconversionStatus } = item;
-        let status = modelconversionStatus;
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : typeText[modelconversionStatus];
+        let status = typeText[modelconversionStatus];
+        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : status;
         return (<span>{status}</span>)
       }
     },
