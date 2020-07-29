@@ -7,7 +7,7 @@ import styles from './index.less';
 import moment from 'moment';
 import { NameReg, NameErrorText, pollInterval, sortText } from '@/utils/const';
 import useInterval from '../../hooks/useInterval';
-import { CloudUploadOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -48,7 +48,7 @@ const EdgeInference = () => {
   //   getData();
   // }, pollInterval);
 
-  const getData = async () => {
+  const getData = async (text) => {
     setLoading(true);
     const params = { 
       ...pageParams, 
@@ -60,12 +60,15 @@ const EdgeInference = () => {
     const { code, data, msg } = await getEdgeInferences(params);
     if (code === 0 && data) {
       const { total, edgeInferences } = data;
-      const temp1 = jobs ? JSON.stringify(jobs.map(i => i.jobStatus)) : [];
-      const temp2 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.jobStatus)) : [];
-      const temp3 = jobs ? JSON.stringify(jobs.map(i => i.modelconversionStatus)) : [];
-      const temp4 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.modelconversionStatus)) : [];
-      if (temp1 !== temp2 || temp3 !== temp4) setJobs(edgeInferences);
+      // const temp1 = jobs ? JSON.stringify(jobs.map(i => i.jobStatus)) : [];
+      // const temp2 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.jobStatus)) : [];
+      // const temp3 = jobs ? JSON.stringify(jobs.map(i => i.modelconversionStatus)) : [];
+      // const temp4 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.modelconversionStatus)) : [];
+      // if (temp1 !== temp2 || temp3 !== temp4) {
+        setJobs(edgeInferences);
+      // }
       setTotal(total);
+      text && message.success(text);
     }
     setLoading(false);
   };
@@ -203,6 +206,7 @@ const EdgeInference = () => {
         <div className={styles.searchWrap}>
           <Select onChange={v => setType(v)} defaultValue={type}>{getOptions(true)}</Select>
           <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
+          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table
           columns={columns}
