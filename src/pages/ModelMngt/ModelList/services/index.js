@@ -6,6 +6,12 @@ export async function getModels(params) {
   });
 }
 
+export async function getModel(modelId) {
+  return request(`/models/${modelId}`, {
+    method: 'GET'
+  });
+}
+
 export async function deleteModel(modelId) {
   return request(`/models/${modelId}`, {
     method: 'DELETE',

@@ -39,7 +39,7 @@ const EvaluationDetail = props => {
     const res = await getEvaluationLog();
     cancel();
     if (res.code === 0) {
-      message.success('成功获取日志');
+      message.success('成功获取结果');
     }
   }  
 

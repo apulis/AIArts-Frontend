@@ -3,7 +3,7 @@ import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select, T
 import React, { useState, useEffect, useRef } from 'react';
 import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/icons';
 // import ModalForm from './components/ModalForm';
-import { addModel } from '../ModelList/services';
+import { getModel } from '../ModelList/services';
 import { addEvaluation } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
@@ -15,14 +15,16 @@ import styles from '@/pages/ModelTraining/index.less';
 const { Option } = Select;
 
 const ModelEvaluation = props => {
-  // const query = props.location.query;
+  const query = props.location.query;
   // const modelName = decodeURIComponent(query.modelName);
-  // const modelId = decodeURIComponent(query.modelId);
-  // const mockData = decodeURIComponent(query.data);
+  const modelId = decodeURIComponent(query.modelId);
 
-  const modelName = props.location.modelName;
-  const modelId = props.location.modelId;
-  const mockData = props.location.data;
+  // const modelName = props.location.modelName;
+  // const modelId = props.location.modelId;
+  // const mockData = props.location.data;
+  // const modelData = props.location.data;
+  // const modelId = modelData.id;
+  // const modelName = modelData.name;
 
   // const { modelName, modelId, data: { mockData }} = props.location;
 
@@ -36,6 +38,7 @@ const ModelEvaluation = props => {
   const [deviceNums, setDeviceNums] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
+  const [curModel, setCurModel] = useState(null);
   const [nodeInfo, setNofeInfo] = useState([]);
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
 
@@ -45,6 +48,7 @@ const ModelEvaluation = props => {
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
+    getCurModel(modelId);
   }, []);
 
   const getAvailableResource = async () => {
@@ -101,27 +105,33 @@ const ModelEvaluation = props => {
     }
   }
 
-  const selectTrainingJob = () => {
-
-  };
+  const getCurModel = async (modelId) => {
+    const { code, data, msg } = await getModel(modelId);
+    if (code === 0) {
+      const { model } = data;
+      console.log(333, model)
+      setCurModel(model);
+    } else {
+      message.error(msg);
+    }
+  }
 
   const onFinish = async (values) => {
     const { name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
-    // const data = {
-    //   name,
-    //   engine,
-    //   startupFile: codePathPrefix + startupFile,
-    //   outputPath: codePathPrefix + outputPath,
-    //   datasetPath,
-    //   datasetName,
-    //   deviceType,
-    //   deviceNum,
-    //   argumentPath: codePathPrefix + argumentsFile,
-    // }
+    const data = {
+      name,
+      engine,
+      startupFile: codePathPrefix + startupFile,
+      outputPath: codePathPrefix + outputPath,
+      datasetPath,
+      datasetName,
+      deviceType,
+      deviceNum,
+      argumentPath: codePathPrefix + argumentsFile,
+    }
     
-    // const { code, msg } = await addEvaluation(modelId, data);
-    // console.log(999, mockData)
-    const { code, msg } = await addEvaluation(modelId, mockData);
+    const { code, msg } = await addEvaluation(modelId, data);
+    // const { code, msg } = await addEvaluation(modelId, mockData);
 
     if (code === 0) {
       message.success(`创建评估成功`);
@@ -179,7 +189,7 @@ const ModelEvaluation = props => {
 
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
-    console.log('values', values);
+    // console.log('values', values);
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
@@ -211,7 +221,7 @@ const ModelEvaluation = props => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
-          initialValues={{name: modelName}}
+          // initialValues={{name: modelName}}
         >
           <Form.Item
             {...layout}
@@ -219,7 +229,7 @@ const ModelEvaluation = props => {
             label="名称"
             rules={[{ required: true, message: '名称不能为空!' }]}
           >
-            <Input placeholder="请输入模型名称" disabled/>
+            <Input placeholder="请输入模型名称" disabled value={curModel?.name}/>
           </Form.Item>
           <Form.Item {...layout} name="datasetPath" rules={[{ required: false, message: '请选择测试数据集' }]} label="测试数据集">
             <Select
@@ -241,10 +251,10 @@ const ModelEvaluation = props => {
             <Input addonBefore={codePathPrefix} />
           </Form.Item> */}
           <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
-            <Input addonBefore={codePathPrefix} />
+            <Input addonBefore={codePathPrefix} value={curModel?.startupFile}/>
           </Form.Item>
           <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
-            <Input addonBefore={codePathPrefix} />
+            <Input addonBefore={codePathPrefix} value={curModel?.argumentPath}/>
           </Form.Item>
           <Form.Item 
             {...layout} 
@@ -252,7 +262,7 @@ const ModelEvaluation = props => {
             name="outputPath"
             rules={[{ required: true }]}
           >
-            <Input addonBefore={codePathPrefix} />
+            <Input addonBefore={codePathPrefix} value={curModel?.outputPath}/>
           </Form.Item>
           <Form.Item
             {...layout}
