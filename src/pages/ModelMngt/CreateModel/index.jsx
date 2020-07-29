@@ -235,7 +235,7 @@ const CreateModel = props => {
                 hidden            
               >
                 <Input type="hidden"/>
-              </Form.Item>          
+            </Form.Item>          
             <Form.Item
               style={{ float: 'right' }}
             >
