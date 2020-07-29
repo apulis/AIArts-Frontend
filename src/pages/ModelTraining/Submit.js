@@ -275,7 +275,14 @@ const ModelTraining = (props) => {
       param.key = values[index].key;
       param.value = values[index].value;
     });
-    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key);
+    const newRunningParams = [...runningParams].filter((param) => {
+      if (param.createTime) {
+        return param.createTime !== key;
+      } else {
+        return param.key !== key;
+      }
+      
+    });
     setRunningParams(newRunningParams);
     setFieldsValue({
       runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
@@ -406,7 +413,7 @@ const ModelTraining = (props) => {
                     <Input style={{ width: 200 }} />
                   </FormItem>
                   {
-                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
+                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
                   }
                 </div>
               );
