@@ -99,7 +99,7 @@ const ModelTraining = (props) => {
       const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, nodeInfo]);
+  }, [distributedJob, nodeInfo, currentDeviceType]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
@@ -295,17 +295,6 @@ const ModelTraining = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
-    const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
-    const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
-    if (deviceNumMax >= 0) {
-      const list = [0];
-      let current = 1;
-      while (current <= deviceNumMax) {
-        list.push(current);
-        current = current * 2;
-      }
-      setAvailableDeviceNumList(list);
-    }
   };
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
