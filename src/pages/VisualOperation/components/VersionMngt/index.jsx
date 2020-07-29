@@ -33,7 +33,7 @@ const VersionMngt = (props) => {
   const upgradIngStatusHandler = async(logData)=>{
     switch(logData.status){
       case 'not ready':
-        
+        upgradeManager('finish')
         break
       case 'upgrading':
         if(!isEmptyString(logData.logs))
