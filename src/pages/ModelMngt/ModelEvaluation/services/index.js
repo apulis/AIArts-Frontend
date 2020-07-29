@@ -9,7 +9,7 @@ export async function getTrainingJobs(params) {
 export async function addEvaluation(id, data) {
   return await request(`/models/${id}/evaluation`, {
     method: 'POST',
-    data: data,
+    data,
   });
 }
 

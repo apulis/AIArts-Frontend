@@ -198,11 +198,19 @@ const ModelList = props => {
   };
 
   const evaluateModel = (item) => {
-    const queryString = stringify({
+    // const queryString = stringify({
+    //   modelName: encodeURIComponent(item.name),
+    //   modelId: encodeURIComponent(item.id),
+    //   data: encodeURIComponent(item),
+    // });
+    // history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
+
+    history.push({
+      pathname: '/ModelManagement/CreateEvaluation/',
+      data: item,
       modelName: encodeURIComponent(item.name),
       modelId: encodeURIComponent(item.id),
     });
-    history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
   };
 
   const evaluateDetail = (item) => {

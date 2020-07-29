@@ -47,16 +47,16 @@ const CreateModel = props => {
       name,
       description,
       argumentPath: codePathPrefix + argumentPath,
-      // jobId: jobId || '',
-      // modelPath,
+      jobId: jobId || '',
+      modelPath: modelPath ? modelPath : codePathPrefix + argumentPath,
       isAdvance: false,
     }
 
-    if (jobId) {
-      data['jobId'] = jobId;
-    } else {
-      data['modelPath'] = modelPath;
-    }
+    // if (jobId) {
+    //   data['jobId'] = jobId;
+    // } else {
+    //   data['modelPath'] = modelPath;
+    // }
     
     const { code, msg } = await addModel(data);
 
