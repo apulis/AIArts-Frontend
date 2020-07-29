@@ -36,6 +36,8 @@ const ParamsManage = () => {
 
   const ExpandDetail = (props) => {
     const record = props.record;
+    // check null
+    record.params = record.params || [];
     const argumentsContent = (
       <div>
         {Object.entries(record.params).map(item => {
@@ -160,14 +162,12 @@ const ParamsManage = () => {
     if (value.name) {
       params.name = value.name;
     }
-    console.log(params);
     const res = await getParamsList(params);
   };
 
   const getParamsList = async (params) => {
     setTableLoading(true);
     const res = await fetchTemplates(params);
-    console.log(res);
     if (res.code === 0) {
       const paramList = (res.data && res.data.Templates) || [];
       setParamList(paramList);

@@ -84,20 +84,20 @@ const ModelTraining = (props) => {
       if (totalNodes) {
         setTotalNodes(totalNodes);
       }
-      setNofeInfo(nodeInfo)
+      setNofeInfo(nodeInfo);
     }
   };
   useEffect(() => {
     if (distributedJob) {
-      if (!currentDeviceType) return
+      if (!currentDeviceType) return;
       const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
       setAvailableDeviceNumList(list);
     } else {
-      if (!currentDeviceType) return
+      if (!currentDeviceType) return;
       const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, nodeInfo])
+  }, [distributedJob, nodeInfo]);
 
 
   const fetchDataSets = async () => {
@@ -113,6 +113,8 @@ const ModelTraining = (props) => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
       const data = res.data;
+      // check null 
+      data.params.params = data.params.params || [];
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -130,11 +132,12 @@ const ModelTraining = (props) => {
   const getPresetModel = async () => {
     const res = await fetchPresetModel(paramsId);
     if (res.code === 0) {
-      console.log('data', res.data)
       const { model } = res.data;
+      // check null
+      model.arguments = model.arguments || [];
       const params = Object.entries(model.arguments).map(item => {
         var obj = {};
-        console.log('item', item)
+        console.log('item', item);
         obj['key'] = item[0];
         obj['value'] = item[1];
         return obj;
@@ -142,16 +145,16 @@ const ModelTraining = (props) => {
       if (params.length === 0) {
         params[0] = { key: '', value: '', createTime: generateKey() };
       }
-      setRunningParams(params)
+      setRunningParams(params);
       setFieldsValue({
         params: params,
         datasetPath: model.datasetName,
         engine: model.engineType,
         name: model.name,
-      })
+      });
 
     }
-  }
+  };
 
   useEffect(() => {
     getAvailableResource();
@@ -159,7 +162,7 @@ const ModelTraining = (props) => {
     // set default value
     if (['createJobWithParam', 'editParam'].includes(requestType)) { fetchParams(); }
     if (['PretrainedModel'].includes(requestType)) {
-      getPresetModel()
+      getPresetModel();
     }
   }, []);
 
@@ -170,10 +173,10 @@ const ModelTraining = (props) => {
           const template = res.data.Templates;
           setPresetRunningParams(template);
           if (template.length > 0) {
-            setCurrentSelectedPresetParamsId(template[0].metaData?.id)
+            setCurrentSelectedPresetParamsId(template[0].metaData?.id);
           }
         }
-      })
+      });
     }
   }, [presetParamsVisible]);
 
@@ -285,7 +288,7 @@ const ModelTraining = (props) => {
   };
 
   const handleSelectPresetParams = (current) => {
-    console.log(current)
+    console.log(current);
     setCurrentSelectedPresetParamsId(current);
   };
 
@@ -402,12 +405,12 @@ const ModelTraining = (props) => {
               {
                 validator(rule, value, callback) {
                   if (Number(value) > totalNodes) {
-                    callback(`当前只有 ${totalNodes} 个节点`)
-                    return
+                    callback(`当前只有 ${totalNodes} 个节点`);
+                    return;
                   }
                   if (Number(value) < 1) {
-                    callback(`不能小于 1`)
-                    return
+                    callback(`不能小于 1`);
+                    return;
                   }
                   callback();
                 }
