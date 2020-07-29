@@ -7,7 +7,7 @@ import { addModel } from '../ModelList/services';
 import { addEvaluation } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
-import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '@/utils/utils'
+import { getDeviceNumArrByNodeType } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -27,6 +27,7 @@ const ModelEvaluation = props => {
   const [deviceNums, setDeviceNums] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
+  const [nodeInfo, setNofeInfo] = useState([]);
 
   const [form] = Form.useForm();
 
@@ -35,24 +36,26 @@ const ModelEvaluation = props => {
     getTestDatasets();
   }, []);
 
-  // useEffect(() => {
-  //   let nums = getDeviceNums(form.deviceType);
-  //   console.log(111, nums, form.deviceType)
-  //   form.setFieldsValue({
-  //     deviceNum: nums.length > 0 ? nums[0] : 0,
-  //   });
-  // }, [form.deviceType]);
-
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { codePathPrefix, aiFrameworks, deviceList } } = res;
+      let { data: { codePathPrefix, aiFrameworks, deviceList, nodeInfo } } = res;
       if (!/\/$/.test(codePathPrefix)) {
         codePathPrefix = codePathPrefix + '/'
       }
       setCodePathPrefix(codePathPrefix);
+      // let aiFrameworkList = [];
+      // Object.keys(aiFrameworks).forEach(val => {
+      //   aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
+      // });      
+      // setFrameWorks(aiFrameworkList);
       setFrameWorks(aiFrameworks);
       setDeviceList(deviceList);
+      // const totalNodes = nodeInfo.length;
+      // if (totalNodes) {
+      //   setTotalNodes(totalNodes);
+      // }
+      setNofeInfo(nodeInfo); 
 
       // 获取引擎类型
       let types = Object.keys(aiFrameworks);      
@@ -68,16 +71,7 @@ const ModelEvaluation = props => {
       let deviceTypes = deviceList.map(d => d.deviceType);
       if (deviceTypes.length > 0) {
         setDeviceTypes(deviceTypes);
-        // let defaultDeviceType = deviceTypes[0];
-        // handleDeviceTypeChange(defaultDeviceType);
-        // let firstDevice = deviceList.find(item => item.deviceType === defaultDeviceType);
-
-        // form.setFieldsValue({
-        //   deviceType: defaultDeviceType,
-        //   // deviceNum: firstDevice ?.avail || 0,
-        // });
       }
-
     }
   }
 
@@ -101,16 +95,13 @@ const ModelEvaluation = props => {
   };
 
   const onFinish = async (values) => {
-    // const { name, jobId, engine, codePath, startupFile, outputPath, datasetPath } = values;
     const { name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const data = {
       name,
-      // codePath: codePathPrefix + codePath,
-      // jobId: jobId || '',
       engine,
       startupFile: codePathPrefix + startupFile,
       outputPath: codePathPrefix + outputPath,
-      datasetPath: codePathPrefix + datasetPath,
+      datasetPath,
       datasetName,
       deviceType,
       deviceNum,
@@ -155,37 +146,10 @@ const ModelEvaluation = props => {
   }  
 
   const handleDeviceTypeChange = value => {
-    const selected = deviceList.find(item => item.deviceType === value);
-    const avail = selected ?.avail || 0;
-
-    // let nums = getDeviceNums(value);
-    let nums = [];
-
-    if (avail >= 2){
-      nums = [0, 1, 2];
-    }else if (avail === 1 ){
-      nums = [0, 1];
-    }else{
-      nums = [0];
-    }
-    setDeviceNums(nums);
-  }
-
-  const getDeviceNums = value => {
-    const selected = deviceList.find(item => item.deviceType === value);
-    const avail = selected ?.avail || 0;
-
-    let nums = [];
-
-    if (avail >= 2){
-      nums = [0, 1, 2];
-    }else if (avail === 1 ){
-      nums = [0, 1];
-    }else{
-      nums = [0];
-    }
+    const selected = deviceList.find(item => item.deviceType === value); 
+    const nums = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === selected.deviceType));
     
-    return nums;
+    setDeviceNums(nums);
   }
 
   const layout = {
