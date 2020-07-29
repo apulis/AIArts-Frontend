@@ -126,7 +126,7 @@ const CreateModel = props => {
           message.warning(`不能上传相同的文件！`);
           reject(file);
         }
-        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip')) {
+        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip' || type === 'application/zip' || type === 'application/gzip')) {
           message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
           reject(file);
         }
