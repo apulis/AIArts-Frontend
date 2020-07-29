@@ -23,12 +23,11 @@ const CodeList = (props) => {
     orderBy:'',
     order:''
   })
-  // useEffect(()=>{
-  //   renderStatusSelect()
-  // },[])
+  useEffect(()=>{
+    renderStatusSelect()
+  })
   useEffect(() => {// componentDidMount()
     renderTable();
-    renderStatusSelect();
   }, [pageParams,curStatus,searchWord,sortInfo])// pageParams改变触发的componentwillUpdate()
   
   const renderStatusSelect = async ()=>{
