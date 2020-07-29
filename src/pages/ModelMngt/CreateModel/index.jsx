@@ -48,8 +48,8 @@ const CreateModel = props => {
       description,
       argumentPath: codePathPrefix + argumentPath,
       jobId: jobId || '',
-      // modelPath: modelPath ? modelPath : codePathPrefix + argumentPath,
-      modelPath: '/home/jin.li/code',
+      modelPath: modelPath ? modelPath : codePathPrefix + argumentPath,
+      // modelPath: '/home/jin.li/code',
       isAdvance: false,
     }
 
@@ -160,7 +160,7 @@ const CreateModel = props => {
             form={form}
             onFinish={onFinish}
             autoComplete="off"
-            initialValues={{ modelPath: modelFileType }}
+            initialValues={{ modelFileType: modelFileType }}
           >
             <Form.Item
               {...layout}
@@ -181,7 +181,7 @@ const CreateModel = props => {
             <Form.Item
               {...layout}
               label="模型文件"
-              name="modelPath"
+              name="modelFileType"
               rules={[{ required: true }]} 
             >
               <Radio.Group onChange={e => setModelFileType(e.target.value)}>
@@ -237,6 +237,12 @@ const CreateModel = props => {
               >
                 <Input type="hidden"/>
             </Form.Item>          
+            <Form.Item
+                name="modelPath"
+                hidden            
+              >
+                <Input type="hidden"/>
+            </Form.Item>         
             <Form.Item
               style={{ float: 'right' }}
             >
