@@ -79,6 +79,7 @@ const Detail = () => {
     console.log('submitData', submitData)
     const res = await saveTrainingParams(submitData);
     if (res.code === 0) {
+      message.success('保存成功');
       setModalVisible(false);
     }
   }
