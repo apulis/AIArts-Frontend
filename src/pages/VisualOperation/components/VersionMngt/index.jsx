@@ -186,7 +186,7 @@ const VersionMngt = (props) => {
           {logs}
         </Paragraph>}
       </div>
-      <Title level={4} style={{ marginTop: "30px" }}>安装日志</Title>
+      <Title level={4} style={{ marginTop: "30px" }}>升级历史</Title>
       <Divider style={{ borderColor: '#cdcdcd' }} />
       <div><Timeline>
         {versionLogs.map(
