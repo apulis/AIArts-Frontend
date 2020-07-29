@@ -25,7 +25,7 @@ const CodeList = (props) => {
   })
   useEffect(()=>{
     renderStatusSelect()
-  })
+  },[])
   useEffect(() => {// componentDidMount()
     renderTable();
   }, [pageParams,curStatus,searchWord,sortInfo])// pageParams改变触发的componentwillUpdate()
