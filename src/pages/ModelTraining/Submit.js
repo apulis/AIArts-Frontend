@@ -114,10 +114,13 @@ const ModelTraining = (props) => {
     let res = await fetchTemplateById(paramsId);
     if (res.code === 0) {
       const data = res.data;
-      console.log('data', data);
       setParamsDetailedData(data);
       // check null 
       data.params.params = data.params.params || [];
+      // replace path prefix
+      data.params.codePath.replace(codePathPrefix, '');
+      data.params.startupFile.replace(codePathPrefix, '');
+      data.params.outputPath.replace(codePathPrefix, '');
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -138,7 +141,7 @@ const ModelTraining = (props) => {
       const { model } = res.data;
       // check null
       model.arguments = model.arguments || [];
-      const params = Object.entries(model.arguments).map(item => {
+      const params = Object.entries(model.arguments || {}).map(item => {
         var obj = {};
         console.log('item', item);
         obj['key'] = item[0];
