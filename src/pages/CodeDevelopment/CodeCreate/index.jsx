@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal,InputNumber,Card,Radio } from 'antd';
 import { history } from 'umi';
-import { postCode1,postCode2, getResource } from '../service.js'
-import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '../const.js'
+import { postCode1, getResource } from '../service.js'
+import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '../serviceController.js'
+import { jobNameReg } from '@/utils/reg.js';
 const CodeCreate = () => {
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue,getFieldValue } = form;
@@ -37,7 +38,9 @@ const CodeCreate = () => {
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
       const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo[0])
       const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo[0]) || [0]
-      const maxNodeNumData = 2  // todo 静态数据
+      debugger
+      const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
+      
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
@@ -100,6 +103,8 @@ const CodeCreate = () => {
       arr = utilGetDeviceNumPerNodeArr(type)
       setFieldsValue({ 'numPsWorker': arr[0]})
       setDeviceNumPerNodeArr(arr)
+      // todo
+      setMaxNodeNum(result.nodeCountByDeviceType[index])
     }
   }
   const handleCaclTotalDeviceNum = (nodeNum,perNodeDeviceNum)=>{
@@ -144,7 +149,7 @@ const CodeCreate = () => {
           <Form.Item
             label="开发环境名称"
             name="name"
-            rules={[{ required: true }]}
+            rules={[{ required: true }, jobNameReg]}
           >
             <Input placeholder="请输入开发环境名称" />
           </Form.Item>
