@@ -12,6 +12,7 @@ import { jobNameReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 import { includes } from 'lodash';
 import models from '../InferenceService/InferenceList/models';
+import { formatParams } from './Detail';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -576,7 +577,7 @@ const ModelTraining = (props) => {
                       运行参数
                   </Col>
                     <Col span={16}>
-                      {p.params.params}
+                      {p.params.params && formatParams(p.params.params)}
                     </Col>
                   </Row>
                   <Row>
