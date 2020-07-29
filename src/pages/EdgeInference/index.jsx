@@ -31,8 +31,10 @@ const EdgeInference = () => {
     order: ''
   });
   const typeText = {
-    converting: '转换中',
-    pushing: '推送中'
+    'converting': '转换中',
+    'pushing': '推送中',
+    'push success': '推送成功',
+    'push failed': '推送失败'
   }
 
   useEffect(() => {
@@ -52,8 +54,8 @@ const EdgeInference = () => {
     setLoading(true);
     const params = { 
       ...pageParams, 
-      name: name, 
-      type: type === '全部类型' ? '' : type,
+      jobName: name, 
+      modelconversionType: type === '全部类型' ? '' : type,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
@@ -119,8 +121,8 @@ const EdgeInference = () => {
       title: '状态',
       render: item => {
         const { jobStatus, modelconversionStatus } = item;
-        let status = modelconversionStatus;
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : typeText[modelconversionStatus];
+        let status = typeText[modelconversionStatus];
+        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : status;
         return (<span>{status}</span>)
       }
     },

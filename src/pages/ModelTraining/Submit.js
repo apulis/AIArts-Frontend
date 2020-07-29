@@ -4,8 +4,7 @@ import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, saveTrainingParams, fetchPresetTemplates, fetchPresetModel } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -13,6 +12,7 @@ import { jobNameReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 import { includes } from 'lodash';
 import models from '../InferenceService/InferenceList/models';
+import { formatParams } from './Detail';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -27,6 +27,7 @@ export const generateKey = () => {
   return new Date().getTime();
 };
 
+let haveSetedParamsDetail = false;
 
 
 const ModelTraining = (props) => {
@@ -98,8 +99,26 @@ const ModelTraining = (props) => {
       const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, nodeInfo]);
+  }, [distributedJob, nodeInfo, currentDeviceType]);
 
+  useEffect(() => {
+    if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
+      console.log(111, paramsDetailedData)
+      haveSetedParamsDetail = true;
+      const newParams = {
+        ...paramsDetailedData.params,
+        outputPath: paramsDetailedData.params.outputPath.replace(/\/.+?\/.+?\/.+?/, ''),
+        codePath: paramsDetailedData.params.codePath.replace(/\/.+?\/.+?\/.+?/, ''),
+        startupFile: paramsDetailedData.params.startupFile.replace(/\/.+?\/.+?\/.+?/, ''),
+      }
+      console.log('newParams', newParams)
+      setParamsDetailedData({
+        ...paramsDetailedData,
+        params: newParams
+      });
+      setFieldsValue(newParams);
+    }
+  }, [codePathPrefix, paramsDetailedData])
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
@@ -118,9 +137,9 @@ const ModelTraining = (props) => {
       // check null 
       data.params.params = data.params.params || [];
       // replace path prefix
-      data.params.codePath.replace(codePathPrefix, '');
-      data.params.startupFile.replace(codePathPrefix, '');
-      data.params.outputPath.replace(codePathPrefix, '');
+      data.params.codePath = data.params.codePath.replace(codePathPrefix, '');
+      data.params.startupFile = data.params.startupFile.replace(codePathPrefix, '');
+      data.params.outputPath = data.params.outputPath.replace(codePathPrefix, '');
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -165,12 +184,11 @@ const ModelTraining = (props) => {
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
-    // set default value
     if (['createJobWithParam', 'editParam'].includes(requestType)) { fetchParams(); }
     if (['PretrainedModel'].includes(requestType)) {
       getPresetModel();
     }
-  }, []);
+  }, [codePathPrefix]);
 
   useEffect(() => {
     if (presetParamsVisible) {
@@ -206,7 +224,7 @@ const ModelTraining = (props) => {
         ...paramsDetailedData.metaData,
         templateData: values
       };
-      const res = await saveTrainingParams(editParams);
+      const res = await updateParams(editParams);
       if (res.code === 0) {
         message.success('保存成功');
         history.push(goBackPath);
@@ -277,17 +295,6 @@ const ModelTraining = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
-    const selectedDevice = deviceList.find(d => d.deviceType === deviceType);
-    const deviceNumMax = selectedDevice ? selectedDevice.avail : 0;
-    if (deviceNumMax >= 0) {
-      const list = [0];
-      let current = 1;
-      while (current <= deviceNumMax) {
-        list.push(current);
-        current = current * 2;
-      }
-      setAvailableDeviceNumList(list);
-    }
   };
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
@@ -559,7 +566,7 @@ const ModelTraining = (props) => {
                       运行参数
                   </Col>
                     <Col span={16}>
-                      {p.params.params}
+                      {p.params.params && formatParams(p.params.params)}
                     </Col>
                   </Row>
                   <Row>
