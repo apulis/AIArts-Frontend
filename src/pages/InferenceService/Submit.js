@@ -48,6 +48,9 @@ const SubmitModelTraining = (props) => {
     } else if (submitData.device === 'GPU') {
       submitData.image = availImage[1]
     }
+    const currentFramework = submitData.framework;
+    const currentInference = allSupportInference.find(val => val.framework === currentFramework);
+    submitData.image = availImage[currentInference?.device?.findIndex(val => val === submitData.device)];    
     const res = await createInference(submitData);
     if (res.code === 0) {
       cancel();
