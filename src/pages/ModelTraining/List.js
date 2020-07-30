@@ -24,6 +24,7 @@ export const statusList = [
 ]
 
 const { Search } = Input;
+const { Option } = Select;
 
 const List = () => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
