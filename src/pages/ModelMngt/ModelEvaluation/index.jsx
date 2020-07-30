@@ -9,6 +9,7 @@ import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
 import { getDeviceNumArrByNodeType } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
+import { jobNameReg } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
 
@@ -209,7 +210,7 @@ const ModelEvaluation = props => {
             {...layout}
             name="name"
             label="作业名称"
-            rules={[{ required: true, message: '名称不能为空!' }]}
+            rules={[{ required: true, message: '名称不能为空!' }, { ...jobNameReg }]}
           >
             <Input placeholder="请输入评估作业名称"/>
           </Form.Item>
