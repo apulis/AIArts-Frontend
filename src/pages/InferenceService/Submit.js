@@ -24,6 +24,7 @@ const SubmitModelTraining = (props) => {
   const [computedDeviceList, setComputedDeviceList] = useState([]);
   const [currentGpuType, setCurrentGpuType] = useState('');
   const [availImage, setAvailImage] = useState([]);
+  const [allSupportInference, setAllSupportInference] = useState([]);
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
 
@@ -42,7 +43,6 @@ const SubmitModelTraining = (props) => {
     values.runningParams && values.runningParams.forEach(p => {
       submitData.params[p.key] = p.value;
     });
-    console.log('device', submitData.device, availImage)
     if (submitData.device === 'CPU') {
       submitData.image = availImage[0]
     } else if (submitData.device === 'GPU') {
@@ -60,12 +60,9 @@ const SubmitModelTraining = (props) => {
     const res = await getAllSupportInference()
     if (res.code === 0) {
       const deviceList = res.data[0];
-      let { device, framework, image } = deviceList;
-      setAvailImage(image);
-      if (typeof framework === 'string') {
-        framework = [framework]
-      }
-      setFrameWorks(framework);
+      setAllSupportInference(res.data);
+      let { device } = deviceList;
+      setFrameWorks(res.data.map(val => val.framework));
       if (device.length > 0) {
         setFieldsValue({
           deviceType: device[0]
@@ -74,11 +71,11 @@ const SubmitModelTraining = (props) => {
       setDeviceList(device);
     }
   }
+
   const fetchComputedDevice = async () => {
     const res = await getAllComputedDevice();
     if (res.code === 0) {
       const computedDeviceList = Object.keys(res.data);
-      console.log('computedDeviceList', computedDeviceList);
       if (computedDeviceList.length > 0) {
         setFieldsValue({
           gpuType: computedDeviceList[0]
@@ -138,6 +135,10 @@ const SubmitModelTraining = (props) => {
     labelCol: { span: 4 },
     wrapperCol: { span: 8 },
   }
+  const handleSelectFramework = () => {
+    const currentFramework = getFieldValue('frameWork');
+    setAvailImage(allSupportInference.find(val => val.framework === currentFramework).image);
+  }
   return (
     <PageHeader
       ghost={false}
@@ -157,7 +158,7 @@ const SubmitModelTraining = (props) => {
       <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
       <Form form={form}>
         <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
-          <Select placeholder="请选择">
+          <Select placeholder="请选择" onChange={handleSelectFramework}>
             {
               frameWorks.map(f => (
                 <Option value={f}>{f}</Option>
