@@ -118,7 +118,7 @@ const ModelEvaluation = props => {
       outputPath,
       datasetPath,
       params,
-      datasetName,
+      desc: datasetName,
       deviceType,
       deviceNum,
       argumentPath: argumentsFile,

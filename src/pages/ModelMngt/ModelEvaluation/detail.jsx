@@ -58,10 +58,10 @@ const EvaluationDetail = props => {
       title="评估详情"
     >
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
-        <Descriptions.Item label="模型名称">{evaluationJob?.modelName}</Descriptions.Item>
+        <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
         <Descriptions.Item label="评估状态">{evaluationJob ? getJobStatus(evaluationJob.status) : ''}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{evaluationJob?.engine}</Descriptions.Item>
-        <Descriptions.Item label="测试数据集">{evaluationJob?.datasetPath}</Descriptions.Item>
+        <Descriptions.Item label="测试数据集">{evaluationJob?.desc}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
         <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
         <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
