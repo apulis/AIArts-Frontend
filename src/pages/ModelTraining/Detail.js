@@ -18,7 +18,7 @@ const FormItem = Form.Item;
 export const formatParams = (obj) => {
   let result = ''
   for (let key in obj) {
-    result += `${key}=${obj[key]} `;
+    result += `${key}=${obj[key]}`;
   }
   return result
 }

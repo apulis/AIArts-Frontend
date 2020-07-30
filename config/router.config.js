@@ -135,6 +135,12 @@ export default [
                 path: '/ModelManagement/ModelEvaluation/:id/detail',
                 component: './ModelMngt/ModelEvaluation/detail'
               },
+              {
+                path: '/ModelManagement/ModelEvaluation/List',
+                name: 'modelEvaluationList',
+                icon: 'CodepenOutlined',                 
+                component: './ModelMngt/ModelEvaluation/List'
+              },
             ],            
           },
           {

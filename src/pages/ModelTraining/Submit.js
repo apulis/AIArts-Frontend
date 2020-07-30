@@ -275,7 +275,14 @@ const ModelTraining = (props) => {
       param.key = values[index].key;
       param.value = values[index].value;
     });
-    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key);
+    const newRunningParams = [...runningParams].filter((param) => {
+      if (param.createTime) {
+        return param.createTime !== key;
+      } else {
+        return param.key !== key;
+      }
+      
+    });
     setRunningParams(newRunningParams);
     setFieldsValue({
       runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
@@ -355,7 +362,7 @@ const ModelTraining = (props) => {
       {isSubmitPage && <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
-          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入参数配置</Radio.Button>
+          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入训练参数</Radio.Button>
         </Radio.Group>
       </FormItem>}
       <Form form={form}>
@@ -406,7 +413,7 @@ const ModelTraining = (props) => {
                     <Input style={{ width: 200 }} />
                   </FormItem>
                   {
-                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
+                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
                   }
                 </div>
               );
@@ -525,6 +532,7 @@ const ModelTraining = (props) => {
         onOk={handleConfirmPresetParams}
         title="导入训练参数配置"
         forceRender
+        width="80%"
       >
         <Form
           form={form}
@@ -534,66 +542,66 @@ const ModelTraining = (props) => {
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       计算节点个数
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.deviceNum}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       启动文件
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.startupFile}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       代码目录
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.codePath}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       训练数据集
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.datasetPath}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       输出路径
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.outputPath}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       运行参数
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.params && formatParams(p.params.params)}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       计算节点规格
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.deviceType}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={8}>
+                    <Col span={5}>
                       引擎类型
                   </Col>
-                    <Col span={16}>
+                    <Col span={19}>
                       {p.params.engine}
                     </Col>
                   </Row>

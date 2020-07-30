@@ -1,9 +1,6 @@
 import { Link, history } from 'umi';
 import { message, Modal, Form, Input, Button, Card, PageHeader, Tooltip, Radio, Upload } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { connect } from 'umi';
-import { formatDate } from '@/utils/time';
 import { FolderOpenOutlined, InboxOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
@@ -35,10 +32,6 @@ const CreateModel = props => {
       setCodePathPrefix(codePathPrefix);
     }
   }
-
-  const selectTrainingJob = () => {
-
-  };
 
   const onFinish = async (values) => {
     // console.log(values);
@@ -121,7 +114,6 @@ const CreateModel = props => {
     },
     beforeUpload(file) {
       const { type, size } = file;
-      // const isOverSize = size / 1024 / 1024 / 1024 > 2; 
       return new Promise((resolve, reject) => {
         if (fileList.length && fileList.findIndex(i => i.name === name && i.type === type) > -1) {
           message.warning(`不能上传相同的文件！`);
@@ -254,7 +246,6 @@ const CreateModel = props => {
       {/* 选择训练作业弹框 */}
       {
         visible && <ModalForm
-        // current={current}
         visible={visible}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
