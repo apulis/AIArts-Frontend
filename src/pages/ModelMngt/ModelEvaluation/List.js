@@ -155,10 +155,10 @@ const List = () => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
     },
-    {
-      dataIndex: 'desc',
-      title: '描述'
-    },
+    // {
+    //   dataIndex: 'desc',
+    //   title: '描述'
+    // },
     {
       title: '操作',
       render(_text, item) {
