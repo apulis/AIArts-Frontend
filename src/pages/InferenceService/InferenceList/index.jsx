@@ -222,7 +222,7 @@ const InferenceList = props => {
   };
 
   const deleteJob = async (item) => {
-    const {code, msg, data} = await deleteference(item.jobId);
+    const {code, msg, data} = await deleteInference(item.jobId);
 
     if(code === 0){
       message.success(`Job删除停止！`);

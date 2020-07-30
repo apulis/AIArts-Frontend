@@ -13,26 +13,26 @@ export async function stopInference(params) {
 }
 
 export async function deleteInference(jobId) {
-  return request(`/api/inferences/DeleteJob?jobId=${jobId}`, {
+  return request(`/inferences/DeleteJob?jobId=${jobId}`, {
     method: 'DELETE',
   });
 }
 
 // export async function deleteInference(jobId) {
-//   return request(`/api/inferences/${jobId}`, {
+//   return request(`/inferences/${jobId}`, {
 //     method: 'DELETE',
 //   });
 // }
 
 export async function addInference(data) {
-  return await request('/api/inferences', {
+  return await request('/inferences', {
     method: 'POST',
     data: data,
   });
 }
 
 export async function updateInference(params = {}) {
-  return await request(`/api/inferences/update`, {
+  return await request(`/inferences/update`, {
     method: 'POST',
     params
   });
