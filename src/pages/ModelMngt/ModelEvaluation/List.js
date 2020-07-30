@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, message, Card, Select } from 'antd';
+import { Button, Table, Input, message, Card, Select, Popover } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
@@ -125,7 +125,9 @@ const List = () => {
       key: 'jobName',
       render(_text, item) {
         return (
-          <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
+          <Popover content='查看评估详情'>
+            <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
+          </Popover>
         )
       },
       sorter: true,
@@ -180,9 +182,6 @@ const List = () => {
           padding: '8'
         }}
       >
-      <Link to="/model-training/submit">
-        <Button href="">创建训练作业</Button>
-      </Link>
       <div style={{ float: 'right', paddingRight: '20px' }}>
         <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleChangeStatus}>
           {

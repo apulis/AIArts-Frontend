@@ -19,7 +19,7 @@ const DataSetDetail = () => {
   }, [id])
 
   const getData = async () => {
-    const { code, data, msg, total } = await getDatasetDetail(id);
+    const { code, data, total } = await getDatasetDetail(id);
     if (code === 0 && data) {
       setData([data.dataset]);
     }

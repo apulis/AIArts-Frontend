@@ -9,6 +9,7 @@ import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
 import { getDeviceNumArrByNodeType } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
+import { jobNameReg } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
 
@@ -16,29 +17,16 @@ const { Option } = Select;
 
 const ModelEvaluation = props => {
   const query = props.location.query;
-  // const modelName = decodeURIComponent(query.modelName);
   const modelId = decodeURIComponent(query.modelId);
-
-  // const modelName = props.location.modelName;
-  // const modelId = props.location.modelId;
-  // const mockData = props.location.data;
-  // const modelData = props.location.data;
-  // const modelId = modelData.id;
-  // const modelName = modelData.name;
-
-  // const { modelName, modelId, data: { mockData }} = props.location;
 
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
-  const [frameWorks, setFrameWorks] = useState(null);
-  const [engineTypes, setEngineTypes] = useState([]);
   const [engines, setEngines] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [deviceTypes, setDeviceTypes] = useState([]);
   const [deviceNums, setDeviceNums] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
-  const [curModel, setCurModel] = useState(null);
   const [nodeInfo, setNofeInfo] = useState([]);
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
 
@@ -48,7 +36,7 @@ const ModelEvaluation = props => {
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
-    getCurModel(modelId);
+    getCurrentModel(modelId);
   }, []);
 
   const getAvailableResource = async () => {
@@ -59,29 +47,17 @@ const ModelEvaluation = props => {
         codePathPrefix = codePathPrefix + '/'
       }
       setCodePathPrefix(codePathPrefix);
-      // let aiFrameworkList = [];
-      // Object.keys(aiFrameworks).forEach(val => {
-      //   aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
-      // });      
-      // setFrameWorks(aiFrameworkList);
-      setFrameWorks(aiFrameworks);
-      setDeviceList(deviceList);
-      // const totalNodes = nodeInfo.length;
-      // if (totalNodes) {
-      //   setTotalNodes(totalNodes);
-      // }
-      setNofeInfo(nodeInfo); 
 
-      // 获取引擎类型
-      let types = Object.keys(aiFrameworks);      
-      if (types.length > 0) {
-        setEngineTypes(types);
-        let defaultType = types[0];
-        form.setFieldsValue({
-          engineType: defaultType,
-          engine: aiFrameworks[defaultType].length > 0 ? aiFrameworks[defaultType][0] : ''
-        });
-      }
+      // 获取引擎
+      let engineList = [];
+      Object.keys(aiFrameworks).forEach(val => {
+        engineList = engineList.concat(aiFrameworks[val]);
+      });
+      setEngines(engineList);
+
+      setDeviceList(deviceList);
+      setNofeInfo(nodeInfo);
+
       // 设备类型
       let deviceTypes = deviceList.map(d => d.deviceType);
       if (deviceTypes.length > 0) {
@@ -93,7 +69,7 @@ const ModelEvaluation = props => {
   const getTestDatasets = async () => {
     const params = { 
       pageNum: 1, 
-      pageSize: 999,
+      pageSize: 9999,
     }; 
     const { code, data, msg } = await getLabeledDatasets(params);
     if (code === 0 && data) {
@@ -105,33 +81,48 @@ const ModelEvaluation = props => {
     }
   }
 
-  const getCurModel = async (modelId) => {
+  const getCurrentModel = async (modelId) => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
-      console.log(333, model)
-      setCurModel(model);
+      // console.log(666, model)
+      form.setFieldsValue({
+        name: model.name,
+        // engine: model.engineType,
+        // startupFile: model.startupFile,
+        // outputPath: model.outputPath,
+        // datasetPath: model.datasetPath,
+        argumentsFile: model.argumentPath,
+        // codePath: model.codePath,
+        // deviceType: model.deviceType,
+        // deviceNum: model.deviceNum,
+      });
     } else {
       message.error(msg);
     }
   }
 
   const onFinish = async (values) => {
-    const { name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
+    let params = {};
+    values.params && values.params.forEach(p => {
+      params[p.key] = p.value;
+    });
+    // values.params = params;
+    const { name, engine, codePath, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const data = {
       name,
       engine,
-      startupFile: codePathPrefix + startupFile,
-      outputPath: codePathPrefix + outputPath,
+      codePath,
+      startupFile,
+      outputPath,
       datasetPath,
+      params,
       datasetName,
       deviceType,
       deviceNum,
-      argumentPath: codePathPrefix + argumentsFile,
-    }
-    
+      argumentPath: argumentsFile,
+    };
     const { code, msg } = await addEvaluation(modelId, data);
-    // const { code, msg } = await addEvaluation(modelId, mockData);
 
     if (code === 0) {
       message.success(`创建评估成功`);
@@ -139,13 +130,6 @@ const ModelEvaluation = props => {
     } else {
       msg && message.error(`创建评估失败:${msg}`);
     }
-  };
-
-
-  const handleEngineTypeChange = value => {
-    let selectedType = frameWorks[value];
-    setEngines(selectedType);
-    form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
   };
 
   const handleDatasetChange = (value, option) => {
@@ -221,17 +205,46 @@ const ModelEvaluation = props => {
           form={form}
           onFinish={onFinish}
           autoComplete="off"
-          // initialValues={{name: modelName}}
         >
           <Form.Item
             {...layout}
             name="name"
-            label="名称"
-            rules={[{ required: true, message: '名称不能为空!' }]}
+            label="作业名称"
+            rules={[{ required: true, message: '名称不能为空!' }, { ...jobNameReg }]}
           >
-            <Input placeholder="请输入模型名称" disabled value={curModel?.name}/>
+            <Input placeholder="请输入评估作业名称"/>
           </Form.Item>
-          <Form.Item {...layout} name="datasetPath" rules={[{ required: false, message: '请选择测试数据集' }]} label="测试数据集">
+          <Form.Item
+            {...layout}
+            label="引擎"
+            name="engine"
+            required
+          >
+            <Select>
+              {
+                engines && engines.map(f => (
+                  <Option value={f} key={f}>{f}</Option>
+                ))
+              }
+            </Select>
+          </Form.Item>
+          <Form.Item {...layout} label="代码目录" name="codePath">
+            <Input/>
+          </Form.Item>
+          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
+            <Input/>
+          </Form.Item>
+          <Form.Item 
+            {...layout} 
+            label="输出路径"
+            name="outputPath"
+          >
+            <Input/>            
+          </Form.Item> 
+         <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
+            <Input/>
+          </Form.Item>                                             
+          <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: false, message: '请选择测试数据集' }]}>
             <Select
               onChange={handleDatasetChange}
             >
@@ -241,62 +254,12 @@ const ModelEvaluation = props => {
                 ))
               }
             </Select>
-          </Form.Item>          
-          {/* <Form.Item
-            {...layout}
-            name="codePath"
-            label="代码目录"
-            rules={[{ required: true }]}
-          >
-            <Input addonBefore={codePathPrefix} />
-          </Form.Item> */}
-          <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
-            <Input addonBefore={codePathPrefix} value={curModel?.startupFile}/>
-          </Form.Item>
-          <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
-            <Input addonBefore={codePathPrefix} value={curModel?.argumentPath}/>
           </Form.Item>
           <Form.Item 
-            {...layout} 
-            label="输出路径"
-            name="outputPath"
-            rules={[{ required: true }]}
+            // {...layout}
+            label="运行参数"
+            labelCol={{ span: 3 }}
           >
-            <Input addonBefore={codePathPrefix} value={curModel?.outputPath}/>
-          </Form.Item>
-          <Form.Item
-            {...layout}
-            label="引擎"
-            required
-          >
-            <Form.Item name="engineType" 
-              rules={[{ required: true }]}
-              style={{ display: 'inline-block', width: 'calc(35% - 4px)' }}
-            >
-              <Select
-                onChange={handleEngineTypeChange}
-              >
-                {
-                  engineTypes && engineTypes.map(f => (
-                    <Option value={f} key={f}>{f}</Option>
-                  ))
-                }
-              </Select>
-            </Form.Item>
-            <Form.Item name="engine" 
-              rules={[{ required: true }]}
-              style={{ display: 'inline-block', width: 'calc(65% - 4px)', marginLeft: '8px' }}
-            >
-              <Select>
-                {
-                  engines && engines.map(f => (
-                    <Option value={f} key={f}>{f}</Option>
-                  ))
-                }
-              </Select>
-            </Form.Item>
-          </Form.Item>
-          {/* <Form.Item {...layout} label="运行参数">
             {
               runningParams.map((param, index) => {
                 return (
@@ -319,7 +282,7 @@ const ModelEvaluation = props => {
               <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
               <a>点击增加参数</a>
             </div>
-          </Form.Item>           */}
+          </Form.Item>          
           <Form.Item
             {...layout}
             label="设备类型"

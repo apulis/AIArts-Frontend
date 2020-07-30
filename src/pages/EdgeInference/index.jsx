@@ -59,7 +59,7 @@ const EdgeInference = () => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
-    const { code, data, msg } = await getEdgeInferences(params);
+    const { code, data } = await getEdgeInferences(params);
     if (code === 0 && data) {
       const { total, edgeInferences } = data;
       // const temp1 = jobs ? JSON.stringify(jobs.map(i => i.jobStatus)) : [];
@@ -82,7 +82,7 @@ const EdgeInference = () => {
   const onSubmit = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const { code, data, msg } = await submit(values);
+      const { code, data } = await submit(values);
       if (code === 0) {
         message.success('提交成功！');
         getData();
@@ -140,7 +140,7 @@ const EdgeInference = () => {
 
   const getFdInfo = async () => {
     let info = {};
-    const { code, data, msg } = await getFD();
+    const { code, data } = await getFD();
     if (code === 0) {
       info = data.fdinfo;
       setFdInfo(data.fdinfo);
@@ -152,7 +152,7 @@ const EdgeInference = () => {
     const info = await getFdInfo();
     if (info) {
       setPushId(id);
-      const { code, data, msg } = await push({ jobId: id });
+      const { code, data } = await push({ jobId: id });
       if (code === 0) {
         getData();
         message.success('推送成功！');
@@ -171,7 +171,7 @@ const EdgeInference = () => {
   }
 
   const getTypesData = async () => {
-    const { code, data, msg } = await getTypes();
+    const { code, data } = await getTypes();
     if (code === 0) {
       setTypesData(data.conversionTypes);
     }
@@ -180,7 +180,7 @@ const EdgeInference = () => {
   const onSubmitFD = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const { code, data, msg } = await submitFD(values);
+      const { code, data } = await submitFD(values);
       if (code === 0) {
         message.success('设置成功！');
         getFdInfo();
