@@ -122,7 +122,7 @@ const ModelEvaluation = props => {
       deviceNum,
       argumentPath: argumentsFile,
     };
-    const { code, msg } = await addEvaluation(modelId, data);
+    const { code, msg } = await addEvaluation(data);
 
     if (code === 0) {
       message.success(`创建评估成功`);
