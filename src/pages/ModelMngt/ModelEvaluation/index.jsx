@@ -20,15 +20,12 @@ const ModelEvaluation = props => {
 
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
-  const [frameWorks, setFrameWorks] = useState(null);
-  const [engineTypes, setEngineTypes] = useState([]);
   const [engines, setEngines] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [deviceTypes, setDeviceTypes] = useState([]);
   const [deviceNums, setDeviceNums] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
-  const [curModel, setCurModel] = useState(null);
   const [nodeInfo, setNofeInfo] = useState([]);
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
 
@@ -38,7 +35,7 @@ const ModelEvaluation = props => {
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
-    getCurModel(modelId);
+    getCurrentModel(modelId);
   }, []);
 
   const getAvailableResource = async () => {
@@ -49,20 +46,17 @@ const ModelEvaluation = props => {
         codePathPrefix = codePathPrefix + '/'
       }
       setCodePathPrefix(codePathPrefix);
-      setFrameWorks(aiFrameworks);
-      setDeviceList(deviceList);
-      setNofeInfo(nodeInfo); 
 
-      // 获取引擎类型
-      let types = Object.keys(aiFrameworks);      
-      if (types.length > 0) {
-        setEngineTypes(types);
-        let defaultType = types[0];
-        form.setFieldsValue({
-          engineType: defaultType,
-          engine: aiFrameworks[defaultType].length > 0 ? aiFrameworks[defaultType][0] : ''
-        });
-      }
+      // 获取引擎
+      let engineList = [];
+      Object.keys(aiFrameworks).forEach(val => {
+        engineList = engineList.concat(aiFrameworks[val]);
+      });
+      setEngines(engineList);
+
+      setDeviceList(deviceList);
+      setNofeInfo(nodeInfo);
+
       // 设备类型
       let deviceTypes = deviceList.map(d => d.deviceType);
       if (deviceTypes.length > 0) {
@@ -74,7 +68,7 @@ const ModelEvaluation = props => {
   const getTestDatasets = async () => {
     const params = { 
       pageNum: 1, 
-      pageSize: 999,
+      pageSize: 9999,
     }; 
     const { code, data, msg } = await getLabeledDatasets(params);
     if (code === 0 && data) {
@@ -86,19 +80,21 @@ const ModelEvaluation = props => {
     }
   }
 
-  const getCurModel = async (modelId) => {
+  const getCurrentModel = async (modelId) => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
-      setCurModel(model);
+      // console.log(666, model)
       form.setFieldsValue({
         name: model.name,
-        engine: model.engineType,
-        startupFile: model.startupFile,
-        outputPath: model.outputPath,
-        datasetPath: model.datasetPath,
+        // engine: model.engineType,
+        // startupFile: model.startupFile,
+        // outputPath: model.outputPath,
+        // datasetPath: model.datasetPath,
         argumentsFile: model.argumentPath,
-        //name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile
+        // codePath: model.codePath,
+        // deviceType: model.deviceType,
+        // deviceNum: model.deviceNum,
       });
     } else {
       message.error(msg);
@@ -106,19 +102,25 @@ const ModelEvaluation = props => {
   }
 
   const onFinish = async (values) => {
-    const { name, engine, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
+    let params = {};
+    values.params && values.params.forEach(p => {
+      params[p.key] = p.value;
+    });
+    // values.params = params;
+    const { name, engine, codePath, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const data = {
       name,
       engine,
-      startupFile: startupFile,
-      outputPath: outputPath,
+      codePath,
+      startupFile,
+      outputPath,
       datasetPath,
+      params,
       datasetName,
       deviceType,
       deviceNum,
       argumentPath: argumentsFile,
-    }
-    
+    };
     const { code, msg } = await addEvaluation(modelId, data);
 
     if (code === 0) {
@@ -127,13 +129,6 @@ const ModelEvaluation = props => {
     } else {
       msg && message.error(`创建评估失败:${msg}`);
     }
-  };
-
-
-  const handleEngineTypeChange = value => {
-    let selectedType = frameWorks[value];
-    setEngines(selectedType);
-    form.setFieldsValue({engine: selectedType.length > 0 ? selectedType[0] : ''});
   };
 
   const handleDatasetChange = (value, option) => {
@@ -213,10 +208,10 @@ const ModelEvaluation = props => {
           <Form.Item
             {...layout}
             name="name"
-            label="名称"
+            label="作业名称"
             rules={[{ required: true, message: '名称不能为空!' }]}
           >
-            <Input placeholder="请输入模型名称" disabled/>
+            <Input placeholder="请输入评估作业名称"/>
           </Form.Item>
           <Form.Item
             {...layout}
@@ -259,7 +254,11 @@ const ModelEvaluation = props => {
               }
             </Select>
           </Form.Item>
-          <Form.Item {...layout} label="运行参数">
+          <Form.Item 
+            // {...layout}
+            label="运行参数"
+            labelCol={{ span: 3 }}
+          >
             {
               runningParams.map((param, index) => {
                 return (
