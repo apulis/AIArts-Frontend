@@ -12,11 +12,17 @@ export async function stopInference(params) {
   });
 }
 
-export async function deleteInference(projectId) {
-  return request(`/api/inferences/${projectId}`, {
+export async function deleteInference(jobId) {
+  return request(`/api/inferences/DeleteJob?jobId=${jobId}`, {
     method: 'DELETE',
   });
 }
+
+// export async function deleteInference(jobId) {
+//   return request(`/api/inferences/${jobId}`, {
+//     method: 'DELETE',
+//   });
+// }
 
 export async function addInference(data) {
   return await request('/api/inferences', {

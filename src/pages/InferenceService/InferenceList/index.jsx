@@ -2,7 +2,7 @@ import { Link, history } from 'umi'
 import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { stopInference } from './services';
+import { stopInference, deleteInference } from './services';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
@@ -129,7 +129,7 @@ const InferenceList = props => {
         return (
           <>
             <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled(item)}>停止</Button>
-            <Button type="link" onClick={() => deleteJob(item)}>删除</Button>
+            <Button type="link" onClick={() => deleteJob(item)} disabled={isDeleteDisabled(item)}>删除</Button>
           </>
         );
       },
@@ -201,28 +201,35 @@ const InferenceList = props => {
     }
   }
 
-  const stopJob = async (item) => {
-    if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
-      const params = {jobId: item.jobId};
-      const {code, msg, data} = await stopInference(params);
-      if(code === 0){
-        message.success(`Job成功停止！`);
-        handleSearch();
-      }else{
-        message.error(`Job停止错误：${msg}。`);
-      }
+  const isDeleteDisabled = item =>{
+    if(item.jobStatus === 'failed' || item.jobStatus === 'error' || item.jobStatus === 'unapproved' || item.jobStatus === 'finished' || item.jobStatus === 'killed' || item.jobStatus === 'paused'){
+      return false;
     }else{
-      message.error('Job无法停止！');
+      return true;
+    }
+  }
+
+  const stopJob = async (item) => {
+    const params = {jobId: item.jobId};
+    const {code, msg, data} = await stopInference(params);
+    
+    if(code === 0){
+      message.success(`Job成功停止！`);
+      handleSearch();
+    }else{
+      message.error(`Job停止错误：${msg}。`);
     }
   };
 
   const deleteJob = (item) => {
-    dispatch({
-      type: 'inferenceList/delete',
-      payload: {
-        id: item.id
-      }
-    });
+    const {code, msg, data} = await deleteference(item.jobId);
+
+    if(code === 0){
+      message.success(`Job删除停止！`);
+      handleSearch();
+    }else{
+      message.error(`Job删除错误：${msg}。`);
+    }
   };
 
   const CreateJob = (item) => {
