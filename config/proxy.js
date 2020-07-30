@@ -18,7 +18,7 @@ export default {
       },
     },
     '/custom-user-dashboard-backend/': {
-      target: 'http://219.133.167.42:52009/',
+      target: 'http://219.133.167.42:30000/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
