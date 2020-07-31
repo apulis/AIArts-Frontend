@@ -55,7 +55,9 @@ const ParamsManage = () => {
         <Descriptions.Item label="运行参数">
           <Popover title="运行参数" content={argumentsContent}>
             {
-              Object.entries(record.params.params).map(item => {
+              Object.entries(record.params.params).map((item, index) => {
+                if (index === 2) return <p>...</p>;
+                if (index > 2) return;
                 return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
               })
             }
