@@ -23,6 +23,8 @@ export const modelTrainingType = 'artsTraining';
 
 export const modelEvaluationType = 'artsEvaluation';
 
+export const inferenceJobType = 'InferenceJob';
+
 export const sortText = {
   ascend: 'asc',
   descend: 'desc'

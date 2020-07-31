@@ -6,10 +6,9 @@ import { getModel } from '../ModelList/services';
 import { addEvaluation, fetchPresetTemplates } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
-import { getDeviceNumArrByNodeType } from '@/utils/utils';
+import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg } from '@/utils/reg';
-import { formatParams } from '@/pages/ModelTraining/Detail';
 
 import styles from '@/pages/ModelTraining/index.less';
 
@@ -36,6 +35,8 @@ const ModelEvaluation = props => {
   const [form] = Form.useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
   
+  const [form2] = Form.useForm();
+
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
@@ -126,7 +127,7 @@ const ModelEvaluation = props => {
     });
     // values.params = params;
     const { name, engine, codePath, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
-    const data = {
+    const evalParams = {
       id: modelId,
       name,
       engine,
@@ -140,7 +141,8 @@ const ModelEvaluation = props => {
       deviceNum,
       argumentPath: argumentsFile,
     };
-    const { code, msg } = await addEvaluation(data);
+    console.log(999, evalParams)
+    const { code, msg } = await addEvaluation(evalParams);
 
     if (code === 0) {
       message.success(`创建评估成功`);
@@ -210,7 +212,7 @@ const ModelEvaluation = props => {
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};
-        console.log('item', item);
+        // console.log('item', item);
         obj['key'] = item[0];
         obj['value'] = item[1];
         return obj;
@@ -292,7 +294,7 @@ const ModelEvaluation = props => {
             >
               <Input/>            
             </Form.Item> 
-          <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
+            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
               <Input/>
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: false, message: '请选择测试数据集' }]}>
@@ -379,7 +381,7 @@ const ModelEvaluation = props => {
         width="80%"
       >
         <Form
-          form={form}
+          form={form2}
         >
           {
             presetRunningParams.length > 0 ? 
@@ -431,7 +433,7 @@ const ModelEvaluation = props => {
                       运行参数
                   </Col>
                     <Col span={19}>
-                      {p.params.params && formatParams(p.params.params)}
+                      {p.params.params && formatParams(p.params.params).map(p => <div>{p}</div>)}
                     </Col>
                   </Row>
                   <Row>

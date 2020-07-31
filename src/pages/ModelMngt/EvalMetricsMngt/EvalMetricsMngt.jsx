@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Select, Row, Col, Descriptions, Card, Popover, Form, message } from 'antd';
+import { Modal, Table, Input, Button, Select, Row, Col, Card, Form, message } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
-import { omitText } from '@/utils/utils';
+import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail'
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -34,42 +34,6 @@ const EvalMetricsMngt = () => {
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
-  };
-
-  const ExpandDetail = (props) => {
-    const record = props.record;
-    // check null
-    record.params.params = record.params.params || [];
-    const argumentsContent = (
-      <div>
-        {Object.entries(record.params.params).map(item => {
-          return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
-        })}
-      </div>
-    );
-    return (
-      <Descriptions>
-        <Descriptions.Item label="参数配置名称">{record.params.name}</Descriptions.Item>
-        <Descriptions.Item label="启动文件">{record.params.startupFile}</Descriptions.Item>
-        <Descriptions.Item label="计算节点数">{record.params.deviceNum}</Descriptions.Item>
-        <Descriptions.Item label="训练数据集">{record.params.datasetPath}</Descriptions.Item>
-        <Descriptions.Item label="运行参数">
-          <Popover title="运行参数" content={argumentsContent}>
-            {
-              Object.entries(record.params.params).map((item, index) => {
-                if (index === 2) return <p>...</p>;
-                if (index > 2) return;
-                return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
-              })
-            }
-          </Popover>
-        </Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{record.params.engine}</Descriptions.Item>
-        <Descriptions.Item label="代码目录">{record.params.codePath}</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">{record.params.deviceType}</Descriptions.Item>
-        <Descriptions.Item label="描述">{record.params.desc}</Descriptions.Item>
-      </Descriptions>
-    );
   };
 
   const handleEdit = (id) => {

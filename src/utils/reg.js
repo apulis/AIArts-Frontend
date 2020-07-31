@@ -5,6 +5,6 @@ export const jobNameReg = {
 
 export const modelNameReg = {
   type: 'string',
-  max: 20,
-  message: '不能超过20个字符串'
+  max: 255,
+  message: '不能超过255个字符串'
 }

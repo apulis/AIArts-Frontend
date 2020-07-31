@@ -200,7 +200,7 @@ export const isEmptyString = (str) => {
   }
 };
 
-export const omitText = function (str, len) {
+export const omitText = function (str, len=20) {
   var reg = /[\u4e00-\u9fa5]/g,    //专业匹配中文
     slice = str.substring(0, len),
     chineseCharNum = (~~(slice.match(reg) && slice.match(reg).length)),
@@ -209,9 +209,9 @@ export const omitText = function (str, len) {
 };
 
 export const formatParams = (obj) => {
-  let result = '';
+  let result = [];
   for (let key in obj) {
-    result += `${key}=${obj[key]}`;
+    result.push(`${key}=${obj[key]}`);
   }
   return result;
 };

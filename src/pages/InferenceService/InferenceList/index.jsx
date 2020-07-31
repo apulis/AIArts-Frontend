@@ -9,6 +9,8 @@ import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
+import { fetchJobStatusSumary } from './services';
+import { statusList } from '@/pages/ModelTraining/List';
 
 const { Option } = Select;
 
@@ -27,25 +29,51 @@ const InferenceList = props => {
     orderBy: '',
     order: ''
   });
+  const [jobSumary, setJobSumary] = useState([]);
 
-  const statusList = [
-    { en: 'all', cn: '全部' },
-    { en: 'unapproved', cn: '未批准'},
-    { en: 'queued', cn: '队列中'},
-    { en: 'scheduling', cn: '调度中'},
-    { en: 'running', cn: '运行中'},
-    { en: 'finished', cn: '已完成'},
-    { en: 'failed', cn: '已失败'},
-    { en: 'pausing', cn: '暂停中'},
-    { en: 'paused', cn: '已暂停'},
-    { en: 'killing', cn: '关闭中'},
-    { en: 'killed', cn: '已关闭'},
-    { en: 'error', cn: '错误'},
-  ]
+  // const statusList = [
+  //   { en: 'all', cn: '全部' },
+  //   { en: 'unapproved', cn: '未批准'},
+  //   { en: 'queued', cn: '队列中'},
+  //   { en: 'scheduling', cn: '调度中'},
+  //   { en: 'running', cn: '运行中'},
+  //   { en: 'finished', cn: '已完成'},
+  //   { en: 'failed', cn: '已失败'},
+  //   { en: 'pausing', cn: '暂停中'},
+  //   { en: 'paused', cn: '已暂停'},
+  //   { en: 'killing', cn: '关闭中'},
+  //   { en: 'killed', cn: '已关闭'},
+  //   { en: 'error', cn: '错误'},
+  // ];
+
+  const getJobStatusSumary = async () => {
+    const res = await fetchJobStatusSumary();
+    if (res.code === 0) {
+      const jobSumary = [{ value: 'all', label: '全部' }];
+      let total = 0;
+      Object.keys(res.data).forEach(k => {
+        let count = res.data[k]
+        total += count;
+        jobSumary.push({
+          // label: statusList.find(status => status.value === k)?.label + `（${count}）`,
+          label: statusList.find(status => status.value === k)?.label,
+          value: k
+        })
+      })
+      // jobSumary[0].label = jobSumary[0].label  + `（${total}）`
+      jobSumary[0].label = jobSumary[0].label
+      setJobSumary(jobSumary)
+    }
+  };
+  
+  useEffect(() => {
+    getJobStatusSumary()
+  }, []);
 
   useEffect(() => {
     handleSearch();
   }, [pageParams, formValues, sortedInfo]);
+
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -269,9 +297,12 @@ const InferenceList = props => {
               >
                 <Select style={{ width: 180 }} onChange={handleStatusChange}>
                   {
-                    statusList.map((item) => (
-                      <Option key= {item.en} value={item.en}>{item.cn}</Option>
+                    jobSumary.map((item) => (
+                      <Option key= {item.value} value={item.value}>{item.label}</Option>
                     ))
+                    // statusList.map((item) => (
+                    //   <Option key= {item.en} value={item.en}>{item.cn}</Option>
+                    // ))
                   }
                 </Select>
               </Form.Item>              
