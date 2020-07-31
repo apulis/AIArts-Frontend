@@ -48,3 +48,11 @@ export async function fetchEvaluationDetail(id) {
 export async function fetchJobStatusSumary() {
   return await request(`/common/job/summary?jobType=${modelEvaluationType}`);
 }
+
+export async function saveEvaluationParams(data) {
+  return await request('/templates', {
+    method: 'POST',
+    data
+  })
+}
+
