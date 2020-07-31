@@ -32,10 +32,10 @@ export async function addInference(data) {
   });
 }
 
-export async function updateInference(params = {}) {
+export async function updateInference(data = {}) {
   return await request(`/inferences/update`, {
     method: 'POST',
-    params
+    data,
   });
 }
 
