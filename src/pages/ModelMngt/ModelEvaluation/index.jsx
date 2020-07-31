@@ -156,8 +156,8 @@ const ModelEvaluation = props => {
 
   const handleDeviceTypeChange = value => {
     const selected = deviceList.find(item => item.deviceType === value); 
-    const nums = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === selected.deviceType));
-    
+    // const nums = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === selected.deviceType));
+    const nums = getDeviceNumArrByNodeType(nodeInfo,selected.deviceType);
     setDeviceNums(nums);
   };
 

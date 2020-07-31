@@ -91,11 +91,12 @@ const ModelTraining = (props) => {
   useEffect(() => {
     if (distributedJob) {
       if (!currentDeviceType) return;
-      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo,currentDeviceType);
       setAvailableDeviceNumList(list);
     } else {
       if (!currentDeviceType) return;
-      const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+      const list = getDeviceNumArrByNodeType(nodeInfo,currentDeviceType);
       setAvailableDeviceNumList(list);
     }
   }, [distributedJob, nodeInfo, currentDeviceType]);

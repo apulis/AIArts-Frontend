@@ -71,7 +71,8 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+    // const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+    const list = getDeviceNumArrByNodeType(nodeInfo,currentDeviceType);
     setAvailableDeviceNumList(list);
   }, [nodeInfo, currentDeviceType]);
 
