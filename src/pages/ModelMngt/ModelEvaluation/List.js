@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, message, Card, Select } from 'antd';
+import { Button, Table, Input, message, Card, Select, Popover } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText } from '@/utils/const';
-import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
+// import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from '@/services/modelTraning';
+import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from './services';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
@@ -40,10 +41,10 @@ const List = () => {
     order: '',
     columnKey: '',
   });
-  const getTrainingList = async () => {
-    const res = await fetchTrainingList({pageNum, pageSize, search, sortedInfo, status: currentStatus});
+  const getEvaluationList = async () => {
+    const res = await getEvaluations({pageNum, pageSize, search, sortedInfo, status: currentStatus});
     if (res.code === 0) {
-      const trainings = (res.data && res.data.Trainings) || [];
+      const trainings = (res.data && res.data.evaluations) || [];
       const total = res.data?.total;
       setTotal(total);
       setTrainingWorkList(trainings)
@@ -52,11 +53,11 @@ const List = () => {
   }
   const handleChangeStatus = async (status) => {
     setCurrentStatus(status);
+    const res = await getEvaluations({ pageNum, pageSize, search, status: status });
+    if (res.code === 0) {
+      setTrainingWorkList(res.data.evaluations);
+    }
   }
-
-  useEffect(() => {
-    getTrainingList();
-  }, [currentStatus])
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
@@ -77,7 +78,7 @@ const List = () => {
   }
 
   useEffect(() => {
-    getTrainingList();
+    getEvaluationList();
     getJobStatusSumary()
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {
@@ -92,8 +93,7 @@ const List = () => {
       orderBy: sortText[sorter.order] && sorter.columnKey,
       order: sortText[sorter.order],
     }
-    setTableLoading(true);
-    const res = await fetchTrainingList({
+    const res = await getEvaluations({
       pageNum: current,
       pageSize,
       search,
@@ -101,24 +101,22 @@ const List = () => {
       sortedInfo: searchSorterInfo,
     })
     if (res.code === 0) {
-      setTableLoading(false);
-      setTrainingWorkList(res.data.Trainings);
+      console.log('sortText[sorter.order]', res.data)
+      setTrainingWorkList(res.data.evaluations);
     }
   }
-  const removeTraining = async (id) => {
-    const res = await removeTrainings(id);
+  const stopEvaluationJob = async (id) => {
+    const res = await stopEvaluation(id);
     if (res.code === 0) {
       message.success('已成功操作');
-      getTrainingList();
+      getEvaluationList();
     }
   }
   const searchList = async (s) => {
     setSearch(s);
-    setTableLoading(true);
-    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s });
+    const res = await getEvaluations({ pageNum: 1, pageSize, search: s });
     if (res.code === 0) {
-      setTrainingWorkList(res.data.Trainings);
-      setTableLoading(false);
+      setTrainingWorkList(res.data.evaluations);
     }
   }
   const columns = [
@@ -128,7 +126,9 @@ const List = () => {
       key: 'jobName',
       render(_text, item) {
         return (
-          <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
+          <Popover content='查看评估详情'>
+            <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
+          </Popover>
         )
       },
       sorter: true,
@@ -155,10 +155,10 @@ const List = () => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
     },
-    {
-      dataIndex: 'desc',
-      title: '描述'
-    },
+    // {
+    //   dataIndex: 'desc',
+    //   title: '描述'
+    // },
     {
       title: '操作',
       render(_text, item) {
@@ -166,7 +166,7 @@ const List = () => {
           <>
             {
               ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)
-                ? <a onClick={() => removeTraining(item.id)}>停止</a>
+                ? <a onClick={() => stopEvaluationJob(item.id)}>停止</a>
                 : <span>已停止</span>
             }
 
@@ -183,9 +183,6 @@ const List = () => {
           padding: '8'
         }}
       >
-      <Link to="/model-training/submit">
-        <Button href="">创建训练作业</Button>
-      </Link>
       <div style={{ float: 'right', paddingRight: '20px' }}>
         <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleChangeStatus}>
           {
@@ -195,7 +192,7 @@ const List = () => {
           }
         </Select>
         <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} />
-        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
+        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getEvaluationList()}></Button>
       </div>
       <Table
         loading={tableLoading}

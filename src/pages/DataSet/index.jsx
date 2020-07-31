@@ -41,7 +41,7 @@ const DataSetList = () => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
-    const { code, data, msg } = await getDatasets(params);
+    const { code, data } = await getDatasets(params);
     if (code === 0 && data) {
       const { total, datasets } = data;
       setDataSets({
@@ -76,7 +76,7 @@ const DataSetList = () => {
         text = '新增';
         res = await add(values);
       }
-      const { code, msg } = res;
+      const { code } = res;
       if (code === 0) {
         getData();
         message.success(`${text}成功！`);
@@ -145,7 +145,7 @@ const DataSetList = () => {
       cancelText: '取消',
       onOk: async () => {
         const res = await deleteDataSet(id);
-        const { code, msg } = res;
+        const { code } = res;
         if (code === 0) {
           message.success('删除成功！');
           getData();

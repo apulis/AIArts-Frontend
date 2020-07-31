@@ -10,7 +10,7 @@ import moment from 'moment';
 const { confirm } = Modal;
 const { Option } = Select;
 
-const ParamsManage = () => {
+const EvalMetricsMngt = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({});
@@ -69,11 +69,8 @@ const ParamsManage = () => {
     );
   };
 
-  const handleCreateTrainJob = (id) => {
-    history.push(`paramManage/${id}/createJobWithParam`);
-  };
   const handleEdit = (id) => {
-    history.push(`paramManage/${id}/editParam`);
+    history.push(`editMetrics/${id}`);
   };
 
   const handleDelete = async (id) => {
@@ -134,7 +131,6 @@ const ParamsManage = () => {
         const id = item.metaData.id;
         return (
           <>
-            <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
           </>
@@ -256,4 +252,4 @@ const ParamsManage = () => {
   );
 };
 
-export default ParamsManage;
+export default EvalMetricsMngt;

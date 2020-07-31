@@ -9,19 +9,11 @@ import moment from 'moment';
 
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
-import { getJobStatus } from '@/utils/utils';
+import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
-
-export const formatParams = (obj) => {
-  let result = ''
-  for (let key in obj) {
-    result += `${key}=${obj[key]} `;
-  }
-  return result
-}
 
 const Detail = () => {
   const params = useParams();
@@ -115,7 +107,7 @@ const Detail = () => {
         <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-        <Descriptions.Item label="运行参数">{jobDetail.params && formatParams(jobDetail.params)}</Descriptions.Item>
+        <Descriptions.Item label="运行参数">{jobDetail.params && formatParams(jobDetail.params).map(val => <div>{val}</div>)}</Descriptions.Item>
         <Descriptions.Item label="代码目录">{jobDetail.codePath}</Descriptions.Item>
         <Descriptions.Item label="计算节点个数">{jobDetail.deviceNum}</Descriptions.Item>
         <Descriptions.Item label="启动文件">{jobDetail.startupFile}</Descriptions.Item>

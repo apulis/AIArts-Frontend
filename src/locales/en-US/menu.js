@@ -49,6 +49,8 @@ export default {
   'menu.modelManagement.myModels': 'My Models',
   'menu.modelManagement.pretraindedModels': 'Pretrained Models',
   'menu.modelManagement.modelEvaluation': 'Model Evaluation',
+  'menu.modelManagement.modelEvaluationList': 'Model Evaluation List',
+  'menu.modelManagement.evaluationMetricsManage':'Evaluation Metrics Manage',
   'menu.inferenceService': 'Inference Service',
   'menu.inferenceService.list': 'Inference Service List',
   'menu.modelTraining': 'Model Training',

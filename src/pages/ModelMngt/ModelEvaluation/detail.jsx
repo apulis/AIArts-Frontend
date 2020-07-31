@@ -1,10 +1,11 @@
 import { history } from 'umi';
 import { PageHeader, Descriptions, Button, message } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-// import { getEvaluationStatus } from '@/utils/utils';
 import { useParams } from 'umi';
 import moment from 'moment';
-import { fetchEvaluationLog, fetchEvaluationDetail } from './services';
+import { fetchEvaluationDetail } from './services';
+import { getJobStatus } from '@/utils/utils';
+
 import styles from './index.less';
 
 const EvaluationDetail = props => {
@@ -12,8 +13,9 @@ const EvaluationDetail = props => {
   const modelId = params.id;
 
   const logEl = useRef(null);
-  const [evaluationDetail, setEvaluationDetail] = useState(null);
+  const [evaluationJob, setEvaluationJob] = useState(null);
   const [logs, setLogs] = useState('');
+  const [indicator, setIndicator] = useState(null);
 
   const getEvaluationLog = async () => {
     const res = await fetchEvaluationDetail(modelId);
@@ -28,9 +30,11 @@ const EvaluationDetail = props => {
   }
   const getEvaluationDetail = async () => {
     const res = await fetchEvaluationDetail(modelId);
-    const {code, msg, data} = res;
+    const { code, msg, data: {evaluation, log, indicator } } = res;
     if (code === 0) {
-      setEvaluationDetail(data);
+      setEvaluationJob(evaluation);
+      setLogs(log);
+      setIndicator(indicator);
     }
   }
 
@@ -39,22 +43,11 @@ const EvaluationDetail = props => {
     const res = await getEvaluationLog();
     cancel();
     if (res.code === 0) {
-      message.success('成功获取日志');
+      message.success('成功获取结果');
     }
   }  
 
-  // const evaluationDetail = {
-  //   modelName: 'hanjf-test2',
-  //   status: 'running',
-  //   engineType: 'apulistech/pytorch:2.0',
-  //   dataset: 'coco',
-  //   createAt: new Date().valueOf(),
-  //   deviceType: 'nvidia_gpu_amd64',
-  //   deviceNum: '2',
-  // };
-
   useEffect(() => {
-    // getMockEvaluationDetail();
     getEvaluationDetail();
   }, []);
 
@@ -65,15 +58,13 @@ const EvaluationDetail = props => {
       title="评估详情"
     >
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
-        <Descriptions.Item label="模型名称">{evaluationDetail?.modelName}</Descriptions.Item>
-        {/* <Descriptions.Item label="评估状态">{getEvaluationStatus(evaluationDetail.status)}</Descriptions.Item> */}
-        <Descriptions.Item label="评估状态">{evaluationDetail?.status}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{evaluationDetail?.engineType}</Descriptions.Item>
-        <Descriptions.Item label="测试数据集">{evaluationDetail?.datasetName}</Descriptions.Item>
-        {/* <Descriptions.Item label="创建时间">{moment(evaluationDetail.createAt).format('YYYY-MM-DD HH:mm')}</Descriptions.Item> */}
-        <Descriptions.Item label="创建时间">{evaluationDetail?.createdAt}</Descriptions.Item>
-        <Descriptions.Item label="设备类型">{evaluationDetail?.deviceType}</Descriptions.Item>
-        <Descriptions.Item label="设备数量">{evaluationDetail?.deviceNum}</Descriptions.Item>
+        <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
+        <Descriptions.Item label="评估状态">{evaluationJob ? getJobStatus(evaluationJob.status) : ''}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{evaluationJob?.engine}</Descriptions.Item>
+        <Descriptions.Item label="测试数据集">{evaluationJob?.desc}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
+        <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
+        <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
       <Button onClick={getLateastLogs}>点击获取评估结果</Button>

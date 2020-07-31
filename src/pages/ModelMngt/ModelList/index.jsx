@@ -52,17 +52,17 @@ const ModelList = props => {
   const columns = [
     {
       title: '模型名称',
-      // dataIndex: 'name',
+      dataIndex: 'name',
       key: 'name',
       ellipsis: true,
       width: 150,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => !!item.evaluationId ? (
-        <Popover content='查看评估详情'>
-          <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
-        </Popover>
-      ): (item.name)
+      // render: item => !!item.evaluationId ? (
+      //   <Popover content='查看评估详情'>
+      //     <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
+      //   </Popover>
+      // ): (item.name)
     },
     {
       title: '状态',
@@ -199,10 +199,18 @@ const ModelList = props => {
 
   const evaluateModel = (item) => {
     const queryString = stringify({
-      modelName: encodeURIComponent(item.name),
+      // modelName: encodeURIComponent(item.name),
       modelId: encodeURIComponent(item.id),
+      // data: encodeURIComponent(item),
     });
     history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
+
+    // history.push({
+    //   pathname: '/ModelManagement/CreateEvaluation/',
+    //   data: item,
+    //   // modelName: encodeURIComponent(item.name),
+    //   // modelId: encodeURIComponent(item.id),
+    // });
   };
 
   const evaluateDetail = (item) => {

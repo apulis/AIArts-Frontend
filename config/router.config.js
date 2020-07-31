@@ -112,13 +112,11 @@ export default [
               {
                 path: '/ModelManagement/MyModels',
                 name: 'myModels',
-                icon: 'CodepenOutlined',
                 component: './ModelMngt/ModelList',
               },
               {
                 path: '/ModelManagement/PretrainedModels',
                 name: 'pretraindedModels',
-                icon: 'CodepenOutlined',
                 component: './ModelMngt/PretrainedModel',
               },
               {
@@ -134,6 +132,21 @@ export default [
               {
                 path: '/ModelManagement/ModelEvaluation/:id/detail',
                 component: './ModelMngt/ModelEvaluation/detail'
+              },
+              {
+                path: '/ModelManagement/ModelEvaluation/List',
+                name: 'modelEvaluationList',      
+                component: './ModelMngt/ModelEvaluation/List'
+              },
+              {
+                path: '/ModelManagement/EvaluationMetricsManage/',
+                name: 'evaluationMetricsManage',
+                icon: 'CodepenOutlined',                 
+                component: './ModelMngt/EvalMetricsMngt/EvalMetricsMngt'
+              },
+              {
+                path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
+                component: './ModelMngt/EvalMetricsMngt/component/EditMetrics'
               },
             ],            
           },
