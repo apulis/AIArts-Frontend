@@ -269,7 +269,7 @@ const ModelTraining = (props) => {
   };
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
-    console.log('values', values);
+    console.log('values', values, key);
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
@@ -280,11 +280,10 @@ const ModelTraining = (props) => {
       } else {
         return param.key !== key;
       }
-      
     });
     setRunningParams(newRunningParams);
     setFieldsValue({
-      runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
     });
   };
 
@@ -403,7 +402,7 @@ const ModelTraining = (props) => {
           {
             runningParams.map((param, index) => {
               return (
-                <div>
+                <div key={param.createTime || param.key}>
                   <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args); } }]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
                     <Input style={{ width: 200 }} />
                   </FormItem>
@@ -585,7 +584,7 @@ const ModelTraining = (props) => {
                       运行参数
                   </Col>
                     <Col span={19}>
-                      {p.params.params && formatParams(p.params.params)}
+                      {p.params.params && formatParams(p.params.params).map(val => (<div>{val}</div>))}
                     </Col>
                   </Row>
                   <Row>
