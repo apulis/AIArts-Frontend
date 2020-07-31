@@ -32,7 +32,7 @@ const ExpandDetails = (item) => {
   const argsSuffix = runArguments.length > 1 ? '...' : '';
 
   return (
-    <Descriptions>
+    <Descriptions style={{width: '100%'}}>
       <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
       <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
