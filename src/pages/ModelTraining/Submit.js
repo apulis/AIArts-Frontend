@@ -585,7 +585,7 @@ const ModelTraining = (props) => {
                       运行参数
                   </Col>
                     <Col span={19}>
-                      {p.params.params && formatParams(p.params.params)}
+                      {p.params.params && formatParams(p.params.params).map(val => (<div>{val}</div>))}
                     </Col>
                   </Row>
                   <Row>
