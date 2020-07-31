@@ -191,9 +191,9 @@ export const omitText = function (str, len=20) {
 };
 
 export const formatParams = (obj) => {
-  let result = '';
+  let result = [];
   for (let key in obj) {
-    result += `${key}=${obj[key]}`;
+    result.push(`${key}=${obj[key]}`);
   }
   return result;
 };

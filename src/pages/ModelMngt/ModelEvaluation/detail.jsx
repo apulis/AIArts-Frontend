@@ -98,7 +98,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
           <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
           <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
-          <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params)}</Descriptions.Item>
+          <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
         </Descriptions>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
         <Button onClick={getLateastLogs}>获取评估结果</Button>

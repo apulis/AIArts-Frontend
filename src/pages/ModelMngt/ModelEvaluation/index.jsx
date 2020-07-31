@@ -431,7 +431,7 @@ const ModelEvaluation = props => {
                       运行参数
                   </Col>
                     <Col span={19}>
-                      {p.params.params && formatParams(p.params.params)}
+                      {p.params.params && formatParams(p.params.params).map(p => <div>{p}</div>)}
                     </Col>
                   </Row>
                   <Row>
