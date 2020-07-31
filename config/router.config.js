@@ -141,6 +141,16 @@ export default [
                 icon: 'CodepenOutlined',                 
                 component: './ModelMngt/ModelEvaluation/List'
               },
+              {
+                path: '/ModelManagement/EvaluationMetricsManage/',
+                name: 'evaluationMetricsManage',
+                icon: 'CodepenOutlined',                 
+                component: './ModelMngt/EvalMetricsMngt/EvalMetricsMngt'
+              },
+              {
+                path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
+                component: './ModelMngt/EvalMetricsMngt/component/EditMetrics'
+              },
             ],            
           },
           {
