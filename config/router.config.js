@@ -141,7 +141,6 @@ export default [
               {
                 path: '/ModelManagement/EvaluationMetricsManage/',
                 name: 'evaluationMetricsManage',
-                icon: 'CodepenOutlined',                 
                 component: './ModelMngt/EvalMetricsMngt/EvalMetricsMngt'
               },
               {

@@ -4,8 +4,9 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
-import { PAGEPARAMS, sortText } from '@/utils/const';
+import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
+import { omitText } from '@/utils/utils';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -55,7 +56,9 @@ const EvalMetricsMngt = () => {
         <Descriptions.Item label="运行参数">
           <Popover title="运行参数" content={argumentsContent}>
             {
-              Object.entries(record.params.params).map(item => {
+              Object.entries(record.params.params).map((item, index) => {
+                if (index === 2) return <p>...</p>;
+                if (index > 2) return;
                 return <p key={item[0]}>{item[0] + ':' + item[1]}</p>;
               })
             }
@@ -97,7 +100,7 @@ const EvalMetricsMngt = () => {
 
   const columns = [
     {
-      title: '参数配置名称',
+      title: '评估参数名称',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'configName' && sortedInfo.order,
       dataIndex: ['params', 'name'],
@@ -148,7 +151,7 @@ const EvalMetricsMngt = () => {
     const params = {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
-      jobType: 'artsTraining',
+      jobType: modelEvaluationType,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
@@ -211,9 +214,9 @@ const EvalMetricsMngt = () => {
               </Form.Item>
               <Form.Item
                 name="name"
-                label="参数配置名称"
+                label="评估参数名称"
               >
-                <Input style={{ width: '200px' }} placeholder="输入参数配置名称" />
+                <Input style={{ width: '200px' }} placeholder="输入评估参数名称" />
               </Form.Item>
               <Form.Item>
                 <Button htmlType="button" onClick={onReset}>重置</Button>
