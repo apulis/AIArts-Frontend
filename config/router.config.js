@@ -32,7 +32,7 @@ export default [
             path: '/OverView',
             name: 'overView',
             icon: 'HomeOutlined',
-            component: './OverView',
+            component: './Overview',
             authority: ['AI_ARTS_ALL'],
           },
           {
