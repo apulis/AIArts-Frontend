@@ -181,11 +181,3 @@ export const isEmptyString =(str)=> {
     return false;
   }
 }
-
-export const formatParams = (obj) => {
-  let result = ''
-  for (let key in obj) {
-    result += `${key}=${obj[key]}`;
-  }
-  return result
-}

@@ -9,11 +9,19 @@ import moment from 'moment';
 
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
-import { getJobStatus, formatParams } from '@/utils/utils';
+import { getJobStatus } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
+
+export const formatParams = (obj) => {
+  let result = ''
+  for (let key in obj) {
+    result += `${key}=${obj[key]}`;
+  }
+  return result
+}
 
 const Detail = () => {
   const params = useParams();
