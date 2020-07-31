@@ -36,8 +36,8 @@ const CodeCreate = () => {
       const enginTypeArrData = Object.keys(result.aiFrameworks)
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
-      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo[0])
-      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo[0]) || [0]
+      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo,result.nodeInfo[0]['gpuType'])
+      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo,result.nodeInfo[0]['gpuType']) || [0]
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
       
       setCodePathPrefix(result.codePathPrefix)
@@ -92,14 +92,14 @@ const CodeCreate = () => {
     setEngineNameArr(arr)
   }
   const handleDeviceTypeChange = (index) => {
-    const type = data['nodeInfo'][index]
+    const type = data['nodeInfo'][index]['gpuType']
     let arr = []
     if(jobTrainingType=='RegularJob'){
-      arr = utilGetDeviceNumArr(type)
+      arr = utilGetDeviceNumArr(data['nodeInfo'],type)
       setFieldsValue({ 'deviceNum': arr[0]})
       setDeviceNumArr(arr)
     }else if(jobTrainingType=='PSDistJob'){
-      arr = utilGetDeviceNumPerNodeArr(type)
+      arr = utilGetDeviceNumPerNodeArr(data['nodeInfo'],type)
       setFieldsValue({ 'numPsWorker': arr[0]})
       setDeviceNumPerNodeArr(arr)
       // todo

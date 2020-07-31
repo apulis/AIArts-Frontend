@@ -4,13 +4,12 @@ import { history } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { fetchAvilableResource, fetchTemplateById, fetchTemplates, updateParams } from '@/services/modelTraning';
+import { fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, updateParams } from '@/services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
 import { jobNameReg } from '@/utils/reg';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
-import { modelEvaluationType } from '@/utils/const';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -72,12 +71,14 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+    // const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+    const list = getDeviceNumArrByNodeType(nodeInfo,currentDeviceType);
     setAvailableDeviceNumList(list);
   }, [nodeInfo, currentDeviceType]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
+      console.log(111, paramsDetailedData);
       haveSetedParamsDetail = true;
       const newParams = {
         ...paramsDetailedData.params,
@@ -124,24 +125,6 @@ const EditMetrics = (props) => {
     }
   };
 
-  const fetchPresetTemplates = async () => {
-    // 导入评估参数时，拉取所有评估参数。
-    const query = {
-      pageNum: 1,
-      pageSize: 10000,
-      jobType: modelEvaluationType,
-      scope: 3,
-    };
-    const res = await fetchTemplates(query);
-    if (res.code === 0) {
-      const template = res.data.Templates;
-      setPresetRunningParams(template);
-      if (template.length > 0) {
-        setCurrentSelectedPresetParamsId(template[0].metaData?.id);
-      }
-    }
-  };
-
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
@@ -150,7 +133,15 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (presetParamsVisible) {
-      fetchPresetTemplates();
+      fetchPresetTemplates().then(res => {
+        if (res.code === 0) {
+          const template = res.data.Templates;
+          setPresetRunningParams(template);
+          if (template.length > 0) {
+            setCurrentSelectedPresetParamsId(template[0].metaData?.id);
+          }
+        }
+      });
     }
   }, [presetParamsVisible]);
 
@@ -174,8 +165,6 @@ const EditMetrics = (props) => {
     if (res.code === 0) {
       message.success('保存成功');
       history.push(goBackPath);
-    } else {
-      message.error('保存失败');
     }
   };
 
@@ -288,7 +277,7 @@ const EditMetrics = (props) => {
       <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
-          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入评估参数</Radio.Button>
+          <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入训练参数</Radio.Button>
         </Radio.Group>
       </FormItem>
       <Form form={form}>
@@ -407,7 +396,7 @@ const EditMetrics = (props) => {
         visible={presetParamsVisible}
         onCancel={() => setPresetParamsVisible(false)}
         onOk={handleConfirmPresetParams}
-        title="导入评估参数配置"
+        title="导入训练参数配置"
         forceRender
         width="80%"
       >
@@ -463,7 +452,7 @@ const EditMetrics = (props) => {
                       运行参数
                   </Col>
                     <Col span={19}>
-                      {p.params.params && formatParams(p.params.params).map(p => (<div>{p}</div>))}
+                      {p.params.params && formatParams(p.params.params)}
                     </Col>
                   </Row>
                   <Row>

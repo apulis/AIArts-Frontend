@@ -133,39 +133,57 @@ export const getModelStatus = (status) => {
   return statusList[status] || '';
 };
 // Regular任务类型，根据nodeType返回可选设备数量数组
-export const getDeviceNumArrByNodeType = (nodeTypeObj) => {
-  if (!nodeTypeObj['gpuType']) {
-    return [];
-  }
+export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
   // gpu
-  if (nodeTypeObj['gpuType'] == 'nvidia_gpu_amd64') {
-    const capacityObj = nodeTypeObj['gpu_capacity'];
-    const num = Math.max(Object.values(capacityObj));
-    let arr = [];
-    for (let i = 0; i <= num; i++) {
-      arr.push(i);
+  if (type === 'nvidia_gpu_amd64') {
+    let arr = []
+    for (let index in nodeInfo) {
+      const nodeItem = nodeInfo[index]
+      if (nodeItem['gpuType'] === type) {
+        // gpu
+        if (nodeItem['gpuType'] == 'nvidia_gpu_amd64') {
+          const capacityObj = nodeItem['gpu_capacity'];
+          arr.push(capacityObj[type])
+
+        }
+      }
     }
-    return arr;
+    const num = Math.max(...arr);
+    debugger
+    let arr2 = []
+    for (let i = 0; i <= num; i++) {
+      arr2.push(i);
+    }
+    return arr2;
   }
   // npu
   return [0, 1, 2, 4, 8];
 };
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
-export const getDeviceNumPerNodeArrByNodeType = (nodeTypeObj) => {
-  if (!nodeTypeObj['gpuType']) {
-    return [];
-  }
+export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
   // gpu
-  if (nodeTypeObj['gpuType'] == 'nvidia_gpu_amd64') {
-    const capacityObj = nodeTypeObj['gpu_capacity'];
-    const num = Math.max(Object.values(capacityObj));
-    let arr = [];
+  if (type === 'nvidia_gpu_amd64') {
+    let arr = []
+    for (let index in nodeInfo) {
+      const nodeItem = nodeInfo[index]
+      if (nodeItem['gpuType'] === type) {
+        // gpu
+        if (nodeItem['gpuType'] == 'nvidia_gpu_amd64') {
+          const capacityObj = nodeItem['gpu_capacity'];
+          arr.push(capacityObj[type])
+
+        }
+      }
+    }
+    const num = Math.max(...arr);
+    debugger
+    let arr2 = []
     let temp = 1;
     while (temp <= num) {
-      arr.push(temp);
+      arr2.push(temp);
       temp *= 2;
     }
-    return arr;
+    return arr2;
   }
   // npu
   return [8];
