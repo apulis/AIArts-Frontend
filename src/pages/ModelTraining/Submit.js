@@ -9,10 +9,9 @@ import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPre
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
-import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
+import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType,formatParams } from '@/utils/utils';
 import { includes } from 'lodash';
 import models from '../InferenceService/InferenceList/models';
-import { formatParams } from './Detail';
 
 const { TextArea } = Input;
 const { Option } = Select;
