@@ -2,29 +2,23 @@ import request from '@/utils/request';
 import { modelEvaluationType } from '@/utils/const';
 
 export async function getTrainingJobs(params) {
-  return request(`/trainings`, {
+  return await request(`/trainings`, {
     params
   });
 }
 
 export async function getEvaluations(params) {
-  return request(`/evaluations`, {
+  return await request(`/evaluations`, {
     params
   });
 }
 
-export async function addEvaluation(param) {
+export async function addEvaluation(data) {
   return await request(`/evaluations`, {
     method: 'POST',
-    param,
+    data,
   });
 }
-// export async function addEvaluation(id, data) {
-//   return await request(`/models/${id}/evaluation`, {
-//     method: 'POST',
-//     data,
-//   });
-// }
 
 export async function stopEvaluation(id) {
   return await request(`/evaluations/${id}`, {
@@ -33,7 +27,7 @@ export async function stopEvaluation(id) {
 }
 
 export async function fetchEvaluationLog(id) {
-  return request(`/inferences/GetEvaluationLog`, {
+  return await request(`/inferences/GetEvaluationLog`, {
     params: {
       evaluationId: id,
     }
@@ -42,9 +36,28 @@ export async function fetchEvaluationLog(id) {
 
 export async function fetchEvaluationDetail(id) {
   // return request(`/models/${id}/evaluation`);
-  return request(`/evaluations/${id}`);
+  return await request(`/evaluations/${id}`);
 }
 
 export async function fetchJobStatusSumary() {
   return await request(`/common/job/summary?jobType=${modelEvaluationType}`);
 }
+
+export async function saveEvaluationParams(data) {
+  return await request('/templates', {
+    method: 'POST',
+    data
+  })
+}
+
+export async function fetchPresetTemplates() {
+  return await request(`/templates`, {
+    params: {
+      pageNum: 1,
+      pageSize: 10000,
+      jobType: modelEvaluationType,
+      scope: 3,
+    }
+  })
+}
+

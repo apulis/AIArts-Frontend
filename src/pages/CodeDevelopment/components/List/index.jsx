@@ -1,39 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'umi';
-import { Table, Select,Space, Button, Row, Col, Input,message,Modal } from 'antd';
+import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import { getCodes,deleteCode,getJupyterUrl,getCodeCount} from '../../service.js';
+import { getCodes, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
 import moment from 'moment';
-import {isEmptyString} from '../../util.js'
+import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
-import {statusMap,canOpenStatus,canStopStatus,canUploadStatus,sortColumnMap, sortTextMap,pageObj} from '../../serviceController.js'
+import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap, sortTextMap, pageObj } from '../../serviceController.js'
 
 const CodeList = (props) => {
   const { Search } = Input;
   const { Option } = Select;
+  const searchRef = useRef(null)
   const [data, setData] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(pageObj);// 页长
-  const [statusSearchArr,setStatusSearchArr] = useState([])
-  const [curStatus,setCurStatus] = useState('')
-  const [searchWord,setSearchName] = useState('')
+  const [statusSearchArr, setStatusSearchArr] = useState([])
+  const [curStatus, setCurStatus] = useState('')
+  const [searchObj, setSearchObj] = useState({})
   const [modalFlag, setModalFlag] = useState(false);
-  const [modalData,setModalData] = useState({})
-  const [sortInfo,setSortInfo] = useState({
-    orderBy:'',
-    order:''
+  const [modalData, setModalData] = useState({})
+  const [sortInfo, setSortInfo] = useState({
+    orderBy: '',
+    order: ''
   })
-  useEffect(()=>{
+  useEffect(() => {
     renderStatusSelect()
-  },[])
+  }, [])
+
   useEffect(() => {// componentDidMount()
     renderTable();
-  }, [pageParams,curStatus,searchWord,sortInfo])// pageParams改变触发的componentwillUpdate()
-  
-  const renderStatusSelect = async ()=>{
+  }, [pageParams, curStatus, searchObj, sortInfo])// pageParams改变触发的componentwillUpdate()
+  useEffect(() => {// componentDidMount()
+    const type = searchObj.type
+    if (type === 'search') {
+      renderTable();
+    } else if (type === 'fresh') {
+      renderTable(() => { message.success('刷新成功') })
+    }
+  }, [searchObj])
+
+
+  const renderStatusSelect = async () => {
     // todo
     const apiData = await apiGetCodeCount()
-    if(apiData){
+    if (apiData) {
       setStatusSearchArr(apiData)
       setCurStatus(apiData[0].status)
     }
@@ -41,20 +52,20 @@ const CodeList = (props) => {
   const renderTable = async (success) => {
     setLoading(true)
     const apiData = await apiGetCodes(pageParams)
-    if(apiData){
+    if (apiData) {
       setData({
-        codeEnvs:apiData.CodeEnvs,
-        total:apiData.total
+        codeEnvs: apiData.CodeEnvs,
+        total: apiData.total
       })
-      if(success){
+      if (success) {
         success()
       }
     }
     setLoading(false);
   };
-  const apiGetCodeCount = async()=>{
+  const apiGetCodeCount = async () => {
     const obj = await getCodeCount()
-    const {code,data,msg} = obj
+    const { code, data, msg } = obj
     if (code === 0) {
       return data
     } else {
@@ -62,14 +73,14 @@ const CodeList = (props) => {
       return null
     }
   }
-  const apiGetCodes = async (pageParams)=>{
-    const params = {...pageParams}
-    params['status'] = isEmptyString(curStatus)?'all':curStatus
-    if(!isEmptyString(searchWord)){
-      params['searchWord'] = searchWord
+  const apiGetCodes = async (pageParams) => {
+    const params = { ...pageParams }
+    params['status'] = isEmptyString(curStatus) ? 'all' : curStatus
+    if (!isEmptyString(searchObj.word)) {
+      params['searchWord'] = searchObj.word
     }
-    if(!isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)){
-      params['orderBy'] =sortColumnMap[sortInfo.orderBy] 
+    if (!isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
+      params['orderBy'] = sortColumnMap[sortInfo.orderBy]
       params['order'] = sortTextMap[sortInfo.order]
     }
     const obj = await getCodes(params);
@@ -81,23 +92,23 @@ const CodeList = (props) => {
       return null
     }
   }
-  const apiOpenJupyter = async (id)=>{
-    const {code,data,msg} = await getJupyterUrl(id)
-    if(code===0){
-      if(data.name==='ipython' && data.status==='running' && data.accessPoint){
+  const apiOpenJupyter = async (id) => {
+    const { code, data, msg } = await getJupyterUrl(id)
+    if (code === 0) {
+      if (data.name === 'ipython' && data.status === 'running' && data.accessPoint) {
         window.open(data.accessPoint)
       }
-     else{
-      message.info('服务正在准备中，请稍候再试')
-     }
-    }else{
+      else {
+        message.info('服务正在准备中，请稍候再试')
+      }
+    } else {
       message.error(msg)
     }
 
   }
-  const apiDeleteCode = async(id)=>{
+  const apiDeleteCode = async (id) => {
     const obj = await deleteCode(id)
-    const { code,data, msg } = obj
+    const { code, data, msg } = obj
     if (code === 0) {
       renderTable();
       message.success('停止成功');
@@ -112,39 +123,40 @@ const CodeList = (props) => {
     const id = item.id
     apiDeleteCode(item.id)
   }
-  const handleSelectChange = (selectStatus)=>{
+  const handleSelectChange = (selectStatus) => {
     setCurStatus(selectStatus)
   }
   const handleSearch = (searchWord) => {
-    setSearchName(searchWord)
+    setSearchObj({ type: 'search', word: searchWord })
   }
   const handleFresh = () => {
-    renderTable(()=>{message.success('刷新成功')})
+    const value = searchRef.current.state.value
+    setSearchObj({ type: 'fresh', word: value })
   }
   const handlePageParamsChange = (pageNum, pageSize) => {
-    setPageParams({ pageNum, pageSize});
+    setPageParams({ pageNum, pageSize });
   };
-  const handleOpenModal = (codeItem)=>{
+  const handleOpenModal = (codeItem) => {
     setModalData(codeItem)
     setModalFlag(true)
   }
   const handleSortChange = (pagination, filters, sorter) => {
-    const {field:orderBy,order} = sorter
-    setSortInfo({orderBy,order});
+    const { field: orderBy, order } = sorter
+    setSortInfo({ orderBy, order });
   }
   const columns = [
     {
       title: '开发环境名称',
       dataIndex: 'name',
       ellipsis: true,
-      sorter:true,
-      sortOrder:sortInfo.orderBy==='name' && sortInfo['order'],// name与createTime非复合排序，各自独立排序
+      sorter: true,
+      sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'],// name与createTime非复合排序，各自独立排序
     },
     {
       title: '状态',
       dataIndex: 'status',
       ellipsis: true,
-      render:status=>statusMap[status]?.local,
+      render: status => statusMap[status]?.local,
     },
     {
       title: '引擎类型',
@@ -156,8 +168,8 @@ const CodeList = (props) => {
       dataIndex: 'createTime',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
-      sorter:true,
-      sortOrder:sortInfo.orderBy==='createTime' && sortInfo['order'],
+      sorter: true,
+      sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
     {
       title: '代码存储目录',
@@ -184,9 +196,9 @@ const CodeList = (props) => {
   ];
   return (
     <>
-      <Row style={{marginBottom:"20px"}}>
+      <Row style={{ marginBottom: "20px" }}>
         <Col span={12}>
-          <div style={{ float: "left"}}>
+          <div style={{ float: "left" }}>
             <Link to="/codeDevelopment/add">
               <Button href="">创建开发环境</Button>
             </Link>
@@ -194,17 +206,18 @@ const CodeList = (props) => {
         </Col>
         <Col span={12}>
           <div style={{ float: "right" }}>
-            <div style={{width:'200px',display:'inline-block'}}>
-            <Select value={curStatus} style={{width:'calc(100% - 8px)',margin:'0 8px 0 0'}} onChange ={(item)=>handleSelectChange(item)}>
-              {
-                statusSearchArr.map((item) => (
-                  <Option value={item.status}>{item.desc}</Option>
-                ))
-              }
-            </Select>
+            <div style={{ width: '200px', display: 'inline-block' }}>
+              <Select value={curStatus} style={{ width: 'calc(100% - 8px)', margin: '0 8px 0 0' }} onChange={(item) => handleSelectChange(item)}>
+                {
+                  statusSearchArr.map((item) => (
+                    <Option value={item.status}>{item.desc}</Option>
+                  ))
+                }
+              </Select>
             </div>
             <Search
               placeholder="输入开发环境名称查询"
+              ref={searchRef}
               onSearch={value => handleSearch(value)}
               style={{ width: 200 }}
             />
@@ -229,7 +242,7 @@ const CodeList = (props) => {
         }}
         pageSize={false}
         loading={loading} />
-        {modalFlag && (
+      {modalFlag && (
         <Modal
           title="上传代码"
           visible={modalFlag}

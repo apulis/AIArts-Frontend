@@ -1,5 +1,5 @@
 import request from '../utils/request'
-
+import { inferenceJobType } from '@/utils/const';
 
 export async function fetchInferenceList() {
   return await request('/inferences')

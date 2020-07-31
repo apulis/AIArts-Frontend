@@ -4,14 +4,14 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
-import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
+import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
-import ExpandDetail from './ExpandDetail'
+import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail'
 
 const { confirm } = Modal;
 const { Option } = Select;
 
-const ParamsManage = () => {
+const EvalMetricsMngt = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({});
@@ -31,17 +31,13 @@ const ParamsManage = () => {
     '4': '公有'
   };
 
+
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
   };
 
-
-
-  const handleCreateTrainJob = (id) => {
-    history.push(`paramManage/${id}/createJobWithParam`);
-  };
   const handleEdit = (id) => {
-    history.push(`paramManage/${id}/editParam`);
+    history.push(`editMetrics/${id}`);
   };
 
   const handleDelete = async (id) => {
@@ -68,7 +64,7 @@ const ParamsManage = () => {
 
   const columns = [
     {
-      title: '参数配置名称',
+      title: '评估参数名称',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'configName' && sortedInfo.order,
       dataIndex: ['params', 'name'],
@@ -102,7 +98,6 @@ const ParamsManage = () => {
         const id = item.metaData.id;
         return (
           <>
-            <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
           </>
@@ -120,7 +115,7 @@ const ParamsManage = () => {
     const params = {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
-      jobType: modelTrainingType,
+      jobType: modelEvaluationType,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
@@ -183,9 +178,9 @@ const ParamsManage = () => {
               </Form.Item>
               <Form.Item
                 name="name"
-                label="参数配置名称"
+                label="评估参数名称"
               >
-                <Input style={{ width: '200px' }} placeholder="输入参数配置名称" />
+                <Input style={{ width: '200px' }} placeholder="输入评估参数名称" />
               </Form.Item>
               <Form.Item>
                 <Button htmlType="button" onClick={onReset}>重置</Button>
@@ -224,4 +219,4 @@ const ParamsManage = () => {
   );
 };
 
-export default ParamsManage;
+export default EvalMetricsMngt;

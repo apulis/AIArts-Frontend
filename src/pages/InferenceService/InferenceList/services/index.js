@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import { inferenceJobType } from '@/utils/const';
 
 export async function getInferences(params) {
   return request(`/inferences/ListInferenceJob`, {
@@ -31,9 +32,13 @@ export async function addInference(data) {
   });
 }
 
-export async function updateInference(params = {}) {
+export async function updateInference(data = {}) {
   return await request(`/inferences/update`, {
     method: 'POST',
-    params
+    data,
   });
+}
+
+export async function fetchJobStatusSumary() {
+  return await request(`/common/job/summary?jobType=${inferenceJobType}`);
 }

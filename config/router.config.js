@@ -148,6 +148,15 @@ export default [
                 name: 'modelEvaluationList',      
                 component: './ModelMngt/ModelEvaluation/List'
               },
+              {
+                path: '/ModelManagement/EvaluationMetricsManage/',
+                name: 'evaluationMetricsManage',
+                component: './ModelMngt/EvalMetricsMngt/EvalMetricsMngt'
+              },
+              {
+                path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
+                component: './ModelMngt/EvalMetricsMngt/component/EditMetrics'
+              },
             ],            
           },
           {

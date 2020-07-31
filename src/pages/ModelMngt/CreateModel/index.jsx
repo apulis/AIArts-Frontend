@@ -5,6 +5,7 @@ import { FolderOpenOutlined, InboxOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 import { fetchAvilableResource } from '@/services/modelTraning';
+import { modelNameReg } from '@/utils/reg';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
@@ -158,7 +159,7 @@ const CreateModel = props => {
               {...layout}
               name="name"
               label="名称"
-              rules={[{ required: true, message: '名称不能为空!' }]}
+              rules={[{ required: true, message: '名称不能为空!' }, { ...modelNameReg }]}
             >
               <Input placeholder="请输入模型名称" />
             </Form.Item>
