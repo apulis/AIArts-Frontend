@@ -29,13 +29,6 @@ export default [
         authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
         routes: [
           {
-            path: '/OverView',
-            name: 'overView',
-            icon: 'HomeOutlined',
-            component: './OverView',
-            authority: ['AI_ARTS_ALL'],
-          },
-          {
             path: '/codeDevelopment',
             name: 'codeDevelopment',
             icon: 'EditOutlined',
