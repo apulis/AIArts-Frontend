@@ -38,7 +38,6 @@ const CodeCreate = () => {
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
       const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo[0])
       const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo[0]) || [0]
-      debugger
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
       
       setCodePathPrefix(result.codePathPrefix)

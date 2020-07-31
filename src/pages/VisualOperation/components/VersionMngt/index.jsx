@@ -100,8 +100,11 @@ const VersionMngt = (props) => {
       case 'finish':
         setUpgradeText('升级成功')
         if(logTimer)clearInterval(logTimer)
-        message.success('升级成功')
-        location.reload()
+        setTimeout(()=>{
+          message.success('升级成功，版本数据已更新')
+          upgradeManager('init')
+        },1000)
+ 
         break
       case 'error':
         setUpgradeText('升级失败')

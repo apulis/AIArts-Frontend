@@ -51,7 +51,6 @@ const CodeList = (props) => {
   }
   const renderTable = async (success) => {
     setLoading(true)
-    debugger
     const apiData = await apiGetCodes(pageParams)
     if (apiData) {
       setData({
