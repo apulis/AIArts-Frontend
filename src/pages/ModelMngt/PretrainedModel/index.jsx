@@ -24,7 +24,7 @@ const ExpandDetails = (item) => {
   const argumentsContent = (
     <div>
       {runArguments && runArguments.map(a => {
-        return <p>{a.key + '=' + a.value}</p>;
+        return <div>{a.key + '=' + a.value}</div>;
       })}
     </div>
   );

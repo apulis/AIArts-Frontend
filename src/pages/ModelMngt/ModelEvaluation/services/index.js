@@ -13,18 +13,12 @@ export async function getEvaluations(params) {
   });
 }
 
-export async function addEvaluation(param) {
+export async function addEvaluation(data) {
   return await request(`/evaluations`, {
     method: 'POST',
-    param,
+    data,
   });
 }
-// export async function addEvaluation(id, data) {
-//   return await request(`/models/${id}/evaluation`, {
-//     method: 'POST',
-//     data,
-//   });
-// }
 
 export async function stopEvaluation(id) {
   return await request(`/evaluations/${id}`, {
