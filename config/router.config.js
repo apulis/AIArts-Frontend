@@ -26,8 +26,15 @@ export default [
         path: '/',
         component: '../layouts/BasicLayout',
         Routes: ['src/pages/Authorized'],
-        authority: ['AI_ARTS_ALL'],
+        authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
         routes: [
+          {
+            path: '/OverView',
+            name: 'overView',
+            icon: 'HomeOutlined',
+            component: './OverView',
+            authority: ['AI_ARTS_ALL'],
+          },
           {
             path: '/codeDevelopment',
             name: 'codeDevelopment',
@@ -44,21 +51,24 @@ export default [
             path: '/dataManage',
             name: 'dataManage',
             icon: 'ReadOutlined',
-            authority: ['AI_ARTS_ALL'],
+            authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
             routes: [
               {
                 path: '/dataManage/dataSet',
                 name: 'dataSet',
                 component: './DataSet',
+                authority: ['AI_ARTS_ALL']
               },
               {
                 path: '/dataManage/dataSet/detail',
                 component: './DataSet/detail',
+                authority: ['AI_ARTS_ALL']
               },
               {
                 path: '/image_label/project',
                 target: '_blank',
                 name: 'imageLabel',
+                authority: ['AI_ARTS_ALL', 'LABELING_IMAGE']
               },
             ],
           },
@@ -203,10 +213,10 @@ export default [
             icon: 'CloudUploadOutlined',
             component: './VisualOperation',
             authority: ['AI_ARTS_ALL'],
-          },                      
+          },        
           {
             path: '/',
-            redirect: '/codeDevelopment',
+            redirect: '/OverView',
             authority: ['AI_ARTS_ALL'],
           },
           {
