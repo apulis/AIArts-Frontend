@@ -4,7 +4,7 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
-import { PAGEPARAMS, sortText } from '@/utils/const';
+import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
 import moment from 'moment';
 
 const { confirm } = Modal;
@@ -152,7 +152,7 @@ const ParamsManage = () => {
     const params = {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
-      jobType: 'artsTraining',
+      jobType: modelTrainingType,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };

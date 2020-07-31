@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row, InputNumber } from 'antd';
-import { history, useParams } from 'umi';
+import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row } from 'antd';
+import { history } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '@/services/modelTraning';
+import { fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, updateParams } from '@/services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
 import { jobNameReg } from '@/utils/reg';
-import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
+import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -30,7 +30,7 @@ let haveSetedParamsDetail = false;
 const EditMetrics = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const paramsId = props.match.params.id;
-  const goBackPath = '/modelManagement/evaluationMetricManage/';
+  const goBackPath = '/ModelManagement/EvaluationMetricsManage/';
 
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
@@ -44,12 +44,9 @@ const EditMetrics = (props) => {
   const [availableDeviceNumList, setAvailableDeviceNumList] = useState([]);
   const [datasets, setDatasets] = useState([]);
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
-  const [deviceTotal, setDeviceTotal] = useState(0);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const { validateFields, getFieldValue, setFieldsValue } = form;
-  const [distributedJob, setDistributedJob] = useState(false);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
-  const [totalNodes, setTotalNodes] = useState(0);
   const [nodeInfo, setNofeInfo] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [paramsDetailedData, setParamsDetailedData] = useState({});
@@ -68,25 +65,15 @@ const EditMetrics = (props) => {
       });
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
-      const totalNodes = nodeInfo.length;
-      if (totalNodes) {
-        setTotalNodes(totalNodes);
-      }
       setNofeInfo(nodeInfo);
     }
   };
 
   useEffect(() => {
-    if (distributedJob) {
-      if (!currentDeviceType) return;
-      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
-      setAvailableDeviceNumList(list);
-    } else {
-      if (!currentDeviceType) return;
-      const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
-      setAvailableDeviceNumList(list);
-    }
-  }, [distributedJob, nodeInfo, currentDeviceType]);
+    if (!currentDeviceType) return;
+    const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
+    setAvailableDeviceNumList(list);
+  }, [nodeInfo, currentDeviceType]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
@@ -132,36 +119,8 @@ const EditMetrics = (props) => {
         obj['value'] = item[1];
         return obj;
       });
-      data.params.name = '';
       form.setFieldsValue(data.params);
       setRunningParams(data.params.params);
-    }
-  };
-
-  const getPresetModel = async () => {
-    const res = await fetchPresetModel(paramsId);
-    if (res.code === 0) {
-      const { model } = res.data;
-      // check null
-      model.arguments = model.arguments || [];
-      const params = Object.entries(model.arguments || {}).map(item => {
-        var obj = {};
-        console.log('item', item);
-        obj['key'] = item[0];
-        obj['value'] = item[1];
-        return obj;
-      });
-      if (params.length === 0) {
-        params[0] = { key: '', value: '', createTime: generateKey() };
-      }
-      setRunningParams(params);
-      setFieldsValue({
-        params: params,
-        datasetPath: model.datasetName,
-        engine: model.engineType,
-        name: model.name,
-      });
-
     }
   };
 
@@ -196,10 +155,7 @@ const EditMetrics = (props) => {
     values.startupFile = codePathPrefix + values.startupFile;
     values.outputPath = codePathPrefix + (values.outputPath || '');
     values.params = params;
-    if (distributedJob) {
-      values.deviceNum = values.deviceTotal;
-    }
-    console.log('params:', paramsDetailedData);
+
     let editParams = {
       ...paramsDetailedData.metaData,
       templateData: values
@@ -264,11 +220,6 @@ const EditMetrics = (props) => {
     wrapperCol: { span: 8 }
   };
 
-  const handleDistributedJob = (e) => {
-    const type = e.target.value;
-    setDistributedJob(type === 'PSDistJob');
-  };
-
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
@@ -305,24 +256,16 @@ const EditMetrics = (props) => {
     }
   };
 
-  const handleDeviceChange = () => {
-    const deviceTotal = (Number(getFieldValue('numPsWorker') || 0)) * (Number(getFieldValue('deviceNum') || 0));
-    setFieldsValue({
-      deviceTotal: deviceTotal || 0,
-    });
-    setDeviceTotal(deviceTotal);
-  };
-
   return (
     <div className={styles.modelTraining}>
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title='编辑训练参数'
+        title='编辑评估参数'
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label="参数配置名称" rules={[{ required: true }, { ...jobNameReg }]}>
-          <Input style={{ width: 300 }} placeholder="请输入参数配置名称" />
+        <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label="评估参数名称" rules={[{ required: true }, { ...jobNameReg }]}>
+          <Input style={{ width: 300 }} placeholder="请输入评估参数名称" />
         </FormItem>
         <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
@@ -395,44 +338,6 @@ const EditMetrics = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob" onChange={handleDistributedJob}>
-          <Radio.Group style={{ width: '300px' }}>
-            <Radio value={'PSDistJob'}>是</Radio>
-            <Radio value={'RegularJob'}>否</Radio>
-          </Radio.Group>
-        </FormItem>
-        {
-          distributedJob && <FormItem
-            label="节点数量"
-            {...commonLayout}
-            name="numPsWorker"
-            rules={[
-              { required: true },
-              { type: 'number', message: '需要填写一个数字' },
-              {
-                validator(rule, value, callback) {
-                  if (Number(value) > totalNodes) {
-                    callback(`当前只有 ${totalNodes} 个节点`);
-                    return;
-                  }
-                  if (Number(value) < 1) {
-                    callback(`不能小于 1`);
-                    return;
-                  }
-                  callback();
-                }
-              }
-            ]}
-
-            initialValue={1}
-          >
-            <InputNumber
-              onChange={handleDeviceChange}
-              min={1}
-              max={totalNodes}
-            />
-          </FormItem>
-        }
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {
@@ -443,13 +348,12 @@ const EditMetrics = (props) => {
           </Select>
         </FormItem>
         <FormItem
-          label={distributedJob ? "每个节点设备数量" : "设备数量"}
+          label="设备数量"
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}
         >
           <Select style={{ width: '300px' }}
-            onChange={handleDeviceChange}
             onClick={handleClickDeviceNum} >
             {
               availableDeviceNumList.map(avail => (
@@ -458,16 +362,6 @@ const EditMetrics = (props) => {
             }
           </Select>
         </FormItem>
-        {
-          distributedJob && <FormItem
-            {...commonLayout}
-            label="设备总数"
-            name="deviceTotal"
-            disabled
-          >
-            <Input value={deviceTotal} style={{ width: '300px' }} disabled />
-          </FormItem>
-        }
       </Form>
       <Modal
         visible={bootFileModalVisible}
