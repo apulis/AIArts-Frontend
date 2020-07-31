@@ -5,6 +5,7 @@ import { useParams } from 'umi';
 import moment from 'moment';
 import { fetchEvaluationDetail } from './services';
 import { getJobStatus } from '@/utils/utils';
+import { formatParams } from '@/pages/ModelTraining/Detail';
 
 import styles from './index.less';
 
@@ -59,15 +60,19 @@ const EvaluationDetail = props => {
     >
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
         <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
         <Descriptions.Item label="评估状态">{evaluationJob ? getJobStatus(evaluationJob.status) : ''}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{evaluationJob?.engine}</Descriptions.Item>
         <Descriptions.Item label="测试数据集">{evaluationJob?.desc}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
+        <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
+        <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
+        <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
         <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
         <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
+        <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params)}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
-      <Button onClick={getLateastLogs}>点击获取评估结果</Button>
+      <Button onClick={getLateastLogs}>获取评估结果</Button>
       <div>
         {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}
