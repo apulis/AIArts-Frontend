@@ -6,10 +6,9 @@ import { getModel } from '../ModelList/services';
 import { addEvaluation, fetchPresetTemplates } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getLabeledDatasets } from '@/services/datasets';
-import { getDeviceNumArrByNodeType } from '@/utils/utils';
+import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg } from '@/utils/reg';
-import { formatParams } from '@/pages/ModelTraining/Detail';
 
 import styles from '@/pages/ModelTraining/index.less';
 

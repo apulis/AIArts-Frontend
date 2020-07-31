@@ -4,8 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
 import { fetchEvaluationDetail, saveEvaluationParams } from './services';
-import { getJobStatus } from '@/utils/utils';
-import { formatParams } from '@/pages/ModelTraining/Detail';
+import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelEvaluationType } from '@/utils/const';
 
 import styles from './index.less';
@@ -37,6 +36,7 @@ const EvaluationDetail = props => {
   const getEvaluationDetail = async () => {
     const res = await fetchEvaluationDetail(modelId);
     const { code, msg, data: {evaluation, log, indicator } } = res;
+    
     if (code === 0) {
       setEvaluationJob(evaluation);
       setLogs(log);
