@@ -31,11 +31,11 @@ const ModelList = props => {
     order: ''
   });
 
-  const statusList = [
-    { en: 'all', cn: '全部' },
-    { en: 'normal', cn: '正常'},
-    { en: 'deleting', cn: '删除中'},
-  ]
+  // const statusList = [
+  //   { en: 'all', cn: '全部' },
+  //   { en: 'normal', cn: '正常'},
+  //   { en: 'deleting', cn: '删除中'},
+  // ]
 
   useEffect(() => {
     handleSearch();
@@ -58,18 +58,13 @@ const ModelList = props => {
       width: 150,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      // render: item => !!item.evaluationId ? (
-      //   <Popover content='查看评估详情'>
-      //     <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
-      //   </Popover>
-      // ): (item.name)
     },
-    {
-      title: '状态',
-      ellipsis: true,
-      width: 100,
-      render: (text, item) => getModelStatus(item.status),
-    },
+    // {
+    //   title: '状态',
+    //   ellipsis: true,
+    //   width: 100,
+    //   render: (text, item) => getModelStatus(item.status),
+    // },
     // {
     //   title: '引擎类型',
     //   dataIndex: 'type',
@@ -123,7 +118,8 @@ const ModelList = props => {
 
   const onReset = () => {
     form.resetFields();
-    setFormValues({status: 'all', name:''});
+    // setFormValues({status: 'all', name:''});
+    setFormValues({name:''});
   };
   const handleCancel = () => {
     setVisible(false);
@@ -157,9 +153,9 @@ const ModelList = props => {
       queryClauses.name = values.modelName;
     }
 
-    if (values.status) {
-      queryClauses.status = values.status;
-    }
+    // if (values.status) {
+    //   queryClauses.status = values.status;
+    // }
 
     setFormValues({...formValues, ...queryClauses});
   };
@@ -172,9 +168,9 @@ const ModelList = props => {
       order: sortText[sortedInfo.order]      
     };
 
-    if (formValues.status && formValues.status !== 'all') {
-      params.status = formValues.status;
-    }
+    // if (formValues.status && formValues.status !== 'all') {
+    //   params.status = formValues.status;
+    // }
 
     if (formValues.name) {
       params.name = formValues.name;
@@ -281,9 +277,9 @@ const ModelList = props => {
                 layout='inline'
                 form={form}
                 onFinish={onFinish}
-                initialValues={{status: 'all'}}
+                // initialValues={{status: 'all'}}
               >
-                <Form.Item
+                {/* <Form.Item
                   name="status"
                 >
                   <Select style={{ width: 180 }} onChange={handleChange}>
@@ -293,7 +289,7 @@ const ModelList = props => {
                       ))
                     }
                   </Select>
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item
                   name="modelName" 
                   label="模型名称"
