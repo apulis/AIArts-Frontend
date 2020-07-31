@@ -19,12 +19,6 @@ export async function addEvaluation(data) {
     data,
   });
 }
-// export async function addEvaluation(id, data) {
-//   return await request(`/models/${id}/evaluation`, {
-//     method: 'POST',
-//     data,
-//   });
-// }
 
 export async function stopEvaluation(id) {
   return await request(`/evaluations/${id}`, {
