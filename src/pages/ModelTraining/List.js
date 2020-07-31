@@ -52,11 +52,11 @@ const List = () => {
   }
   const handleChangeStatus = async (status) => {
     setCurrentStatus(status);
-    const res = await fetchTrainingList({ pageNum, pageSize, search, status: status });
-    if (res.code === 0) {
-      setTrainingWorkList(res.data.Trainings);
-    }
   }
+
+  useEffect(() => {
+    getTrainingList();
+  }, [currentStatus])
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
@@ -92,6 +92,7 @@ const List = () => {
       orderBy: sortText[sorter.order] && sorter.columnKey,
       order: sortText[sorter.order],
     }
+    setTableLoading(true);
     const res = await fetchTrainingList({
       pageNum: current,
       pageSize,
@@ -100,7 +101,7 @@ const List = () => {
       sortedInfo: searchSorterInfo,
     })
     if (res.code === 0) {
-      console.log('sortText[sorter.order]', res.data)
+      setTableLoading(false);
       setTrainingWorkList(res.data.Trainings);
     }
   }
@@ -113,9 +114,11 @@ const List = () => {
   }
   const searchList = async (s) => {
     setSearch(s);
+    setTableLoading(true);
     const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s });
     if (res.code === 0) {
       setTrainingWorkList(res.data.Trainings);
+      setTableLoading(false);
     }
   }
   const columns = [
