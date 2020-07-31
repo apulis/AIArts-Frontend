@@ -1,19 +1,19 @@
 import request from '@/utils/request';
 
 export async function getModels(params) {
-  return request(`/models`, {
+  return await request(`/models`, {
     params
   });
 }
 
 export async function getModel(modelId) {
-  return request(`/models/${modelId}`, {
+  return await request(`/models/${modelId}`, {
     method: 'GET'
   });
 }
 
 export async function deleteModel(modelId) {
-  return request(`/models/${modelId}`, {
+  return await request(`/models/${modelId}`, {
     method: 'DELETE',
   });
 }
@@ -33,7 +33,7 @@ export async function updateModel(params = {}) {
 }
 
 export async function downloadModel(modelId) {
-  return request(`/files/download/model/${modelId}`, {
+  return await request(`/files/download/model/${modelId}`, {
     method: 'GET'
   });
 }

@@ -110,6 +110,7 @@ const ModelEvaluation = props => {
     // values.params = params;
     const { name, engine, codePath, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const data = {
+      id: modelId,
       name,
       engine,
       codePath,
@@ -117,12 +118,12 @@ const ModelEvaluation = props => {
       outputPath,
       datasetPath,
       params,
-      datasetName,
+      desc: datasetName,
       deviceType,
       deviceNum,
       argumentPath: argumentsFile,
     };
-    const { code, msg } = await addEvaluation(modelId, data);
+    const { code, msg } = await addEvaluation(data);
 
     if (code === 0) {
       message.success(`创建评估成功`);
@@ -209,10 +210,10 @@ const ModelEvaluation = props => {
           <Form.Item
             {...layout}
             name="name"
-            label="作业名称"
+            label="模型名称"
             rules={[{ required: true, message: '名称不能为空!' }, { ...jobNameReg }]}
           >
-            <Input placeholder="请输入评估作业名称"/>
+            <Input placeholder="请输入模型名称" disabled/>
           </Form.Item>
           <Form.Item
             {...layout}

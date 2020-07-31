@@ -52,17 +52,17 @@ const ModelList = props => {
   const columns = [
     {
       title: '模型名称',
-      // dataIndex: 'name',
+      dataIndex: 'name',
       key: 'name',
       ellipsis: true,
       width: 150,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => !!item.evaluationId ? (
-        <Popover content='查看评估详情'>
-          <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
-        </Popover>
-      ): (item.name)
+      // render: item => !!item.evaluationId ? (
+      //   <Popover content='查看评估详情'>
+      //     <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
+      //   </Popover>
+      // ): (item.name)
     },
     {
       title: '状态',
