@@ -166,7 +166,7 @@ const DataSetList = () => {
       <div className={styles.datasetWrap}>
         <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
         <div className={styles.searchWrap}>
-          <Search placeholder="请输入数据集名称或者创建者查询" enterButton onSearch={v => setName(v)} allowClear />
+          <Search placeholder="请输入数据集名称查询" enterButton onSearch={v => setName(v)} allowClear />
           <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
         <Table

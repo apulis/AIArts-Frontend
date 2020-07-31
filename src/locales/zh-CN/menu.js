@@ -1,5 +1,6 @@
 export default {
   'menu.home': '首页',
+  'menu.overView': '总览',
   'menu.dataManage': '数据管理',
   'menu.dataManage.dataSet': '数据集管理',
   'menu.dataManage.imageLabel': '数据标注',
