@@ -24,27 +24,14 @@ const InferenceList = props => {
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
+  // const [formValues, setFormValues] = useState({status: 'all', name: ''});
   const [form] = Form.useForm();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
   const [jobSumary, setJobSumary] = useState([]);
-
-  // const statusList = [
-  //   { en: 'all', cn: '全部' },
-  //   { en: 'unapproved', cn: '未批准'},
-  //   { en: 'queued', cn: '队列中'},
-  //   { en: 'scheduling', cn: '调度中'},
-  //   { en: 'running', cn: '运行中'},
-  //   { en: 'finished', cn: '已完成'},
-  //   { en: 'failed', cn: '已失败'},
-  //   { en: 'pausing', cn: '暂停中'},
-  //   { en: 'paused', cn: '已暂停'},
-  //   { en: 'killing', cn: '关闭中'},
-  //   { en: 'killed', cn: '已关闭'},
-  //   { en: 'error', cn: '错误'},
-  // ];
+  const inputRef = useRef();
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
@@ -55,13 +42,11 @@ const InferenceList = props => {
         let count = res.data[k]
         total += count;
         jobSumary.push({
-          // label: statusList.find(status => status.value === k)?.label + `（${count}）`,
-          label: statusList.find(status => status.value === k)?.label,
+          label: statusList.find(status => status.value === k)?.label + `（${count}）`,
           value: k
         })
       })
-      // jobSumary[0].label = jobSumary[0].label  + `（${total}）`
-      jobSumary[0].label = jobSumary[0].label
+      jobSumary[0].label = jobSumary[0].label  + `（${total}）`
       setJobSumary(jobSumary)
     }
   };
@@ -73,7 +58,7 @@ const InferenceList = props => {
   useEffect(() => {
     handleSearch();
   }, [pageParams, formValues, sortedInfo]);
-
+  // }, [pageParams, formValues.status, sortedInfo]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -173,6 +158,12 @@ const InferenceList = props => {
     form.resetFields();
     setFormValues({status: 'all', name:''});
   };
+
+  const onNameChange = () => {
+    let jobName = inputRef.current.value;
+    setFormValues({name:jobName});
+  };
+
   const handleCancel = () => {
     setVisible(false);
   };
@@ -204,7 +195,7 @@ const InferenceList = props => {
     const params = {
       ...pageParams,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]      
+      order: sortText[sortedInfo.order]
     };
 
     if (formValues.status && formValues.status !== 'all') {
@@ -300,9 +291,6 @@ const InferenceList = props => {
                     jobSumary.map((item) => (
                       <Option key= {item.value} value={item.value}>{item.label}</Option>
                     ))
-                    // statusList.map((item) => (
-                    //   <Option key= {item.en} value={item.en}>{item.cn}</Option>
-                    // ))
                   }
                 </Select>
               </Form.Item>              
@@ -310,7 +298,7 @@ const InferenceList = props => {
                 name="jobName" 
                 label="作业名称"
               >
-                <Input placeholder="请输入作业名称" />
+                <Input ref={inputRef} placeholder="请输入作业名称" onBlur={onNameChange}/>
               </Form.Item>
               <Form.Item>
                 <Button htmlType="button" onClick={onReset}>重置</Button>
