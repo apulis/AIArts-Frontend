@@ -1,5 +1,5 @@
 import { history } from 'umi';
-import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Radio } from 'antd';
+import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Radio, Tabs } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
@@ -8,6 +8,8 @@ import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelEvaluationType } from '@/utils/const';
 
 import styles from './index.less';
+
+const { TabPane } = Tabs;
 
 const EvaluationDetail = props => {
   const params = useParams();
@@ -84,7 +86,7 @@ const EvaluationDetail = props => {
         onBack={() => history.push('/ModelManagement/MyModels')}
         title="评估详情"
       >
-        <div>
+        <div className={styles.saveEvalParams}>
           <Button onClick={() => setModalVisible(true)}>保存评估参数</Button>
         </div>
         <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
@@ -92,7 +94,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
           <Descriptions.Item label="评估状态">{evaluationJob ? getJobStatus(evaluationJob.status) : ''}</Descriptions.Item>
           <Descriptions.Item label="引擎类型">{evaluationJob?.engine}</Descriptions.Item>
-          <Descriptions.Item label="测试数据集">{evaluationJob?.desc}</Descriptions.Item>
+          <Descriptions.Item label="测试数据集">{evaluationJob?.datasetName}</Descriptions.Item>
           <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
           <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
           <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
@@ -102,11 +104,18 @@ const EvaluationDetail = props => {
         </Descriptions>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
         <Button onClick={getLateastLogs}>获取评估结果</Button>
-        <div>
-          {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
-            {logs}
-          </pre>}
-        </div>
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="评估日志" key="1">
+            {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+              {logs}
+            </pre>}
+          </TabPane>
+          <TabPane tab="评估结果" key="2">
+            {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+              {logs}
+            </pre>}
+          </TabPane>
+        </Tabs>
       </PageHeader>
       {modalVisible &&
         <Modal

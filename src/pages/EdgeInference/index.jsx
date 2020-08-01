@@ -5,8 +5,7 @@ import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './se
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import moment from 'moment';
-import { NameReg, NameErrorText, pollInterval, sortText } from '@/utils/const';
-import useInterval from '../../hooks/useInterval';
+import { NameReg, NameErrorText, sortText } from '@/utils/const';
 import { CloudUploadOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
@@ -31,7 +30,7 @@ const EdgeInference = () => {
     order: ''
   });
   const typeText = {
-    'converting': '转换中',
+    'converting': '推理中',
     'pushing': '推送中',
     'push success': '推送成功',
     'push failed': '推送失败'
@@ -46,29 +45,21 @@ const EdgeInference = () => {
     getTypesData();
   }, []);
 
-  // useInterval(() => {
-  //   getData();
-  // }, pollInterval);
-
   const getData = async (text) => {
     setLoading(true);
+    const searchType = type && type.split('-') ? type.split('-') : [];
     const params = { 
       ...pageParams, 
       jobName: name, 
-      modelconversionType: type === '全部类型' ? '' : type,
+      jobStatus: searchType ? searchType[0] : '',
+      modelconversionType: searchType ? searchType[1] : '',
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
     const { code, data } = await getEdgeInferences(params);
     if (code === 0 && data) {
       const { total, edgeInferences } = data;
-      // const temp1 = jobs ? JSON.stringify(jobs.map(i => i.jobStatus)) : [];
-      // const temp2 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.jobStatus)) : [];
-      // const temp3 = jobs ? JSON.stringify(jobs.map(i => i.modelconversionStatus)) : [];
-      // const temp4 = edgeInferences ? JSON.stringify(edgeInferences.map(i => i.modelconversionStatus)) : [];
-      // if (temp1 !== temp2 || temp3 !== temp4) {
-        setJobs(edgeInferences);
-      // }
+      setJobs(edgeInferences);
       setTotal(total);
       text && message.success(text);
     }
@@ -190,13 +181,38 @@ const EdgeInference = () => {
     setBtnLoading(false);
   }
 
-  const getOptions = isFilter => {
-    let data = isFilter ? ['全部类型'].concat(typesData) : typesData;
-    return data.map(i => <Option value={i}>{i}</Option>);
-  }
-
   const onSortChange = (pagination, filters, sorter) => {
     setSortedInfo(sorter);
+  }
+
+  const getOptions = () => {
+    const statusMap = [
+      {
+        text: '推送中',
+        status: 'finished-pushing'
+      },
+      {
+        text: '推送成功',
+        status: 'finished-push success'
+      },
+      {
+        text: '推送失败',
+        status: 'finished-push failed'
+      },
+      {
+        text: '推理中',
+        status: 'running-converting'
+      },
+      {
+        text: '推理成功',
+        status: 'finished-converting'
+      },
+      {
+        text: '推理失败',
+        status: 'failed-converting'
+      }
+    ];
+    return statusMap.map(i => <Option value={i.status}>{i.text}</Option>);
   }
 
   return (
@@ -206,7 +222,7 @@ const EdgeInference = () => {
         <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
         {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
         <div className={styles.searchWrap}>
-          <Select onChange={v => setType(v)} defaultValue={type}>{getOptions(true)}</Select>
+          <Select onChange={v => setType(v)} defaultValue={type}>{getOptions()}</Select>
           <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
           <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
         </div>
@@ -258,7 +274,9 @@ const EdgeInference = () => {
               name="conversionType"
               rules={[{ required: true, message: '请选择类型！' }]}
             >
-                <Select placeholder="请选择类型">{getOptions()}</Select>
+                <Select placeholder="请选择类型">
+                  {typesData.map(i => <Option value={i}>{i}</Option>)}
+                </Select>
             </Form.Item>
             <Form.Item
               label="输入路径"

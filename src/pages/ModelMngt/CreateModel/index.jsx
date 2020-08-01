@@ -40,19 +40,12 @@ const CreateModel = props => {
     const data = {
       name,
       description,
-      argumentPath: codePathPrefix + argumentPath,
+      paramPath: codePathPrefix + argumentPath,
       jobId: jobId || '',
-      modelPath: modelPath ? modelPath : codePathPrefix + argumentPath,
-      // modelPath: '/home/jin.li/code',
+      codePath: modelPath ? modelPath : codePathPrefix + argumentPath,
       isAdvance: false,
     }
 
-    // if (jobId) {
-    //   data['jobId'] = jobId;
-    // } else {
-    //   data['modelPath'] = modelPath;
-    // }
-    
     const { code, msg } = await addModel(data);
 
     if (code === 0) {

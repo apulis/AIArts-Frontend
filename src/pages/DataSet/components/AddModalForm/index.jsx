@@ -2,6 +2,7 @@ import { message, Form, Input, Button, Select, Radio, Upload } from 'antd';
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import styles from './index.less';
+import { FilePathReg, FilePathErrorText } from '@/utils/const';
 
 const { Dragger } = Upload;
 
@@ -111,7 +112,10 @@ const AddModalForm = (props, ref) => {
       {sourceType == 2 &&<Form.Item
         label="存储路径"
         name="path"
-        rules={[{ required: true, message: '请输入存储路径！' }]}
+        rules={[
+          { required: true, message: '请输入存储路径！' },
+          { pattern: FilePathReg, message: FilePathErrorText },
+        ]}
       >
         <Input placeholder="请输入存储路径" />
       </Form.Item>}

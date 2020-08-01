@@ -73,7 +73,7 @@ const ModelList = props => {
     // },
     {
       title: '存储路径',
-      dataIndex: 'modelPath',
+      dataIndex: 'codePath',
       ellipsis: true,
       width: 100,
     },

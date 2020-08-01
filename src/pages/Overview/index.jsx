@@ -7,6 +7,7 @@ import { SyncOutlined, EditOutlined, ReadOutlined, FireOutlined, CodepenOutlined
 import { getPieData } from './service';
 import { getJobStatus } from '@/utils/utils';
 import { Link, history } from 'umi';
+import noDataImg from '../../assets/no_data.png';
 
 const { Step } = Steps;
 
@@ -59,14 +60,21 @@ const OverView = () => {
       const { value, name } = i;
       return (
         <Card title={name}>
-          <Pie
-            hasLegend 
-            data={value}
-            height={250}
-          />
+          {value.length > 0 ?
+            <Pie
+              hasLegend 
+              data={value}
+              height={250}
+            />
+          : 
+          <div className={styles.noData}>
+            <img src={noDataImg} />
+            <p>暂无数据</p>
+          </div>}
         </Card>
       )
-    })
+      
+    });
   }
   if (loading) return (<PageLoading />);
   return (
@@ -79,16 +87,16 @@ const OverView = () => {
             icon={<EditOutlined onClick={() => history.push('/codeDevelopment')} />}
           />
           <Step status="finish" 
-            title={<Link to='/dataManage'>数据管理</Link>}
-            icon={<ReadOutlined onClick={() => history.push('/dataManage')} />}
+            title={<Link to='/dataManage/dataSet'>数据管理</Link>}
+            icon={<ReadOutlined onClick={() => history.push('/dataManage/dataSet')} />}
           />
           <Step status="finish" 
-            title={<Link to='/model-training'>模型训练</Link>}
-            icon={<FireOutlined onClick={() => history.push('/model-training')} />}
+            title={<Link to='/model-training/modelTraining'>模型训练</Link>}
+            icon={<FireOutlined onClick={() => history.push('/model-training/modelTraining')} />}
           />
           <Step status="finish" 
-            title={<Link to='/ModelManagement'>模型管理</Link>}
-            icon={<CodepenOutlined onClick={() => history.push('/ModelManagement')} />}
+            title={<Link to='/ModelManagement/MyModels'>模型管理</Link>}
+            icon={<CodepenOutlined onClick={() => history.push('/ModelManagement/MyModels')} />}
           />
           <Step status="finish" 
             title={<Link to='/Inference/list'>推理服务</Link>}
