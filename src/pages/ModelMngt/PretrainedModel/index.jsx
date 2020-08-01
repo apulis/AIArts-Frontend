@@ -8,6 +8,8 @@ import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
 
+const { Search } = Input;
+
 const ExpandDetails = (item) => {
   // 转换运行参数格式
   let runArguments = [];
@@ -122,19 +124,8 @@ const PretrainedModelList = props => {
     },
   ];
 
-  const onReset = () => {
-    form.resetFields();
-    setFormValues({name:''});
-  };
-
-  const onFinish = values => {
-    let queryClauses = {};
-
-    if (values.modelName) {
-      queryClauses.name = values.modelName;
-    }
-
-    setFormValues({...formValues, ...queryClauses});    
+  const handleNameSearch = name => {
+    setFormValues({name});    
   };
 
   const handleSearch = () => {
@@ -180,29 +171,11 @@ const PretrainedModelList = props => {
           <div
             style={{
               float: "right",
+              paddingRight: '20px',
             }}
           >
-            <Form
-              layout='inline'
-              form={form}
-              onFinish={onFinish}
-            >
-              <Form.Item
-                name="modelName" 
-                label="模型名称"
-              >
-                <Input placeholder="请输入模型名称" />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="button" onClick={onReset}>重置</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">查询</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-              </Form.Item>
-            </Form>
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={handleNameSearch} />
+            <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
           </div>            
         </div>
         <Table

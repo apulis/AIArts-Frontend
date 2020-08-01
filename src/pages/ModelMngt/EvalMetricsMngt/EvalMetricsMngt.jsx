@@ -10,27 +10,25 @@ import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail'
 
 const { confirm } = Modal;
 const { Option } = Select;
+const { Search } = Input;
 
 const EvalMetricsMngt = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
-  const [formValues, setFormValues] = useState({});
-  const [form] = Form.useForm();
+  const [formValues, setFormValues] = useState({ scope: 3, name: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
-  const { getFieldsValue } = form;
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
-  const statusList = {
-    '3': '全部',
-    '1': '公有',
-    '2': '私有',
-    '4': '公有'
-  };
-
+  const [currentScope, setCurrentScope] = useState(3);
+  const scopeList = [
+    { value: 3, label: '全部' },
+    { value: 1, label: '公有' },
+    { value: 2, label: '私有' },
+  ];
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -75,7 +73,7 @@ const EvalMetricsMngt = () => {
       dataIndex: ['metaData', 'scope'],
       key: 'type',
       width: 70,
-      render: index => statusList[index]
+      render: item => scopeList.find(scope => scope.value === item)?.label
     },
     { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine' },
     {
@@ -106,11 +104,6 @@ const EvalMetricsMngt = () => {
     },
   ];
 
-  const onReset = () => {
-    form.resetFields();
-    setFormValues({ scope: '3', name: '' });
-  };
-
   const handleSearch = async () => {
     const params = {
       pageNum: pageParams.pageNum,
@@ -119,13 +112,14 @@ const EvalMetricsMngt = () => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
-    const value = getFieldsValue();
-    if (value.scope) {
-      params.scope = value.scope;
+
+    if (formValues.scope) {
+      params.scope = formValues.scope;
     }
-    if (value.name) {
-      params.name = value.name;
-    }
+
+    if (formValues.name) {
+      params.name = formValues.name;
+    }    
     const res = await getParamsList(params);
   };
 
@@ -145,7 +139,12 @@ const EvalMetricsMngt = () => {
     setSortedInfo(sorter);
   };
 
-  const handleTypeChange = (value) => {
+  const handleScopeChange = (scope) => {
+    setFormValues({...formValues, ...{scope}});
+  };
+
+  const onSearchName = (name) => {
+    setFormValues({...formValues, ...{name}});
   };
 
   useEffect(() => {
@@ -156,64 +155,49 @@ const EvalMetricsMngt = () => {
     <PageHeaderWrapper>
       <Card bordered={false}
         bodyStyle={{
-          padding: '8'
+          padding: '0'
         }}
       >
-        <Row gutter={[0, 16]} justify='end'>
-          <Col>
-            <Form
-              layout='inline'
-              form={form}
-              initialValues={{ scope: '3' }}
-            >
-              <Form.Item
-                name="scope"
-                label="权限"
-              >
-                <Select style={{ width: 180 }} onChange={handleTypeChange}>
-                  <Option value='3'>全部</Option>
-                  <Option value='1'>公有</Option>
-                  <Option value='2'>私有</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name="name"
-                label="评估参数名称"
-              >
-                <Input style={{ width: '200px' }} placeholder="输入评估参数名称" />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="button" onClick={onReset}>重置</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="button" onClick={handleSearch}>查询</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-              </Form.Item>
-            </Form>
-          </Col>
-          <Col span={24}>
-            <Table
-              columns={columns}
-              rowKey={record => record.metaData.id}
-              onChange={onSortChange}
-              pagination={{
-                total: total,
-                showQuickJumper: true,
-                showTotal: (total) => `总共 ${total} 条`,
-                showSizeChanger: true,
-                onChange: pageParamsChange,
-                onShowSizeChange: pageParamsChange,
-              }}
-              expandable={{
-                expandedRowRender: record => <ExpandDetail record={record} />
-              }}
-              dataSource={paramList}
-              loading={tableLoading}
-            />
-          </Col>
-        </Row>
+        <div
+          style={{
+            padding: '24px 0 24px 24px'
+          }}
+        >
+          <div
+            style={{
+              float: "right",
+              paddingRight: '20px',
+            }}          
+          >
+            <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
+              {
+                scopeList.map((item) => (
+                  <Option key= {item.value} value={item.value}>{item.label}</Option>
+                ))                
+              }
+            </Select>            
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="输入评估参数名称" onSearch={onSearchName} />
+            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+          </div>            
+        </div>
+        <Table
+          columns={columns}
+          rowKey={record => record.metaData.id}
+          onChange={onSortChange}
+          pagination={{
+            total: total,
+            showQuickJumper: true,
+            showTotal: (total) => `总共 ${total} 条`,
+            showSizeChanger: true,
+            onChange: pageParamsChange,
+            onShowSizeChange: pageParamsChange,
+          }}
+          expandable={{
+            expandedRowRender: record => <ExpandDetail record={record} />
+          }}
+          dataSource={paramList}
+          loading={tableLoading}
+        />
       </Card>
     </PageHeaderWrapper>
   );
