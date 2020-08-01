@@ -4,7 +4,6 @@ import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText } from '@/utils/const';
-// import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from '@/services/modelTraning';
 import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from './services';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
