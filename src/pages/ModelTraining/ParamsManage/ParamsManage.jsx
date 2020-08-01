@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Select, Row, Col, Card, Form, message } from 'antd';
+import { Modal, Table, Input, Button, Select, Card, message } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -16,21 +16,13 @@ const ParamsManage = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 3, name: '' });
-  const [form] = Form.useForm();
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
-  const { getFieldsValue } = form;
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
-  // const statusList = {
-  //   '3': '全部',
-  //   '1': '公有',
-  //   '2': '私有',
-  //   '4': '公有'
-  // };
   const [currentScope, setCurrentScope] = useState(3);
   const scopeList = [
     { value: 3, label: '全部' },
@@ -116,11 +108,6 @@ const ParamsManage = () => {
     },
   ];
 
-  const onReset = () => {
-    form.resetFields();
-    setFormValues({ scope: '3', name: '' });
-  };
-
   const handleSearch = async () => {
     const params = {
       pageNum: pageParams.pageNum,
@@ -129,13 +116,6 @@ const ParamsManage = () => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
-    // const value = getFieldsValue();
-    // if (value.scope) {
-    //   params.scope = value.scope;
-    // }
-    // if (value.name) {
-    //   params.name = value.name;
-    // }
     if (formValues.scope) {
       params.scope = formValues.scope;
     }
@@ -221,61 +201,6 @@ const ParamsManage = () => {
           dataSource={paramList}
           loading={tableLoading}
         />
-        {/* <Row gutter={[0, 16]} justify='end'>
-          <Col>
-            <Form
-              layout='inline'
-              form={form}
-              initialValues={{ scope: '3' }}
-            >
-              <Form.Item
-                name="scope"
-                label="权限"
-              >
-                <Select style={{ width: 180 }} onChange={handleTypeChange}>
-                  <Option value='3'>全部</Option>
-                  <Option value='1'>公有</Option>
-                  <Option value='2'>私有</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item
-                name="name"
-                label="参数配置名称"
-              >
-                <Input style={{ width: '200px' }} placeholder="输入参数配置名称" />
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="button" onClick={onReset}>重置</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="button" onClick={handleSearch}>查询</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-              </Form.Item>
-            </Form>
-          </Col>
-          <Col span={24}>
-            <Table
-              columns={columns}
-              rowKey={record => record.metaData.id}
-              onChange={onSortChange}
-              pagination={{
-                total: total,
-                showQuickJumper: true,
-                showTotal: (total) => `总共 ${total} 条`,
-                showSizeChanger: true,
-                onChange: pageParamsChange,
-                onShowSizeChange: pageParamsChange,
-              }}
-              expandable={{
-                expandedRowRender: record => <ExpandDetail record={record} />
-              }}
-              dataSource={paramList}
-              loading={tableLoading}
-            />
-          </Col>
-        </Row> */}
       </Card>
     </PageHeaderWrapper>
   );
