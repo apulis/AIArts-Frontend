@@ -162,7 +162,7 @@ const ModelTraining = (props) => {
     if (res.code === 0) {
       const { model } = res.data;
       // check null
-      model.arguments = model.arguments || [];
+      model.arguments = model.params || [];
       const params = Object.entries(model.arguments || {}).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -177,7 +177,11 @@ const ModelTraining = (props) => {
         params: params,
         datasetPath: model.datasetName,
         engine: model.engineType,
+        codePath: model.codePath,
+        startupFile: model.codePath,
+        outputPath: model.codePath,
         name: model.name,
+        engine: model.engine,
       });
 
     }
