@@ -14,11 +14,11 @@ const ExpandDetails = (item) => {
   // 转换运行参数格式
   let runArguments = [];
 
-  if(item.arguments){
-    Object.keys(item.arguments).forEach(key => {
+  if(item.params){
+    Object.keys(item.params).forEach(key => {
       runArguments.push({
         key: key,
-        value: item.arguments[key]
+        value: item.params[key]
       })
     });
   }
@@ -35,7 +35,7 @@ const ExpandDetails = (item) => {
 
   return (
     <Descriptions>
-      <Descriptions.Item label="训练数据集">{item.dataset}</Descriptions.Item>
+      <Descriptions.Item label="训练数据集">{item.datasetName}</Descriptions.Item>
       <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
@@ -44,9 +44,9 @@ const ExpandDetails = (item) => {
           }
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="引擎类型">{item.engineType}</Descriptions.Item>
-      {/* <Descriptions.Item label="模型输出">{item.output}</Descriptions.Item> */}
-    </Descriptions> 
+      <Descriptions.Item label="引擎类型">{item.engine}</Descriptions.Item>
+      <Descriptions.Item label="模型输出">{item.outputPath}</Descriptions.Item>
+    </Descriptions>
   );
 }
 
