@@ -10,24 +10,24 @@ const history = require('connect-history-api-fallback')
 const app = express()
 app.use(bodyParser.json())
 
-app.post('//update', (req, res) => {
-  console.log('pull start')
-  res.send('ok')
-  exec('git pull https://cafbe4d081c2ffc3015dc82f78b1c750d245d7fd@github.com/apulis/AIArts.git', (err, result) => {
-    if (!err) {
-      console.log('pull over')
-      exec('yarn && yarn build', (err, result) => {
-        if (!err) {
-          console.log('build over')
-        } else {
-          console.log('build err', err)
-        }
-      })
-    } else {
-      console.log('pull error', err)
-    }
-  })
-})
+// app.post('//update', (req, res) => {
+//   console.log('pull start')
+//   res.send('ok')
+//   exec('git pull https://github.com/apulis/AIArts.git', (err, result) => {
+//     if (!err) {
+//       console.log('pull over')
+//       exec('yarn && yarn build', (err, result) => {
+//         if (!err) {
+//           console.log('build over')
+//         } else {
+//           console.log('build err', err)
+//         }
+//       })
+//     } else {
+//       console.log('pull error', err)
+//     }
+//   })
+// })
 app.use(history())
 
 app.use(ecstatic({ root: path.join(__dirname, './dist') }))
