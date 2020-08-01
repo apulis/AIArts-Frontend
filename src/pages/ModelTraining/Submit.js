@@ -9,7 +9,7 @@ import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPre
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
-import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType,formatParams } from '@/utils/utils';
+import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -186,12 +186,12 @@ const ModelTraining = (props) => {
 
     }
   };
-
+  const isPretrainedModel = ['PretrainedModel'].includes(requestType)
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
     if (['createJobWithParam', 'editParam'].includes(requestType)) { fetchParams(); }
-    if (['PretrainedModel'].includes(requestType)) {
+    if (isPretrainedModel) {
       getPresetModel();
     }
   }, [codePathPrefix]);
@@ -218,9 +218,9 @@ const ModelTraining = (props) => {
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     });
-    values.codePath = codePathPrefix + (values.codePath || '');
-    values.startupFile = codePathPrefix + values.startupFile;
-    values.outputPath = codePathPrefix + (values.outputPath || '');
+    values.codePath = (isPretrainedModel ? '' : codePathPrefix) + (values.codePath || '');
+    values.startupFile = (isPretrainedModel ? '' : codePathPrefix) + values.startupFile;
+    values.outputPath = (isPretrainedModel ? '' : codePathPrefix) + (values.outputPath || '');
     values.params = params;
     if (distributedJob) {
       values.deviceNum = values.deviceTotal;
@@ -319,7 +319,7 @@ const ModelTraining = (props) => {
         outputPath: subCodePathPrefix(currentSelected.params.startupFile),
       });
       console.log('currentSelected.params.params', currentSelected.params)
-      const params = Object.entries(currentSelected.params.params|| {}).map(item => {
+      const params = Object.entries(currentSelected.params.params || {}).map(item => {
         var obj = {};
         obj['key'] = item[0];
         obj['value'] = item[1];
@@ -390,13 +390,24 @@ const ModelTraining = (props) => {
           name="codePath"
           label="代码目录"
         >
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+          {
+            isPretrainedModel ?
+              <Input style={{ width: 420 }} disabled={typeCreate} />
+              : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+          }
         </FormItem>
         <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+          {
+            isPretrainedModel ? <Input style={{ width: 420 }} disabled={typeCreate} />
+            : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+          }
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+          {
+            isPretrainedModel ? <Input style={{ width: 420 }} />
+            : <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+          }
+          
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
