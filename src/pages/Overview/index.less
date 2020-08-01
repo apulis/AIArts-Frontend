@@ -1,8 +1,23 @@
 .resourceMonitoringWrap {
+  .noData {
+    position: absolute;
+    top: 44%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    p {
+      margin: 6px 0 0 -6px;
+      color: darkgrey;
+    }
+  }
   :global {
     .ant-card {
       width: 50%;
+      height: 356px;
       display: inline-block;
+      .ant-card-body {
+        height: 100%;
+        position: relative;
+      }
     }
     .ant-steps {
       margin: 40px 0px;

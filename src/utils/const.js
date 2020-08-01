@@ -29,3 +29,7 @@ export const sortText = {
   ascend: 'asc',
   descend: 'desc'
 }
+
+export const FilePathReg = /^(.*)\/$/;
+
+export const FilePathErrorText = '路径必须以 / 结尾！';
