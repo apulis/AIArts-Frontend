@@ -140,7 +140,6 @@ const EvalMetricsMngt = () => {
   };
 
   const handleScopeChange = (scope) => {
-    debugger
     setFormValues({...formValues, ...{scope}});
   };
 

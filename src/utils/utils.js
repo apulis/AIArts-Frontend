@@ -149,7 +149,6 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
       }
     }
     const num = Math.max(...arr);
-    debugger
     let arr2 = []
     for (let i = 0; i <= num; i++) {
       arr2.push(i);
@@ -176,7 +175,6 @@ export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
       }
     }
     const num = Math.max(...arr);
-    debugger
     let arr2 = []
     let temp = 1;
     while (temp <= num) {
