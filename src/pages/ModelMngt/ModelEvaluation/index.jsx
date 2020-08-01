@@ -106,14 +106,7 @@ const ModelEvaluation = props => {
       // console.log(666, model)
       form.setFieldsValue({
         name: model.name,
-        // engine: model.engineType,
-        // startupFile: model.startupFile,
-        // outputPath: model.outputPath,
-        // datasetPath: model.datasetPath,
-        argumentsFile: model.argumentPath,
-        // codePath: model.codePath,
-        // deviceType: model.deviceType,
-        // deviceNum: model.deviceNum,
+        argumentsFile: model.paramPath,
       });
     } else {
       message.error(msg);
@@ -136,10 +129,10 @@ const ModelEvaluation = props => {
       outputPath,
       datasetPath,
       params,
-      desc: datasetName,
+      datasetName,
       deviceType,
       deviceNum,
-      argumentPath: argumentsFile,
+      paramPath: argumentsFile,
     };
     console.log(999, evalParams)
     const { code, msg } = await addEvaluation(evalParams);

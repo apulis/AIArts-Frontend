@@ -63,7 +63,7 @@ const CreatePretrained = props => {
       engineType,
       use,
       modelArgumentPath,
-      modelPath,
+      codePath,
       precision,
     }
     

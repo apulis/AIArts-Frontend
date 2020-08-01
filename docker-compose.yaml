@@ -1,0 +1,6 @@
+version: '3'
+services:
+  ai-arts-frontend:
+    image: apulistech/ai-arts-frontend:latest
+    ports:
+      - "3084:3084"

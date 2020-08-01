@@ -156,10 +156,6 @@ const PretrainedModelList = props => {
   };
 
   const createInference = (item) => {
-    // const queryString = stringify({
-    //   modelPath: encodeURIComponent(item.path)
-    // });
-    // history.push((`/Inference/submit/?${queryString}`))
     const modelId = item.id;
     history.push((`/model-training/ModelManage/${modelId}/PretrainedModel`));
   };
