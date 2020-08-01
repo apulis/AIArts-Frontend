@@ -13,6 +13,7 @@ import { fetchJobStatusSumary } from './services';
 import { statusList } from '@/pages/ModelTraining/List';
 
 const { Option } = Select;
+const { Search } = Input;
 
 const InferenceList = props => {
   const {
@@ -24,14 +25,12 @@ const InferenceList = props => {
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
-  // const [formValues, setFormValues] = useState({status: 'all', name: ''});
-  const [form] = Form.useForm();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
   const [jobSumary, setJobSumary] = useState([]);
-  const inputRef = useRef();
+  const [currentStatus, setCurrentStatus] = useState('all');
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
@@ -52,13 +51,12 @@ const InferenceList = props => {
   };
   
   useEffect(() => {
-    getJobStatusSumary()
+    getJobStatusSumary();
   }, []);
 
   useEffect(() => {
     handleSearch();
   }, [pageParams, formValues, sortedInfo]);
-  // }, [pageParams, formValues.status, sortedInfo]);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -154,14 +152,8 @@ const InferenceList = props => {
     setCurrent(item);
   };
 
-  const onReset = () => {
-    form.resetFields();
-    setFormValues({status: 'all', name:''});
-  };
-
-  const onNameChange = () => {
-    let jobName = inputRef.current.value;
-    setFormValues({name:jobName});
+  const onSearchName = (name) => {
+    setFormValues({...formValues, ...{name}});
   };
 
   const handleCancel = () => {
@@ -175,20 +167,6 @@ const InferenceList = props => {
       type: 'inferenceList/update',
       payload: params
     });
-  };
-
-  const onFinish = values => {
-    let queryClauses = {};
-
-    if (values.jobName) {
-      queryClauses.name = values.jobName;
-    }
-
-    if (values.status) {
-      queryClauses.status = values.status;
-    }
-
-    setFormValues({...formValues, ...queryClauses});
   };
 
   const handleSearch = () => {
@@ -256,7 +234,8 @@ const InferenceList = props => {
   };
 
   const handleStatusChange = (status) => {
-
+    // setCurrentStatus(status);
+    setFormValues({...formValues, ...{status}});
   };
 
   return (
@@ -275,41 +254,18 @@ const InferenceList = props => {
           <div
             style={{
               float: "right",
+              paddingRight: '20px',
             }}          
           >
-            <Form
-              layout='inline'
-              form={form}
-              onFinish={onFinish}
-              initialValues={{status: 'all'}}
-            >
-              <Form.Item
-                name="status"
-              >
-                <Select style={{ width: 180 }} onChange={handleStatusChange}>
-                  {
-                    jobSumary.map((item) => (
-                      <Option key= {item.value} value={item.value}>{item.label}</Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>              
-              <Form.Item
-                name="jobName" 
-                label="作业名称"
-              >
-                <Input ref={inputRef} placeholder="请输入作业名称" onBlur={onNameChange}/>
-              </Form.Item>
-              <Form.Item>
-                <Button htmlType="button" onClick={onReset}>重置</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">查询</Button>
-              </Form.Item>
-              <Form.Item>
-                <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-              </Form.Item>
-            </Form>
+            <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentStatus} onChange={handleStatusChange}>
+              {
+                jobSumary.map((item) => (
+                  <Option key= {item.value} value={item.value}>{item.label}</Option>
+                ))
+              }
+            </Select>            
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入作业名称" onSearch={onSearchName} />
+            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
           </div>            
         </div>
         <Table

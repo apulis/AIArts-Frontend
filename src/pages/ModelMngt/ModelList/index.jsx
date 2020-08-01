@@ -1,18 +1,16 @@
-import { Link, history } from 'umi';
-import { message, Table, Modal, Form, Input, Button, Space, Card, Select, Popover } from 'antd';
+import { history } from 'umi';
+import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import ModalForm from './components/ModalForm';
 import { connect } from 'umi';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { downloadModel } from '../ModelList/services';
 import { stringify } from 'querystring';
 import moment from 'moment';
-import { getModelStatus } from '@/utils/utils';
 
 const { confirm } = Modal;
-const { Option } = Select;
+const { Search } = Input;
 
 const ModelList = props => {
   const {
@@ -30,12 +28,6 @@ const ModelList = props => {
     orderBy: '',
     order: ''
   });
-
-  // const statusList = [
-  //   { en: 'all', cn: '全部' },
-  //   { en: 'normal', cn: '正常'},
-  //   { en: 'deleting', cn: '删除中'},
-  // ]
 
   useEffect(() => {
     handleSearch();
@@ -59,12 +51,6 @@ const ModelList = props => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
-    // {
-    //   title: '状态',
-    //   ellipsis: true,
-    //   width: 100,
-    //   render: (text, item) => getModelStatus(item.status),
-    // },
     // {
     //   title: '引擎类型',
     //   dataIndex: 'type',
@@ -104,7 +90,6 @@ const ModelList = props => {
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
             <a onClick={() => deleteModel(item)}>删除</a>
             <a onClick={() => evaluateModel(item)}>模型评估</a>
-            {/* <a onClick={() => evaluateDetail(item)}>评估详情</a> */}
           </Space>
         );
       },
@@ -116,11 +101,6 @@ const ModelList = props => {
     setCurrent(item);
   };
 
-  const onReset = () => {
-    form.resetFields();
-    // setFormValues({status: 'all', name:''});
-    setFormValues({name:''});
-  };
   const handleCancel = () => {
     setVisible(false);
   };
@@ -146,20 +126,6 @@ const ModelList = props => {
     }
   };
 
-  const onFinish = values => {
-    let queryClauses = {};
-
-    if (values.modelName) {
-      queryClauses.name = values.modelName;
-    }
-
-    // if (values.status) {
-    //   queryClauses.status = values.status;
-    // }
-
-    setFormValues({...formValues, ...queryClauses});
-  };
-
   const handleSearch = () => {
     const params = {
       ...pageParams,
@@ -167,10 +133,6 @@ const ModelList = props => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]      
     };
-
-    // if (formValues.status && formValues.status !== 'all') {
-    //   params.status = formValues.status;
-    // }
 
     if (formValues.name) {
       params.name = formValues.name;
@@ -195,23 +157,6 @@ const ModelList = props => {
 
   const evaluateModel = (item) => {
     const queryString = stringify({
-      // modelName: encodeURIComponent(item.name),
-      modelId: encodeURIComponent(item.id),
-      // data: encodeURIComponent(item),
-    });
-    history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
-
-    // history.push({
-    //   pathname: '/ModelManagement/CreateEvaluation/',
-    //   data: item,
-    //   // modelName: encodeURIComponent(item.name),
-    //   // modelId: encodeURIComponent(item.id),
-    // });
-  };
-
-  const evaluateDetail = (item) => {
-    const queryString = stringify({
-      modelName: encodeURIComponent(item.name),
       modelId: encodeURIComponent(item.id),
     });
     history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
@@ -250,8 +195,8 @@ const ModelList = props => {
     history.push('/ModelMngt/CreateModel')
   };
 
-  const handleChange = (status) => {
-
+  const onSearchName = (name) => {
+    setFormValues({name});
   };
 
   return (
@@ -271,42 +216,12 @@ const ModelList = props => {
             <div
               style={{
                 float: "right",
+                paddingRight: '20px',
               }}          
             >
-              <Form
-                layout='inline'
-                form={form}
-                onFinish={onFinish}
-                // initialValues={{status: 'all'}}
-              >
-                {/* <Form.Item
-                  name="status"
-                >
-                  <Select style={{ width: 180 }} onChange={handleChange}>
-                    {
-                      statusList.map((item) => (
-                        <Option key= {item.en} value={item.en}>{item.cn}</Option>
-                      ))
-                    }
-                  </Select>
-                </Form.Item> */}
-                <Form.Item
-                  name="modelName" 
-                  label="模型名称"
-                >
-                  <Input placeholder="请输入模型名称" />
-                </Form.Item>
-                <Form.Item>
-                  <Button htmlType="button" onClick={onReset}>重置</Button>
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">查询</Button>
-                </Form.Item>
-                <Form.Item>
-                  <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-                </Form.Item>
-              </Form>
-            </div>            
+              <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} />
+              <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
+            </div>
           </div>
           <Table
             columns={columns}
