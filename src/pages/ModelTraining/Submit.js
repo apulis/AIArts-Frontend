@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row, InputNumber } from 'antd';
 import { history, useParams } from 'umi';
-import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined, CompassOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
@@ -92,11 +92,11 @@ const ModelTraining = (props) => {
     if (distributedJob) {
       if (!currentDeviceType) return;
       // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
-      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo,currentDeviceType);
+      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo, currentDeviceType);
       setAvailableDeviceNumList(list);
     } else {
       if (!currentDeviceType) return;
-      const list = getDeviceNumArrByNodeType(nodeInfo,currentDeviceType);
+      const list = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
       setAvailableDeviceNumList(list);
     }
   }, [distributedJob, nodeInfo, currentDeviceType]);
@@ -116,6 +116,7 @@ const ModelTraining = (props) => {
         ...paramsDetailedData,
         params: newParams
       });
+      setCurrentDeviceType(newParams.deviceType)
       setFieldsValue(newParams);
     }
   }, [codePathPrefix, paramsDetailedData])
@@ -196,6 +197,7 @@ const ModelTraining = (props) => {
         if (res.code === 0) {
           const template = res.data.Templates;
           setPresetRunningParams(template);
+          // setCurrentDeviceType()
           if (template.length > 0) {
             setCurrentSelectedPresetParamsId(template[0].metaData?.id);
           }
