@@ -10,8 +10,6 @@ import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType,formatParams } from '@/utils/utils';
-import { includes } from 'lodash';
-import models from '../InferenceService/InferenceList/models';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -25,6 +23,10 @@ const layout = {
 export const generateKey = () => {
   return new Date().getTime();
 };
+
+export const subCodePathPrefix = (s) => {
+  return s.replace(/\/home\/.+?\//, '')
+}
 
 let haveSetedParamsDetail = false;
 
@@ -107,9 +109,9 @@ const ModelTraining = (props) => {
       haveSetedParamsDetail = true;
       const newParams = {
         ...paramsDetailedData.params,
-        outputPath: paramsDetailedData.params.outputPath.replace(/\/.+?\/.+?\/.+?/, ''),
-        codePath: paramsDetailedData.params.codePath.replace(/\/.+?\/.+?\/.+?/, ''),
-        startupFile: paramsDetailedData.params.startupFile.replace(/\/.+?\/.+?\/.+?/, ''),
+        outputPath: subCodePathPrefix(paramsDetailedData.params.outputPath),
+        codePath: subCodePathPrefix(paramsDetailedData.params.codePath),
+        startupFile: subCodePathPrefix(paramsDetailedData.params.startupFile),
       }
       console.log('newParams', newParams)
       setParamsDetailedData({
@@ -163,7 +165,6 @@ const ModelTraining = (props) => {
       model.arguments = model.arguments || [];
       const params = Object.entries(model.arguments || {}).map(item => {
         var obj = {};
-        console.log('item', item);
         obj['key'] = item[0];
         obj['value'] = item[1];
         return obj;
@@ -307,11 +308,15 @@ const ModelTraining = (props) => {
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
     if (currentSelected) {
-      setFieldsValue(currentSelected.params);
-      console.log('currentSelected.params.params', currentSelected.params.params)
+      setFieldsValue({
+        ...currentSelected.params,
+        codePath: subCodePathPrefix(currentSelected.params.codePath),
+        startupFile: subCodePathPrefix(currentSelected.params.startupFile),
+        outputPath: subCodePathPrefix(currentSelected.params.startupFile),
+      });
+      console.log('currentSelected.params.params', currentSelected.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};
-        console.log('item', item);
         obj['key'] = item[0];
         obj['value'] = item[1];
         return obj;
