@@ -274,12 +274,12 @@ const EditMetrics = (props) => {
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
       <div className="ant-page-header-heading-title" style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</div>
-      <FormItem {...commonLayout} label="参数来源">
+      {/* <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
           <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入训练参数</Radio.Button>
         </Radio.Group>
-      </FormItem>
+      </FormItem> */}
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
           <Select style={{ width: 300 }} >
@@ -304,7 +304,6 @@ const EditMetrics = (props) => {
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
-          {/* <Input style={{ width: 300 }} /> */}
           <Select
             style={{ width: '300px' }}
           >
