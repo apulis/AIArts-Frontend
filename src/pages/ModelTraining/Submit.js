@@ -317,7 +317,7 @@ const ModelTraining = (props) => {
         ...currentSelected.params,
         codePath: currentSelected.params.codePath,
         startupFile: currentSelected.params.startupFile,
-        outputPath: currentSelected.params.startupFile,
+        outputPath: currentSelected.params.outputPath,
       });
       console.log('currentSelected.params.params', currentSelected.params)
       const params = Object.entries(currentSelected.params.params || {}).map(item => {
