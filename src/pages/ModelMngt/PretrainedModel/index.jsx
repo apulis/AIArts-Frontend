@@ -181,7 +181,7 @@ const PretrainedModelList = props => {
         <Table
           columns={columns}
           dataSource={data.list}
-          rowKey='id'
+          rowKey={record => record.id}
           onChange={onSortChange}
           pagination={{
             total: data.pagination.total,
