@@ -69,6 +69,7 @@ const ModelTraining = (props) => {
   const [nodeInfo, setNofeInfo] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [paramsDetailedData, setParamsDetailedData] = useState({});
+  const [importedTrainingParams, setImportedTrainingParams] = useState(false);
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -187,7 +188,7 @@ const ModelTraining = (props) => {
     }
   };
   const isPretrainedModel = ['PretrainedModel'].includes(requestType)
-  const needCodePathPrefix = isPretrainedModel;
+  const needCodePathPrefix = isPretrainedModel || importedTrainingParams;
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
@@ -315,9 +316,9 @@ const ModelTraining = (props) => {
     if (currentSelected) {
       setFieldsValue({
         ...currentSelected.params,
-        codePath: subCodePathPrefix(currentSelected.params.codePath),
-        startupFile: subCodePathPrefix(currentSelected.params.startupFile),
-        outputPath: subCodePathPrefix(currentSelected.params.startupFile),
+        codePath: currentSelected.params.codePath,
+        startupFile: currentSelected.params.startupFile,
+        outputPath: currentSelected.params.startupFile,
       });
       console.log('currentSelected.params.params', currentSelected.params)
       const params = Object.entries(currentSelected.params.params || {}).map(item => {
@@ -331,6 +332,7 @@ const ModelTraining = (props) => {
         params: params
       })
       setPresetParamsVisible(false);
+      setImportedTrainingParams(true);
     }
   };
 
