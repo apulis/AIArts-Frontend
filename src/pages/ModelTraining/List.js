@@ -211,6 +211,8 @@ const List = () => {
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
+          showQuickJumper: true,
+          showSizeChanger: true,
           total: total,
           current: pageNum,
           pageSize: pageSize,
