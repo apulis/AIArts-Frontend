@@ -174,8 +174,8 @@ const PretrainedModelList = props => {
               paddingRight: '20px',
             }}
           >
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={handleNameSearch} />
-            <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={handleNameSearch} enterButton />
+            <Button type="primary" icon={<SyncOutlined />} onClick={handleSearch}></Button>
           </div>            
         </div>
         <Table

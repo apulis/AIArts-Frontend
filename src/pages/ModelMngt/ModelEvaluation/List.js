@@ -190,8 +190,8 @@ const List = () => {
             ))
           }
         </Select>
-        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} />
-        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getEvaluationList()}></Button>
+        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} enterButton />
+        <Button type="primary" style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getEvaluationList()}></Button>
       </div>
       <Table
         loading={tableLoading}

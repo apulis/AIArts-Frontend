@@ -87,7 +87,7 @@ const EvaluationDetail = props => {
         title="评估详情"
       >
         <div className={styles.saveEvalParams}>
-          <Button onClick={() => setModalVisible(true)}>保存评估参数</Button>
+          <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
         </div>
         <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
           <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
@@ -103,7 +103,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
         </Descriptions>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
-        <Button onClick={getLateastLogs}>获取评估结果</Button>
+        <Button type="primary" onClick={getLateastLogs}>获取评估结果</Button>
         <Tabs defaultActiveKey="1">
           <TabPane tab="评估日志" key="1">
             {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
