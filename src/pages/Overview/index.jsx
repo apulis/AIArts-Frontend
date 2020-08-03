@@ -8,11 +8,11 @@ import { getPieData } from './service';
 import { getJobStatus, getStatusColor } from '@/utils/utils';
 import { Link, history } from 'umi';
 import noDataImg from '../../assets/no_data.png';
-import { black } from 'chalk';
+import { connect } from 'dva';
 
 const { Step } = Steps;
 
-const OverView = () => {
+const OverView = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [pieData, setPieData] = useState([
     {
@@ -40,7 +40,8 @@ const OverView = () => {
   useEffect(() => {
     getData();
   }, []);
-
+  console.log('user', user)
+  const { currentUser: { permissionList } } = user;
   const getData = async () => {
     setLoading(true);
     const requestArr = pieData.map(i => getPieData({ jobType: i.params }));
@@ -82,33 +83,39 @@ const OverView = () => {
   if (loading) return (<PageLoading />);
   return (
     <PageHeaderWrapper style={{ overflowY: 'hidden' }}>
-      <div className={styles.resourceMonitoringWrap}>
-        <h3>使用流程</h3>
-        <Steps>
-          <Step status="finish" 
-            title={<Link to='/codeDevelopment'>代码开发</Link>}
-            icon={<EditOutlined onClick={() => history.push('/codeDevelopment')} />}
-          />
-          <Step status="finish" 
-            title={<Link to='/dataManage/dataSet'>数据管理</Link>}
-            icon={<ReadOutlined onClick={() => history.push('/dataManage/dataSet')} />}
-          />
-          <Step status="finish" 
-            title={<Link to='/model-training/modelTraining'>模型训练</Link>}
-            icon={<FireOutlined onClick={() => history.push('/model-training/modelTraining')} />}
-          />
-          <Step status="finish" 
-            title={<Link to='/ModelManagement/MyModels'>模型管理</Link>}
-            icon={<CodepenOutlined onClick={() => history.push('/ModelManagement/MyModels')} />}
-          />
-          <Step status="finish" 
-            title={<Link to='/Inference/list'>推理服务</Link>}
-            icon={<BulbOutlined onClick={() => history.push('/Inference/list')} />}
-          />
-        </Steps>
-        {getCards()}
-      </div>
+      {
+        permissionList.includes('AI_ARTS_ALL') &&< div className={styles.resourceMonitoringWrap}>
+          <h3>使用流程</h3>
+          <Steps>
+            <Step status="finish" 
+              title={<Link to='/codeDevelopment'>代码开发</Link>}
+              icon={<EditOutlined onClick={() => history.push('/codeDevelopment')} />}
+            />
+            <Step status="finish" 
+              title={<Link to='/dataManage/dataSet'>数据管理</Link>}
+              icon={<ReadOutlined onClick={() => history.push('/dataManage/dataSet')} />}
+            />
+            <Step status="finish" 
+              title={<Link to='/model-training/modelTraining'>模型训练</Link>}
+              icon={<FireOutlined onClick={() => history.push('/model-training/modelTraining')} />}
+            />
+            <Step status="finish" 
+              title={<Link to='/ModelManagement/MyModels'>模型管理</Link>}
+              icon={<CodepenOutlined onClick={() => history.push('/ModelManagement/MyModels')} />}
+            />
+            <Step status="finish" 
+              title={<Link to='/Inference/list'>推理服务</Link>}
+              icon={<BulbOutlined onClick={() => history.push('/Inference/list')} />}
+            />
+          </Steps>
+          {getCards()}
+        </div>
+      }
+      {
+        permissionList.length === 1 && permissionList[0] === 'LABELING_IMAGE' && <Button type="primary" href="/image_label">去标注图片</Button>
+      }
+      
     </PageHeaderWrapper>
   );
 };
-export default OverView;
+export default connect(({ user }) => ({ user }))(OverView);

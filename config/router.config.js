@@ -217,7 +217,7 @@ export default [
           {
             path: '/',
             redirect: '/OverView',
-            authority: ['AI_ARTS_ALL'],
+            authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
           },
           {
             component: '404',
