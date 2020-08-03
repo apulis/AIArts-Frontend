@@ -7,7 +7,7 @@ import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
 import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail'
-import styles from './index.less';
+import styles from '@/global.less'
 
 const { confirm } = Modal;
 const { Option } = Select;
