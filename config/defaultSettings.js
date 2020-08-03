@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: 'AIArts Platform',
+  title: '华为深度学习系统',
   pwa: false,
   iconfontUrl: '',
 };
