@@ -48,7 +48,8 @@ const EvaluationDetail = props => {
 
   const getLateastLogs = async () => {
     const cancel = message.loading('获取结果中');
-    const res = await getEvaluationLog();
+    // const res = await getEvaluationLog();
+    const res = await getEvaluationDetail();
     cancel();
     if (res.code === 0) {
       message.success('成功获取结果');
@@ -104,18 +105,12 @@ const EvaluationDetail = props => {
         </Descriptions>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
         <Button type="primary" onClick={getLateastLogs}>获取评估结果</Button>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="评估日志" key="1">
-            {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
-              {logs}
-            </pre>}
-          </TabPane>
-          <TabPane tab="评估结果" key="2">
-            {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
-              {logs}
-            </pre>}
-          </TabPane>
-        </Tabs>
+        {indicator && <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
+          {Object.keys(indicator).map(key => <Descriptions.Item label={key}>{indicator[key]}</Descriptions.Item>)}
+        </Descriptions>}
+        {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+          {logs}
+        </pre>}        
       </PageHeader>
       {modalVisible &&
         <Modal
