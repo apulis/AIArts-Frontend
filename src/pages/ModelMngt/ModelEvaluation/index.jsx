@@ -3,9 +3,8 @@ import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select, T
 import React, { useState, useEffect, useRef } from 'react';
 import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getModel } from '../ModelList/services';
-import { addEvaluation, fetchPresetTemplates } from './services';
+import { addEvaluation, fetchPresetTemplates, getAllLabeledDatasets } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
-import { getLabeledDatasets } from '@/services/datasets';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg } from '@/utils/reg';
@@ -85,15 +84,10 @@ const ModelEvaluation = props => {
   }
 
   const getTestDatasets = async () => {
-    const params = { 
-      pageNum: 1, 
-      pageSize: 9999,
-    }; 
-    const { code, data, msg } = await getLabeledDatasets(params);
+    const { code, data, msg } = await getAllLabeledDatasets();
     if (code === 0 && data) {
       const { datasets } = data;
-      const finishedDs = datasets.filter(d => d.convertStatus === 'finished');
-      setDatasets(finishedDs);
+      setDatasets(datasets);
     } else {
       message.error(msg);
     }
@@ -296,7 +290,7 @@ const ModelEvaluation = props => {
               >
                 {
                   datasets.map(d => (
-                    <Option key={d.dataSetPath} value={d.dataSetPath}>{d.name}</Option>
+                    <Option key={d.path} value={d.path}>{d.name}</Option>
                   ))
                 }
               </Select>
