@@ -122,6 +122,10 @@ const List = () => {
       setTotal(res.data.total);
     }
   }
+
+  const onSearchInput = (e) => {
+    setSearch(e.target.value);
+  }
   const columns = [
     {
       dataIndex: 'name',
@@ -195,7 +199,7 @@ const List = () => {
             ))
           }
         </Select>
-        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} />
+        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onChange={onSearchInput} onSearch={searchList} />
         <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
       </div>
       <Table
