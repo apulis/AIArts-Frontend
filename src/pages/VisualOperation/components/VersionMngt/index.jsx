@@ -121,7 +121,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return_data = data
     } else {
-      message.error('出错啦');
+      message.error('请求异常');
     }
     return return_data
   }
@@ -131,7 +131,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return_data = data
     } else {
-      message.error('出错啦');
+      message.error('请求异常');
     }
     return return_data
   }
