@@ -185,19 +185,20 @@ export default [
                 component: './EdgeInference',
                 authority: ['AI_ARTS_ALL'],
               },
+              {
+                path: '/Inference/submit',
+                component: './InferenceService/Submit',
+                authority: ['AI_ARTS_ALL'],
+              },
+              {
+                path: '/Inference/:id/detail',
+                component: './InferenceService/Detail',
+                authority: ['AI_ARTS_ALL'],
+              },
             ]
           },
 
-          {
-            path: '/Inference/submit',
-            component: './InferenceService/Submit',
-            authority: ['AI_ARTS_ALL'],
-          },
-          {
-            path: '/Inference/:id/detail',
-            component: './InferenceService/Detail',
-            authority: ['AI_ARTS_ALL'],
-          },
+          
           {
             path: '/ResourceMonitoring',
             name: 'resourceMonitoring',
