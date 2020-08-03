@@ -250,7 +250,7 @@ const InferenceList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <Button type="default" onClick={CreateJob}>创建推理作业</Button>
+          <Button type="primary" onClick={CreateJob}>创建推理作业</Button>
           <div
             style={{
               float: "right",
@@ -264,8 +264,8 @@ const InferenceList = props => {
                 ))
               }
             </Select>            
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入作业名称" onSearch={onSearchName} />
-            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入作业名称" onSearch={onSearchName} enterButton />
+            <Button type="primary" icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
           </div>            
         </div>
         <Table
