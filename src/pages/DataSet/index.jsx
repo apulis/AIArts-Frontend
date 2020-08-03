@@ -1,4 +1,4 @@
-import { message, Table, Modal, Form, Input, Button } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getDatasets, edit, deleteDataSet, add, download } from './service';
@@ -168,30 +168,32 @@ const DataSetList = () => {
 
   return (
     <PageHeaderWrapper>
-      <div className={styles.datasetWrap}>
-        <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
-        <div className={styles.searchWrap}>
-          <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => getData()} onChange={e => setName(e.target.value)} />
-          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+      <Card>
+        <div className={styles.datasetWrap}>
+          <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
+          <div className={styles.searchWrap}>
+            <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => getData()} onChange={e => setName(e.target.value)} />
+            <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+          </div>
+          <Table
+            columns={columns}
+            dataSource={dataSets.data}
+            rowKey={r => r.id}
+            onChange={onSortChange}
+            pagination={{
+              total: dataSets.total,
+              showQuickJumper: true,
+              showTotal: total => `总共 ${total} 条`,
+              showSizeChanger: true,
+              onChange: pageParamsChange,
+              onShowSizeChange: pageParamsChange,
+              current: pageParams.pageNum,
+              pageSize: pageParams.pageSize
+            }}
+            loading={loading}
+          />
         </div>
-        <Table
-          columns={columns}
-          dataSource={dataSets.data}
-          rowKey={r => r.id}
-          onChange={onSortChange}
-          pagination={{
-            total: dataSets.total,
-            showQuickJumper: true,
-            showTotal: total => `总共 ${total} 条`,
-            showSizeChanger: true,
-            onChange: pageParamsChange,
-            onShowSizeChange: pageParamsChange,
-            current: pageParams.pageNum,
-            pageSize: pageParams.pageSize
-          }}
-          loading={loading}
-        />
-      </div>
+      </Card>
       {modalFlag && (
         <Modal
           title={`${modalType ? '编辑' : '新增'} 数据集`}

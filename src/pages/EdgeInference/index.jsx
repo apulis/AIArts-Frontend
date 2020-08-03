@@ -1,4 +1,4 @@
-import { message, Table, Modal, Form, Input, Button, Select } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Select, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './service';
@@ -217,33 +217,35 @@ const EdgeInference = () => {
 
   return (
     <PageHeaderWrapper>
-      <div className={styles.edgeInferences}>
-        <Button type="primary" onClick={() => setModalFlag1(true)}>新建推理</Button>
-        <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
-        {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
-        <div className={styles.searchWrap}>
-          <Select onChange={v => setType(v)} defaultValue={type}>{getOptions()}</Select>
-          <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
-          <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+      <Card>
+        <div className={styles.edgeInferences}>
+          <Button type="primary" onClick={() => setModalFlag1(true)}>新建推理</Button>
+          <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
+          {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
+          <div className={styles.searchWrap}>
+            <Select onChange={v => setType(v)} defaultValue={type}>{getOptions()}</Select>
+            <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
+            <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+          </div>
+          <Table
+            columns={columns}
+            dataSource={jobs}
+            rowKey={r => r.jobId}
+            onChange={onSortChange}
+            pagination={{
+              total: total,
+              showQuickJumper: true,
+              showTotal: total => `总共 ${total} 条`,
+              showSizeChanger: true,
+              onChange: pageParamsChange,
+              onShowSizeChange: pageParamsChange,
+              current: pageParams.pageNum,
+              pageSize: pageParams.pageSize
+            }}
+            loading={loading}
+          />
         </div>
-        <Table
-          columns={columns}
-          dataSource={jobs}
-          rowKey={r => r.jobId}
-          onChange={onSortChange}
-          pagination={{
-            total: total,
-            showQuickJumper: true,
-            showTotal: total => `总共 ${total} 条`,
-            showSizeChanger: true,
-            onChange: pageParamsChange,
-            onShowSizeChange: pageParamsChange,
-            current: pageParams.pageNum,
-            pageSize: pageParams.pageSize
-          }}
-          loading={loading}
-        />
-      </div>
+      </Card>
       {modalFlag1 && (
         <Modal
           title="新建推理"

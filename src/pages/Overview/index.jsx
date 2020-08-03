@@ -76,7 +76,6 @@ const OverView = () => {
           </div>}
         </Card>
       )
-      
     });
   }
   if (loading) return (<PageLoading />);
