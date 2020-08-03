@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef,forwardRef} from 'react';
 import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal,InputNumber,Card,Radio } from 'antd';
 import { history } from 'umi';
 import { postCode1, getResource } from '../service.js'
@@ -176,8 +176,8 @@ const CodeCreate = () => {
             <Form.Item name='engineType' rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
               <Select onChange={()=>handleEngineTypeChange(getFieldValue('engineType'))}>
                 {
-                  engineTypeArr.map((item) => (
-                    <Option value={item}>{item}</Option>
+                  engineTypeArr.map((item,key) => (
+                    <Option key={key} value={item}>{item}</Option>
                   ))
                 }
               </Select>
@@ -185,8 +185,8 @@ const CodeCreate = () => {
             <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
               <Select>
                 {
-                  engineNameArr.map((item) => (
-                    <Option value={item}>{item}</Option>
+                  engineNameArr.map((item,key) => (
+                    <Option  key={key} value={item}>{item}</Option>
                   ))
                 }
               </Select>
@@ -209,7 +209,7 @@ const CodeCreate = () => {
           >
             <Select style={{ width: "50%" }}  onChange={(item,option)=>handleDeviceTypeChange(option.index)}>
               {
-                deviceTypeArr.map((item, index) => (<Option value={item} index={index}>{item}</Option>))
+                deviceTypeArr.map((item, index) => (<Option  key={index} value={item} index={index}>{item}</Option>))
               }
             </Select>
           </Form.Item>
@@ -220,8 +220,8 @@ const CodeCreate = () => {
           >
             <Select style={{ width: "50%" }}>
               {
-                deviceNumArr.map((item) => (
-                  <Option value={item}>{item}</Option>
+                deviceNumArr.map((item,key) => (
+                  <Option key={key} value={item}>{item}</Option>
                 ))
               }
             </Select>
@@ -243,8 +243,8 @@ const CodeCreate = () => {
           >
             <Select style={{ width: "50%" }} onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
               {
-                deviceNumPerNodeArr.map((item) => (
-                  <Option value={item}>{item}</Option>
+                deviceNumPerNodeArr.map((item,key) => (
+                  <Option  key={key} value={item}>{item}</Option>
                 ))
               }
             </Select>

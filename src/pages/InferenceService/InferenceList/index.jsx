@@ -265,7 +265,7 @@ const InferenceList = props => {
               }
             </Select>            
             <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入作业名称" onSearch={onSearchName} enterButton />
-            <Button type="primary" icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
           </div>            
         </div>
         <Table

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,forwardRef } from 'react';
 import { Typography, Button, Row, Col, Divider, Timeline, List, Skeleton, Space, Modal, Progress, Card, message, Descriptions, Tabs  } from 'antd';
 import { getInitData, getUpgradeInfo, getUpgradeLog, upgrade } from '../../service.js';
 import {isEmptyString} from '../../../../utils/utils.js'
@@ -8,7 +8,6 @@ const { Paragraph } = Typography;
 const VersionMngt = (props) => {
   let logTimer = null
   const { Title, Paragraph, Text } = Typography;
-  const [initData, setInitData] = useState(null)
   const [versionInfo, setVersionInfo] = useState({})
   const [versionLogs, setVersionLogs] = useState([])
   const [upgradeText, setUpgradeText] = useState('一键升级')
@@ -16,17 +15,22 @@ const VersionMngt = (props) => {
   const [logs,setLogs] = useState('')
   useEffect(() => {
     renderInit()
+    return () => {
+      clearInterval(logTimer)
+    }
   }, [])
   const renderInit = async () => {
     const result = await apiGetInitData()
     if (result) {
-      setInitData(result)
       setVersionInfo(result.versionInfo)
       setVersionLogs(result.versionLogs)
       if(result.isUpgrading){
         upgradeManager('continue')
       }else{
-        upgradeManager('init')
+        // upgradeManager('init')
+        setUpgradeText('一键升级')
+        setUpgrading(false)
+        setLogs('')
       }
     }
   }
@@ -50,9 +54,7 @@ const VersionMngt = (props) => {
   const upgradeManager = async (step)=>{
     switch(step){
       case 'init':
-        setUpgradeText('一键升级')
-        setUpgrading(false)
-        setLogs('')
+        renderInit()
         break
       case 'check':
         const upgradeInfo = await apiGetUpgradeInfo()
@@ -119,7 +121,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return_data = data
     } else {
-      message.error(msg);
+      message.error('出错啦');
     }
     return return_data
   }
@@ -129,7 +131,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return_data = data
     } else {
-      message.error(msg);
+      message.error('出错啦');
     }
     return return_data
   }
@@ -165,7 +167,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return_data = data
     } else {
-      message.error(msg);
+      upgradeManager('error')
     }
     return return_data
   }
@@ -193,7 +195,7 @@ const VersionMngt = (props) => {
       </Descriptions>
       <div><Timeline>
         {versionLogs.map(
-          (item) => (<Timeline.Item>{item}</Timeline.Item>)
+          (item,key) => (<Timeline.Item key={key}>{item}</Timeline.Item>)
         )}
       </Timeline></div>
     </Card>

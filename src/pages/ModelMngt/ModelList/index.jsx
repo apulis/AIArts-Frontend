@@ -220,7 +220,7 @@ const ModelList = props => {
               }}          
             >
               <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} enterButton/>
-              <Button type="primary" icon={<SyncOutlined />} onClick={handleSearch}></Button>
+              <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
             </div>
           </div>
           <Table
