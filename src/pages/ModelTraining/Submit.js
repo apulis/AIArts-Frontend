@@ -246,7 +246,7 @@ const ModelTraining = (props) => {
       cancel();
       if (res.code === 0) {
         message.success('成功创建');
-        history.push(goBackPath);
+        history.push('/model-training/modelTraining');
       }
     }
   };
