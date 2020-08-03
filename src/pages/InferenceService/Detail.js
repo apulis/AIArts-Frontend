@@ -134,7 +134,7 @@ const InferenceDetail = () => {
         </Upload>
       }
       {
-        jobRunning && <Button disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
+        jobRunning && <Button type="primary" disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       }
       
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
@@ -154,7 +154,7 @@ const InferenceDetail = () => {
       {
         logs && <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
       }
-      {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && <Button onClick={getLateastLogs}>点击获取最新日志</Button>}
+      {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && <Button type="primary" onClick={getLateastLogs}>点击获取最新日志</Button>}
       <div>
         {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}

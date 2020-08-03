@@ -212,14 +212,14 @@ const ModelList = props => {
               padding: '24px 0 24px 24px'
             }}
           >
-            <Button type="default" onClick={createModel}>创建模型</Button>
+            <Button type="primary" onClick={createModel}>创建模型</Button>
             <div
               style={{
                 float: "right",
                 paddingRight: '20px',
               }}          
             >
-              <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} />
+              <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} enterButton/>
               <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
             </div>
           </div>

@@ -6,7 +6,8 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
 import moment from 'moment';
-import ExpandDetail from './ExpandDetail'
+import ExpandDetail from './ExpandDetail';
+import styles from '../index.less';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -143,11 +144,11 @@ const ParamsManage = () => {
   };
 
   const handleScopeChange = (scope) => {
-    setFormValues({...formValues, ...{scope}});
+    setFormValues({ ...formValues, ...{ scope } });
   };
 
   const onSearchName = (name) => {
-    setFormValues({...formValues, ...{name}});
+    setFormValues({ ...formValues, ...{ name } });
   };
 
   useEffect(() => {
@@ -166,12 +167,7 @@ const ParamsManage = () => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <div
-            style={{
-              float: "right",
-              paddingRight: '20px',
-            }}          
-          >
+          <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {
                 scopeList.map((item) => (
@@ -179,9 +175,9 @@ const ParamsManage = () => {
                 ))                
               }
             </Select> */}
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="输入参数配置名称" onSearch={onSearchName} />
+            <Search placeholder="输入参数配置名称" onSearch={onSearchName} enterButton />
             <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-          </div>            
+          </div>
         </div>
         <Table
           columns={columns}
@@ -202,7 +198,7 @@ const ParamsManage = () => {
           loading={tableLoading}
         />
       </Card>
-    </PageHeaderWrapper>
+    </PageHeaderWrapper >
   );
 };
 

@@ -7,6 +7,7 @@ import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
 import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail'
+import styles from './index.less';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -165,10 +166,7 @@ const EvalMetricsMngt = () => {
           }}
         >
           <div
-            style={{
-              float: "right",
-              paddingRight: '20px',
-            }}          
+            className={styles.searchWrap}         
           >
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {
@@ -177,7 +175,7 @@ const EvalMetricsMngt = () => {
                 ))                
               }
             </Select>             */}
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="输入评估参数名称" onSearch={onSearchName} />
+            <Search placeholder="输入评估参数名称" onSearch={onSearchName} enterButton/>
             <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
           </div>            
         </div>
