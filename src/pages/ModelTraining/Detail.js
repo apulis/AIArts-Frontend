@@ -99,7 +99,7 @@ const Detail = () => {
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
           {/* <Button onClick={removeTraining}>删除训练</Button> */}
-          <Button onClick={() => setModalVisible(true)}>保存训练参数</Button>
+          <Button type="primary" onClick={() => setModalVisible(true)}>保存训练参数</Button>
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
@@ -119,7 +119,7 @@ const Detail = () => {
         <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
-      {!jobStarted && !jobFailed && <Button onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
+      {!jobStarted && !jobFailed && <Button type="primary" onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
       {logs ? <pre ref={logEl} className={styles.logs}>
         {logs}
       </pre> : (<div>
