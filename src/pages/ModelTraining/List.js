@@ -189,7 +189,7 @@ const List = () => {
         }}
       >
       <Link to="/model-training/submit">
-        <Button href="">创建训练作业</Button>
+        <Button type="primary" href="">创建训练作业</Button>
       </Link>
       <div style={{ float: 'right', paddingRight: '20px' }}>
         <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleChangeStatus}>
@@ -199,7 +199,7 @@ const List = () => {
             ))
           }
         </Select>
-        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onChange={onSearchInput} onSearch={searchList} />
+        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onChange={onSearchInput} onSearch={searchList} enterButton />
         <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
       </div>
       <Table
