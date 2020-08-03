@@ -3,9 +3,8 @@ import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select, T
 import React, { useState, useEffect, useRef } from 'react';
 import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getModel } from '../ModelList/services';
-import { addEvaluation, fetchPresetTemplates } from './services';
+import { addEvaluation, fetchPresetTemplates, getAllLabeledDatasets } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
-import { getLabeledDatasets } from '@/services/datasets';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg } from '@/utils/reg';
@@ -85,15 +84,10 @@ const ModelEvaluation = props => {
   }
 
   const getTestDatasets = async () => {
-    const params = { 
-      pageNum: 1, 
-      pageSize: 9999,
-    }; 
-    const { code, data, msg } = await getLabeledDatasets(params);
+    const { code, data, msg } = await getAllLabeledDatasets();
     if (code === 0 && data) {
       const { datasets } = data;
-      const finishedDs = datasets.filter(d => d.convertStatus === 'finished');
-      setDatasets(finishedDs);
+      setDatasets(datasets);
     } else {
       message.error(msg);
     }
@@ -103,7 +97,6 @@ const ModelEvaluation = props => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
-      // console.log(666, model)
       form.setFieldsValue({
         name: model.name,
         argumentsFile: model.paramPath,
@@ -134,7 +127,6 @@ const ModelEvaluation = props => {
       deviceNum,
       paramPath: argumentsFile,
     };
-    console.log(999, evalParams)
     const { code, msg } = await addEvaluation(evalParams);
 
     if (code === 0) {
@@ -200,7 +192,13 @@ const ModelEvaluation = props => {
 
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
+    
     if (currentSelected) {
+      // 防止name被覆盖
+      if (currentSelected.params.name) {
+        delete currentSelected.params.name
+      }
+
       setFieldsValue(currentSelected.params);
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
@@ -210,10 +208,10 @@ const ModelEvaluation = props => {
         obj['value'] = item[1];
         return obj;
       });
-      setRunningParams(params)
+      setRunningParams(params);
       setFieldsValue({
         params: params
-      })
+      });
       setPresetParamsVisible(false);
     }
   };
@@ -296,7 +294,7 @@ const ModelEvaluation = props => {
               >
                 {
                   datasets.map(d => (
-                    <Option key={d.dataSetPath} value={d.dataSetPath}>{d.name}</Option>
+                    <Option key={d.path} value={d.path}>{d.name}</Option>
                   ))
                 }
               </Select>

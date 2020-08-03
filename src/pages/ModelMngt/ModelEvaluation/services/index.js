@@ -61,3 +61,15 @@ export async function fetchPresetTemplates() {
   })
 }
 
+export async function getAllLabeledDatasets() {
+  return await request('/datasets', {
+    params: {
+      orderBy: 'created_at',
+      order: 'desc',
+      isTranslated: true,
+      pageNum: 1, 
+      pageSize: 10000,
+    }
+  })
+}
+

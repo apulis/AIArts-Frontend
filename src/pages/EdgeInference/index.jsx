@@ -310,7 +310,7 @@ const EdgeInference = () => {
             <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>保存</Button>,
           ]}
         >
-          <Form form={form} preserve={false} initialValues={fdInfo}>
+          <Form form={form} initialValues={fdInfo}>
             <Form.Item
               label="URL"
               name="url"
