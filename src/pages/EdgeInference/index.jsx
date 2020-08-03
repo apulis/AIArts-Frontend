@@ -30,7 +30,7 @@ const EdgeInference = () => {
     order: ''
   });
   const typeText = {
-    'converting': '推理中',
+    'converting': '转换中',
     'pushing': '推送中',
     'push success': '推送成功',
     'push failed': '推送失败'
@@ -113,7 +113,7 @@ const EdgeInference = () => {
       render: item => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '推理成功' : jobStatus === 'failed' ? '推理失败' : status;
+        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '转换成功' : jobStatus === 'failed' ? '转换失败' : status;
         return (<span>{status}</span>)
       }
     },
@@ -123,7 +123,7 @@ const EdgeInference = () => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled = (!(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId);
         return (
-          <CloudUploadOutlined style={{ fontSize: 22 }} disabled={disabled} onClick={() => onPush(jobId)} title="推理推送" />
+          <Button disabled={disabled} icon={<CloudUploadOutlined style={{ fontSize: 22 }} />} shape="circle" onClick={() => onPush(jobId)} title="推送" />
         )
       },
     },
