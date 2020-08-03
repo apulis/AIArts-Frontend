@@ -192,7 +192,7 @@ const CodeList = (props) => {
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
-            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={{ color: 'red' }}>停止</a>
+            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status)?{ color: 'red' }:{}}>停止</a>
           </Space>
         );
       },
