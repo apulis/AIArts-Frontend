@@ -111,7 +111,7 @@ export default [
             path: '/model-training/:id/detail',
             component: './ModelTraining/Detail',
             authority: ['AI_ARTS_ALL'],
-          },          
+          },
           {
             path: '/ModelManagement',
             name: 'modelManagement',
@@ -134,7 +134,7 @@ export default [
                 // name: 'modelEvaluation',
                 // icon: 'CodepenOutlined',           
                 component: './ModelMngt/ModelEvaluation'
-              },             
+              },
               {
                 path: '/ModelManagement/CreatePretrained',
                 component: './ModelMngt/CreatePretrained'
@@ -145,7 +145,7 @@ export default [
               },
               {
                 path: '/ModelManagement/ModelEvaluation/List',
-                name: 'modelEvaluationList',      
+                name: 'modelEvaluationList',
                 component: './ModelMngt/ModelEvaluation/List'
               },
               {
@@ -157,7 +157,7 @@ export default [
                 path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
                 component: './ModelMngt/EvalMetricsMngt/component/EditMetrics'
               },
-            ],            
+            ],
           },
           {
             path: '/ModelMngt/CreateModel',
@@ -169,19 +169,25 @@ export default [
           //   component: './ModelMngt/ModelEvaluation'
           // },
           {
-            path: '/Inference/list',
             name: 'inferenceService',
+            authority: ['AI_ARTS_ALL'],
             icon: 'BulbOutlined',
-            component: './InferenceService/InferenceList',
-            authority: ['AI_ARTS_ALL'],
+            path: '/Inference',
+            routes: [
+              {
+                path: '/Inference/central',
+                name: 'center',
+                component: './InferenceService/InferenceList',
+                authority: ['AI_ARTS_ALL'],
+              }, {
+                path: '/Inference/EdgeInference',
+                name: 'edgeInference',
+                component: './EdgeInference',
+                authority: ['AI_ARTS_ALL'],
+              },
+            ]
           },
-          {
-            path: '/EdgeInference',
-            name: 'edgeInference',
-            icon: 'ApartmentOutlined',
-            component: './EdgeInference',
-            authority: ['AI_ARTS_ALL'],
-          },
+
           {
             path: '/Inference/submit',
             component: './InferenceService/Submit',
@@ -213,7 +219,7 @@ export default [
             icon: 'CloudUploadOutlined',
             component: './VisualOperation',
             authority: ['AI_ARTS_ALL'],
-          },        
+          },
           {
             path: '/',
             redirect: '/OverView',

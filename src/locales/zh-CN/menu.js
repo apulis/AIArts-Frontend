@@ -27,8 +27,8 @@ export default {
   'menu.modelManagement.modelEvaluationList': '评估列表',
   'menu.modelManagement.evaluationMetricsManage':'评估参数管理',
   'menu.inferenceService': '推理服务',
-  'menu.inferenceService.list': '推理服务列表',
+  'menu.inferenceService.center': '中心推理',
+  'menu.inferenceService.edgeInference': '边缘推理',
   'menu.modelTraining': '模型训练',
   'menu.resourceMonitoring': '资源监控',
-  'menu.edgeInference': '边缘推理',
 };
