@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'umi';
+import { history } from 'umi';
 import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
 import { getCodes, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
@@ -36,6 +36,7 @@ const CodeList = (props) => {
     if (type === 'search') {
       renderTable();
     } else if (type === 'fresh') {
+      // renderTable()
       renderTable(() => { message.success('刷新成功') })
     }
   }, [searchObj])
@@ -144,6 +145,9 @@ const CodeList = (props) => {
     const { field: orderBy, order } = sorter
     setSortInfo({ orderBy, order });
   }
+  const handleCreateCodeDev = ()=>{
+    history.push('/codeDevelopment/add')
+  }
   const columns = [
     {
       title: '开发环境名称',
@@ -188,7 +192,7 @@ const CodeList = (props) => {
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
-            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)}>停止</a>
+            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={{ color: 'red' }}>停止</a>
           </Space>
         );
       },
@@ -199,9 +203,7 @@ const CodeList = (props) => {
       <Row style={{ marginBottom: "20px" }}>
         <Col span={12}>
           <div style={{ float: "left" }}>
-            <Link to="/codeDevelopment/add">
-              <Button href="">创建开发环境</Button>
-            </Link>
+              <Button type='primary' onClick={()=>{handleCreateCodeDev()}}>创建开发环境</Button>
           </div>
         </Col>
         <Col span={12}>
@@ -209,8 +211,8 @@ const CodeList = (props) => {
             <div style={{ width: '200px', display: 'inline-block' }}>
               <Select value={curStatus} style={{ width: 'calc(100% - 8px)', margin: '0 8px 0 0' }} onChange={(item) => handleSelectChange(item)}>
                 {
-                  statusSearchArr.map((item) => (
-                    <Option value={item.status}>{item.desc}</Option>
+                  statusSearchArr.map((item,key) => (
+                    <Option key={key} value={item.status}>{item.desc}</Option>
                   ))
                 }
               </Select>
@@ -219,10 +221,11 @@ const CodeList = (props) => {
               placeholder="输入开发环境名称查询"
               ref={searchRef}
               onSearch={value => handleSearch(value)}
-              style={{ width: 200 }}
+              style={{ width: 210 }}
+              enterButton
             />
             <span>
-              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} />
+              <Button type='primary' onClick={() => handleFresh()} icon={<SyncOutlined />} style={{marginLeft:'3px'}}/>
             </span>
           </div>
         </Col>
@@ -231,7 +234,7 @@ const CodeList = (props) => {
         dataSource={data.codeEnvs}
         columns={columns}
         onChange={handleSortChange}
-        rowKey={(r, i) => `${i}`}
+        rowKey={r => r.id}
         pagination={{
           total: data.total,
           showTotal: (total) => `总共 ${total} 条`,
