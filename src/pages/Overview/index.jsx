@@ -78,7 +78,7 @@ const OverView = () => {
   }
   if (loading) return (<PageLoading />);
   return (
-    <PageHeaderWrapper>
+    <PageHeaderWrapper style={{ overflowY: 'hidden' }}>
       <div className={styles.resourceMonitoringWrap}>
         <h3>使用流程</h3>
         <Steps>
