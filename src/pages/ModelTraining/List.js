@@ -119,6 +119,7 @@ const List = () => {
     if (res.code === 0) {
       setTrainingWorkList(res.data.Trainings);
       setTableLoading(false);
+      setTotal(res.data.total);
     }
   }
   const columns = [
