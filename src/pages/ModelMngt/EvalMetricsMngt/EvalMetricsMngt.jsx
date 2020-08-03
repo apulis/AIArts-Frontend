@@ -177,8 +177,8 @@ const EvalMetricsMngt = () => {
                 ))                
               }
             </Select>             */}
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="输入评估参数名称" onSearch={onSearchName} />
-            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="输入评估参数名称" onSearch={onSearchName} enterButton />
+            <Button type="primary" icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
           </div>            
         </div>
         <Table
