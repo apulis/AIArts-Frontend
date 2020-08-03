@@ -7,7 +7,7 @@ import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
 import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
-import styles from '../index.less';
+import styles from '@/global.less';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -147,6 +147,10 @@ const ParamsManage = () => {
     setFormValues({ ...formValues, ...{ scope } });
   };
 
+  const resetQuery = () => {
+    setFormValues({ scope: 3, name: '' });
+  };
+
   const onSearchName = (name) => {
     setFormValues({ ...formValues, ...{ name } });
   };
@@ -176,7 +180,7 @@ const ParamsManage = () => {
               }
             </Select> */}
             <Search placeholder="输入参数配置名称" onSearch={onSearchName} enterButton />
-            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+            <Button icon={<SyncOutlined />} onClick={() => { resetQuery(); handleSearch(); }}></Button>
           </div>
         </div>
         <Table
