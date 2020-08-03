@@ -63,7 +63,8 @@ const Detail = () => {
   const saveTrainingDetail = async () => {
     const values = await validateFields(['name', 'desc', 'scope']);
     const submitData = {};
-    submitData.scope = values.scope;
+    // submitData.scope = values.scope;
+    submitData.scope = 2; // save as private
     submitData.jobType = modelTrainingType;
     submitData.templateData = {};
     submitData.templateData = Object.assign({}, jobDetail, values);
@@ -174,7 +175,7 @@ const Detail = () => {
             >
               <Input.TextArea />
             </FormItem>
-            <FormItem
+            {/* <FormItem
               {...commonLayout}
               name="scope"
               label="是否为公开模板"
@@ -187,10 +188,8 @@ const Detail = () => {
                   {value: 2, label: '否'}
                 ]}
               >
-
               </Radio.Group>
-            </FormItem>
-
+            </FormItem> */}
           </Form>
         </Modal>
       }
