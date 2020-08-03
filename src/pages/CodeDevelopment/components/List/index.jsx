@@ -225,7 +225,7 @@ const CodeList = (props) => {
               enterButton
             />
             <span>
-              <Button type='primary' onClick={() => handleFresh()} icon={<SyncOutlined />} style={{marginLeft:'3px'}}/>
+              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} style={{marginLeft:'3px'}}/>
             </span>
           </div>
         </Col>
