@@ -97,7 +97,6 @@ const ModelEvaluation = props => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
-      // console.log(666, model)
       form.setFieldsValue({
         name: model.name,
         argumentsFile: model.paramPath,
@@ -128,7 +127,6 @@ const ModelEvaluation = props => {
       deviceNum,
       paramPath: argumentsFile,
     };
-    console.log(999, evalParams)
     const { code, msg } = await addEvaluation(evalParams);
 
     if (code === 0) {
@@ -194,7 +192,13 @@ const ModelEvaluation = props => {
 
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
+    
     if (currentSelected) {
+      // 防止name被覆盖
+      if (currentSelected.params.name) {
+        delete currentSelected.params.name
+      }
+
       setFieldsValue(currentSelected.params);
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
@@ -204,10 +208,10 @@ const ModelEvaluation = props => {
         obj['value'] = item[1];
         return obj;
       });
-      setRunningParams(params)
+      setRunningParams(params);
       setFieldsValue({
         params: params
-      })
+      });
       setPresetParamsVisible(false);
     }
   };
