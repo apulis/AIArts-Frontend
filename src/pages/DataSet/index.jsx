@@ -117,6 +117,11 @@ const DataSetList = () => {
       dataIndex: 'version',
     },
     {
+      title: '是否转换',
+      dataIndex: 'isTranslated',
+      render: i => <span>{i === true ? '是' : '否'}</span>
+    },
+    {
       title: '操作',
       render: item => {
         const { id } = item;

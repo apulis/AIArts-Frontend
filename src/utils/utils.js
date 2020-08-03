@@ -125,6 +125,23 @@ export const getJobStatus = (status) => {
   return statusList[status] || '';
 };
 
+export const getStatusColor = (status) => {
+  const colorList = {
+    'unapproved': '#00008B',
+    'queued': '	#00AAAA',
+    'scheduling': '#9ACD32',
+    'running': '#00FF00',
+    'finished': '#1890ff',
+    'failed': '#FF7744',
+    'pausing': '#FFFF33',
+    'paused': '#FFFF33',
+    'killing': '#C0C0C0',
+    'killed': '#DDDDDD',
+    'error': '#FF0000',
+  };
+  return colorList[status] || '#1890ff';
+};
+
 export const getModelStatus = (status) => {
   const statusList = {
     'normal': '正常',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Select, Row, Col, Card, Form, message } from 'antd';
+import { Modal, Table, Input, Button, Select, Card, message } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -68,13 +68,13 @@ const EvalMetricsMngt = () => {
       dataIndex: ['params', 'name'],
       key: 'configName',
     },
-    {
-      title: '权限',
-      dataIndex: ['metaData', 'scope'],
-      key: 'type',
-      width: 70,
-      render: item => scopeList.find(scope => scope.value === item)?.label
-    },
+    // {
+    //   title: '权限',
+    //   dataIndex: ['metaData', 'scope'],
+    //   key: 'type',
+    //   width: 70,
+    //   render: item => scopeList.find(scope => scope.value === item)?.label
+    // },
     { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine' },
     {
       title: '创建时间',
@@ -109,13 +109,14 @@ const EvalMetricsMngt = () => {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
       jobType: modelEvaluationType,
+      scope: 3,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
 
-    if (formValues.scope) {
-      params.scope = formValues.scope;
-    }
+    // if (formValues.scope) {
+    //   params.scope = formValues.scope;
+    // }
 
     if (formValues.name) {
       params.name = formValues.name;
@@ -169,13 +170,13 @@ const EvalMetricsMngt = () => {
               paddingRight: '20px',
             }}          
           >
-            <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
+            {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {
                 scopeList.map((item) => (
                   <Option key= {item.value} value={item.value}>{item.label}</Option>
                 ))                
               }
-            </Select>            
+            </Select>             */}
             <Search style={{ width: '200px', marginRight:'20px' }} placeholder="输入评估参数名称" onSearch={onSearchName} />
             <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
           </div>            

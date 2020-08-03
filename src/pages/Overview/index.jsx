@@ -5,9 +5,10 @@ import styles from './index.less';
 import { Pie, ChartCard } from '../../components/Charts';
 import { SyncOutlined, EditOutlined, ReadOutlined, FireOutlined, CodepenOutlined, BulbOutlined } from '@ant-design/icons';
 import { getPieData } from './service';
-import { getJobStatus } from '@/utils/utils';
+import { getJobStatus, getStatusColor } from '@/utils/utils';
 import { Link, history } from 'umi';
 import noDataImg from '../../assets/no_data.png';
+import { black } from 'chalk';
 
 const { Step } = Steps;
 
@@ -48,7 +49,7 @@ const OverView = () => {
     res.forEach((i, idx) => {
       const keys = Object.keys(i.data);
       if (keys.length) {
-        obj[idx].value = keys.map(v => { return {x: getJobStatus(v), y: i.data[v]} })
+        obj[idx].value = keys.map(v => { return {x: getJobStatus(v), y: i.data[v], color: getStatusColor(v)} })
       }
     });
     setPieData(obj);
@@ -58,12 +59,14 @@ const OverView = () => {
   const getCards = () => {
     return pieData.map(i => {
       const { value, name } = i;
+      const colors = value.map(i => i.color);
       return (
         <Card title={name}>
           {value.length > 0 ?
             <Pie
               hasLegend 
               data={value}
+              colors={colors}
               height={250}
             />
           : 
@@ -78,7 +81,7 @@ const OverView = () => {
   }
   if (loading) return (<PageLoading />);
   return (
-    <PageHeaderWrapper>
+    <PageHeaderWrapper style={{ overflowY: 'hidden' }}>
       <div className={styles.resourceMonitoringWrap}>
         <h3>使用流程</h3>
         <Steps>
