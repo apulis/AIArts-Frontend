@@ -33,7 +33,7 @@ export default [
             name: 'overView',
             icon: 'HomeOutlined',
             component: './Overview',
-            authority: ['AI_ARTS_ALL'],
+            authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
           },
           {
             path: '/codeDevelopment',
@@ -217,7 +217,7 @@ export default [
           {
             path: '/',
             redirect: '/OverView',
-            authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
+            authority: ['AI_ARTS_ALL'],
           },
           {
             component: '404',
