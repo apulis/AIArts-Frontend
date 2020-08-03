@@ -79,6 +79,11 @@ export default [
                 component: './ModelTraining/ParamsManage/ParamsManage'
               },
               {
+                path: '/model-training/visualization',
+                name: 'visualization',
+                component: './ModelTraining/Visualization/Visualization'
+              },
+              {
                 path: '/model-training/submit',
                 component: './ModelTraining/Submit',
               },

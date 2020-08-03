@@ -29,5 +29,6 @@ export default {
   'menu.inferenceService.list': '推理服务列表',
   'menu.modelTraining': '模型训练',
   'menu.resourceMonitoring': '资源监控',
+  'menu.modelTraining.visualization': '可视化',
   'menu.edgeInference': '边缘推理',
 };

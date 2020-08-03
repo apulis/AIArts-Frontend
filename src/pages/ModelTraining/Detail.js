@@ -6,7 +6,7 @@ import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
-
+import { history } from 'umi';
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus, formatParams } from '@/utils/utils';
@@ -16,6 +16,8 @@ const { useForm } = Form;
 const FormItem = Form.Item;
 
 const Detail = () => {
+  const tensorboadrdURL = '/modelTraining';
+  
   const params = useParams();
   const logEl = useRef(null);
   const [form] = useForm();
@@ -98,7 +100,8 @@ const Detail = () => {
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
           {/* <Button onClick={removeTraining}>删除训练</Button> */}
-          <Button onClick={() => setModalVisible(true)}>保存训练参数</Button>
+          <Button onClick={() => history.push(tensorboadrdURL)}>可视化</Button>
+          <Button style={{marginLeft:'8px'}} onClick={() => setModalVisible(true)}>保存训练参数</Button>
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
