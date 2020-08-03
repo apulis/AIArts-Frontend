@@ -10,7 +10,7 @@ import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import { getAuthorityFromRouter } from '@/utils/utils';
+import { getAuthorityFromRouter, getRouteAuthority } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import { USER_LOGIN_URL } from '@/utils/const';
 
@@ -61,10 +61,7 @@ const BasicLayout = (props) => {
       });
     }
   }; // get children authority
-
-  const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
-    authority: undefined,
-  };
+  const authorized = getRouteAuthority(location.pathname || '/', props.route.routes) || '';
   const { formatMessage } = useIntl();
   return (
     <>
@@ -110,7 +107,7 @@ const BasicLayout = (props) => {
         {...props}
         {...settings}
       >
-        <Authorized authority={authorized.authority} noMatch={noMatch}>
+        <Authorized authority={authorized} noMatch={noMatch}>
           {children}
         </Authorized>
       </ProLayout>

@@ -128,7 +128,6 @@ const ModelTraining = (props) => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
     if (res.code === 0) {
       let datasets = res.data.datasets;
-      datasets = datasets.filter(d => d.convertStatus === 'finished');
       setDatasets(datasets);
     }
   };
@@ -419,7 +418,7 @@ const ModelTraining = (props) => {
           >
             {
               datasets.map(d => (
-                <Option value={d.convertOutPath} key={d.dataSetId}>{d.name}</Option>
+                <Option value={d.path} key={d.dataSetId}>{d.name}</Option>
               ))
             }
           </Select>
