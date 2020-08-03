@@ -3,7 +3,7 @@ import { Button, Table, Input, message, Card, Select, Popover } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
-import { sortText } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
 import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from './services';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -29,34 +29,44 @@ const { Option } = Select;
 const List = () => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
-  const [search, setSearch] = useState('');
   const [total, setTotal] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [pageNum, setPageNum] = useState(1);
+  const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [formValues, setFormValues] = useState({name: '', status: 'all'});
   const [currentStatus, setCurrentStatus] = useState('all');
   const [jobSumary, setJobSumary] = useState([]);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: '',
-    columnKey: '',
   });
-  const getEvaluationList = async () => {
-    const res = await getEvaluations({pageNum, pageSize, search, sortedInfo, status: currentStatus});
+  const handleSearch = async () => {
+    const params = {
+      ...pageParams,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order]
+    };
+
+    if (formValues.status) {
+      params.status = formValues.status;
+    }
+
+    if (formValues.name) {
+      params.search = formValues.name;
+    }
+
+    setTableLoading(true);
+    const res = await getEvaluations(params);
     if (res.code === 0) {
       const trainings = (res.data && res.data.evaluations) || [];
       const total = res.data?.total;
       setTotal(total);
-      setTrainingWorkList(trainings)
-      setTableLoading(false)
+      setTrainingWorkList(trainings);
     }
-  }
-  const handleChangeStatus = async (status) => {
-    setCurrentStatus(status);
-    const res = await getEvaluations({ pageNum, pageSize, search, status: status });
-    if (res.code === 0) {
-      setTrainingWorkList(res.data.evaluations);
-    }
-  }
+    setTableLoading(false);
+  };
+
+  const handleStatusChange = async (status) => {
+    setFormValues({...formValues, ...{status}});
+  };
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
@@ -77,46 +87,30 @@ const List = () => {
   }
 
   useEffect(() => {
-    getEvaluationList();
-    getJobStatusSumary()
-  }, [])
-  const onTableChange = async (pagination, filters, sorter) => {
-    console.log('setSortedInfo', sorter)
+    getJobStatusSumary();
+  }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [pageParams, formValues, sortedInfo]);
+
+  const pageParamsChange = (page, size) => {
+    setPageParams({ pageNum: page, pageSize: size });
+  };
+
+  const onSortChange = (pagination, filters, sorter) => {
     setSortedInfo(sorter);
-    console.log('sorter', sortText[sorter.order])
-    const { current } = pagination;
-    setPageNum(current);
-    const searchSorterInfo = {
-      ...sorter,
-      // 正序，倒序，取消排序
-      orderBy: sortText[sorter.order] && sorter.columnKey,
-      order: sortText[sorter.order],
-    }
-    const res = await getEvaluations({
-      pageNum: current,
-      pageSize,
-      searchWord: search,
-      status: currentStatus,
-      sortedInfo: searchSorterInfo,
-    })
-    if (res.code === 0) {
-      console.log('sortText[sorter.order]', res.data)
-      setTrainingWorkList(res.data.evaluations);
-    }
-  }
+  };
+
   const stopEvaluationJob = async (id) => {
     const res = await stopEvaluation(id);
     if (res.code === 0) {
       message.success('已成功操作');
-      getEvaluationList();
+      handleSearch();
     }
   }
-  const searchList = async (s) => {
-    setSearch(s);
-    const res = await getEvaluations({ pageNum: 1, pageSize, search: s });
-    if (res.code === 0) {
-      setTrainingWorkList(res.data.evaluations);
-    }
+  const onSearchName = (name) => {
+    setFormValues({...formValues, ...{name}});
   }
   const columns = [
     {
@@ -183,28 +177,29 @@ const List = () => {
         }}
       >
       <div style={{ float: 'right', paddingRight: '20px' }}>
-        <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleChangeStatus}>
+        <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleStatusChange}>
           {
             jobSumary.map(status => (
               <Option value={status.value}>{status.label}</Option>
             ))
           }
         </Select>
-        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} enterButton />
-        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getEvaluationList()}></Button>
+        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={onSearchName} enterButton />
+        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
       </div>
       <Table
         loading={tableLoading}
         style={{ marginTop: '30px' }}
         columns={columns}
         dataSource={trainingWorkList}
-        onChange={onTableChange}
+        onChange={onSortChange}
         pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 10,
           total: total,
-          current: pageNum,
-          pageSize: pageSize,
+          showQuickJumper: true,
+          showTotal: (total) => `总共 ${total} 条`,
+          showSizeChanger: true,
+          onChange: pageParamsChange,
+          onShowSizeChange: pageParamsChange,
         }}
       />
       </Card>
