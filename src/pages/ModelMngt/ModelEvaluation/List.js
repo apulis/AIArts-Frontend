@@ -95,7 +95,7 @@ const List = () => {
     const res = await getEvaluations({
       pageNum: current,
       pageSize,
-      search,
+      searchWord: search,
       status: currentStatus,
       sortedInfo: searchSorterInfo,
     })
