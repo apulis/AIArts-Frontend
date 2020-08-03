@@ -3,6 +3,7 @@ import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, sortText } from '@/utils/const';
+import { bytesToSize } from '@/utils/utils';
 import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
@@ -100,9 +101,10 @@ const PretrainedModelList = props => {
     },
     {
       title: '模型大小',
-      dataIndex: 'size',
+      // dataIndex: 'size',
       ellipsis: true,
       width: 150,
+      render: (item) => bytesToSize(item.size),
     },
     {
       title: '创建时间',
