@@ -152,6 +152,7 @@ const ParamsManage = () => {
   };
 
   const onSearchName = (name) => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({ ...formValues, ...{ name } });
   };
 
@@ -194,6 +195,8 @@ const ParamsManage = () => {
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize,            
           }}
           expandable={{
             expandedRowRender: record => <ExpandDetail record={record} />
