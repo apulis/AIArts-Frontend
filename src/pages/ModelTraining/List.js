@@ -52,8 +52,8 @@ const List = () => {
       const total = res.data?.total;
       setTotal(total);
       setTrainingWorkList(trainings)
-      setTableLoading(false)
     }
+    setTableLoading(false)
   }
   const handleChangeStatus = async (status) => {
     setCurrentStatus(status);

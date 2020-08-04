@@ -65,6 +65,7 @@ const List = () => {
   };
 
   const handleStatusChange = async (status) => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({...formValues, ...{status}});
   };
 
@@ -110,6 +111,7 @@ const List = () => {
     }
   }
   const onSearchName = (name) => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({...formValues, ...{name}});
   }
   const columns = [
@@ -200,6 +202,8 @@ const List = () => {
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
+          current: pageParams.pageNum,
+          pageSize: pageParams.pageSize,          
         }}
       />
       </Card>
