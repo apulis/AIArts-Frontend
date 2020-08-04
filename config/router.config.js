@@ -24,6 +24,11 @@ export default [
       },
       {
         path: '/',
+        redirect: '/OverView',
+        authority: ['AI_ARTS_ALL'],
+      },
+      {
+        path: '/',
         component: '../layouts/BasicLayout',
         Routes: ['src/pages/Authorized'],
         authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
@@ -219,11 +224,6 @@ export default [
             name: 'visualOperation',
             icon: 'CloudUploadOutlined',
             component: './VisualOperation',
-            authority: ['AI_ARTS_ALL'],
-          },
-          {
-            path: '/',
-            redirect: '/OverView',
             authority: ['AI_ARTS_ALL'],
           },
           {
