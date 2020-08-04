@@ -127,7 +127,8 @@ const PretrainedModelList = props => {
   ];
 
   const handleNameSearch = name => {
-    setFormValues({name});    
+    setPageParams({...pageParams, ...{pageNum: 1}});
+    setFormValues({name});
   };
 
   const handleSearch = () => {
@@ -192,6 +193,8 @@ const PretrainedModelList = props => {
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize,            
           }}
           loading={loading}
           expandable={{

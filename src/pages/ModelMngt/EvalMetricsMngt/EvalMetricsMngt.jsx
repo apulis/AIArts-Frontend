@@ -150,7 +150,8 @@ const EvalMetricsMngt = () => {
   };
 
   const onSearchName = (name) => {
-    setFormValues({ ...formValues, ...{ name } });
+    setPageParams({...pageParams, ...{pageNum: 1}});
+    setFormValues({...formValues, ...{name}});
   };
 
   useEffect(() => {
@@ -195,7 +196,7 @@ const EvalMetricsMngt = () => {
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
             current: pageParams.pageNum,
-            pageSize: pageParams.pageSize
+            pageSize: pageParams.pageSize,            
           }}
           expandable={{
             expandedRowRender: record => <ExpandDetail record={record} />

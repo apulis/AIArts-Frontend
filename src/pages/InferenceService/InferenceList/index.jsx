@@ -153,6 +153,7 @@ const InferenceList = props => {
   };
 
   const onSearchName = (name) => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({...formValues, ...{name}});
   };
 
@@ -235,6 +236,7 @@ const InferenceList = props => {
 
   const handleStatusChange = (status) => {
     // setCurrentStatus(status);
+    setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({...formValues, ...{status}});
   };
 
@@ -280,6 +282,8 @@ const InferenceList = props => {
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize,          
           }}
           loading={loading}
         />
