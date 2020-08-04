@@ -103,8 +103,8 @@ const OverView = ({ user }) => {
             icon={<CodepenOutlined onClick={() => history.push('/ModelManagement/MyModels')} />}
           />
           <Step status="finish" 
-            title={<Link to='/Inference/list'>推理服务</Link>}
-            icon={<BulbOutlined onClick={() => history.push('/Inference/list')} />}
+            title={<Link to='/Inference/central'>推理服务</Link>}
+            icon={<BulbOutlined onClick={() => history.push('/Inference/central')} />}
           />
         </Steps>
         {getCards()}
