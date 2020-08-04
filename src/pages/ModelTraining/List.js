@@ -41,13 +41,13 @@ const List = () => {
     columnKey: '',
   });
   const getTrainingList = async (reloadPage) => {
-    let pageNum = pageNum;
+    let page = pageNum;
     if (reloadPage) {
-      pageNum = 1
+      page = 1
     }
-    const res = await fetchTrainingList({pageNum, pageSize, search, sortedInfo, status: currentStatus});
+    const res = await fetchTrainingList({pageNum: page, pageSize, search, sortedInfo, status: currentStatus});
     if (res.code === 0) {
-      setPageNum(pageNum);
+      setPageNum(page);
       const trainings = (res.data && res.data.Trainings) || [];
       const total = res.data?.total;
       setTotal(total);
