@@ -215,11 +215,6 @@ const EdgeInference = () => {
     return statusMap.map(i => <Option value={i.status}>{i.text}</Option>);
   }
 
-  const onSelectChange = v => {
-    setPageParams({ ...pageParams, pageNum: 1 });
-    setType(v);
-  }
-
   const onSearchChange = (v, type) => {
     type === 1 ? setType(v) : setName(v)
     setPageParams({ ...pageParams, pageNum: 1 });
@@ -234,7 +229,7 @@ const EdgeInference = () => {
           {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
           <div className={styles.searchWrap}>
             <Select onChange={v => onSearchChange(v, 1)} defaultValue={type}>{getOptions()}</Select>
-            <Search placeholder="请输入推理名称查询" enterButton onSearch={v => onSearchChange(v, 2)} allowClear />
+            <Search placeholder="请输入推理名称查询" enterButton onSearch={v => onSearchChange(v, 2)} />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
