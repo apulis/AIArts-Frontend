@@ -89,12 +89,12 @@ const VersionMngt = (props) => {
         const result = await apiUpgrade()
         if (result) {
           setUpgradeText('开始升级')
-          logTimer = setInterval(upgradeManager.bind(this, 'upgrading'), 3000)
+          logTimer = setInterval(upgradeManager.bind(this, 'upgrading'), 1000)
         }
         break
       case 'continue':
         if (logTimer) clearInterval(logTimer)
-        logTimer = setInterval(upgradeManager.bind(this, 'upgrading'), 3000)
+        logTimer = setInterval(upgradeManager.bind(this, 'upgrading'), 1000)
         break
       case 'upgrading':
         if (!upgrading) setUpgrading(true)
