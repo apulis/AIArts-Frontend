@@ -17,7 +17,7 @@ export async function getInitData() {
       },
       versionLogs:logs.map((item)=>{
         return `${moment(item.updatedAt).format('YYYY/MM/DD HH:mm')}，${item.creator} 将版本更新为 ${item.version}`
-      }).slice(0,10),
+      }),
       isUpgrading:data.isUpgrading
     }
   }
