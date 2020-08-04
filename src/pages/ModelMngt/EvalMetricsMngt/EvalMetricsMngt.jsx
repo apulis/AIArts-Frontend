@@ -6,8 +6,8 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
-import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail'
-import styles from '@/global.less'
+import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail';
+import styles from '@/global.less';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -59,6 +59,10 @@ const EvalMetricsMngt = () => {
       onCancel() {
       },
     });
+  };
+
+  const resetQuery = () => {
+    setFormValues({ scope: 3, name: '' });
   };
 
   const columns = [
@@ -121,7 +125,7 @@ const EvalMetricsMngt = () => {
 
     if (formValues.name) {
       params.name = formValues.name;
-    }    
+    }
     const res = await getParamsList(params);
   };
 
@@ -142,16 +146,16 @@ const EvalMetricsMngt = () => {
   };
 
   const handleScopeChange = (scope) => {
-    setFormValues({...formValues, ...{scope}});
+    setFormValues({ ...formValues, ...{ scope } });
   };
 
   const onSearchName = (name) => {
-    setFormValues({...formValues, ...{name}});
+    setFormValues({ ...formValues, ...{ name } });
   };
 
   useEffect(() => {
     handleSearch();
-  }, [pageParams, formValues, sortedInfo]);
+  }, [pageParams, sortedInfo]);
 
   return (
     <PageHeaderWrapper>
@@ -166,7 +170,7 @@ const EvalMetricsMngt = () => {
           }}
         >
           <div
-            className={styles.searchWrap}         
+            className={styles.searchWrap}
           >
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {
@@ -175,9 +179,9 @@ const EvalMetricsMngt = () => {
                 ))                
               }
             </Select>             */}
-            <Search placeholder="输入评估参数名称" onSearch={onSearchName} enterButton/>
-            <Button icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
-          </div>            
+            <Search placeholder="输入评估参数名称" onSearch={handleSearch} enterButton onChange={e => { onSearchName(e.target.value); }} />
+            <Button icon={<SyncOutlined />} onClick={() => { handleSearch(); }}></Button>
+          </div>
         </div>
         <Table
           columns={columns}
@@ -190,6 +194,8 @@ const EvalMetricsMngt = () => {
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize
           }}
           expandable={{
             expandedRowRender: record => <ExpandDetail record={record} />

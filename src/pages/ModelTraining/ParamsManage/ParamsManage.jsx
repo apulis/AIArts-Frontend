@@ -147,17 +147,13 @@ const ParamsManage = () => {
     setFormValues({ ...formValues, ...{ scope } });
   };
 
-  const resetQuery = () => {
-    setFormValues({ scope: 3, name: '' });
-  };
-
   const onSearchName = (name) => {
-    setFormValues({ ...formValues, ...{ name } });
+    setFormValues({ ...formValues, name });
   };
 
   useEffect(() => {
     handleSearch();
-  }, [pageParams, formValues, sortedInfo]);
+  }, [pageParams, sortedInfo]);
 
   return (
     <PageHeaderWrapper>
@@ -179,8 +175,8 @@ const ParamsManage = () => {
                 ))                
               }
             </Select> */}
-            <Search placeholder="输入参数配置名称" onSearch={onSearchName} enterButton />
-            <Button icon={<SyncOutlined />} onClick={() => { resetQuery(); handleSearch(); }}></Button>
+            <Search placeholder="输入参数配置名称" onSearch={handleSearch} enterButton onChange={e => onSearchName(e.target.value)} />
+            <Button icon={<SyncOutlined />} onClick={() => { setPageParams({ ...pageParams, ...{ pageNum: 1 } }); handleSearch(); }}></Button>
           </div>
         </div>
         <Table
@@ -188,6 +184,8 @@ const ParamsManage = () => {
           rowKey={record => record.metaData.id}
           onChange={onSortChange}
           pagination={{
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize,
             total: total,
             showQuickJumper: true,
             showTotal: (total) => `总共 ${total} 条`,
