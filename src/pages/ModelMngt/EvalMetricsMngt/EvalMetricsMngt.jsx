@@ -150,8 +150,7 @@ const EvalMetricsMngt = () => {
   };
 
   const onSearchName = (name) => {
-    setPageParams({...pageParams, ...{pageNum: 1}});
-    setFormValues({...formValues, ...{name}});
+    setFormValues({ ...formValues, ...{ name } });
   };
 
   useEffect(() => {
@@ -180,7 +179,15 @@ const EvalMetricsMngt = () => {
                 ))                
               }
             </Select>             */}
-            <Search placeholder="输入评估参数名称" onSearch={handleSearch} enterButton onChange={e => { onSearchName(e.target.value); }} />
+            <Search
+              placeholder="输入评估参数名称"
+              onSearch={() => {
+                setPageParams({ ...pageParams, ...{ pageNum: 1 } });
+                handleSearch();
+              }}
+              enterButton
+              onChange={e => { onSearchName(e.target.value); }}
+            />
             <Button icon={<SyncOutlined />} onClick={() => { handleSearch(); }}></Button>
           </div>
         </div>
@@ -196,7 +203,7 @@ const EvalMetricsMngt = () => {
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
             current: pageParams.pageNum,
-            pageSize: pageParams.pageSize,            
+            pageSize: pageParams.pageSize,
           }}
           expandable={{
             expandedRowRender: record => <ExpandDetail record={record} />
