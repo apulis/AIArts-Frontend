@@ -67,7 +67,7 @@ const AddModalForm = (props, ref) => {
 
   return (
     <Form form={form} className={styles.modalFormWrap} 
-      initialValues={modalType ? editData : { sourceType: sourceType, isPrivate: isPrivate, isTranslated: true }}>
+      initialValues={modalType ? editData : { sourceType: sourceType, isPrivate: isPrivate, isTranslated: false }}>
       <Form.Item
         label="数据集名称"
         name="name"
@@ -85,8 +85,8 @@ const AddModalForm = (props, ref) => {
       {!modalType && <>
         <Form.Item label="是否已转换" rules={[{ required: true }]} name="isTranslated">
           <Radio.Group>
-            <Radio value={true}>是</Radio>
             <Radio value={false}>否</Radio>
+            <Radio value={true}>是</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
