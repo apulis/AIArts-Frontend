@@ -5,9 +5,12 @@ import {isEmptyString} from '../../../../utils/utils.js'
 import styles from './index.less';
 const { TabPane } = Tabs;
 const { Paragraph } = Typography;
+let logTimer = null
 const VersionMngt = (props) => {
-  let logTimer = null
+  // let logTimer = null // 放这访问不到
   const { Title, Paragraph, Text } = Typography;
+  const [initData,setInitData] = useState({})
+  const [vHistoryNum,setVHistoryNum] = useState(10)
   const [versionInfo, setVersionInfo] = useState({})
   const [versionLogs, setVersionLogs] = useState([])
   const [upgradeText, setUpgradeText] = useState('一键升级')
@@ -22,8 +25,9 @@ const VersionMngt = (props) => {
   const renderInit = async () => {
     const result = await apiGetInitData()
     if (result) {
+      setInitData(result)
       setVersionInfo(result.versionInfo)
-      setVersionLogs(result.versionLogs)
+      setVersionLogs(result.versionLogs.slice(0,vHistoryNum))
       if(result.isUpgrading){
         upgradeManager('continue')
       }else{
@@ -84,12 +88,12 @@ const VersionMngt = (props) => {
         const result = await apiUpgrade()
         if(result){
           setUpgradeText('开始升级')
-          logTimer = setInterval(upgradeManager.bind(this,'upgrading'),1000)
+          logTimer = setInterval(upgradeManager.bind(this,'upgrading'),3000)
         }
         break
       case 'continue':
         if(logTimer) clearInterval(logTimer)
-        logTimer = setInterval(upgradeManager.bind(this,'upgrading'),1000)
+        logTimer = setInterval(upgradeManager.bind(this,'upgrading'),3000)
         break
       case 'upgrading':
         if(!upgrading) setUpgrading(true)
@@ -100,7 +104,7 @@ const VersionMngt = (props) => {
         }
         break
       case 'finish':
-        setUpgradeText('升级成功')
+        if(upgradeText!=='升级成功') setUpgradeText('升级成功')
         if(logTimer)clearInterval(logTimer)
         setTimeout(()=>{
           message.success('升级成功，版本数据已更新')
@@ -171,6 +175,25 @@ const VersionMngt = (props) => {
     }
     return return_data
   }
+  const handleLoadMoreHistory = async()=>{
+    debugger
+    const len = initData.versionLogs.length
+    if(len>vHistoryNum){
+      const newNum = len<=vHistoryNum+10?len:vHistoryNum+10
+      setVersionLogs(initData.versionLogs.slice(0,newNum))
+      setVHistoryNum(newNum)
+    }
+    else{
+      Modal.info({
+        title: '提示',
+        content: (
+          <div>
+            <p>亲，没有更多了</p>
+          </div>
+        )
+      });
+    }
+  }
   return (
     <Card >
       <Descriptions title="版本信息" bordered>
@@ -187,9 +210,11 @@ const VersionMngt = (props) => {
         <Button type="primary" onClick={() => { upgradeManager('check') }} disabled={upgradeText === '一键升级' ? false : true}>
           {upgradeText}
         </Button>
-        {upgrading && <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: 'more' }}>
+        {upgrading &&<div style={{height:'120px',marginTop:'14px'}}>
+         <Paragraph ellipsis={{ rows: 5}}>
           {logs}
-        </Paragraph>}
+        </Paragraph>
+        </div>}
       </div>
       <Descriptions title="升级历史" style={{ marginTop: "30px" }}>
       </Descriptions>
@@ -198,6 +223,9 @@ const VersionMngt = (props) => {
           (item,key) => (<Timeline.Item key={key}>{item}</Timeline.Item>)
         )}
       </Timeline></div>
+      <Button type='primary' onClick={()=>{handleLoadMoreHistory()}}>
+        更多历史
+      </Button>
     </Card>
   )
 }

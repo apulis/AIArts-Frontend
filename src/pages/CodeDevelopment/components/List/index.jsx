@@ -28,16 +28,20 @@ const CodeList = (props) => {
     renderStatusSelect()
   }, [])
 
-  useEffect(() => {// componentDidMount()
-    renderTable();
-  }, [pageParams, curStatus, searchObj, sortInfo])// pageParams改变触发的componentwillUpdate()
-  useEffect(() => {// componentDidMount()
+  useEffect(() => {
+    renderTable(pageParams);
+  }, [pageParams,sortInfo])
+  useEffect(() => {
+    renderTable(pageObj);
+    setPageParams(pageObj);
+  }, [curStatus, searchObj])
+  useEffect(() => {
     const type = searchObj.type
     if (type === 'search') {
-      renderTable();
+      renderTable(pageParams);
     } else if (type === 'fresh') {
       // renderTable()
-      renderTable(() => { message.success('刷新成功') })
+      renderTable(pageParams,() => { message.success('刷新成功') })
     }
   }, [searchObj])
 
@@ -50,10 +54,11 @@ const CodeList = (props) => {
       setCurStatus(apiData[0].status)
     }
   }
-  const renderTable = async (success) => {
+  const renderTable = async (pageParams,success) => {
     setLoading(true)
     const apiData = await apiGetCodes(pageParams)
     if (apiData) {
+      console.log(apiData)
       setData({
         codeEnvs: apiData.CodeEnvs,
         total: apiData.total
@@ -80,7 +85,7 @@ const CodeList = (props) => {
     if (!isEmptyString(searchObj.word)) {
       params['searchWord'] = searchObj.word
     }
-    if (!isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
+    if (sortInfo.order && !isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
       params['orderBy'] = sortColumnMap[sortInfo.orderBy]
       params['order'] = sortTextMap[sortInfo.order]
     }
@@ -111,7 +116,7 @@ const CodeList = (props) => {
     const obj = await deleteCode(id)
     const { code, data, msg } = obj
     if (code === 0) {
-      renderTable();
+      renderTable(pageParams);
       message.success('停止成功');
     } else {
       message.error(msg);
@@ -242,8 +247,8 @@ const CodeList = (props) => {
           showSizeChanger: true,
           onChange: handlePageParamsChange,
           onShowSizeChange: handlePageParamsChange,
+          current:pageParams.pageNum,
         }}
-        pageSize={false}
         loading={loading} />
       {modalFlag && (
         <Modal
