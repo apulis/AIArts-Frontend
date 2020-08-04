@@ -561,7 +561,7 @@ const ModelTraining = (props) => {
           form={form}
         >
           {
-            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: '50%' }}>
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>

@@ -116,7 +116,9 @@ const Detail = () => {
         <Descriptions.Item label="训练数据集">{jobDetail.datasetPath}</Descriptions.Item>
         <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
         <Descriptions.Item label="输出路径">{jobDetail.outputPath}</Descriptions.Item>
-        <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
+        {
+          jobDetail.checkpoint && <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
+        }
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
       {!jobStarted && !jobFailed && <Button type="primary" onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}

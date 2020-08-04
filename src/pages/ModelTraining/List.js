@@ -63,6 +63,10 @@ const List = () => {
     getTrainingList(true);
   }, [currentStatus])
 
+  useEffect(() => {
+    getTrainingList(true);
+  }, [pageSize])
+
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
@@ -188,6 +192,10 @@ const List = () => {
     }
   ]
 
+  const onShowSizeChange = (current, size) => {
+    setPageSize(size);
+  }
+
   return (
     <PageHeaderWrapper>
       <Card bordered={false}
@@ -223,6 +231,7 @@ const List = () => {
           total: total,
           current: pageNum,
           pageSize: pageSize,
+          onShowSizeChange: onShowSizeChange
         }}
       />
       </Card>
