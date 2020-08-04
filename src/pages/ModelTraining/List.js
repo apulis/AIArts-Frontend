@@ -87,7 +87,9 @@ const List = () => {
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {
     console.log('setSortedInfo', sorter)
-    setSortedInfo(sorter);
+    if (sorter.order !== false) {
+      setSortedInfo(sorter);
+    }
     console.log('sorter', sortText[sorter.order])
     const { current } = pagination;
     setPageNum(current);

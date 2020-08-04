@@ -100,7 +100,9 @@ const List = () => {
   };
 
   const onSortChange = (pagination, filters, sorter) => {
-    setSortedInfo(sorter);
+    if (sorter.order !== false) {
+      setSortedInfo(sorter);
+    }
   };
 
   const stopEvaluationJob = async (id) => {
