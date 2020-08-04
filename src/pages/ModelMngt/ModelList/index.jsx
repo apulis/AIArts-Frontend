@@ -196,6 +196,7 @@ const ModelList = props => {
   };
 
   const onSearchName = (name) => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({name});
   };
 
@@ -235,6 +236,8 @@ const ModelList = props => {
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
+              current: pageParams.pageNum,
+              pageSize: pageParams.pageSize,              
             }}
             loading={loading}
           />
