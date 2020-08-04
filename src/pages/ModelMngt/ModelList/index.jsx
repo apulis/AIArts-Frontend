@@ -38,7 +38,9 @@ const ModelList = props => {
   };
 
   const onSortChange = (pagination, filters, sorter) => {
-    setSortedInfo(sorter);
+    if (sorter.order !== false) {
+      setSortedInfo(sorter);
+    }
   };
 
   const columns = [
