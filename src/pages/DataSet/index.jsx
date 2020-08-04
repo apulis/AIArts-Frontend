@@ -117,7 +117,7 @@ const DataSetList = () => {
       dataIndex: 'version',
     },
     {
-      title: '是否转换',
+      title: '是否已标注',
       dataIndex: 'isTranslated',
       render: i => <span>{i === true ? '是' : '否'}</span>
     },
@@ -165,7 +165,7 @@ const DataSetList = () => {
     !type && setPathId(new Date().valueOf());
     setModalFlag(true);
   }
-  
+
   return (
     <PageHeaderWrapper>
       <Card>
