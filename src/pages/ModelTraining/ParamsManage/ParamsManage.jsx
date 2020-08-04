@@ -175,8 +175,8 @@ const ParamsManage = () => {
                 ))                
               }
             </Select> */}
-            <Search placeholder="输入参数配置名称" onSearch={handleSearch} enterButton onChange={e => onSearchName(e.target.value)} />
-            <Button icon={<SyncOutlined />} onClick={() => { setPageParams({ ...pageParams, ...{ pageNum: 1 } }); handleSearch(); }}></Button>
+            <Search placeholder="输入参数配置名称" onSearch={() => { setPageParams({ ...pageParams, ...{ pageNum: 1 } }); handleSearch(); }} enterButton onChange={e => onSearchName(e.target.value)} />
+            <Button icon={<SyncOutlined />} onClick={() => { handleSearch(); }}></Button>
           </div>
         </div>
         <Table
@@ -193,7 +193,7 @@ const ParamsManage = () => {
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
             current: pageParams.pageNum,
-            pageSize: pageParams.pageSize,            
+            pageSize: pageParams.pageSize,
           }}
           expandable={{
             expandedRowRender: record => <ExpandDetail record={record} />
