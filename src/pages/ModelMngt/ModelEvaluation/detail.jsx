@@ -57,9 +57,11 @@ const EvaluationDetail = props => {
   }
   
   const saveTrainingDetail = async () => {
-    const values = await validateFields(['name', 'desc', 'scope']);
+    // const values = await validateFields(['name', 'desc', 'scope']);
+    const values = await validateFields(['name', 'desc']);
     const submitData = {};
-    submitData.scope = values.scope;
+    // submitData.scope = values.scope;
+    submitData.scope = 2;
     submitData.jobType = modelEvaluationType;
     submitData.templateData = {};
     submitData.templateData = Object.assign({}, evaluationJob, values);
@@ -156,7 +158,7 @@ const EvaluationDetail = props => {
             >
               <Input.TextArea />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               {...commonLayout}
               name="scope"
               label="是否为公开模板"
@@ -171,7 +173,7 @@ const EvaluationDetail = props => {
               >
 
               </Radio.Group>
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </Modal>
       }
