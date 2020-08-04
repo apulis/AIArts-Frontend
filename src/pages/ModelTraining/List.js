@@ -82,7 +82,7 @@ const List = () => {
   }
 
   useEffect(() => {
-    getTrainingList();
+    getTrainingList(true);
     getJobStatusSumary()
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {
