@@ -55,7 +55,7 @@ const SubmitModelTraining = (props) => {
     if (res.code === 0) {
       cancel();
       message.success('成功提交');
-      history.push('/Inference/list')
+      history.push('/Inference/central')
     }
   }
 
@@ -145,7 +145,7 @@ const SubmitModelTraining = (props) => {
   return (
     <PageHeader
       ghost={false}
-      onBack={() => history.push('/Inference/list')}
+      onBack={() => history.push('/Inference/central')}
       title="创建推理作业"
     >
     <div className={styles.modelTraining}>

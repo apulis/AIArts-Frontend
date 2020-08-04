@@ -38,7 +38,7 @@ const EdgeInference = () => {
 
   useEffect(() => {
     getData();
-  }, [pageParams, name, type, sortedInfo]);
+  }, [pageParams, sortedInfo]);
 
   useEffect(() => {
     getFdInfo();
@@ -215,6 +215,11 @@ const EdgeInference = () => {
     return statusMap.map(i => <Option value={i.status}>{i.text}</Option>);
   }
 
+  const onSearchChange = (v, type) => {
+    type === 1 ? setType(v) : setName(v)
+    setPageParams({ ...pageParams, pageNum: 1 });
+  }
+
   return (
     <PageHeaderWrapper>
       <Card>
@@ -223,8 +228,8 @@ const EdgeInference = () => {
           <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
           {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
           <div className={styles.searchWrap}>
-            <Select onChange={v => setType(v)} defaultValue={type}>{getOptions()}</Select>
-            <Search placeholder="请输入推理名称查询" enterButton onSearch={v => setName(v)} allowClear />
+            <Select onChange={v => onSearchChange(v, 1)} defaultValue={type}>{getOptions()}</Select>
+            <Search placeholder="请输入推理名称查询" enterButton onSearch={v => onSearchChange(v, 2)} />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
@@ -310,7 +315,7 @@ const EdgeInference = () => {
             <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>保存</Button>,
           ]}
         >
-          <Form form={form} preserve={false} initialValues={fdInfo}>
+          <Form form={form} initialValues={fdInfo}>
             <Form.Item
               label="URL"
               name="url"

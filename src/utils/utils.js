@@ -38,6 +38,7 @@ export const getAuthorityFromRouter = (router = [], pathname) => {
   if (authority) return authority;
   return undefined;
 };
+
 export const getRouteAuthority = (path, routeData) => {
   let authorities;
   routeData.forEach((route) => {

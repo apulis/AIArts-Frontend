@@ -246,7 +246,7 @@ const ModelTraining = (props) => {
       cancel();
       if (res.code === 0) {
         message.success('成功创建');
-        history.push(goBackPath);
+        history.push('/model-training/modelTraining');
       }
     }
   };
@@ -317,7 +317,7 @@ const ModelTraining = (props) => {
         ...currentSelected.params,
         codePath: currentSelected.params.codePath,
         startupFile: currentSelected.params.startupFile,
-        outputPath: currentSelected.params.startupFile,
+        outputPath: currentSelected.params.outputPath,
       });
       console.log('currentSelected.params.params', currentSelected.params)
       const params = Object.entries(currentSelected.params.params || {}).map(item => {

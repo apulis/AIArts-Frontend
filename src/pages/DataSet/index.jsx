@@ -117,7 +117,7 @@ const DataSetList = () => {
       dataIndex: 'version',
     },
     {
-      title: '是否转换',
+      title: '是否已标注',
       dataIndex: 'isTranslated',
       render: i => <span>{i === true ? '是' : '否'}</span>
     },
@@ -172,7 +172,7 @@ const DataSetList = () => {
         <div className={styles.datasetWrap}>
           <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
           <div className={styles.searchWrap}>
-            <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => getData()} onChange={e => setName(e.target.value)} />
+            <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })} onChange={e => setName(e.target.value)} />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table

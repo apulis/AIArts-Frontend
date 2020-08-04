@@ -10,6 +10,25 @@ body,
   filter: invert(80%);
 }
 
+.searchWrap {
+  float: right;
+  margin-bottom: 24px;
+  margin-right: 24px;
+  :global {
+    .ant-input-search .ant-input-wrapper {
+      width: 220px;
+      margin-right: 20px;
+    }
+    .ant-input-group-wrapper {
+      width: inherit;
+    }
+    .ant-select {
+      width: 120px;
+      margin-right: 20px;
+    }
+  }
+}
+
 .ant-layout {
   min-height: 100vh;
 }

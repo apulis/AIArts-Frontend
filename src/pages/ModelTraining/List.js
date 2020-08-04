@@ -40,22 +40,27 @@ const List = () => {
     order: '',
     columnKey: '',
   });
-  const getTrainingList = async () => {
+  const getTrainingList = async (reloadPage) => {
+    let pageNum = pageNum;
+    if (reloadPage) {
+      pageNum = 1
+    }
     const res = await fetchTrainingList({pageNum, pageSize, search, sortedInfo, status: currentStatus});
     if (res.code === 0) {
+      setPageNum(pageNum);
       const trainings = (res.data && res.data.Trainings) || [];
       const total = res.data?.total;
       setTotal(total);
       setTrainingWorkList(trainings)
-      setTableLoading(false)
     }
+    setTableLoading(false)
   }
   const handleChangeStatus = async (status) => {
     setCurrentStatus(status);
   }
 
   useEffect(() => {
-    getTrainingList();
+    getTrainingList(true);
   }, [currentStatus])
 
   const getJobStatusSumary = async () => {
@@ -77,7 +82,7 @@ const List = () => {
   }
 
   useEffect(() => {
-    getTrainingList();
+    getTrainingList(true);
     getJobStatusSumary()
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {

@@ -10,7 +10,7 @@ import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
-import { getAuthorityFromRouter } from '@/utils/utils';
+import { getRouteAuthority } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import { USER_LOGIN_URL } from '@/utils/const';
 
@@ -18,10 +18,10 @@ const noMatch = (
   <Result
     status={403}
     title="403"
-    subTitle="Sorry, you are not authorized to access this page."
+    subTitle="抱歉，您无权限访问此页面."
     extra={
       <Button type="primary">
-        <a href={USER_LOGIN_URL}>Go Login</a>
+        <a href={USER_LOGIN_URL}>去登录</a>
       </Button>
     }
   />
@@ -61,10 +61,7 @@ const BasicLayout = (props) => {
       });
     }
   }; // get children authority
-
-  const authorized = getAuthorityFromRouter(props.route.routes, location.pathname || '/') || {
-    authority: undefined,
-  };
+  const authorized = getRouteAuthority(location.pathname || '/', props.route.routes) || '';
   const { formatMessage } = useIntl();
   return (
     <>
@@ -110,7 +107,7 @@ const BasicLayout = (props) => {
         {...props}
         {...settings}
       >
-        <Authorized authority={authorized.authority} noMatch={noMatch}>
+        <Authorized authority={authorized} noMatch={noMatch}>
           {children}
         </Authorized>
       </ProLayout>
