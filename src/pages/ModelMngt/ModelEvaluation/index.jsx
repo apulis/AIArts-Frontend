@@ -178,15 +178,21 @@ const ModelEvaluation = props => {
 
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
-    // console.log('values', values);
+    console.log('values', values, key);
     [...runningParams].forEach((param, index) => {
       param.key = values[index].key;
       param.value = values[index].value;
     });
-    const newRunningParams = [...runningParams].filter((param) => param.createTime !== key);
+    const newRunningParams = [...runningParams].filter((param) => {
+      if (param.createTime) {
+        return param.createTime !== key;
+      } else {
+        return param.key !== key;
+      }
+    });
     setRunningParams(newRunningParams);
     setFieldsValue({
-      runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
     });
   };
 
@@ -212,8 +218,8 @@ const ModelEvaluation = props => {
       setFieldsValue({
         params: params
       });
-      setPresetParamsVisible(false);
     }
+    setPresetParamsVisible(false);
   };
 
   const handleSelectPresetParams = (current) => {
@@ -316,7 +322,7 @@ const ModelEvaluation = props => {
                         <Input style={{ width: 200 }} />
                       </Form.Item>
                       {
-                        runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime)} />
+                        runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
                       }
                     </div>
                   );

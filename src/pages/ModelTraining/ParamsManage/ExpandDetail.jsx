@@ -13,6 +13,12 @@ const ExpandDetail = (props) => {
       })}
     </div >
   );
+
+  const descriptionContent = (
+    <p>
+      {record.params.desc}
+    </p>
+  );
   return (
     <Descriptions >
       <Descriptions.Item label="参数配置名称">{record.params.name}</Descriptions.Item>
@@ -33,7 +39,11 @@ const ExpandDetail = (props) => {
       <Descriptions.Item label="引擎类型">{record.params.engine}</Descriptions.Item>
       <Descriptions.Item label="代码目录">{record.params.codePath}</Descriptions.Item>
       <Descriptions.Item label="计算节点规格">{record.params.deviceType}</Descriptions.Item>
-      <Descriptions.Item label="描述">{record.params.desc}</Descriptions.Item>
+      <Descriptions.Item label="描述">
+        <Popover title="描述" content={descriptionContent}>
+          {omitText(record.params.desc)}
+        </Popover>
+      </Descriptions.Item>
     </Descriptions>
   );
 };
