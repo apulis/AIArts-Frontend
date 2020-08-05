@@ -330,9 +330,9 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
-      setPresetParamsVisible(false);
       setImportedTrainingParams(true);
     }
+    setPresetParamsVisible(false);
   };
 
   const handleSelectPresetParams = (current) => {
