@@ -203,7 +203,7 @@ const VersionMngt = (props) => {
       <Button type='primary' onClick={() => { handleShowHistoryModal() }} style={{ position: 'absolute', right: '0px', marginRight: '24px' }}>
         升级历史
       </Button>
-      <Descriptions title="版本信息" bordered extra={<Button type="primary">Edit</Button>}>
+      <Descriptions title="版本信息" bordered>
         <Descriptions.Item label="版本号">{versionInfo.name}</Descriptions.Item>
         <Descriptions.Item label="操作人" span={1}>{versionInfo.creator}</Descriptions.Item>
         <Descriptions.Item label="安装时间" span={1}>{versionInfo.time}</Descriptions.Item>
