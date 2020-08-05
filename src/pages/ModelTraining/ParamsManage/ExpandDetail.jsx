@@ -19,12 +19,22 @@ const ExpandDetail = (props) => {
       {record.params.desc}
     </p>
   );
+
+  const datasetContent = (
+    <p>
+      {record.params.datasetPath}
+    </p>
+  );
   return (
     <Descriptions >
       <Descriptions.Item label="参数配置名称">{record.params.name}</Descriptions.Item>
       <Descriptions.Item label="启动文件">{record.params.startupFile}</Descriptions.Item>
       <Descriptions.Item label="计算节点数">{record.params.deviceNum}</Descriptions.Item>
-      <Descriptions.Item label="训练数据集">{record.params.datasetPath}</Descriptions.Item>
+      <Descriptions.Item label="训练数据集">
+        <Popover title="训练数据集" content={datasetContent}>
+          {omitText(record.params.datasetPath)}
+        </Popover>
+      </Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover title="运行参数" content={argumentsContent}>
           {
