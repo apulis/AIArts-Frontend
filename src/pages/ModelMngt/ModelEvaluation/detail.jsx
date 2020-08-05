@@ -5,7 +5,7 @@ import { useParams } from 'umi';
 import moment from 'moment';
 import { fetchEvaluationDetail, saveEvaluationParams } from './services';
 import { getJobStatus, formatParams } from '@/utils/utils';
-import { modelEvaluationType } from '@/utils/const';
+import { modelEvaluationType, REFRESH_INTERVAL } from '@/utils/const';
 
 import styles from './index.less';
 
@@ -28,7 +28,7 @@ const EvaluationDetail = props => {
     cancel();
     const { code, msg, data: {evaluation, log, indicator } } = res;
     if (code === 0) {
-      message.success('成功获取结果');
+      // message.success('成功获取结果');
 
       setEvaluationJob(evaluation);
       setLogs(log);
@@ -75,6 +75,12 @@ const EvaluationDetail = props => {
 
   useEffect(() => {
     getEvaluationDetail();
+    let timer = setInterval(() => {
+      getEvaluationDetail()
+    }, REFRESH_INTERVAL);
+    return () => {
+      clearInterval(timer)
+    }
   }, []);
 
   const commonLayout = {
