@@ -218,8 +218,8 @@ const ModelEvaluation = props => {
       setFieldsValue({
         params: params
       });
-      setPresetParamsVisible(false);
     }
+    setPresetParamsVisible(false);
   };
 
   const handleSelectPresetParams = (current) => {
