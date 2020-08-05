@@ -294,7 +294,7 @@ const ModelEvaluation = props => {
             <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
               <Input/>
             </Form.Item>                                             
-            <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: false, message: '请选择测试数据集' }]}>
+            <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
               <Select
                 onChange={handleDatasetChange}
               >

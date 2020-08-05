@@ -26,20 +26,28 @@ const EvaluationDetail = props => {
     const cancel = message.loading('获取结果中');
     const res = await fetchEvaluationDetail(modelId);
     cancel();
-    const { code, msg, data: {evaluation, log, indicator } } = res;
+    const { code, msg, data: {evaluation, log, indicator, status } } = res;
     if (code === 0) {
       // message.success('成功获取结果');
-
+      
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
+
+      // console.log(status)
+      // //  作业已经完成，不再刷新请求
+      // if(isFinished(status)){
+      //   console.log('finished...')
+      //   clearInterval(timer);
+      //   return;
+      // }
     }
   }
 
-  const isFinished = () => {
-    let status = evaluationJob.status;
+  const isFinished = (status) => {
+    // let status = evaluationJob.status;
 
-    if ([].find(status)) {
+    if (['finished','failed','pausing','paused','killing','killed','error'].includes(status)) {
       return true;
     }else{
       return false;
