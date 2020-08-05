@@ -363,7 +363,7 @@ const ModelTraining = (props) => {
       />
       <Form form={form}>
         <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label={typeEdit ? "参数配置名称" : "作业名称"} rules={[{ required: true }, { ...jobNameReg }]}>
-          <Input style={{ width: 300 }} placeholder={typeEdit ? "请输入参数配置名称" : "请输入作业名称"} disabled={typeEdit} />
+          <Input style={{ width: 300 }} placeholder={typeEdit ? "请输入参数配置名称" : "请输入作业名称"} />
         </FormItem>
         <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
           <TextArea placeholder="请输入描述信息" />
