@@ -20,29 +20,14 @@ const GlobalHeaderRight = (props) => {
     className = `${styles.right}  ${styles.dark}`;
   }
 
-  const menu = (
-    <Menu>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.alipay.com/">
-          1st menu item
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a target="_blank" rel="noopener noreferrer" href="http://www.taobao.com/">
-          2nd menu item
-        </a>
-      </Menu.Item>
-    </Menu>
-  )
-
   return (
-    <div className={className} style={{display: 'flex', alignItems: 'center'}}>
+    <div className={className} style={{display: 'flex', alignItems: 'center', marginRight: '20px'}}>
       {/* <Dropdown overlay={menu}>
         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
           当前虚拟集群 <DownOutlined />
         </a>
       </Dropdown> */}
-      <Button href="/expert" style={{marginLeft: '20px'}}>专家系统</Button>
+      <Button href="/custom-user-dashboard" style={{marginLeft: '20px'}}>用户管理系统</Button>
       <Avatar menu />
       {REACT_APP_ENV && (
         <span>
