@@ -396,6 +396,9 @@ const ModelTraining = (props) => {
           labelCol={{ span: 4 }}
           name="codePath"
           label="代码目录"
+          rules={[
+            { required: isPretrainedModel }
+          ]}
         >
           {
             needCodePathPrefix ?
@@ -409,7 +412,7 @@ const ModelTraining = (props) => {
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
+        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
           {
             needCodePathPrefix ? <Input style={{ width: 420 }} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
