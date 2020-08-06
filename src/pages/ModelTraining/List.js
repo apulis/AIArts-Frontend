@@ -7,6 +7,7 @@ import { sortText } from '@/utils/const';
 import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import style from './index.less'
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -173,7 +174,11 @@ const List = () => {
     },
     {
       dataIndex: 'desc',
-      title: '描述'
+      title: '描述',
+      width: '100px',
+      render(_text) {
+        return <div title={_text} className={style.overflow}>{_text}</div>
+      }
     },
     {
       title: '操作',
