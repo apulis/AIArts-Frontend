@@ -206,15 +206,15 @@ const EdgeInference = () => {
         status: 'finished-push failed'
       },
       {
-        text: '推理中',
+        text: '转换中',
         status: 'running-converting'
       },
       {
-        text: '推理成功',
+        text: '转换成功',
         status: 'finished-converting'
       },
       {
-        text: '推理失败',
+        text: '转换失败',
         status: 'failed-converting'
       }
     ];
