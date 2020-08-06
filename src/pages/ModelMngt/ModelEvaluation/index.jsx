@@ -10,6 +10,7 @@ import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
+import curStyles from './index.less';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -383,7 +384,10 @@ const ModelEvaluation = props => {
         >
           {
             presetRunningParams.length > 0 ? 
-            <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+            <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} 
+              // style={{ height: 220 }} 
+              className={curStyles.paramsTabs}
+            >
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   {/* <Row>

@@ -1,6 +1,6 @@
 import { history } from 'umi'
 import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { bytesToSize } from '@/utils/utils';
@@ -64,6 +64,7 @@ const PretrainedModelList = props => {
     orderBy: '',
     order: ''
   });
+  const searchEl = useRef(null);
 
   useEffect(() => {
     handleSearch();
@@ -134,6 +135,12 @@ const PretrainedModelList = props => {
     setFormValues({name});
   };
 
+  const onRefresh = () => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
+    const name = searchEl.current.value;
+    setFormValues({name});
+  };  
+
   const handleSearch = () => {
     const params = {
       ...pageParams,
@@ -173,15 +180,17 @@ const PretrainedModelList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
-          {/* <Button type="default" onClick={addPretrainedModel}>录入模型</Button> */}
+          <Button type="default" onClick={addPretrainedModel}>录入模型</Button>
           <div
             style={{
               float: "right",
               paddingRight: '20px',
             }}
           >
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={handleNameSearch} enterButton />
-            <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
+            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={handleNameSearch} enterButton 
+              ref={searchEl}
+            />
+            <Button icon={<SyncOutlined />} onClick={onRefresh}></Button>
           </div>            
         </div>
         <Table
