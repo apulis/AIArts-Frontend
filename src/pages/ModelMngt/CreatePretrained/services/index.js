@@ -13,7 +13,7 @@ export async function fetchPresetTemplates() {
       pageNum: 1,
       pageSize: 10000,
       jobType: modelTrainingType,
-      scope: 3,
+      scope: 2,
     }
   })
 }
