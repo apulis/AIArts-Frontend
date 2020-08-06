@@ -35,7 +35,7 @@ const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
-  let readParam, typeCreate, typeEdit;
+  let readParam, typeCreate, typeEdit, isFromPresetModel;
   const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
@@ -46,7 +46,11 @@ const ModelTraining = (props) => {
   if (requestType === 'editParam') {
     typeEdit = true;
   }
-  const goBackPath = readParam ? '/model-training/paramsManage' : '/model-training/modelTraining';
+  // 从'预置模型页面'跳转过来
+  if (requestType === 'PretrainedModel') {
+    isFromPresetModel = true;
+  }
+  const goBackPath = isFromPresetModel ? '/ModelManagement/PretrainedModels' : (readParam ? '/model-training/paramsManage' : '/model-training/modelTraining');
 
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();

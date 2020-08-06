@@ -16,7 +16,7 @@ const { Search } = Input;
 const EvalMetricsMngt = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
-  const [formValues, setFormValues] = useState({ scope: 3, name: '' });
+  const [formValues, setFormValues] = useState({ scope: 2, name: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
@@ -62,16 +62,16 @@ const EvalMetricsMngt = () => {
   };
 
   const resetQuery = () => {
-    setFormValues({ scope: 3, name: '' });
+    setFormValues({ scope: 2, name: '' });
   };
 
   const columns = [
     {
       title: '评估参数名称',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'configName' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       dataIndex: ['params', 'name'],
-      key: 'configName',
+      key: 'name',
     },
     // {
     //   title: '权限',
@@ -84,9 +84,9 @@ const EvalMetricsMngt = () => {
     {
       title: '创建时间',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
-      key: 'createdAt',
+      key: 'created_at',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
@@ -114,14 +114,13 @@ const EvalMetricsMngt = () => {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
       jobType: modelEvaluationType,
-      scope: 3,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]
+      order: sortText[sortedInfo.order],
     };
 
-    // if (formValues.scope) {
-    //   params.scope = formValues.scope;
-    // }
+    if (formValues.scope) {
+      params.scope = formValues.scope;
+    }
 
     if (formValues.name) {
       params.name = formValues.name;

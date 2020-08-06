@@ -23,23 +23,31 @@ const EvaluationDetail = props => {
   const { validateFields } = form;
 
   const getEvaluationDetail = async () => {
-    const cancel = message.loading('获取结果中');
+    // const cancel = message.loading('获取结果中');
     const res = await fetchEvaluationDetail(modelId);
-    cancel();
-    const { code, msg, data: {evaluation, log, indicator } } = res;
+    // cancel();
+    const { code, msg, data: { evaluation, log, indicator } } = res;
     if (code === 0) {
       // message.success('成功获取结果');
-
+      
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
+
+      // console.log(111, evaluation.status)
+      // //  作业已经完成，不再刷新请求
+      // if(isFinished(evaluation.status)){
+      //   console.log('finished...')
+      //   clearInterval(timer);
+      //   return;
+      // }
     }
   }
 
-  const isFinished = () => {
-    let status = evaluationJob.status;
+  const isFinished = (status) => {
+    // let status = evaluationJob.status;
 
-    if ([].find(status)) {
+    if (['finished','failed','pausing','paused','killing','killed','error'].includes(status)) {
       return true;
     }else{
       return false;
@@ -48,11 +56,15 @@ const EvaluationDetail = props => {
 
   const getLateastLogs = async () => {
     const cancel = message.loading('获取结果中');
-    // const res = await getEvaluationLog();
     const res = await fetchEvaluationDetail(modelId);
     cancel();
-    if (res.code === 0) {
+    const { code, msg, data: { evaluation, log, indicator } } = res;
+    if (code === 0) {
       message.success('成功获取结果');
+
+      setEvaluationJob(evaluation);
+      setLogs(log);
+      setIndicator(indicator);
     }
   }
   
@@ -112,7 +124,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
         </Descriptions>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
-        <Button type="primary" onClick={getEvaluationDetail}>获取评估结果</Button>
+        <Button type="primary" onClick={getLateastLogs}>获取评估结果</Button>
         {indicator && <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
           {Object.keys(indicator).map(key => <Descriptions.Item label={key}>{indicator[key]}</Descriptions.Item>)}
         </Descriptions>}
