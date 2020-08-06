@@ -102,10 +102,12 @@ const ModelEvaluation = props => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
-      const paramPathSuffix = model.paramPath?.substr(codePathPrefix.length+1) || '';
-      const codePathSuffix = model.codePath?.substr(codePathPrefix.length+1) || '';
-      const outputPathSuffix = model.outputPath?.substr(codePathPrefix.length+1) || '';
-      const startupFileSuffix = model.startupFile?.substr(codePathPrefix.length+1) || '';
+
+      let paramPathSuffix = model.paramPath?.substr(codePathPrefix.length) || '';
+      let codePathSuffix = model.codePath?.substr(codePathPrefix.length) || '';
+      let outputPathSuffix = model.outputPath?.substr(codePathPrefix.length) || '';
+      let startupFileSuffix = model.startupFile?.substr(codePathPrefix.length) || '';
+
       form.setFieldsValue({
         name: model.name,
         argumentsFile: paramPathSuffix,
@@ -218,10 +220,10 @@ const ModelEvaluation = props => {
       }
 
       const suffixParams = {
-        codePath: currentSelected.params.codePath?.substr(codePathPrefix.length+1) || '',
-        outputPath: currentSelected.params.outputPath?.substr(codePathPrefix.length+1) || '',
-        startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length+1) || '',
-        paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length+1) || '',
+        codePath: currentSelected.params.codePath?.substr(codePathPrefix.length) || '',
+        outputPath: currentSelected.params.outputPath?.substr(codePathPrefix.length) || '',
+        startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length) || '',
+        paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length) || '',
       }
       setFieldsValue({...currentSelected.params, ...suffixParams});
       // console.log('currentSelected.params.params', currentSelected.params.params)
