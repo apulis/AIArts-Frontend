@@ -1,6 +1,6 @@
 import { history } from 'umi';
 import { message, Table, Modal, Form, Input, Button, Space, Card } from 'antd';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import ModalForm from './components/ModalForm';
@@ -28,6 +28,7 @@ const ModelList = props => {
     orderBy: '',
     order: ''
   });
+  const searchEl = useRef(null);
 
   useEffect(() => {
     handleSearch();
@@ -202,6 +203,12 @@ const ModelList = props => {
     setFormValues({name});
   };
 
+  const onRefresh = () => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
+    const name = searchEl.current.value;
+    setFormValues({name});
+  };
+
   return (
     <>
       <PageHeaderWrapper>
@@ -222,8 +229,10 @@ const ModelList = props => {
                 paddingRight: '20px',
               }}          
             >
-              <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} enterButton/>
-              <Button icon={<SyncOutlined />} onClick={handleSearch}></Button>
+              <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} enterButton 
+                ref={searchEl}
+              />
+              <Button icon={<SyncOutlined />} onClick={onRefresh}></Button>
             </div>
           </div>
           <Table
