@@ -12,6 +12,7 @@ import { jobNameReg } from '@/utils/reg';
 import { fetchPresetTemplates } from './services';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { formatParams } from '@/utils/utils';
+import { getAllLabeledDatasets } from '@/pages/ModelMngt/ModelEvaluation/services';
 
 import styles from '@/pages/ModelTraining/index.less';
 
@@ -33,6 +34,7 @@ const CreatePretrained = props => {
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
+  const [datasets, setDatasets] = useState([]);
 
   const usages = [
     { key: 'ImageClassification',label: '图像分类' }, 
@@ -44,9 +46,10 @@ const CreatePretrained = props => {
     { key: '2',label: 'tensorflow , tf-1.8.0-py2.7' }, 
   ];
 
-  // useEffect(() => {
-  //   getAvailableResource();
-  // }, []);
+  useEffect(() => {
+    // getAvailableResource();
+    getTestDatasets();
+  }, []);
 
   useEffect(() => {
     if (presetParamsVisible) {
@@ -61,6 +64,16 @@ const CreatePretrained = props => {
       });
     }
   }, [presetParamsVisible]);
+
+  const getTestDatasets = async () => {
+    const { code, data, msg } = await getAllLabeledDatasets();
+    if (code === 0 && data) {
+      const { datasets } = data;
+      setDatasets(datasets);
+    } else {
+      message.error(msg);
+    }
+  }
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
@@ -157,13 +170,18 @@ const CreatePretrained = props => {
     setCurrentSelectedPresetParamsId(current);
   };  
 
+  const handleDatasetChange = (value, option) => {
+    // setDatasetName(option.children);
+    setFieldsValue({datasetPath: option.key})
+  };
+
   const onFinish = async (values) => {
     // console.log(values);
     let params = {};
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     });    
-    const { name, use, engine, precision, size, datasetName, datasetPath, dataFormat, modelPath, modelArgumentPath, codePath, startupFile, outputPath, paramPath } = values;
+    const { name, use, engine, precision, size, datasetName, datasetPath, dataFormat, codePath, startupFile, outputPath, paramPath } = values;
     const data = {
       name,
       use,
@@ -174,8 +192,6 @@ const CreatePretrained = props => {
       datasetPath,
       params,
       dataFormat,
-      modelPath,
-      modelArgumentPath,
       codePath,
       startupFile,
       outputPath,
@@ -274,7 +290,14 @@ const CreatePretrained = props => {
             form={form}
             onFinish={onFinish}
             // autoComplete="off"
-            // initialValues={{ sourceType: sourceType }}
+            initialValues={{ 
+              dataFormat: 'tfrecord',
+              engine: 'apulistech/tensorflow:1.14.0-gpu-py3',
+              precision: '0.99',
+              size: '',
+              use: '图像分类',
+              size: 80*1024*1024,
+           }}
           >
             <Form.Item
               {...layout}
@@ -344,7 +367,16 @@ const CreatePretrained = props => {
               label="数据集名称"
               rules={[{ required: true, message: '数据集名称不能为空!' }]}
             >
-              <Input placeholder="请输入数据集名称" />
+              {/* <Input placeholder="请输入数据集名称" /> */}
+              <Select
+                onChange={handleDatasetChange}
+              >
+                {
+                  datasets.map(d => (
+                    <Option key={d.path} value={d.name}>{d.name}</Option>
+                  ))
+                }
+              </Select>              
             </Form.Item>                     
             <Form.Item
               {...layout}
@@ -362,22 +394,22 @@ const CreatePretrained = props => {
             >
               <Input placeholder="请输入数据格式" />
             </Form.Item>                     
-            <Form.Item
+            {/* <Form.Item
               {...layout}
               name="modelPath"
               label="模型路径"
               rules={[{ required: true, message: '模型路径不能为空!' }]}
             >
               <Input placeholder="请输入模型路径" />
-            </Form.Item>                     
-            <Form.Item
+            </Form.Item>                      */}
+            {/* <Form.Item
               {...layout}
               name="modelArgumentPath"
               label="模型参数文件"
               rules={[{ required: true, message: '模型参数文件不能为空!' }]}
             >
               <Input placeholder="请输入模型参数文件路径" />
-            </Form.Item>                     
+            </Form.Item>                      */}
             <Form.Item
               {...layout}
               name="codePath"
@@ -405,8 +437,8 @@ const CreatePretrained = props => {
             <Form.Item
               {...layout}
               name="paramPath"
-              label="参数路径"
-              rules={[{ required: true, message: '参数路径不能为空!' }]}
+              label="模型参数路径"
+              rules={[{ required: true, message: '模型参数路径不能为空!' }]}
             >
               <Input placeholder="请输入参数路径" />
             </Form.Item>

@@ -125,7 +125,7 @@ const InferenceList = props => {
       title: '服务地址',
       // dataIndex: 'serverAddr',
       ellipsis: true,
-      width: 100,
+      // width: 100,
       render: (text, item) => item['inference-url'] ? item['inference-url'] : '',
     },
     {
@@ -137,7 +137,8 @@ const InferenceList = props => {
     },
     {
       title: '操作',
-      width: 120,
+      // width: 120,
+      align: 'center',
       render: (item) => {
         return (
           <>
