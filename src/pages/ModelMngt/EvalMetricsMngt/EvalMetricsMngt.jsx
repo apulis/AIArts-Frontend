@@ -115,12 +115,12 @@ const EvalMetricsMngt = () => {
       pageSize: pageParams.pageSize,
       jobType: modelEvaluationType,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]
+      order: sortText[sortedInfo.order],
     };
 
-    // if (formValues.scope) {
-    //   params.scope = formValues.scope;
-    // }
+    if (formValues.scope) {
+      params.scope = formValues.scope;
+    }
 
     if (formValues.name) {
       params.name = formValues.name;
