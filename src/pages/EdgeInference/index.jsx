@@ -23,7 +23,7 @@ const EdgeInference = () => {
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
-  const [type, setType] = useState('');
+  const [statusType, setStatusType] = useState('');
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
@@ -47,12 +47,12 @@ const EdgeInference = () => {
 
   const getData = async (text) => {
     setLoading(true);
-    const searchType = type && type.split('-') ? type.split('-') : [];
+    const searchType = statusType && statusType.split('-') ? statusType.split('-') : [];
     const params = { 
       ...pageParams, 
       jobName: name, 
       jobStatus: searchType ? searchType[0] : '',
-      modelconversionType: searchType ? searchType[1] : '',
+      modelconversionStatus: searchType ? searchType[1] : '',
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order]
     };
@@ -222,7 +222,7 @@ const EdgeInference = () => {
   }
 
   const onSearchChange = (v, type) => {
-    type === 1 ? setType(v) : setName(v)
+    type === 1 ? setStatusType(v) : setName(v)
     setPageParams({ ...pageParams, pageNum: 1 });
   }
 
@@ -234,7 +234,7 @@ const EdgeInference = () => {
           <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
           {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
           <div className={styles.searchWrap}>
-            <Select onChange={v => onSearchChange(v, 1)} defaultValue={type}>{getOptions()}</Select>
+            <Select onChange={v => onSearchChange(v, 1)} defaultValue={statusType}>{getOptions()}</Select>
             <Search placeholder="请输入推理名称查询" enterButton onSearch={v => onSearchChange(v, 2)} />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
