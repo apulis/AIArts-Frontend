@@ -154,20 +154,20 @@ export const getModelStatus = (status) => {
 export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
   // gpu
   if (type === 'nvidia_gpu_amd64') {
-    let arr = []
+    let arr = [];
     for (let index in nodeInfo) {
-      const nodeItem = nodeInfo[index]
+      const nodeItem = nodeInfo[index];
       if (nodeItem['gpuType'] === type) {
         // gpu
         if (nodeItem['gpuType'] == 'nvidia_gpu_amd64') {
           const capacityObj = nodeItem['gpu_capacity'];
-          arr.push(capacityObj[type])
+          arr.push(capacityObj[type]);
 
         }
       }
     }
     const num = Math.max(...arr);
-    let arr2 = []
+    let arr2 = [];
     for (let i = 0; i <= num; i++) {
       arr2.push(i);
     }
@@ -180,20 +180,20 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
 export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
   // gpu
   if (type === 'nvidia_gpu_amd64') {
-    let arr = []
+    let arr = [];
     for (let index in nodeInfo) {
-      const nodeItem = nodeInfo[index]
+      const nodeItem = nodeInfo[index];
       if (nodeItem['gpuType'] === type) {
         // gpu
         if (nodeItem['gpuType'] == 'nvidia_gpu_amd64') {
           const capacityObj = nodeItem['gpu_capacity'];
-          arr.push(capacityObj[type])
+          arr.push(capacityObj[type]);
 
         }
       }
     }
     const num = Math.max(...arr);
-    let arr2 = []
+    let arr2 = [];
     let temp = 1;
     while (temp <= num) {
       arr2.push(temp);
@@ -216,7 +216,10 @@ export const isEmptyString = (str) => {
   }
 };
 
-export const omitText = function (str, len=20) {
+export const omitText = function (str, len = 20) {
+  if (!str) {
+    return '';
+  }
   var reg = /[\u4e00-\u9fa5]/g,    //专业匹配中文
     slice = str.substring(0, len),
     chineseCharNum = (~~(slice.match(reg) && slice.match(reg).length)),
