@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { modelEvaluationType } from '@/utils/const';
+import { modelTrainingType } from '@/utils/const';
 
 export async function getTrainingJobs(params) {
   return request(`/trainings`, {
@@ -12,7 +12,7 @@ export async function fetchPresetTemplates() {
     params: {
       pageNum: 1,
       pageSize: 10000,
-      jobType: modelEvaluationType,
+      jobType: modelTrainingType,
       scope: 3,
     }
   })
