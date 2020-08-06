@@ -23,7 +23,7 @@ const EdgeInference = () => {
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
-  const [type, setType] = useState('全部类型');
+  const [type, setType] = useState('');
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
@@ -189,6 +189,10 @@ const EdgeInference = () => {
 
   const getOptions = () => {
     const statusMap = [
+      {
+        text: '全部',
+        status: ''
+      },
       {
         text: '推送中',
         status: 'finished-pushing'
