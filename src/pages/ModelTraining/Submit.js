@@ -92,6 +92,7 @@ const ModelTraining = (props) => {
     }
   };
   useEffect(() => {
+    console.log(111, currentDeviceType)
     if (distributedJob) {
       if (!currentDeviceType) return;
       // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
@@ -319,7 +320,6 @@ const ModelTraining = (props) => {
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
       });
-      console.log('currentSelected.params.params', currentSelected.params)
       const params = Object.entries(currentSelected.params.params || {}).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -330,6 +330,7 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
+      setCurrentDeviceType(currentSelected.params.deviceType);
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
@@ -561,7 +562,7 @@ const ModelTraining = (props) => {
           form={form}
         >
           {
-            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: '50%' }}>
+            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{maxHeight: '500px'}}>
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>
