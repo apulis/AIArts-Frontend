@@ -278,7 +278,7 @@ const ModelEvaluation = props => {
                 }
               </Select>
             </Form.Item>
-            <Form.Item {...layout} label="代码目录" name="codePath">
+            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true }, { message: '需要填写代码目录' }]}>
               <Input/>
             </Form.Item>
             <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
@@ -288,6 +288,7 @@ const ModelEvaluation = props => {
               {...layout} 
               label="输出路径"
               name="outputPath"
+              rules={[{ required: true }, { message: '需要填写输出路径' }]}
             >
               <Input/>            
             </Form.Item> 
