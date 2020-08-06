@@ -40,7 +40,7 @@ const ModelEvaluation = props => {
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
-    getCurrentModel(modelId);
+    // getCurrentModel(modelId);
   }, []);
 
   useEffect(() => {
@@ -56,6 +56,10 @@ const ModelEvaluation = props => {
       });
     }
   }, [presetParamsVisible]);
+
+  useEffect(() => {
+    getCurrentModel(modelId);
+  }, [codePathPrefix]);
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
@@ -98,9 +102,16 @@ const ModelEvaluation = props => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
+      const paramPathSuffix = model.paramPath?.substr(codePathPrefix.length+1) || '';
+      const codePathSuffix = model.codePath?.substr(codePathPrefix.length+1) || '';
+      const outputPathSuffix = model.outputPath?.substr(codePathPrefix.length+1) || '';
+      const startupFileSuffix = model.startupFile?.substr(codePathPrefix.length+1) || '';
       form.setFieldsValue({
         name: model.name,
-        argumentsFile: model.paramPath,
+        argumentsFile: paramPathSuffix,
+        codePath: codePathSuffix,
+        outputPath: outputPathSuffix,
+        startupFile: startupFileSuffix,
       });
     } else {
       message.error(msg);
@@ -118,15 +129,15 @@ const ModelEvaluation = props => {
       id: modelId,
       name,
       engine,
-      codePath,
-      startupFile,
-      outputPath,
+      codePath: codePathPrefix + codePath,
+      startupFile: codePathPrefix + startupFile,
+      outputPath: codePathPrefix + outputPath,
       datasetPath,
       params,
       datasetName,
       deviceType,
       deviceNum,
-      paramPath: argumentsFile,
+      paramPath: codePathPrefix + argumentsFile,
     };
     const { code, msg } = await addEvaluation(evalParams);
 
@@ -206,7 +217,13 @@ const ModelEvaluation = props => {
         delete currentSelected.params.name
       }
 
-      setFieldsValue(currentSelected.params);
+      const suffixParams = {
+        codePath: currentSelected.params.codePath?.substr(codePathPrefix.length+1) || '',
+        outputPath: currentSelected.params.outputPath?.substr(codePathPrefix.length+1) || '',
+        startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length+1) || '',
+        paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length+1) || '',
+      }
+      setFieldsValue({...currentSelected.params, ...suffixParams});
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};
@@ -280,10 +297,12 @@ const ModelEvaluation = props => {
               </Select>
             </Form.Item>
             <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true }, { message: '需要填写代码目录' }]}>
-              <Input/>
+              {/* <Input/> */}
+              <Input addonBefore={codePathPrefix} />
             </Form.Item>
             <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
-              <Input/>
+              {/* <Input/> */}
+              <Input addonBefore={codePathPrefix} />
             </Form.Item>
             <Form.Item 
               {...layout} 
@@ -291,10 +310,12 @@ const ModelEvaluation = props => {
               name="outputPath"
               rules={[{ required: true }, { message: '需要填写输出路径' }]}
             >
-              <Input/>            
+              {/* <Input/> */}
+              <Input addonBefore={codePathPrefix} />
             </Form.Item> 
             <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
-              <Input/>
+              {/* <Input/> */}
+              <Input addonBefore={codePathPrefix} />
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
               <Select
