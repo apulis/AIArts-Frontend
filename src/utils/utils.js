@@ -152,6 +152,9 @@ export const getModelStatus = (status) => {
 };
 // Regular任务类型，根据nodeType返回可选设备数量数组
 export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
+  if(nodeInfo==undefined || type==undefined){
+    return []
+  }
   // gpu
   if (type === 'nvidia_gpu_amd64') {
     let arr = [];
@@ -178,6 +181,9 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
 };
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
 export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
+  if(nodeInfo==undefined || type==undefined){
+    return []
+  }
   // gpu
   if (type === 'nvidia_gpu_amd64') {
     let arr = [];

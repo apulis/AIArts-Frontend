@@ -30,17 +30,16 @@ const CodeList = (props) => {
 
   useEffect(() => {
     renderTable(pageParams);
-  }, [pageParams,sortInfo])
+  }, [pageParams,sortInfo,curStatus])
   useEffect(() => {
     renderTable(pageObj);
     setPageParams(pageObj);
-  }, [curStatus, searchObj])
+  }, [curStatus])
   useEffect(() => {
     const type = searchObj.type
     if (type === 'search') {
       renderTable(pageParams);
     } else if (type === 'fresh') {
-      // renderTable()
       renderTable(pageParams,() => { message.success('刷新成功') })
     }
   }, [searchObj])
