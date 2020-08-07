@@ -41,12 +41,13 @@ const List = () => {
     order: '',
     columnKey: '',
   });
-  const getTrainingList = async (reloadPage) => {
+  const getTrainingList = async (reloadPage, options = {}) => {
+    const { pageSize: size, status } = options
     let page = pageNum;
     if (reloadPage) {
       page = 1
     }
-    const res = await fetchTrainingList({pageNum: page, pageSize, search, sortedInfo, status: currentStatus});
+    const res = await fetchTrainingList({pageNum: page, pageSize: size || pageSize, search, sortedInfo, status: status || currentStatus});
     if (res.code === 0) {
       setPageNum(page);
       const trainings = (res.data && res.data.Trainings) || [];
@@ -57,16 +58,9 @@ const List = () => {
     setTableLoading(false)
   }
   const handleChangeStatus = async (status) => {
+    getTrainingList(true, { status: status });
     setCurrentStatus(status);
   }
-
-  useEffect(() => {
-    getTrainingList(true);
-  }, [currentStatus])
-
-  useEffect(() => {
-    getTrainingList(true);
-  }, [pageSize])
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
@@ -199,6 +193,7 @@ const List = () => {
 
   const onShowSizeChange = (current, size) => {
     setPageSize(size);
+    getTrainingList(true, { pageSize: size });
   }
 
   return (
