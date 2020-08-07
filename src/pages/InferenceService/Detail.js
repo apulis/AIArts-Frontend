@@ -57,9 +57,11 @@ const InferenceDetail = () => {
   }, [])
   const handleChange = info => {
     if (info.file.status === 'uploading') {
+      setImageUrl('');
       setLoading(true);
       return;
     }
+    console.log('info', info.file.status)
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, imageUrl => {
         setImageUrl(imageUrl);
@@ -75,8 +77,12 @@ const InferenceDetail = () => {
       } else {
         setTempImageUrl(imageBase64);
         setLoading(false);
-      }
-      
+      } 
+    }
+
+    if (info.file.status === 'error') {
+      setLoading(false);
+      message.error('处理出错')
     }
   }
   const beforeUpload = (file) => {
@@ -154,7 +160,7 @@ const InferenceDetail = () => {
       {
         logs && <div className="ant-descriptions-title" style={{marginTop: '30px'}}>训练日志</div>
       }
-      {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && <Button type="primary" onClick={getLateastLogs}>点击获取最新日志</Button>}
+      {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && <Button type="primary" style={{marginTop: '20px'}} onClick={getLateastLogs}>点击获取最新日志</Button>}
       <div>
         {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}

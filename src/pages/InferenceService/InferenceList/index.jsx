@@ -226,8 +226,13 @@ const InferenceList = props => {
     const {code, msg, data} = await deleteInference(item.jobId);
 
     if(code === 0){
-      message.success(`Job删除停止！`);
-      handleSearch();
+      // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+      if (data.inferences.length == 1 && pageParams.pageNum > 1) {
+        setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+      } else {
+        handleSearch();
+      } 
+      message.success(`Job删除成功！`);
     }else{
       message.error(`Job删除错误：${msg}。`);
     }
