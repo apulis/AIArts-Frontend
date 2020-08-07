@@ -180,7 +180,8 @@ const ModelTraining = (props) => {
       setRunningParams(params);
       setFieldsValue({
         params: params,
-        datasetPath: model.datasetName,
+        // datasetPath: model.datasetName,
+        datasetPath: model.datasetPath,
         engine: model.engineType,
         codePath: model.codePath,
         startupFile: model.startupFile,
