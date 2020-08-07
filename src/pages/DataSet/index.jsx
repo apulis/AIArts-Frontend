@@ -44,11 +44,6 @@ const DataSetList = () => {
     const { code, data } = await getDatasets(params);
     if (code === 0 && data) {
       const { total, datasets } = data;
-      // 如果当前页面已经被删光，跳到上一页
-      if (datasets.length === 0 && pageParams.pageNum > 1) {
-        setPageParams({...pageParams, ...{pageNum: pageParams.pageNum - 1}});
-        return;
-      }
       setDataSets({
         data: datasets,
         total: total,
@@ -159,8 +154,13 @@ const DataSetList = () => {
         const res = await deleteDataSet(id);
         const { code } = res;
         if (code === 0) {
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (dataSets.data.length == 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            getData();
+          }
           message.success('删除成功！');
-          getData();
         }
       },
       onCancel() {}
