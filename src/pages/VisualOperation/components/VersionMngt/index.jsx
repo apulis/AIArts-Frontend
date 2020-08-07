@@ -232,15 +232,17 @@ const VersionMngt = (props) => {
           <Button onClick={() => { setHistoryVisible(false) }}>关闭</Button>,
         ]}
       >
-        <div style={{ height: '320px', overflowY: 'scroll',paddingTop:'10px'}}><Timeline>
+        <div style={{ height: '320px', overflowY: 'scroll', paddingTop:'10px', position: 'relative'}}><Timeline>
           {versionLogs.map(
             (item, key) => (<Timeline.Item key={key}>{item}</Timeline.Item>)
           )}
         </Timeline>
-          <div style={{display: 'flex', justifyContent:'center'}}>
-            <Button type='primary' onClick={() => { handleLoadMoreHistory() }}>
-              更多历史
-            </Button>
+          <div style={{position: 'absolute', width: '100%', bottom: '10px'}}>
+            <div style={{display: 'flex', justifyContent:'center'}}>
+              <Button type='primary' onClick={() => { handleLoadMoreHistory() }}>
+                更多历史
+              </Button>
+            </div>
           </div>
         </div>
       </Modal>}
