@@ -241,12 +241,10 @@ const VersionMngt = (props) => {
             (item, key) => (<Timeline.Item key={key}>{item}</Timeline.Item>)
           )}
         </Timeline>
-          <div style={{position: 'absolute', width: '100%', bottom: '10px'}}>
-            <div style={{display: 'flex', justifyContent:'center'}}>
-              <Button type='primary' onClick={() => { handleLoadMoreHistory() }}>
-                更多历史
-              </Button>
-            </div>
+          <div style={{display: 'flex', justifyContent:'center', position: 'absolute', width: '100%', bottom: '10px'}}>
+            <Button type='primary' onClick={() => { handleLoadMoreHistory() }}>
+              更多历史
+            </Button>
           </div>
         </div>
       </Modal>}
