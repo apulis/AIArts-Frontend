@@ -191,6 +191,13 @@ const InferenceList = props => {
     dispatch({
       type: 'inferenceList/fetch',
       payload: params,
+    }).then(({ error, data }) => {
+      if (error === null) {
+        // 当前页面已经被删光
+        if (data.inferences && data.inferences.length === 0 && pageParams.pageNum > 1) {
+          setPageParams({...pageParams, ...{pageNum: pageParams.pageNum-1}});
+        }
+      }
     });
   };
 
