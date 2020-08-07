@@ -42,7 +42,7 @@ const CreateModel = props => {
       description,
       paramPath: codePathPrefix + argumentPath,
       jobId: jobId || '',
-      codePath: modelPath ? modelPath : codePathPrefix + argumentPath,
+      codePath: modelPath || '',
       isAdvance: false,
     }
 
