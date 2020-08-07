@@ -5,15 +5,16 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { stopInference, deleteInference } from './services';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { connect } from 'umi';
-import { SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
 import { fetchJobStatusSumary } from './services';
 import { statusList } from '@/pages/ModelTraining/List';
+import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Search } = Input;
+const { confirm } = Modal;
 
 const InferenceList = props => {
   const {
@@ -223,19 +224,31 @@ const InferenceList = props => {
   };
 
   const deleteJob = async (item) => {
-    const {code, msg, data} = await deleteInference(item.jobId);
+    confirm({
+      title: '删除推理作业',
+      icon: <ExclamationCircleOutlined />,
+      content: '删除操作无法恢复，是否继续？',
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () =>{
+        const {code, msg} = await deleteInference(item.jobId);
 
-    if(code === 0){
-      // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
-      if (data.inferences.length == 1 && pageParams.pageNum > 1) {
-        setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
-      } else {
-        handleSearch();
-      } 
-      message.success(`Job删除成功！`);
-    }else{
-      message.error(`Job删除错误：${msg}。`);
-    }
+        if(code === 0){
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (data.list.length === 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            handleSearch();
+          }
+          message.success(`Job删除成功！`);
+        }else{
+          message.error(`Job删除错误：${msg}。`);
+        }
+      },
+      onCancel() {
+      },
+    });
   };
 
   const CreateJob = (item) => {
