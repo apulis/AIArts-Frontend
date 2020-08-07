@@ -11,6 +11,7 @@ import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingPar
 import styles from './index.less';
 import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
+import { jobNameReg } from '@/utils/reg';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
@@ -147,7 +148,7 @@ const Detail = () => {
               {...commonLayout}
               name="name"
               label="配置名称"
-              rules={[{ required: true }]}
+              rules={[{ required: true }, {...jobNameReg}]}
             >
               <Input placeholder="请输入配置名称" />
             </FormItem>
