@@ -22,7 +22,7 @@ const Detail = () => {
   const [form] = useForm();
   const { validateFields } = form;
   const id = params.id;
-  const [logs, setLogs] = useState('');
+  const [logs, setLogs] = useState(undefined);
   const [jobDetail, setJobDetail] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const getTrainingDetail = async () => {
@@ -50,7 +50,7 @@ const Detail = () => {
     const res = await fetchTrainingLog(id);
     const l = logEl.current;
     if (res.code === 0) {
-      setLogs(res.data.log);
+      setLogs(res.data.log || '');
     }
   }
 
@@ -123,7 +123,7 @@ const Detail = () => {
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
       {!jobStarted && !jobFailed && <Button type="primary" onClick={handleFetchTrainingLogs} style={{marginBottom: '20px', marginTop: '16px'}}>获取训练日志</Button>}
-      {logs ? <pre ref={logEl} className={styles.logs}>
+      {typeof logs !== 'undefined' ? <pre ref={logEl} className={styles.logs}>
         {logs}
       </pre> : (<div>
         {
