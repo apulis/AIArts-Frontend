@@ -37,7 +37,7 @@ const CodeCreate = () => {
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
       const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo,result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || []
-      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo,result.nodeInfo[0]['gpuType']) || [0]
+      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo,result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || [0]
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
       
       setCodePathPrefix(result.codePathPrefix)

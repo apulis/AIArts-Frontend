@@ -30,19 +30,25 @@ const CodeList = (props) => {
 
   useEffect(() => {
     renderTable(pageParams);
-  }, [pageParams,sortInfo,curStatus])
+  }, [pageParams, sortInfo, curStatus])
   useEffect(() => {
-    renderTable(pageObj);
-    setPageParams(pageObj);
+    debugger
+    if (curStatus != '') {
+      renderTable(pageObj);
+      setPageParams(pageObj);
+    }
   }, [curStatus])
   useEffect(() => {
-    const type = searchObj.type
-    if (type === 'search') {
-      renderTable(pageParams);
-    } else if (type === 'fresh') {
-      renderTable(pageParams,() => { message.success('刷新成功') })
+    if (searchObj.type != undefined) {
+      const type = searchObj.type
+      if (type === 'search') {
+        renderTable(pageParams);
+      } else if (type === 'fresh') {
+        renderTable(pageParams, () => { message.success('刷新成功') })
+      }
     }
-  }, [searchObj])
+  }
+    , [searchObj])
 
 
   const renderStatusSelect = async () => {
@@ -53,7 +59,7 @@ const CodeList = (props) => {
       setCurStatus(apiData[0].status)
     }
   }
-  const renderTable = async (pageParams,success) => {
+  const renderTable = async (pageParams, success) => {
     setLoading(true)
     const apiData = await apiGetCodes(pageParams)
     if (apiData) {
@@ -149,7 +155,7 @@ const CodeList = (props) => {
     const { field: orderBy, order } = sorter
     setSortInfo({ orderBy, order });
   }
-  const handleCreateCodeDev = ()=>{
+  const handleCreateCodeDev = () => {
     history.push('/codeDevelopment/add')
   }
   const columns = [
@@ -196,7 +202,7 @@ const CodeList = (props) => {
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
-            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status)?{ color: 'red' }:{}}>停止</a>
+            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: 'red' } : {}}>停止</a>
           </Space>
         );
       },
@@ -207,7 +213,7 @@ const CodeList = (props) => {
       <Row style={{ marginBottom: "20px" }}>
         <Col span={12}>
           <div style={{ float: "left" }}>
-              <Button type='primary' onClick={()=>{handleCreateCodeDev()}}>创建开发环境</Button>
+            <Button type='primary' onClick={() => { handleCreateCodeDev() }}>创建开发环境</Button>
           </div>
         </Col>
         <Col span={12}>
@@ -215,7 +221,7 @@ const CodeList = (props) => {
             <div style={{ width: '200px', display: 'inline-block' }}>
               <Select value={curStatus} style={{ width: 'calc(100% - 8px)', margin: '0 8px 0 0' }} onChange={(item) => handleSelectChange(item)}>
                 {
-                  statusSearchArr.map((item,key) => (
+                  statusSearchArr.map((item, key) => (
                     <Option key={key} value={item.status}>{item.desc}</Option>
                   ))
                 }
@@ -229,7 +235,7 @@ const CodeList = (props) => {
               enterButton
             />
             <span>
-              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} style={{marginLeft:'3px'}}/>
+              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} style={{ marginLeft: '3px' }} />
             </span>
           </div>
         </Col>
@@ -246,7 +252,7 @@ const CodeList = (props) => {
           showSizeChanger: true,
           onChange: handlePageParamsChange,
           onShowSizeChange: handlePageParamsChange,
-          current:pageParams.pageNum,
+          current: pageParams.pageNum,
         }}
         loading={loading} />
       {modalFlag && (
