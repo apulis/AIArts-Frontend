@@ -5,6 +5,8 @@ import { Redirect, connect } from 'umi';
 // import enUS from 'antd/es/locale/en_US';
 import zhCN from 'antd/es/locale/zh_CN';
 import LoginPage from '@/pages/exception/401';
+import { USER_LOGIN_URL } from '@/utils/const';
+import { stringify } from 'querystring';
 
 class SecurityLayout extends React.Component {
   state = {
@@ -44,7 +46,15 @@ class SecurityLayout extends React.Component {
   }
 
   componentDidMount() {
-    
+    if (!localStorage.token) {
+      const queryString = stringify({
+        redirect: window.location.href,
+      });
+      if (process.env.NODE_ENV !== 'development') {
+        window.location.href = USER_LOGIN_URL + '?' + queryString
+      }
+      
+    }
     if (this.props.dispatch) {
       this.props.dispatch({
         type: 'user/fetchCurrent',
