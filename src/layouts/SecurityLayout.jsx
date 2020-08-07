@@ -76,7 +76,8 @@ class SecurityLayout extends React.Component {
 
     if (!token) {
       return (
-        <LoginPage />
+        // <LoginPage />
+        <PageLoading />
       )
     }
 
