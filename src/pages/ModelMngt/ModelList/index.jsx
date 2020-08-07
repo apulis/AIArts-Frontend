@@ -144,6 +144,13 @@ const ModelList = props => {
     dispatch({
       type: 'modelList/fetch',
       payload: params,
+    }).then(({ error, data }) => {
+      if (error === null) {
+        // 当前页面已经被删光
+        if (data.models && data.models.length === 0 && pageParams.pageNum > 1) {
+          setPageParams({...pageParams, ...{pageNum: pageParams.pageNum-1}});
+        }
+      }
     });
   };
 

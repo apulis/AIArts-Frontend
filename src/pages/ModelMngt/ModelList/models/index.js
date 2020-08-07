@@ -33,7 +33,6 @@ export default {
         } = yield call(getModels, params)
         let error = null
         if (code === 0) {
-          // const result = normalizeTableResult(data)
           const result = {
             list: data.models || [],
             pagination: {
