@@ -124,7 +124,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
         </Descriptions>
         <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
-        <Button type="primary" onClick={getLateastLogs}>获取评估结果</Button>
+        <Button type="primary" onClick={getLateastLogs} style={{marginTop: '16px'}}>获取评估结果</Button>
         {indicator && <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
           {Object.keys(indicator).map(key => <Descriptions.Item label={key}>{indicator[key]}</Descriptions.Item>)}
         </Descriptions>}

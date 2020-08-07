@@ -234,3 +234,24 @@ export const formatParams = (obj) => {
   }
   return result;
 };
+// 节流
+export const throttle = (fn,delay)=>{
+  let lastTime = 0;
+  return function(){
+      let nowTime = Date.now();
+      if(nowTime-lastTime>delay){
+          fn.call(this);
+          lastTime = nowTime;
+      }
+  }
+}
+// 防抖
+export const debounce = (fn,delay)=>{
+  let timer = null;
+  return function (){
+      clearTimeout(timer);
+      timer = setTimeout(function(){
+          fn.call(this);
+      },delay)
+  }
+}

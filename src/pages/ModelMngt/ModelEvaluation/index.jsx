@@ -267,7 +267,7 @@ const ModelEvaluation = props => {
           <Form
             form={form}
             onFinish={onFinish}
-            autoComplete="off"
+            // autoComplete="off"
           >
             <Form.Item
               {...layout}
@@ -288,7 +288,7 @@ const ModelEvaluation = props => {
               {...layout}
               label="引擎"
               name="engine"
-              required
+              rules={[{ required: true, message: '请选择引擎' }]}
             >
               <Select>
                 {
@@ -298,25 +298,21 @@ const ModelEvaluation = props => {
                 }
               </Select>
             </Form.Item>
-            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true }, { message: '需要填写代码目录' }]}>
-              {/* <Input/> */}
+            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
               <Input addonBefore={codePathPrefix} />
             </Form.Item>
-            <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
-              {/* <Input/> */}
+            <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
               <Input addonBefore={codePathPrefix} />
             </Form.Item>
             <Form.Item 
               {...layout} 
               label="输出路径"
               name="outputPath"
-              rules={[{ required: true }, { message: '需要填写输出路径' }]}
+              rules={[{ required: true, message: '需要填写输出路径' }]}
             >
-              {/* <Input/> */}
               <Input addonBefore={codePathPrefix} />
             </Form.Item> 
-            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
-              {/* <Input/> */}
+            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型参数文件' }]}>
               <Input addonBefore={codePathPrefix} />
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
@@ -362,7 +358,7 @@ const ModelEvaluation = props => {
               {...layout}
               label="设备类型"
               name="deviceType"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请选择设备类型' }]}
             >
               <Select onChange={handleDeviceTypeChange}>
                 {
@@ -376,7 +372,7 @@ const ModelEvaluation = props => {
               {...layout}
               label="设备数量"
               name="deviceNum"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请选择设备数量' }]}
             >
               <Select>
                 {

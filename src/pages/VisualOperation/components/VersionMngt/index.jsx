@@ -1,5 +1,6 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import { Typography, Button, Row, Col, Divider, Timeline, List, Skeleton, Space, Modal, Progress, Card, message, Descriptions, Tabs } from 'antd';
+import {throttle} from 'lodash'
 import { getInitData, getUpgradeInfo, getUpgradeLog, upgrade } from '../../service.js';
 import { isEmptyString } from '../../../../utils/utils.js'
 import styles from './index.less';
@@ -17,6 +18,7 @@ const VersionMngt = (props) => {
   const [upgrading, setUpgrading] = useState(false)
   const [logs, setLogs] = useState('')
   const [historyVisible, setHistoryVisible] = useState(false)
+  const [checkingFlag,setCheckingFlag] = useState(false)
   useEffect(() => {
     renderInit()
     return () => {
@@ -62,6 +64,7 @@ const VersionMngt = (props) => {
         renderInit()
         break
       case 'check':
+        setCheckingFlag(true)
         const upgradeInfo = await apiGetUpgradeInfo()
         if (upgradeInfo.canUpgrade) {
           if (upgradeInfo.isLowerVersion) {
@@ -84,6 +87,7 @@ const VersionMngt = (props) => {
             content: '经检测，暂不支持升级',
           });
         }
+        setCheckingFlag(false)
         break
       case 'begin':
         const result = await apiUpgrade()
@@ -214,7 +218,7 @@ const VersionMngt = (props) => {
       <Descriptions title="本地升级" style={{ marginTop: "30px" }}>
       </Descriptions>
       <div>
-        <Button type="primary" onClick={() => { upgradeManager('check') }} disabled={upgradeText === '一键升级' ? false : true}>
+        <Button type="primary" onClick={() => {if(!checkingFlag)upgradeManager('check')}} disabled={upgradeText === '一键升级' ? false : true}>
           {upgradeText}
         </Button>
         {upgrading && <div style={{ height: '120px', marginTop: '14px' }}>
@@ -232,12 +236,12 @@ const VersionMngt = (props) => {
           <Button onClick={() => { setHistoryVisible(false) }}>关闭</Button>,
         ]}
       >
-        <div style={{ height: '320px', overflowY: 'scroll',paddingTop:'10px'}}><Timeline>
+        <div style={{ height: '320px', overflowY: 'scroll', paddingTop:'10px', position: 'relative'}}><Timeline>
           {versionLogs.map(
             (item, key) => (<Timeline.Item key={key}>{item}</Timeline.Item>)
           )}
         </Timeline>
-          <div style={{display: 'flex', justifyContent:'center'}}>
+          <div style={{display: 'flex', justifyContent:'center', position: 'absolute', width: '100%', bottom: '10px'}}>
             <Button type='primary' onClick={() => { handleLoadMoreHistory() }}>
               更多历史
             </Button>
