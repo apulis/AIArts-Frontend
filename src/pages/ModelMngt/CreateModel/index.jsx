@@ -145,7 +145,7 @@ const CreateModel = props => {
           <Form
             form={form}
             onFinish={onFinish}
-            autoComplete="off"
+            // autoComplete="off"
             initialValues={{ modelFileType: modelFileType }}
           >
             <Form.Item
