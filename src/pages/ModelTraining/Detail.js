@@ -11,6 +11,7 @@ import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingPar
 import styles from './index.less';
 import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
+import { jobNameReg } from '@/utils/reg';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
@@ -121,7 +122,7 @@ const Detail = () => {
         }
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
-      {!jobStarted && !jobFailed && <Button type="primary" onClick={handleFetchTrainingLogs} style={{marginBottom: '20px'}}>获取训练日志</Button>}
+      {!jobStarted && !jobFailed && <Button type="primary" onClick={handleFetchTrainingLogs} style={{marginBottom: '20px', marginTop: '16px'}}>获取训练日志</Button>}
       {logs ? <pre ref={logEl} className={styles.logs}>
         {logs}
       </pre> : (<div>
@@ -147,7 +148,7 @@ const Detail = () => {
               {...commonLayout}
               name="name"
               label="配置名称"
-              rules={[{ required: true }]}
+              rules={[{ required: true }, {...jobNameReg}]}
             >
               <Input placeholder="请输入配置名称" />
             </FormItem>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Table, Input, message, Card, Select, Popover } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
@@ -38,6 +38,7 @@ const List = () => {
     orderBy: '',
     order: '',
   });
+  const searchEl = useRef(null);
   const handleSearch = async () => {
     const params = {
       ...pageParams,
@@ -115,7 +116,14 @@ const List = () => {
   const onSearchName = (name) => {
     setPageParams({...pageParams, ...{pageNum: 1}});
     setFormValues({...formValues, ...{name}});
-  }
+  };
+
+  const onRefresh = () => {
+    setPageParams({...pageParams, ...{pageNum: 1}});
+    const name = searchEl.current.value;
+    setFormValues({...formValues, ...{name}});
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -188,8 +196,8 @@ const List = () => {
             ))
           }
         </Select>
-        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={onSearchName} enterButton />
-        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => handleSearch()}></Button>
+        <Search ref={searchEl} style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={onSearchName} enterButton />
+        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={onRefresh}></Button>
       </div>
       <Table
         loading={tableLoading}

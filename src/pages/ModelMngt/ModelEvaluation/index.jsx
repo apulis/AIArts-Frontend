@@ -10,6 +10,7 @@ import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
+import curStyles from './index.less';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -39,7 +40,7 @@ const ModelEvaluation = props => {
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
-    getCurrentModel(modelId);
+    // getCurrentModel(modelId);
   }, []);
 
   useEffect(() => {
@@ -55,6 +56,10 @@ const ModelEvaluation = props => {
       });
     }
   }, [presetParamsVisible]);
+
+  useEffect(() => {
+    getCurrentModel(modelId);
+  }, [codePathPrefix]);
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
@@ -97,9 +102,18 @@ const ModelEvaluation = props => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
       const { model } = data;
+
+      let paramPathSuffix = model.paramPath?.substr(codePathPrefix.length) || '';
+      let codePathSuffix = model.codePath?.substr(codePathPrefix.length) || '';
+      let outputPathSuffix = model.outputPath?.substr(codePathPrefix.length) || '';
+      let startupFileSuffix = model.startupFile?.substr(codePathPrefix.length) || '';
+
       form.setFieldsValue({
         name: model.name,
-        argumentsFile: model.paramPath,
+        argumentsFile: paramPathSuffix,
+        codePath: codePathSuffix,
+        outputPath: outputPathSuffix,
+        startupFile: startupFileSuffix,
       });
     } else {
       message.error(msg);
@@ -117,15 +131,15 @@ const ModelEvaluation = props => {
       id: modelId,
       name,
       engine,
-      codePath,
-      startupFile,
-      outputPath,
+      codePath: codePathPrefix + codePath,
+      startupFile: codePathPrefix + startupFile,
+      outputPath: codePathPrefix + outputPath,
       datasetPath,
       params,
       datasetName,
       deviceType,
       deviceNum,
-      paramPath: argumentsFile,
+      paramPath: codePathPrefix + argumentsFile,
     };
     const { code, msg } = await addEvaluation(evalParams);
 
@@ -205,7 +219,13 @@ const ModelEvaluation = props => {
         delete currentSelected.params.name
       }
 
-      setFieldsValue(currentSelected.params);
+      const suffixParams = {
+        codePath: currentSelected.params.codePath?.substr(codePathPrefix.length) || '',
+        outputPath: currentSelected.params.outputPath?.substr(codePathPrefix.length) || '',
+        startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length) || '',
+        paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length) || '',
+      }
+      setFieldsValue({...currentSelected.params, ...suffixParams});
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};
@@ -247,7 +267,7 @@ const ModelEvaluation = props => {
           <Form
             form={form}
             onFinish={onFinish}
-            autoComplete="off"
+            // autoComplete="off"
           >
             <Form.Item
               {...layout}
@@ -268,7 +288,7 @@ const ModelEvaluation = props => {
               {...layout}
               label="引擎"
               name="engine"
-              required
+              rules={[{ required: true, message: '请选择引擎' }]}
             >
               <Select>
                 {
@@ -278,22 +298,22 @@ const ModelEvaluation = props => {
                 }
               </Select>
             </Form.Item>
-            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true }, { message: '需要填写代码目录' }]}>
-              <Input/>
+            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
+              <Input addonBefore={codePathPrefix} />
             </Form.Item>
-            <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true }, { message: '需要填写启动文件' }]}>
-              <Input/>
+            <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
+              <Input addonBefore={codePathPrefix} />
             </Form.Item>
             <Form.Item 
               {...layout} 
               label="输出路径"
               name="outputPath"
-              rules={[{ required: true }, { message: '需要填写输出路径' }]}
+              rules={[{ required: true, message: '需要填写输出路径' }]}
             >
-              <Input/>            
+              <Input addonBefore={codePathPrefix} />
             </Form.Item> 
-            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true }, { message: '需要填写模型参数文件' }]}>
-              <Input/>
+            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型参数文件' }]}>
+              <Input addonBefore={codePathPrefix} />
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
               <Select
@@ -338,7 +358,7 @@ const ModelEvaluation = props => {
               {...layout}
               label="设备类型"
               name="deviceType"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请选择设备类型' }]}
             >
               <Select onChange={handleDeviceTypeChange}>
                 {
@@ -352,7 +372,7 @@ const ModelEvaluation = props => {
               {...layout}
               label="设备数量"
               name="deviceNum"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: '请选择设备数量' }]}
             >
               <Select>
                 {
@@ -383,7 +403,10 @@ const ModelEvaluation = props => {
         >
           {
             presetRunningParams.length > 0 ? 
-            <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+            <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} 
+              // style={{ height: 220 }} 
+              className={curStyles.paramsTabs}
+            >
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   {/* <Row>

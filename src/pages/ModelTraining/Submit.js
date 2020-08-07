@@ -96,6 +96,7 @@ const ModelTraining = (props) => {
     }
   };
   useEffect(() => {
+    console.log(111, currentDeviceType)
     if (distributedJob) {
       if (!currentDeviceType) return;
       // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
@@ -179,7 +180,8 @@ const ModelTraining = (props) => {
       setRunningParams(params);
       setFieldsValue({
         params: params,
-        datasetPath: model.datasetName,
+        // datasetPath: model.datasetName,
+        datasetPath: model.datasetPath,
         engine: model.engineType,
         codePath: model.codePath,
         startupFile: model.startupFile,
@@ -323,7 +325,6 @@ const ModelTraining = (props) => {
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
       });
-      console.log('currentSelected.params.params', currentSelected.params)
       const params = Object.entries(currentSelected.params.params || {}).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -334,6 +335,7 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
+      setCurrentDeviceType(currentSelected.params.deviceType);
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
@@ -395,6 +397,9 @@ const ModelTraining = (props) => {
           labelCol={{ span: 4 }}
           name="codePath"
           label="代码目录"
+          rules={[
+            { required: isPretrainedModel }
+          ]}
         >
           {
             needCodePathPrefix ?
@@ -408,7 +413,7 @@ const ModelTraining = (props) => {
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
+        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
           {
             needCodePathPrefix ? <Input style={{ width: 420 }} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
@@ -565,7 +570,7 @@ const ModelTraining = (props) => {
           form={form}
         >
           {
-            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: '50%' }}>
+            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{maxHeight: '500px'}}>
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>
