@@ -144,13 +144,6 @@ const ModelList = props => {
     dispatch({
       type: 'modelList/fetch',
       payload: params,
-    }).then(({ error, data }) => {
-      if (error === null) {
-        // 当前页面已经被删光
-        if (data.models && data.models.length === 0 && pageParams.pageNum > 1) {
-          setPageParams({...pageParams, ...{pageNum: pageParams.pageNum-1}});
-        }
-      }
     });
   };
 
@@ -188,8 +181,13 @@ const ModelList = props => {
           }
         }).then(({ error }) => {
           if (error === null) {
+            // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+            if (data.list.length == 1 && pageParams.pageNum > 1) {
+              setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+            } else {
+              handleSearch();
+            }            
             message.success(`删除成功`);
-            handleSearch();
           } else {
             message.error(`删除失败${error.msg}` || `删除失败`);
           }
