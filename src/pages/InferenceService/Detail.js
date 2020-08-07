@@ -57,9 +57,11 @@ const InferenceDetail = () => {
   }, [])
   const handleChange = info => {
     if (info.file.status === 'uploading') {
+      setImageUrl('');
       setLoading(true);
       return;
     }
+    console.log('info', info.file.status)
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, imageUrl => {
         setImageUrl(imageUrl);
@@ -75,8 +77,12 @@ const InferenceDetail = () => {
       } else {
         setTempImageUrl(imageBase64);
         setLoading(false);
-      }
-      
+      } 
+    }
+
+    if (info.file.status === 'error') {
+      setLoading(false);
+      message.error('处理出错')
     }
   }
   const beforeUpload = (file) => {
