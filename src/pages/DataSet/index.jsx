@@ -44,6 +44,11 @@ const DataSetList = () => {
     const { code, data } = await getDatasets(params);
     if (code === 0 && data) {
       const { total, datasets } = data;
+      // 如果当前页面已经被删光，跳到上一页
+      if (datasets.length === 0 && pageParams.pageNum > 1) {
+        setPageParams({...pageParams, ...{pageNum: pageParams.pageNum - 1}});
+        return;
+      }
       setDataSets({
         data: datasets,
         total: total,
