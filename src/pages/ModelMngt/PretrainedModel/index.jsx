@@ -180,7 +180,7 @@ const PretrainedModelList = props => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <Button type="default" onClick={addPretrainedModel}>录入模型</Button>
+          {/* <Button type="default" onClick={addPretrainedModel}>录入模型</Button> */}
           <div
             style={{
               float: "right",
