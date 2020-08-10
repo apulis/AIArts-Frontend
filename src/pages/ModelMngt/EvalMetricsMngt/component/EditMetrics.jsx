@@ -71,7 +71,6 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    // const list = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
     const list = getDeviceNumArrByNodeType(nodeInfo,currentDeviceType);
     setAvailableDeviceNumList(list);
   }, [nodeInfo, currentDeviceType]);
@@ -94,10 +93,9 @@ const EditMetrics = (props) => {
   }, [codePathPrefix, paramsDetailedData]);
 
   const fetchDataSets = async () => {
-    const res = await getLabeledDatasets();
+    const res = await getLabeledDatasets({ pageNum: 1, pageSize: 9999 });
     if (res.code === 0) {
       let datasets = res.data.datasets;
-      // datasets = datasets.filter(d => d.convertStatus === 'finished');
       setDatasets(datasets);
     }
   };
