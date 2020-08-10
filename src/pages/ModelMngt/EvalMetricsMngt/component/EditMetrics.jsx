@@ -78,7 +78,6 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
-      console.log(111, paramsDetailedData);
       haveSetedParamsDetail = true;
       const newParams = {
         ...paramsDetailedData.params,
@@ -95,10 +94,10 @@ const EditMetrics = (props) => {
   }, [codePathPrefix, paramsDetailedData]);
 
   const fetchDataSets = async () => {
-    const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
+    const res = await getLabeledDatasets();
     if (res.code === 0) {
       let datasets = res.data.datasets;
-      datasets = datasets.filter(d => d.convertStatus === 'finished');
+      // datasets = datasets.filter(d => d.convertStatus === 'finished');
       setDatasets(datasets);
     }
   };
@@ -309,7 +308,7 @@ const EditMetrics = (props) => {
           >
             {
               datasets.map(d => (
-                <Option value={d.convertOutPath} key={d.dataSetId}>{d.name}</Option>
+                <Option value={d.path} key={d.id}>{d.name}</Option>
               ))
             }
           </Select>
