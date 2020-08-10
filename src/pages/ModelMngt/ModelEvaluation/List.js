@@ -192,7 +192,7 @@ const List = () => {
         <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleStatusChange}>
           {
             jobSumary.map(status => (
-              <Option value={status.value}>{status.label}</Option>
+              <Option key={status.value} value={status.value}>{status.label}</Option>
             ))
           }
         </Select>
@@ -204,6 +204,7 @@ const List = () => {
         style={{ marginTop: '30px' }}
         columns={columns}
         dataSource={trainingWorkList}
+        rowKey={record => record.id}
         onChange={onSortChange}
         pagination={{
           total: total,
