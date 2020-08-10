@@ -119,6 +119,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
           <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
           <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
+          <Descriptions.Item label="模型参数文件">{evaluationJob?.paramPath}</Descriptions.Item>
           <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
           <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
