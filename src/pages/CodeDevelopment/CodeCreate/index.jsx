@@ -37,9 +37,9 @@ const CodeCreate = () => {
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
       const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo,result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || []
-      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo,result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || [0]
+      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo, deviceTypeArrData[0]) || [0]
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
-      
+      console.log('deviceTypeArrData[0]', deviceTypeArrData[0])
       setCodePathPrefix(result.codePathPrefix)
       setEngineTypeArr(enginTypeArrData)
       setEngineNameArr(engineNameArrData)
@@ -98,7 +98,7 @@ const CodeCreate = () => {
       arr = utilGetDeviceNumArr(data['nodeInfo'],type)
       setFieldsValue({ 'deviceNum': arr[0]})
       setDeviceNumArr(arr)
-    }else if(jobTrainingType=='PSDistJob'){
+    }else if (jobTrainingType=='PSDistJob'){
       arr = utilGetDeviceNumPerNodeArr(data['nodeInfo'],type)
       setFieldsValue({ 'numPsWorker': arr[0]})
       setDeviceNumPerNodeArr(arr)

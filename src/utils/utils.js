@@ -152,7 +152,7 @@ export const getModelStatus = (status) => {
 };
 // Regular任务类型，根据nodeType返回可选设备数量数组
 export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
-  if(nodeInfo==undefined || type==undefined){
+  if (nodeInfo == undefined || !type) {
     return []
   }
   // gpu
@@ -176,12 +176,13 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
     }
     return arr2;
   }
+  console.log(111, type)
   // npu
   return [0, 1, 2, 4, 8];
 };
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
 export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
-  if(nodeInfo==undefined || type==undefined){
+  if (nodeInfo == undefined || !type) {
     return []
   }
   // gpu
@@ -241,23 +242,23 @@ export const formatParams = (obj) => {
   return result;
 };
 // 节流
-export const throttle = (fn,delay)=>{
+export const throttle = (fn, delay) => {
   let lastTime = 0;
-  return function(){
-      let nowTime = Date.now();
-      if(nowTime-lastTime>delay){
-          fn.call(this);
-          lastTime = nowTime;
-      }
+  return function () {
+    let nowTime = Date.now();
+    if (nowTime - lastTime > delay) {
+      fn.call(this);
+      lastTime = nowTime;
+    }
   }
 }
 // 防抖
-export const debounce = (fn,delay)=>{
+export const debounce = (fn, delay) => {
   let timer = null;
-  return function (){
-      clearTimeout(timer);
-      timer = setTimeout(function(){
-          fn.call(this);
-      },delay)
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.call(this);
+    }, delay)
   }
 }
