@@ -130,7 +130,7 @@ const ModelTraining = (props) => {
   }, [codePathPrefix, paramsDetailedData])
 
   const fetchDataSets = async () => {
-    const res = await getLabeledDatasets({ pageNum: 1, pageSize: 100 });
+    const res = await getLabeledDatasets({ pageNum: 1, pageSize: 9999 });
     if (res.code === 0) {
       let datasets = res.data.datasets;
       setDatasets(datasets);
