@@ -71,7 +71,9 @@ const CreateModel = props => {
 
   const handleSubmit = item => {
     // console.log(item)
-    form.setFieldsValue({job: item.name, jobId: item.id});
+    if (!!item) {
+      form.setFieldsValue({job: item.name, jobId: item.id});
+    }
     setVisible(false);
   };
 
