@@ -16,7 +16,7 @@ const { Search } = Input;
 const EvalMetricsMngt = () => {
 
   const [tableLoading, setTableLoading] = useState(true);
-  const [formValues, setFormValues] = useState({ scope: 2, name: '' });
+  const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
@@ -67,7 +67,7 @@ const EvalMetricsMngt = () => {
   };
 
   const resetQuery = () => {
-    setFormValues({ scope: 2, name: '' });
+    setFormValues({ scope: 2, searchWord: '' });
   };
 
   const columns = [
@@ -127,8 +127,8 @@ const EvalMetricsMngt = () => {
       params.scope = formValues.scope;
     }
 
-    if (formValues.name) {
-      params.name = formValues.name;
+    if (formValues.searchWord) {
+      params.searchWord = formValues.searchWord;
     }
     const res = await getParamsList(params);
   };
@@ -155,8 +155,8 @@ const EvalMetricsMngt = () => {
     setFormValues({ ...formValues, ...{ scope } });
   };
 
-  const onSearchName = (name) => {
-    setFormValues({ ...formValues, ...{ name } });
+  const onSearchName = (searchWord) => {
+    setFormValues({ ...formValues, ...{ searchWord } });
   };
 
   useEffect(() => {
