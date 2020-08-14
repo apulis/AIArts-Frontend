@@ -27,6 +27,7 @@ const ModelEvaluation = props => {
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
   const [nodeInfo, setNofeInfo] = useState([]);
+  const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
@@ -87,6 +88,12 @@ const ModelEvaluation = props => {
       }
     }
   }
+
+  useEffect(() => {
+    if (!currentDeviceType) return;
+    const nums = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+    setDeviceNums(nums);
+  }, [nodeInfo, currentDeviceType]);
 
   const getTestDatasets = async () => {
     const { code, data, msg } = await getAllLabeledDatasets();
@@ -155,11 +162,9 @@ const ModelEvaluation = props => {
     setDatasetName(option.children);
   };
 
-  const handleDeviceTypeChange = value => {
-    const selected = deviceList.find(item => item.deviceType === value); 
-    // const nums = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === selected.deviceType));
-    const nums = getDeviceNumArrByNodeType(nodeInfo,selected.deviceType);
-    setDeviceNums(nums);
+  const onDeviceTypeChange = (value) => {
+    const deviceType = value;
+    setCurrentDeviceType(deviceType);
   };
 
   const addParams = () => {
@@ -238,6 +243,7 @@ const ModelEvaluation = props => {
       setFieldsValue({
         params: params
       });
+      setCurrentDeviceType(currentSelected.params.deviceType);
     }
     setPresetParamsVisible(false);
   };
@@ -245,6 +251,12 @@ const ModelEvaluation = props => {
   const handleSelectPresetParams = (current) => {
     // console.log(current);
     setCurrentSelectedPresetParamsId(current);
+  };
+
+  const handleClickDeviceNum = (e) => {
+    if (!getFieldValue('deviceType')) {
+      message.error('需要先选择设备类型');
+    }
   };
 
   const layout = {
@@ -360,7 +372,7 @@ const ModelEvaluation = props => {
               name="deviceType"
               rules={[{ required: true, message: '请选择设备类型' }]}
             >
-              <Select onChange={handleDeviceTypeChange}>
+              <Select onChange={onDeviceTypeChange}>
                 {
                   deviceTypes.map((item) => (
                     <Option key={item} value={item}>{item}</Option>
@@ -374,7 +386,9 @@ const ModelEvaluation = props => {
               name="deviceNum"
               rules={[{ required: true, message: '请选择设备数量' }]}
             >
-              <Select>
+              <Select
+                onClick={handleClickDeviceNum}
+              >
                 {
                   deviceNums.map((item) => (
                     <Option key={item} value={item}>{item}</Option>
