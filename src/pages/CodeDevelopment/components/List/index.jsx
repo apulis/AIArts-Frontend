@@ -26,6 +26,12 @@ const CodeList = (props) => {
   })
   useEffect(() => {
     renderStatusSelect()
+    const timer = setInterval(() => {
+      renderStatusSelect();
+    }, 3000)
+    return () => {
+      window.clearInterval(timer);
+    }
   }, [])
 
   useEffect(() => {
