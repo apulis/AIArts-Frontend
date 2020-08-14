@@ -20,9 +20,7 @@ const noMatch = (
     title="403"
     subTitle="抱歉，您无权限访问此页面."
     extra={
-      <Button type="primary">
-        <a href={USER_LOGIN_URL}>请联系管理员添加权限</a>
-      </Button>
+        <p>请联系管理员添加权限</p>
     }
   />
 );
