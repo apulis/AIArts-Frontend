@@ -32,7 +32,7 @@ const CodeList = (props) => {
     renderTable(pageParams);
   }, [pageParams, sortInfo, curStatus])
   useEffect(() => {
-    debugger
+    
     if (curStatus != '') {
       renderTable(pageObj);
       setPageParams(pageObj);
