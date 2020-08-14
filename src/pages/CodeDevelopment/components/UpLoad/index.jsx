@@ -42,6 +42,7 @@ const CodeUpload = (props) => {
           <InboxOutlined />
         </p>
         <p className="ant-upload-text">请点击或拖入文件上传（支持多文件）</p>
+        <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）</p>
       </Dragger>
 
     </>
