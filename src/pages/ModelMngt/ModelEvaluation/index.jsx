@@ -28,7 +28,8 @@ const ModelEvaluation = props => {
   const [datasetName, setDatasetName] = useState('');
   const [nodeInfo, setNofeInfo] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
-  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  // const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  const [runningParams, setRunningParams] = useState([]);
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
@@ -130,9 +131,12 @@ const ModelEvaluation = props => {
   const onFinish = async (values) => {
     let params = {};
     values.params && values.params.forEach(p => {
-      params[p.key] = p.value;
+      //处理params存在空记录的问题
+      if (p.key && p.value) {
+        params[p.key] = p.value;
+      }
     });
-    // values.params = params;
+
     const { name, engine, codePath, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const evalParams = {
       id: modelId,
