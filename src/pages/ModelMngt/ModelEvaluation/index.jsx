@@ -33,6 +33,7 @@ const ModelEvaluation = props => {
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
 
   const [form] = Form.useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
@@ -116,13 +117,17 @@ const ModelEvaluation = props => {
       let outputPathSuffix = model.outputPath?.substr(codePathPrefix.length) || '';
       let startupFileSuffix = model.startupFile?.substr(codePathPrefix.length) || '';
 
+      const dataSuffix = model.codePath ? model.codePath.startsWith('/data') : false;
+      setIsPublic(dataSuffix);
+
       form.setFieldsValue({
         name: model.name,
         argumentsFile: paramPathSuffix,
-        codePath: codePathSuffix,
+        codePath: dataSuffix ? model.outputPath : codePathSuffix,
         outputPath: outputPathSuffix,
-        startupFile: startupFileSuffix,
+        startupFile: dataSuffix ? model.startupFile : startupFileSuffix,
       });
+
     } else {
       message.error(msg);
     }
@@ -142,8 +147,8 @@ const ModelEvaluation = props => {
       id: modelId,
       name,
       engine,
-      codePath: codePathPrefix + codePath,
-      startupFile: codePathPrefix + startupFile,
+      codePath: isPublic ? codePath : codePathPrefix + codePath,
+      startupFile: isPublic ? startupFile : codePathPrefix + startupFile,
       outputPath: codePathPrefix + outputPath,
       datasetPath,
       params,
@@ -314,12 +319,22 @@ const ModelEvaluation = props => {
                 }
               </Select>
             </Form.Item>
-            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
-              <Input addonBefore={codePathPrefix} />
-            </Form.Item>
-            <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
-              <Input addonBefore={codePathPrefix} />
-            </Form.Item>
+            { isPublic ?
+              <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
+                <Input disabled />
+              </Form.Item> :
+              <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
+                <Input addonBefore={codePathPrefix} />
+              </Form.Item>
+            }
+            { isPublic ?
+              <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
+                <Input disabled />
+              </Form.Item> :              
+              <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
+                <Input addonBefore={codePathPrefix} />
+              </Form.Item>
+            }
             <Form.Item 
               {...layout} 
               label="输出路径"
@@ -328,7 +343,7 @@ const ModelEvaluation = props => {
             >
               <Input addonBefore={codePathPrefix} />
             </Form.Item> 
-            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型参数文件' }]}>
+            <Form.Item {...layout} label="模型权重文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型权重文件' }]}>
               <Input addonBefore={codePathPrefix} />
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
