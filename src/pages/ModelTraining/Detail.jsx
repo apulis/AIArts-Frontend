@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Descriptions, Modal } from 'antd';
 import { useParams } from 'umi';
-import { message, Form, Input, Radio } from 'antd';
+import { message, Form, Input, Tooltip } from 'antd';
 import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
@@ -94,15 +94,15 @@ const Detail = () => {
       message.success('成功删除');
     }
   }
+  let setTemplateButtonDisabled = /^\/data/.test(jobDetail.codePath) || Object.keys(jobDetail).length === 0
   return (
     <div className={styles.modelDetail}>
       <div className={styles.topButtons}>
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
-          {/* <Button onClick={removeTraining}>删除训练</Button> */}
-          {
-            /^\/data/.test(jobDetail.codePath) ? null :  <Button type="primary" onClick={() => setModalVisible(true)}>保存训练参数</Button>
-          }
+          <Tooltip placement="bottomLeft" title="公有模板，不可保存" arrowPointAtCenter>
+            <Button type="primary" disabled={setTemplateButtonDisabled} onClick={() => setModalVisible(true)}>保存训练参数</Button>
+          </Tooltip>
         </div>
       </div>
       <Descriptions bordered={true} column={2}>
