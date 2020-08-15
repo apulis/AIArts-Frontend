@@ -1,5 +1,5 @@
 import { history } from 'umi';
-import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Radio } from 'antd';
+import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Tooltip } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
@@ -116,7 +116,12 @@ const EvaluationDetail = props => {
         title="评估详情"
       >
         <div className={styles.saveEvalParams}>
-          <Button type="primary" disabled={isPublic} onClick={() => setModalVisible(true)}>保存评估参数</Button>
+          { isPublic ?
+            <Tooltip placement="bottomLeft" title="公有模板，不可保存" arrowPointAtCenter>
+              <Button type="primary" disabled onClick={() => setModalVisible(true)}>保存评估参数</Button>
+            </Tooltip> :
+            <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
+          }
         </div>
         <Descriptions style={{ marginTop: '20px' }} bordered={true} column={2}>
           <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
