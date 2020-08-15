@@ -234,7 +234,6 @@ const ModelTraining = (props) => {
       values.startupFile = codePathPrefix + values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath
     }
-    
     values.params = params;
     if (distributedJob) {
       values.deviceNum = values.deviceTotal;
@@ -409,23 +408,23 @@ const ModelTraining = (props) => {
           ]}
         >
           {
-            needCodePathPrefix ?
-              <Input style={{ width: 420 }} disabled={true} />
+            isPretrainedModel || importedTrainingParams ?
+              <Input style={{ width: 420 }} disabled={isPretrainedModel} />
               : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
         <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
           {
-            needCodePathPrefix ? <Input style={{ width: 420 }} disabled={true} />
+            isPretrainedModel || importedTrainingParams ? <Input style={{ width: 420 }} disabled={isPretrainedModel} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
+          
           {
-            needCodePathPrefix ? <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+            isPretrainedModel || importedTrainingParams ? <Input style={{ width: 420 }} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
           }
-          
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
           {/* <Input style={{ width: 300 }} /> */}
