@@ -225,9 +225,16 @@ const ModelTraining = (props) => {
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     });
-    values.codePath = (needCodePathPrefix ? '' : codePathPrefix) + (values.codePath || '');
-    values.startupFile = (needCodePathPrefix ? '' : codePathPrefix) + values.startupFile;
-    values.outputPath = (needCodePathPrefix ? '' : codePathPrefix) + (values.outputPath || '');
+    if (isPretrainedModel || importedTrainingParams) {
+      values.codePath = values.codePath;
+      values.startupFile =  values.startupFile;
+      values.outputPath = codePathPrefix + values.outputPath
+    } else {
+      values.codePath = codePathPrefix + values.codePath;
+      values.startupFile = codePathPrefix + values.startupFile;
+      values.outputPath = codePathPrefix + values.outputPath
+    }
+    
     values.params = params;
     if (distributedJob) {
       values.deviceNum = values.deviceTotal;
@@ -403,19 +410,19 @@ const ModelTraining = (props) => {
         >
           {
             needCodePathPrefix ?
-              <Input style={{ width: 420 }} disabled={typeCreate} />
+              <Input style={{ width: 420 }} disabled={true} />
               : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
         <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
           {
-            needCodePathPrefix ? <Input style={{ width: 420 }} disabled={typeCreate} />
+            needCodePathPrefix ? <Input style={{ width: 420 }} disabled={true} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
           {
-            needCodePathPrefix ? <Input style={{ width: 420 }} />
+            needCodePathPrefix ? <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
           }
           
