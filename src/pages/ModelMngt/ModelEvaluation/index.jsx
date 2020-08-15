@@ -117,15 +117,15 @@ const ModelEvaluation = props => {
       let outputPathSuffix = model.outputPath?.substr(codePathPrefix.length) || '';
       let startupFileSuffix = model.startupFile?.substr(codePathPrefix.length) || '';
 
-      const dataSuffix = model.codePath ? model.codePath.startsWith('/data') : false;
-      setIsPublic(dataSuffix);
+      const dataPreffix = model.codePath ? model.codePath.startsWith('/data') : false;
+      setIsPublic(dataPreffix);
 
       form.setFieldsValue({
         name: model.name,
         argumentsFile: paramPathSuffix,
-        codePath: dataSuffix ? model.outputPath : codePathSuffix,
+        codePath: dataPreffix ? model.codePath : codePathSuffix,
         outputPath: outputPathSuffix,
-        startupFile: dataSuffix ? model.startupFile : startupFileSuffix,
+        startupFile: dataPreffix ? model.startupFile : startupFileSuffix,
       });
 
     } else {

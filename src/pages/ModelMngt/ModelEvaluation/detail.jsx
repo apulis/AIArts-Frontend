@@ -46,8 +46,8 @@ const EvaluationDetail = props => {
       // }
 
       // 判断是否/data开头
-      const dataSuffix = evaluation.codePath ? evaluation.codePath.startsWith('/data') : false;
-      setIsPublic(dataSuffix);
+      const dataPreffix = evaluation.codePath ? evaluation.codePath.startsWith('/data') : false;
+      setIsPublic(dataPreffix);
     }
   };
 
@@ -115,11 +115,9 @@ const EvaluationDetail = props => {
         onBack={() => history.push('/ModelManagement/ModelEvaluation/List')}
         title="评估详情"
       >
-        { !isPublic ?
-          <div className={styles.saveEvalParams}>
-            <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
-          </div> : null
-        }
+        <div className={styles.saveEvalParams}>
+          <Button type="primary" disabled={isPublic} onClick={() => setModalVisible(true)}>保存评估参数</Button>
+        </div>
         <Descriptions style={{ marginTop: '20px' }} bordered={true} column={2}>
           <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
           <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
