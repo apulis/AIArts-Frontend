@@ -125,7 +125,7 @@ const ModelEvaluation = props => {
         argumentsFile: paramPathSuffix,
         codePath: dataPreffix ? model.codePath : codePathSuffix,
         outputPath: outputPathSuffix,
-        startupFile: dataPreffix ? model.startupFile : startupFileSuffix,
+        startupFile: dataPreffix ? model.startupFile.replace('train', 'eval') : startupFileSuffix,
       });
 
     } else {
