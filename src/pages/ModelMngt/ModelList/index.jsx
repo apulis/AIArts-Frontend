@@ -91,8 +91,8 @@ const ModelList = props => {
             <a onClick={() => handleDownload(item)}>模型下载</a>
             {/* <a onClick={() => createInference(item)}>创建推理</a> */}
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
-            <a onClick={() => deleteModel(item)}>删除</a>
             <a onClick={() => evaluateModel(item)}>模型评估</a>
+            <a style={{ color: 'red' }} onClick={() => deleteModel(item)}>删除</a>
           </Space>
         );
       },
