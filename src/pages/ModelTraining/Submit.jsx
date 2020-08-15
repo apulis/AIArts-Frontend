@@ -225,10 +225,12 @@ const ModelTraining = (props) => {
     values.params && values.params.forEach(p => {
       params[p.key] = p.value;
     });
-    if (isPretrainedModel || importedTrainingParams) {
+    if (isPretrainedModel) {
       values.codePath = values.codePath;
       values.startupFile =  values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath
+    } else if (importedTrainingParams) {
+      //
     } else {
       values.codePath = codePathPrefix + values.codePath;
       values.startupFile = codePathPrefix + values.startupFile;
