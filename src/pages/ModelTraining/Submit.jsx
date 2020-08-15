@@ -368,6 +368,15 @@ const ModelTraining = (props) => {
     setDeviceTotal(deviceTotal);
   };
 
+  let needOutputPathCodePrefix = true;
+  if (isPretrainedModel) {
+    needOutputPathCodePrefix = true
+  } else if (importedTrainingParams) {
+    needOutputPathCodePrefix = false;
+  } else {
+    needOutputPathCodePrefix = true;
+  }
+
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -422,10 +431,8 @@ const ModelTraining = (props) => {
           }
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
-          
           {
-            isPretrainedModel || importedTrainingParams ? <Input style={{ width: 420 }} />
-            : <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+            <Input addonBefore={needOutputPathCodePrefix ? codePathPrefix : null} style={{ width: 420 }} />
           }
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
