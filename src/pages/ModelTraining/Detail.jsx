@@ -100,7 +100,7 @@ const Detail = () => {
       <div className={styles.topButtons}>
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>模型训练</div>
         <div>
-          <Tooltip placement="bottomLeft" title="公有模板，不可保存" arrowPointAtCenter>
+          <Tooltip placement="bottomLeft" title={setTemplateButtonDisabled && "公有模板，不可保存"} arrowPointAtCenter>
             <Button type="primary" disabled={setTemplateButtonDisabled} onClick={() => setModalVisible(true)}>保存训练参数</Button>
           </Tooltip>
         </div>
