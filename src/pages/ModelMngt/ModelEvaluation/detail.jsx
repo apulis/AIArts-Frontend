@@ -19,6 +19,7 @@ const EvaluationDetail = props => {
   const [indicator, setIndicator] = useState(null);
   const [confusion, setConfusion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
 
   const [form] = Form.useForm();
   const { validateFields } = form;
@@ -43,6 +44,10 @@ const EvaluationDetail = props => {
       //   clearInterval(timer);
       //   return;
       // }
+
+      // 判断是否/data开头
+      const dataSuffix = evaluation.codePath ? evaluation.codePath.startsWith('/data') : false;
+      setIsPublic(dataSuffix);
     }
   };
 
@@ -110,9 +115,11 @@ const EvaluationDetail = props => {
         onBack={() => history.push('/ModelManagement/ModelEvaluation/List')}
         title="评估详情"
       >
-        <div className={styles.saveEvalParams}>
-          <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
-        </div>
+        { !isPublic ?
+          <div className={styles.saveEvalParams}>
+            <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
+          </div> : null
+        }
         <Descriptions style={{ marginTop: '20px' }} bordered={true} column={2}>
           <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
           <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
@@ -122,7 +129,10 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
           <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
           <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
-          <Descriptions.Item label="模型参数文件">{evaluationJob?.paramPath}</Descriptions.Item>
+          { evaluationJob && evaluationJob.paramPath ?
+            <Descriptions.Item label="模型权重文件">{evaluationJob?.paramPath}</Descriptions.Item>
+            : null
+          }
           <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
           <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>

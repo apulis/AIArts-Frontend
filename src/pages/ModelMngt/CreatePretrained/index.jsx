@@ -405,10 +405,10 @@ const CreatePretrained = props => {
             {/* <Form.Item
               {...layout}
               name="modelArgumentPath"
-              label="模型参数文件"
-              rules={[{ required: true, message: '模型参数文件不能为空!' }]}
+              label="模型权重文件"
+              rules={[{ required: true, message: '模型权重文件不能为空!' }]}
             >
-              <Input placeholder="请输入模型参数文件路径" />
+              <Input placeholder="请输入模型权重文件路径" />
             </Form.Item>                      */}
             <Form.Item
               {...layout}
