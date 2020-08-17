@@ -72,7 +72,8 @@ const CreateModel = props => {
   const handleSubmit = item => {
     // console.log(item)
     if (!!item) {
-      form.setFieldsValue({job: item.name, jobId: item.id});
+      const outPath = item.outputPath.substr(codePathPrefix.length);
+      form.setFieldsValue({job: item.name, jobId: item.id, argumentPath: outPath});
     }
     setVisible(false);
   };
@@ -214,10 +215,10 @@ const CreateModel = props => {
             <Form.Item
               {...layout}
               name="argumentPath"
-              label="模型参数文件"
-              rules={[{ required: true, message: '模型参数文件不能为空!' }]}
+              label="模型权重文件"
+              rules={[{ required: true, message: '模型权重文件不能为空!' }]}
             >
-              <Input addonBefore={codePathPrefix} placeholder="请输入模型参数文件" />
+              <Input addonBefore={codePathPrefix} placeholder="请输入模型权重文件" />
             </Form.Item>            
             <Form.Item
                 name="jobId"

@@ -1,5 +1,5 @@
 import { history } from 'umi';
-import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Radio } from 'antd';
+import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Tooltip } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
@@ -17,8 +17,10 @@ const EvaluationDetail = props => {
   const [evaluationJob, setEvaluationJob] = useState(null);
   const [logs, setLogs] = useState('');
   const [indicator, setIndicator] = useState(null);
+  const [confusion, setConfusion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  
+  const [isPublic, setIsPublic] = useState(false);
+
   const [form] = Form.useForm();
   const { validateFields } = form;
 
@@ -26,13 +28,14 @@ const EvaluationDetail = props => {
     // const cancel = message.loading('获取结果中');
     const res = await fetchEvaluationDetail(modelId);
     // cancel();
-    const { code, msg, data: { evaluation, log, indicator } } = res;
+    const { code, msg, data: { evaluation, log, indicator, confusion } } = res;
     if (code === 0) {
       // message.success('成功获取结果');
-      
+
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
+      setConfusion(confusion);
 
       // console.log(111, evaluation.status)
       // //  作业已经完成，不再刷新请求
@@ -41,33 +44,38 @@ const EvaluationDetail = props => {
       //   clearInterval(timer);
       //   return;
       // }
+
+      // 判断是否/data开头
+      const dataPreffix = evaluation.codePath ? evaluation.codePath.startsWith('/data') : false;
+      setIsPublic(dataPreffix);
     }
-  }
+  };
 
   const isFinished = (status) => {
     // let status = evaluationJob.status;
 
-    if (['finished','failed','pausing','paused','killing','killed','error'].includes(status)) {
+    if (['finished', 'failed', 'pausing', 'paused', 'killing', 'killed', 'error'].includes(status)) {
       return true;
-    }else{
+    } else {
       return false;
     }
-  }
+  };
 
   const getLateastLogs = async () => {
     const cancel = message.loading('获取结果中');
     const res = await fetchEvaluationDetail(modelId);
     cancel();
-    const { code, msg, data: { evaluation, log, indicator } } = res;
+    const { code, msg, data: { evaluation, log, indicator, confusion } } = res;
     if (code === 0) {
       message.success('成功获取结果');
 
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
+      setConfusion(confusion);
     }
-  }
-  
+  };
+
   const saveTrainingDetail = async () => {
     // const values = await validateFields(['name', 'desc', 'scope']);
     const values = await validateFields(['name', 'desc']);
@@ -83,16 +91,16 @@ const EvaluationDetail = props => {
       message.success('保存成功');
       setModalVisible(false);
     }
-  }  
+  };
 
   useEffect(() => {
     getEvaluationDetail();
     let timer = setInterval(() => {
-      getEvaluationDetail()
+      getEvaluationDetail();
     }, REFRESH_INTERVAL);
     return () => {
-      clearInterval(timer)
-    }
+      clearInterval(timer);
+    };
   }, []);
 
   const commonLayout = {
@@ -108,9 +116,14 @@ const EvaluationDetail = props => {
         title="评估详情"
       >
         <div className={styles.saveEvalParams}>
-          <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
+          { isPublic ?
+            <Tooltip placement="bottomLeft" title="公有模板，不可保存" arrowPointAtCenter>
+              <Button type="primary" disabled onClick={() => setModalVisible(true)}>保存评估参数</Button>
+            </Tooltip> :
+            <Button type="primary" onClick={() => setModalVisible(true)}>保存评估参数</Button>
+          }
         </div>
-        <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
+        <Descriptions style={{ marginTop: '20px' }} bordered={true} column={2}>
           <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
           <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
           <Descriptions.Item label="评估状态">{evaluationJob ? getJobStatus(evaluationJob.status) : ''}</Descriptions.Item>
@@ -119,19 +132,51 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
           <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
           <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
-          <Descriptions.Item label="模型参数文件">{evaluationJob?.paramPath}</Descriptions.Item>
+          { evaluationJob && evaluationJob.paramPath ?
+            <Descriptions.Item label="模型权重文件">{evaluationJob?.paramPath}</Descriptions.Item>
+            : null
+          }
           <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
           <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
         </Descriptions>
-        <div className="ant-descriptions-title" style={{marginTop: '30px'}}>评估结果</div>
-        <Button type="primary" onClick={getLateastLogs} style={{marginTop: '16px'}}>获取评估结果</Button>
-        {indicator && <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
+        <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>评估结果</div>
+        <Button type="primary" onClick={getLateastLogs} style={{ marginTop: '16px' }}>获取评估结果</Button>
+        {confusion && JSON.stringify(confusion) != "{}" &&
+          <table border={1} className={styles.confusionTable}>
+            <tr>
+              <th></th>
+              <th className={styles.title}>{confusion.y1}</th>
+              <th className={styles.title}>{confusion.y2}</th>
+              <th className={styles.title}>Recall</th>
+            </tr>
+            <tr>
+              <td className={styles.title}>{confusion.x1}</td>
+              <td>{confusion.TP}</td>
+              <td>{confusion.FN}</td>
+              <td>{confusion.Recall1}</td>
+            </tr>
+            <tr>
+              <td className={styles.title}>{confusion.x2}</td>
+              <td>{confusion.FP}</td>
+              <td>{confusion.TN}</td>
+              <td>{confusion.Recall2}</td>
+            </tr>
+            <tr>
+              <td className={styles.title}> Precision</td>
+              <td>{confusion.Precision1}</td>
+              <td>{confusion.Precision2}</td>
+              <td></td>
+            </tr>
+          </table>
+        }
+        {indicator && <Descriptions style={{ marginTop: '20px' }} bordered={true} column={2}>
           {Object.keys(indicator).map(key => <Descriptions.Item label={key}>{indicator[key]}</Descriptions.Item>)}
-        </Descriptions>}
-        {logs && <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
+        </Descriptions>
+        }
+        {logs && <pre ref={logEl} style={{ marginTop: '20px' }} className={styles.logs}>
           {logs}
-        </pre>}        
+        </pre>}
       </PageHeader>
       {modalVisible &&
         <Modal

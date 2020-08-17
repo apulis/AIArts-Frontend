@@ -84,7 +84,7 @@ const VersionMngt = (props) => {
         else {
           Modal.error({
             title: '升级提示',
-            content: '经检测，暂不支持升级',
+            content: '没有检测到升级文件',
           });
         }
         setCheckingFlag(false)
@@ -195,7 +195,7 @@ const VersionMngt = (props) => {
         title: '提示',
         content: (
           <div>
-            <p>亲，没有更多了</p>
+            <p>没有更多历史记录</p>
           </div>
         )
       });

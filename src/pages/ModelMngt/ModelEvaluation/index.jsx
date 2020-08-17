@@ -27,10 +27,13 @@ const ModelEvaluation = props => {
   const [deviceList, setDeviceList] = useState([]);
   const [datasetName, setDatasetName] = useState('');
   const [nodeInfo, setNofeInfo] = useState([]);
-  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  const [currentDeviceType, setCurrentDeviceType] = useState('');
+  // const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  const [runningParams, setRunningParams] = useState([]);
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
 
   const [form] = Form.useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
@@ -88,6 +91,12 @@ const ModelEvaluation = props => {
     }
   }
 
+  useEffect(() => {
+    if (!currentDeviceType) return;
+    const nums = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+    setDeviceNums(nums);
+  }, [nodeInfo, currentDeviceType]);
+
   const getTestDatasets = async () => {
     const { code, data, msg } = await getAllLabeledDatasets();
     if (code === 0 && data) {
@@ -108,13 +117,17 @@ const ModelEvaluation = props => {
       let outputPathSuffix = model.outputPath?.substr(codePathPrefix.length) || '';
       let startupFileSuffix = model.startupFile?.substr(codePathPrefix.length) || '';
 
+      const dataPreffix = model.codePath ? model.codePath.startsWith('/data') : false;
+      setIsPublic(dataPreffix);
+
       form.setFieldsValue({
         name: model.name,
         argumentsFile: paramPathSuffix,
-        codePath: codePathSuffix,
+        codePath: dataPreffix ? model.codePath : codePathSuffix,
         outputPath: outputPathSuffix,
-        startupFile: startupFileSuffix,
+        startupFile: dataPreffix ? model.startupFile.replace('train', 'eval') : startupFileSuffix,
       });
+
     } else {
       message.error(msg);
     }
@@ -123,16 +136,19 @@ const ModelEvaluation = props => {
   const onFinish = async (values) => {
     let params = {};
     values.params && values.params.forEach(p => {
-      params[p.key] = p.value;
+      //处理params存在空记录的问题
+      if (p.key && p.value) {
+        params[p.key] = p.value;
+      }
     });
-    // values.params = params;
+
     const { name, engine, codePath, startupFile, outputPath, datasetPath, deviceType, deviceNum, argumentsFile } = values;
     const evalParams = {
       id: modelId,
       name,
       engine,
-      codePath: codePathPrefix + codePath,
-      startupFile: codePathPrefix + startupFile,
+      codePath: isPublic ? codePath : codePathPrefix + codePath,
+      startupFile: isPublic ? startupFile : codePathPrefix + startupFile,
       outputPath: codePathPrefix + outputPath,
       datasetPath,
       params,
@@ -155,11 +171,9 @@ const ModelEvaluation = props => {
     setDatasetName(option.children);
   };
 
-  const handleDeviceTypeChange = value => {
-    const selected = deviceList.find(item => item.deviceType === value); 
-    // const nums = getDeviceNumArrByNodeType(nodeInfo.find(node => node.gpuType === selected.deviceType));
-    const nums = getDeviceNumArrByNodeType(nodeInfo,selected.deviceType);
-    setDeviceNums(nums);
+  const onDeviceTypeChange = (value) => {
+    const deviceType = value;
+    setCurrentDeviceType(deviceType);
   };
 
   const addParams = () => {
@@ -238,6 +252,7 @@ const ModelEvaluation = props => {
       setFieldsValue({
         params: params
       });
+      setCurrentDeviceType(currentSelected.params.deviceType);
     }
     setPresetParamsVisible(false);
   };
@@ -245,6 +260,12 @@ const ModelEvaluation = props => {
   const handleSelectPresetParams = (current) => {
     // console.log(current);
     setCurrentSelectedPresetParamsId(current);
+  };
+
+  const handleClickDeviceNum = (e) => {
+    if (!getFieldValue('deviceType')) {
+      message.error('需要先选择设备类型');
+    }
   };
 
   const layout = {
@@ -298,12 +319,22 @@ const ModelEvaluation = props => {
                 }
               </Select>
             </Form.Item>
-            <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
-              <Input addonBefore={codePathPrefix} />
-            </Form.Item>
-            <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
-              <Input addonBefore={codePathPrefix} />
-            </Form.Item>
+            { isPublic ?
+              <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
+                <Input disabled />
+              </Form.Item> :
+              <Form.Item {...layout} label="代码目录" name="codePath" rules={[{ required: true, message: '需要填写代码目录' }]}>
+                <Input addonBefore={codePathPrefix} />
+              </Form.Item>
+            }
+            { isPublic ?
+              <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
+                <Input disabled />
+              </Form.Item> :              
+              <Form.Item {...layout} label="启动文件" name="startupFile" rules={[{ required: true, message: '需要填写启动文件' }]}>
+                <Input addonBefore={codePathPrefix} />
+              </Form.Item>
+            }
             <Form.Item 
               {...layout} 
               label="输出路径"
@@ -312,7 +343,7 @@ const ModelEvaluation = props => {
             >
               <Input addonBefore={codePathPrefix} />
             </Form.Item> 
-            <Form.Item {...layout} label="模型参数文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型参数文件' }]}>
+            <Form.Item {...layout} label="模型权重文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型权重文件' }]}>
               <Input addonBefore={codePathPrefix} />
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
@@ -360,7 +391,7 @@ const ModelEvaluation = props => {
               name="deviceType"
               rules={[{ required: true, message: '请选择设备类型' }]}
             >
-              <Select onChange={handleDeviceTypeChange}>
+              <Select onChange={onDeviceTypeChange}>
                 {
                   deviceTypes.map((item) => (
                     <Option key={item} value={item}>{item}</Option>
@@ -374,7 +405,9 @@ const ModelEvaluation = props => {
               name="deviceNum"
               rules={[{ required: true, message: '请选择设备数量' }]}
             >
-              <Select>
+              <Select
+                onClick={handleClickDeviceNum}
+              >
                 {
                   deviceNums.map((item) => (
                     <Option key={item} value={item}>{item}</Option>
