@@ -165,7 +165,7 @@ const InferenceDetail = () => {
         {logs ? <pre ref={logEl} style={{marginTop: '20px'}} className={styles.logs}>
           {logs}
         </pre> : (
-          ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && <div>训练任务尚未开始</div>
+          ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && <div>推理服务尚未开始运行</div>
         )}
         {
           ['failed'].includes(jobDetail.jobStatus) && <div style={{marginTop: '20px'}} >当前训练任务已失败</div>
