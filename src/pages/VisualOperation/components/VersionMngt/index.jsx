@@ -195,7 +195,7 @@ const VersionMngt = (props) => {
         title: '提示',
         content: (
           <div>
-            <p>亲，没有更多了</p>
+            <p>没有更多历史记录</p>
           </div>
         )
       });
