@@ -143,7 +143,7 @@ const InferenceDetail = () => {
         jobRunning && <Button type="primary" disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
       }
       
-      <Descriptions style={{marginTop: '20px'}} bordered={true} column={2}>
+      <Descriptions style={{marginTop: '20px'}} bordered={true} column={1}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.framework}</Descriptions.Item>

@@ -105,7 +105,7 @@ const Detail = () => {
           </Tooltip>
         </div>
       </div>
-      <Descriptions bordered={true} column={2}>
+      <Descriptions bordered={true} column={1}>
         <Descriptions.Item label="作业名称">{jobDetail.name}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.status)}</Descriptions.Item>
         <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
