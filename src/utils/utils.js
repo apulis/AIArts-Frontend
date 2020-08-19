@@ -131,7 +131,7 @@ export const getStatusColor = (status) => {
     'unapproved': '#00008B',
     'queued': '	#00AAAA',
     'scheduling': '#9ACD32',
-    'running': '#00DD00',
+    'running': '#0dbc79',
     'finished': '#1890ff',
     'failed': '#FF7744',
     'pausing': '#FFFF33',
