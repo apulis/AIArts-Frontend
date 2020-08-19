@@ -87,7 +87,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -106,7 +105,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -119,10 +117,7 @@ const CodeList = (props) => {
       else {
         message.info('服务正在准备中，请稍候再试')
       }
-    } else {
-      message.error(msg)
     }
-
   }
   const apiDeleteCode = async (id) => {
     const obj = await deleteCode(id)
@@ -130,8 +125,6 @@ const CodeList = (props) => {
     if (code === 0) {
       renderTable(pageParams);
       message.success('停止成功');
-    } else {
-      message.error(msg);
     }
   }
   const handleOpen = (item) => {

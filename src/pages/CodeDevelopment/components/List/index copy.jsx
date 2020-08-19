@@ -55,7 +55,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -70,7 +69,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -83,8 +81,6 @@ const CodeList = (props) => {
      else{
       message.info('服务正在准备中，请稍候再试')
      }
-    }else{
-      message.error(msg)
     }
 
   }
@@ -94,8 +90,6 @@ const CodeList = (props) => {
     if (code === 0) {
       renderTable();
       message.success('停止成功');
-    } else {
-      message.error(msg);
     }
   }
   const handleOpen = (item) => {
