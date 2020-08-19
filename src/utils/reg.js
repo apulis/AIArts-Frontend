@@ -10,6 +10,5 @@ export const modelNameReg = {
 }
 
 export const getNameFromDockerImage = (tag) => {
-  console.log('123', tag.replace(/(.+\/)/, ''))
   return tag.replace(/(.+\/)/, '');
 }
