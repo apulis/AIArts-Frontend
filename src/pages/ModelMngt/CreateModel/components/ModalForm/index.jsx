@@ -4,6 +4,7 @@ import { Modal, Form, DatePicker, Input, Table } from 'antd';
 import styles from './index.less';
 import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const TrainingJobModal = props => {
   const {
@@ -66,6 +67,9 @@ const TrainingJobModal = props => {
       dataIndex: 'engine',
       ellipsis: true,
       width: 100,
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       title: '描述',

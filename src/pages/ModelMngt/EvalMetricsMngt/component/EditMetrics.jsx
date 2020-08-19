@@ -8,7 +8,7 @@ import { fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, updateP
 
 import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 
 const { TextArea } = Input;
@@ -286,7 +286,7 @@ const EditMetrics = (props) => {
           <Select style={{ width: 300 }} >
             {
               frameWorks.map(f => (
-                <Option value={f} key={f}>{f}</Option>
+                <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
               ))
             }
           </Select>

@@ -7,7 +7,7 @@ import { addEvaluation, fetchPresetTemplates, getAllLabeledDatasets } from './se
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
 import curStyles from './index.less';
@@ -321,7 +321,7 @@ const ModelEvaluation = props => {
               <Select>
                 {
                   engines && engines.map(f => (
-                    <Option value={f} key={f}>{f}</Option>
+                    <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
                   ))
                 }
               </Select>

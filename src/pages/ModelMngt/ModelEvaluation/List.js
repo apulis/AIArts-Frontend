@@ -147,6 +147,9 @@ const List = () => {
     {
       dataIndex: 'engine',
       title: '引擎类型',
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       dataIndex: 'createTime',

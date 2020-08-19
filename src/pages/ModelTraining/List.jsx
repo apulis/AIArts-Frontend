@@ -8,6 +8,7 @@ import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/serv
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import style from './index.less'
+import { getNameFromDockerImage } from '@/utils/reg';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -153,6 +154,9 @@ const List = () => {
     {
       dataIndex: 'engine',
       title: '引擎类型',
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       dataIndex: 'createTime',

@@ -3,7 +3,7 @@ import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Mo
 import { history } from 'umi';
 import { postCode1, getResource } from '../service.js'
 import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '../serviceController.js'
-import { jobNameReg } from '@/utils/reg.js';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
 const CodeCreate = () => {
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue,getFieldValue } = form;
@@ -186,7 +186,7 @@ const CodeCreate = () => {
               <Select>
                 {
                   engineNameArr.map((item,key) => (
-                    <Option  key={key} value={item}>{item}</Option>
+                    <Option  key={key} value={item}>{getNameFromDockerImage(item)}</Option>
                   ))
                 }
               </Select>

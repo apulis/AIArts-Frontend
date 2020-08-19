@@ -7,6 +7,7 @@ import moment from 'moment';
 import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
 import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap, sortTextMap, pageObj } from '../../serviceController.js'
+import { getNameFromDockerImage } from '@/utils/reg.js';
 
 const CodeList = (props) => {
   const { Search } = Input;
@@ -182,6 +183,9 @@ const CodeList = (props) => {
       title: '引擎类型',
       dataIndex: 'engine',
       ellipsis: true,
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       title: '创建时间',
