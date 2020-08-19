@@ -106,9 +106,7 @@ const BasicLayout = (props) => {
         {...settings}
       >
         <Authorized authority={authorized} noMatch={noMatch}>
-          <div>
-            {children}
-          </div>
+          {children}
         </Authorized>
       </ProLayout>
       {/* <SettingDrawer
