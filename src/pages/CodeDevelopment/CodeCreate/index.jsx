@@ -63,8 +63,6 @@ const CodeCreate = () => {
     if (code === 0) {
       message.success('创建成功')
       history.push('/codeDevelopment')
-    } else {
-      message.error(msg)
     }
   }
   const apiGetResource = async () => {
@@ -73,7 +71,6 @@ const CodeCreate = () => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg)
       return null
     }
   }
