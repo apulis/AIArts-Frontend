@@ -23,35 +23,47 @@ const AddModalForm = (props, ref) => {
       isPrivate: isPrivate
     },
     multiple: true,
+    fileList: fileLists,
     action: '/ai_arts/api/files/upload/dataset',
     headers: {
       Authorization: 'Bearer ' + window.localStorage.token
     },
     onChange(info) {
       const { status, name } = info.file;
+      console.log('----', info.fileList)
       setBtn(true);
       if (status !== 'uploading') {
         setBtn(false);
-        form.setFieldsValue({ fileLists: info.fileList });
       }
       if (status === 'done') {
-        setFileLists(info.fileList);
         setBtn(false);
         message.success(`${name}文件上传成功！`);
       } else if (status === 'error') {
         message.error(`${name} 文件上传失败！`);
         setBtn(false);
       }
+      form.setFieldsValue({ fileLists: info.fileList });
+      setFileLists(info.fileList);
     },
     beforeUpload(file, fileList) {
       const { type, size, name } = file;
+      const typeReg = /\.(zip|tar|gz)$/;
       // const isOverSize = size / 1024 / 1024 / 1024 > 2;
       return new Promise((resolve, reject) => {
-        if (fileLists.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
+        // if (fileLists.length && fileLists.findIndex(i => i.name === name && i.type === type) > -1) {
+        //   message.warning(`不能上传相同的文件！`);
+        //   reject(file);
+        // }
+        // if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip' || type === 'application/zip' || type === 'application/gzip')) {
+        //   message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
+        //   reject(file);
+        // }
+
+        if (fileLists.length && fileLists.findIndex(i => i.name === name) > -1) {
           message.warning(`不能上传相同的文件！`);
           reject(file);
         }
-        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip' || type === 'application/zip' || type === 'application/gzip')) {
+        if (!typeReg.test(name)) {
           message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
           reject(file);
         }
@@ -61,9 +73,11 @@ const AddModalForm = (props, ref) => {
     onRemove(file) {
       let newFileList = fileLists;
       newFileList.splice(fileLists.findIndex(i => i.uid === file.uid), 1);
-      setFileLists(newFileList);
+      form.setFieldsValue({ fileLists: [...newFileList] });
+      setFileLists([...newFileList]);
     }
   };
+  console.log('fileLists', fileLists)
 
   return (
     <Form form={form} className={styles.modalFormWrap} 
