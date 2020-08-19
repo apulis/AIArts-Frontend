@@ -299,12 +299,14 @@ const ModelEvaluation = props => {
               <Input placeholder="请输入模型名称" disabled/>
             </Form.Item>
             <Divider style={{ borderColor: '#cdcdcd' }} />
-            <Form.Item {...layout} label="参数来源">
-              <Radio.Group defaultValue={1} buttonStyle="solid">
-                <Radio.Button value={1}>手动参数配置</Radio.Button>
-                <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入评估参数</Radio.Button>
-              </Radio.Group>
-            </Form.Item>
+            { !isPublic ?
+              <Form.Item {...layout} label="参数来源">
+                <Radio.Group defaultValue={1} buttonStyle="solid">
+                  <Radio.Button value={1}>手动参数配置</Radio.Button>
+                  <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入评估参数</Radio.Button>
+                </Radio.Group>
+              </Form.Item> : null
+            }
             <Form.Item
               {...layout}
               label="引擎"
