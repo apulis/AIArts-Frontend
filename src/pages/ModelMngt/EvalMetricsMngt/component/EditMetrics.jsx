@@ -209,7 +209,7 @@ const EditMetrics = (props) => {
     });
     setRunningParams(newRunningParams);
     setFieldsValue({
-      runningParams: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
     });
   };
 
