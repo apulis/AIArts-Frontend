@@ -72,7 +72,6 @@ const BasicLayout = (props) => {
             {titleDom}
           </Link>
         )}
-        contentStyle={{overflowX: 'auto'}}
         onCollapse={handleMenuCollapse}
         menuItemRender={(menuItemProps, defaultDom) => {
           if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
@@ -107,7 +106,7 @@ const BasicLayout = (props) => {
         {...settings}
       >
         <Authorized authority={authorized} noMatch={noMatch}>
-          <div style={{ minWidth: '960px' }}>
+          <div>
             {children}
           </div>
         </Authorized>
