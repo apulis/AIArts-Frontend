@@ -206,23 +206,28 @@ const ModelEvaluation = props => {
 
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
-    console.log('values', values, key);
-    [...runningParams].forEach((param, index) => {
-      param.key = values[index].key;
-      param.value = values[index].value;
-    });
-    const newRunningParams = [...runningParams].filter((param) => {
-      if (param.createTime) {
-        return param.createTime !== key;
-      } else {
-        return param.key !== key;
-      }
-    });
-    setRunningParams(newRunningParams);
-    setFieldsValue({
-      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
-    });
-  };
+    if (values.length === 1) {
+      setFieldsValue({
+        params: [{ key: '', value: ''}]
+      })
+    } else {
+      [...runningParams].forEach((param, index) => {
+        param.key = values[index].key;
+        param.value = values[index].value;
+      });
+      const newRunningParams = [...runningParams].filter((param) => {
+        if (param.createTime) {
+          return param.createTime !== key;
+        } else {
+          return param.key !== key;
+        }
+      });
+      setRunningParams(newRunningParams);
+      setFieldsValue({
+        params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      });
+    };
+  }
 
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
@@ -375,9 +380,7 @@ const ModelEvaluation = props => {
                       <Form.Item initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args); } }]} name={['params', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
                         <Input style={{ width: 200 }} />
                       </Form.Item>
-                      {
-                        runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
-                      }
+                      <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
                     </div>
                   );
                 })
