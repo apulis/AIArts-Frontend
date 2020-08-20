@@ -128,17 +128,18 @@ export const getJobStatus = (status) => {
 
 export const getStatusColor = (status) => {
   const colorList = {
-    'unapproved': '#00008B',
-    'queued': '	#00AAAA',
-    'scheduling': '#9ACD32',
-    'running': '#0dbc79',
-    'finished': '#1890ff',
-    'failed': '#FF7744',
-    'pausing': '#FFFF33',
-    'paused': '#FFFF33',
-    'killing': '#C0C0C0',
+    'error': '#CC0000',
+    'failed': '#d48265',
+    'finished': '#2f4554',
+    'running': '#61a0a8',
     'killed': '#DDDDDD',
-    'error': '#FF0000',
+
+    'unapproved': '#91c7ae',
+    'queued': '#749f83',
+    'scheduling': '#9ACD32',
+    'pausing': '#ca8622',
+    'paused': '#bda29a',
+    'killing': '#C0C0C0',
   };
   return colorList[status] || '#1890ff';
 };
