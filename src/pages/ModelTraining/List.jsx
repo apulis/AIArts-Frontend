@@ -4,7 +4,7 @@ import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText } from '@/utils/const';
-import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
+import { fetchTrainingList, removeTrainings, fetchJobStatusSumary, deleteJob } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import style from './index.less'
@@ -130,6 +130,14 @@ const List = () => {
     }
   }
 
+  const handleDeleteJob = async (jobId) => {
+    const res = await deleteJob(jobId);
+    if (res.code === 0) {
+      message.success('删除成功');
+      getTrainingList()
+    }
+  }
+
   const onSearchInput = (e) => {
     setSearch(e.target.value);
   }
@@ -188,7 +196,7 @@ const List = () => {
                 ? <a onClick={() => removeTraining(item.id)}>停止</a>
                 : <div style={{display: 'flex'}}>
                     <div style={{marginRight: '16px'}}>已停止</div>
-                    {/* <a style={{color: 'red'}}>删除</a> */}
+                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id)}>删除</a>
                   </div>
             }
           </>
