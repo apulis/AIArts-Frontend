@@ -9,6 +9,7 @@ import { getNameFromDockerImage } from '@/utils/reg.js';
 import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
 import styles from '@/global.less';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const { confirm } = Modal;
 const { Option } = Select;
