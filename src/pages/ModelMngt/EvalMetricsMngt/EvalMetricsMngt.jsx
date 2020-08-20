@@ -8,6 +8,7 @@ import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
 import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail';
 import styles from '@/global.less';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -85,7 +86,9 @@ const EvalMetricsMngt = () => {
     //   width: 70,
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
-    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine' },
+    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine', render(value) {
+      return <div>{getNameFromDockerImage(value)}</div>
+    } },
     {
       title: '创建时间',
       sorter: true,

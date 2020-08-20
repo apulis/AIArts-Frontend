@@ -9,7 +9,8 @@ export async function submitModelTraining(data) {
 }
 
 export async function fetchAvilableResource() {
-  return await request('/common/resource');
+  const data = await request('/common/resource');
+  return data
 }
 
 export async function fetchTrainingList({pageNum, pageSize, status, search, sortedInfo}) {

@@ -292,23 +292,28 @@ const ModelTraining = (props) => {
   };
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
-    console.log('values', values, key);
-    [...runningParams].forEach((param, index) => {
-      param.key = values[index].key;
-      param.value = values[index].value;
-    });
-    const newRunningParams = [...runningParams].filter((param) => {
-      if (param.createTime) {
-        return param.createTime !== key;
-      } else {
-        return param.key !== key;
-      }
-    });
-    setRunningParams(newRunningParams);
-    setFieldsValue({
-      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
-    });
-  };
+    if (values.length === 1) {
+      setFieldsValue({
+        params: [{ key: '', value: ''}]
+      })
+    } else {
+      [...runningParams].forEach((param, index) => {
+        param.key = values[index].key;
+        param.value = values[index].value;
+      });
+      const newRunningParams = [...runningParams].filter((param) => {
+        if (param.createTime) {
+          return param.createTime !== key;
+        } else {
+          return param.key !== key;
+        }
+      });
+      setRunningParams(newRunningParams);
+      setFieldsValue({
+        params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      });
+    };
+  }
 
   const commonLayout = {
     labelCol: { span: 4 },
@@ -405,7 +410,7 @@ const ModelTraining = (props) => {
           <Select style={{ width: 300 }} disabled={typeCreate} >
             {
               frameWorks.map(f => (
-                <Option value={f} key={f}>{f}</Option>
+                <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
               ))
             }
           </Select>
@@ -460,7 +465,7 @@ const ModelTraining = (props) => {
                     <Input style={{ width: 200 }} />
                   </FormItem>
                   {
-                    runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
+                    <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
                   }
                 </div>
               );

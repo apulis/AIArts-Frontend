@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
 import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import { getCodes, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
+import { getCodes, stopCode,deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
 import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap, sortTextMap, pageObj } from '../../serviceController.js'
+import { getNameFromDockerImage } from '@/utils/reg.js';
 
 const CodeList = (props) => {
   const { Search } = Input;
@@ -86,7 +87,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -105,7 +105,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -118,25 +117,33 @@ const CodeList = (props) => {
       else {
         message.info('服务正在准备中，请稍候再试')
       }
-    } else {
-      message.error(msg)
     }
-
   }
-  const apiDeleteCode = async (id) => {
-    const obj = await deleteCode(id)
+  const apiStopCode = async (id) => {
+    const obj = await stopCode(id)
     const { code, data, msg } = obj
     if (code === 0) {
       renderTable(pageParams);
       message.success('停止成功');
-    } else {
-      message.error(msg);
+    }
+  }
+  const apiDeleteCode = async (id) => {
+    debugger
+    const obj = await deleteCode(id)
+    const { code, data, msg } = obj
+    if (code === 0) {
+      renderTable(pageParams);
+      message.success('删除成功');
     }
   }
   const handleOpen = (item) => {
     apiOpenJupyter(item.id)
   }
   const handleStop = (item) => {
+    const id = item.id
+    apiStopCode(item.id)
+  }
+  const handleDelete = (item) => {
     const id = item.id
     apiDeleteCode(item.id)
   }
@@ -182,6 +189,9 @@ const CodeList = (props) => {
       title: '引擎类型',
       dataIndex: 'engine',
       ellipsis: true,
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       title: '创建时间',
@@ -209,6 +219,7 @@ const CodeList = (props) => {
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: 'red' } : {}}>停止</a>
+            <a onClick={() => handleDelete(codeItem)} style={{color:'red'}}>删除</a>
           </Space>
         );
       },

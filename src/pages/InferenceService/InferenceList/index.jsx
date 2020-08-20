@@ -11,6 +11,7 @@ import { formatDuration } from '@/utils/time';
 import { fetchJobStatusSumary } from './services';
 import { statusList } from '@/pages/ModelTraining/List';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -103,7 +104,7 @@ const InferenceList = props => {
       // dataIndex: 'engineType',
       // ellipsis: true,
       // width: 100,
-      render: (text, item) => item?.jobParams?.framework,
+      render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework),
     },
     {
       title: '创建时间',

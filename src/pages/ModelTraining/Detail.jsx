@@ -11,7 +11,7 @@ import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingPar
 import styles from './index.less';
 import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
@@ -105,10 +105,10 @@ const Detail = () => {
           </Tooltip>
         </div>
       </div>
-      <Descriptions bordered={true} column={2}>
+      <Descriptions bordered={true} column={1}>
         <Descriptions.Item label="作业名称">{jobDetail.name}</Descriptions.Item>
         <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.status)}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{jobDetail.engine}</Descriptions.Item>
+        <Descriptions.Item label="引擎类型">{getNameFromDockerImage(jobDetail.engine)}</Descriptions.Item>
         <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{moment(jobDetail.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
         <Descriptions.Item label="运行参数">{jobDetail.params && formatParams(jobDetail.params).map(val => <div>{val}</div>)}</Descriptions.Item>

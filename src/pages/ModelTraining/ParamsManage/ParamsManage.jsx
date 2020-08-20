@@ -84,7 +84,9 @@ const ParamsManage = () => {
     //   width: 70,
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
-    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine' },
+    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine', render(val) {
+      return <div>{getNameFromDockerImage(val)}</div>
+    } },
     {
       title: '创建时间',
       sorter: true,

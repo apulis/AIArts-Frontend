@@ -12,8 +12,11 @@ export async function searchData(params) {
     params,
   });
 }
-export async function deleteCode(id) {
+export async function stopCode(id) {
   return request(`/codes/${id}`, { method: 'DELETE'})
+}
+export async function deleteCode(id) {
+  return request(`/inferences/DeleteJob?jobId=${id}`, { method: 'DELETE'})
 }
 export async function getJupyterUrl(id) {
   return request(`/codes/${id}/jupyter`)

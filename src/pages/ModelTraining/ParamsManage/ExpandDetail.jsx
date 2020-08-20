@@ -1,6 +1,7 @@
 import React from 'react';
 import { omitText } from '@/utils/utils';
 import { Descriptions, Popover } from 'antd';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const ExpandDetail = (props) => {
   const record = props.record;
@@ -46,7 +47,7 @@ const ExpandDetail = (props) => {
           }
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="引擎类型">{record.params.engine}</Descriptions.Item>
+      <Descriptions.Item label="引擎类型">{getNameFromDockerImage(record.params.engine)}</Descriptions.Item>
       <Descriptions.Item label="代码目录">{record.params.codePath}</Descriptions.Item>
       <Descriptions.Item label="计算节点规格">{record.params.deviceType}</Descriptions.Item>
       <Descriptions.Item label="描述">
