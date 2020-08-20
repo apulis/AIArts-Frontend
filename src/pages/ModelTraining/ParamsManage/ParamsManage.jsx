@@ -8,6 +8,7 @@ import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
 import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
 import styles from '@/global.less';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const { confirm } = Modal;
 const { Option } = Select;
