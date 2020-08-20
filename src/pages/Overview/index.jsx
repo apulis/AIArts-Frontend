@@ -69,6 +69,7 @@ const OverView = ({ user }) => {
               data={value}
               colors={colors}
               height={250}
+              inner={0.68}
             />
           : 
           <div className={styles.noData}>
