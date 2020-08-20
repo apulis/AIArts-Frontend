@@ -5,6 +5,7 @@ import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
+import { getNameFromDockerImage } from '@/utils/reg.js';
 import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
 import styles from '@/global.less';
