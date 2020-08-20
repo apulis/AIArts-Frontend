@@ -8,6 +8,7 @@ import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelEvaluationType, REFRESH_INTERVAL } from '@/utils/const';
 
 import styles from './index.less';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const EvaluationDetail = props => {
   const params = useParams();
@@ -127,7 +128,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
           <Descriptions.Item label="创建时间">{(evaluationJob && evaluationJob.createTime) ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss') : ''}</Descriptions.Item>
           <Descriptions.Item label="评估状态">{evaluationJob ? getJobStatus(evaluationJob.status) : ''}</Descriptions.Item>
-          <Descriptions.Item label="引擎类型">{evaluationJob?.engine}</Descriptions.Item>
+          <Descriptions.Item label="引擎类型">{getNameFromDockerImage(evaluationJob?.engine)}</Descriptions.Item>
           <Descriptions.Item label="测试数据集">{evaluationJob && (evaluationJob.datasetName ? evaluationJob.datasetName : evaluationJob.datasetPath)}</Descriptions.Item>
           <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
           <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>

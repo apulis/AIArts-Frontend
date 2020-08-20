@@ -8,3 +8,7 @@ export const modelNameReg = {
   max: 255,
   message: '不能超过255个字符串'
 }
+
+export const getNameFromDockerImage = (tag) => {
+  return tag.replace(/(.+\/)/, '');
+}

@@ -410,7 +410,7 @@ const ModelTraining = (props) => {
           <Select style={{ width: 300 }} disabled={typeCreate} >
             {
               frameWorks.map(f => (
-                <Option value={f} key={f}>{f}</Option>
+                <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
               ))
             }
           </Select>
