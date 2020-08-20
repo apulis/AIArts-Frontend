@@ -8,7 +8,7 @@ import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPre
 
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 
 const { TextArea } = Input;
