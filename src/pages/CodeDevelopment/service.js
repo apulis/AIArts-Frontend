@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import {statusMap} from './serviceController'
+import {deleteJob} from '@/services/modelTraning'
 import { forEach } from 'lodash';
 
 export async function getCodes(params) {
@@ -16,7 +17,7 @@ export async function stopCode(id) {
   return request(`/codes/${id}`, { method: 'DELETE'})
 }
 export async function deleteCode(id) {
-  return request(`/inferences/DeleteJob?jobId=${id}`, { method: 'DELETE'})
+  return deleteJob(id)
 }
 export async function getJupyterUrl(id) {
   return request(`/codes/${id}/jupyter`)
