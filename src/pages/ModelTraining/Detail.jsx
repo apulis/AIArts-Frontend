@@ -6,7 +6,7 @@ import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
-
+import { history } from 'umi';
 import { fetchTrainingDetail, removeTrainings, fetchTrainingLog, saveTrainingParams } from '@/services/modelTraning';
 import styles from './index.less';
 import { getJobStatus, formatParams } from '@/utils/utils';
@@ -17,6 +17,8 @@ const { useForm } = Form;
 const FormItem = Form.Item;
 
 const Detail = () => {
+  const tensorboadrdURL = '/modelTraining';
+  
   const params = useParams();
   const logEl = useRef(null);
   const [form] = useForm();

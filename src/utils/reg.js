@@ -10,5 +10,8 @@ export const modelNameReg = {
 }
 
 export const getNameFromDockerImage = (tag) => {
+  if (!tag) {
+    return '';
+  }
   return tag.replace(/(.+\/)/, '');
 }

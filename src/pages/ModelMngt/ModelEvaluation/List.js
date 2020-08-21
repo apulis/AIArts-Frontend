@@ -7,6 +7,7 @@ import { PAGEPARAMS, sortText } from '@/utils/const';
 import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from './services';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { getNameFromDockerImage } from '@/utils/reg.js';
 
 export const statusList = [
   { value: 'all', label: '全部' },

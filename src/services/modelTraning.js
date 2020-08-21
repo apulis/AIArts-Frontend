@@ -93,3 +93,12 @@ export async function fetchPresetTemplates() {
 export async function fetchPresetModel(id) {
   return request(`/models/${id}`);
 }
+
+export async function deleteJob(jobId) {
+  return await request('/inferences/DeleteJob', {
+    method: 'DELETE',
+    params: {
+      jobId,
+    }
+  })
+}
