@@ -13,7 +13,7 @@ const CodeList = (props) => {
   const { Search } = Input;
   const { Option } = Select;
   const searchRef = useRef(null)
-  const [data, setData] = useState({ codeEnvs: [], total: 0 });
+  const [codes, setCodes] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(pageObj);// 页长
   const [statusSearchArr, setStatusSearchArr] = useState([])
@@ -39,7 +39,6 @@ const CodeList = (props) => {
     renderTable(pageParams);
   }, [pageParams, sortInfo, curStatus])
   useEffect(() => {
-    
     if (curStatus != '') {
       renderTable(pageObj);
       setPageParams(pageObj);
@@ -71,7 +70,7 @@ const CodeList = (props) => {
     const apiData = await apiGetCodes(pageParams)
     if (apiData) {
       console.log(apiData)
-      setData({
+      setCodes({
         codeEnvs: apiData.CodeEnvs,
         total: apiData.total
       })
@@ -128,11 +127,16 @@ const CodeList = (props) => {
     }
   }
   const apiDeleteCode = async (id) => {
-    debugger
     const obj = await deleteCode(id)
-    const { code, data, msg } = obj
+    const { code,data, msg } = obj
     if (code === 0) {
-      renderTable(pageParams);
+      if(codes.codeEnvs.length ==1 && pageParams.pageNum > 1){
+        renderTable({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+        setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+      }
+      else{
+        renderTable(pageParams)
+      }
       message.success('删除成功');
     }
   }
@@ -145,7 +149,16 @@ const CodeList = (props) => {
   }
   const handleDelete = (item) => {
     const id = item.id
-    apiDeleteCode(item.id)
+    const status = item.status
+    if(canStopStatus.has(status)){
+      Modal.warning({
+        title: '删除提示',
+        content: '请先停止该任务',
+        okText:'确定'
+      });
+    }else{
+      apiDeleteCode(item.id)
+    }
   }
   const handleSelectChange = (selectStatus) => {
     setCurStatus(selectStatus)
@@ -258,12 +271,12 @@ const CodeList = (props) => {
         </Col>
       </Row>
       <Table
-        dataSource={data.codeEnvs}
+        dataSource={codes.codeEnvs}
         columns={columns}
         onChange={handleSortChange}
         rowKey={r => r.id}
         pagination={{
-          total: data.total,
+          total: codes.total,
           showTotal: (total) => `总共 ${total} 条`,
           showQuickJumper: true,
           showSizeChanger: true,

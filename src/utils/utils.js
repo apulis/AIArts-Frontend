@@ -177,7 +177,6 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
     }
     return arr2;
   }
-  console.log(111, type)
   // npu
   return [0, 1, 2, 4, 8];
 };
@@ -262,4 +261,8 @@ export const debounce = (fn, delay) => {
       fn.call(this);
     }, delay)
   }
+}
+
+export const getDeviceType = () => {
+  
 }

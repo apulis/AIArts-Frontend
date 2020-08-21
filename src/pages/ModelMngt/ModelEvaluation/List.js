@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Table, Input, message, Card, Select, Popover } from 'antd';
+import { Button, Table, Input, message, Card, Select, Popover,Space } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { PAGEPARAMS, sortText } from '@/utils/const';
-import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from './services';
+import { getEvaluations, stopEvaluation, fetchJobStatusSumary,deleteEvaluation } from './services';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getNameFromDockerImage } from '@/utils/reg.js';
@@ -110,7 +110,15 @@ const List = () => {
   const stopEvaluationJob = async (id) => {
     const res = await stopEvaluation(id);
     if (res.code === 0) {
-      message.success('已成功操作');
+      message.success('已成功停止');
+      handleSearch();
+    }
+  }
+  const deleteEvaluationJob = async (id) => {
+    const res = await deleteEvaluation(id);
+    debugger
+    if (res.code === 0) {
+      message.success('已成功删除');
       handleSearch();
     }
   }
@@ -171,16 +179,18 @@ const List = () => {
     {
       title: '操作',
       render(_text, item) {
-        return (
-          <>
-            {
-              ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)
-                ? <a onClick={() => stopEvaluationJob(item.id)}>停止</a>
-                : <span>已停止</span>
-            }
-
-          </>
-        )
+        return ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)?
+           (
+            <>
+            <a onClick={() => stopEvaluationJob(item.id)}>停止</a>
+            </>
+          ):
+          (
+            <Space size="middle">
+            <span>已停止</span>
+            <a onClick={() => deleteEvaluationJob(item.id)} style={{color:'red'}}>删除</a>
+            </Space>
+            )
       }
     }
   ]

@@ -1,5 +1,6 @@
 import request from '@/utils/request';
 import { modelEvaluationType } from '@/utils/const';
+import {deleteJob} from '@/services/modelTraning'
 
 export async function getTrainingJobs(params) {
   return await request(`/trainings`, {
@@ -24,6 +25,9 @@ export async function stopEvaluation(id) {
   return await request(`/evaluations/${id}`, {
     method: 'DELETE',
   });
+}
+export async function deleteEvaluation(id) {
+  return deleteJob(id)
 }
 
 export async function fetchEvaluationLog(id) {
