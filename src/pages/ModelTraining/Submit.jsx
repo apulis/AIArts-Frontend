@@ -5,7 +5,6 @@ import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined, 
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
 import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
-import { getNameFromDockerImage } from '@/utils/reg.js';
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
