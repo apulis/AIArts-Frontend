@@ -2,11 +2,10 @@ import { message, Table, Modal, Form, Input, Button, Select, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getEdgeInferences, submit, getTypes, getFD, submitFD, push, deleteEG } from './service';
-import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import moment from 'moment';
-import { NameReg, NameErrorText, sortText } from '@/utils/const';
-import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { PAGEPARAMS, NameReg, NameErrorText, sortText } from '@/utils/const';
+import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined, PauseOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -25,6 +24,7 @@ const EdgeInference = () => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [statusType, setStatusType] = useState('');
+  const [argValue, setArgValue] = useState('');
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
@@ -36,6 +36,17 @@ const EdgeInference = () => {
     'push success': '推送成功',
     'push failed': '推送失败'
   }
+  const argsOptions = [
+    'mode','weight','check_report','input_format','out_nodes','is_output_adjust_hw_layout',
+    'input_fp16_nodes','is_input_adjust_hw_layout','input_shape','json',
+    'dump_mode','om','op_name_map','insert_op_conf','output_type','singleop',
+    'precision_mode','op_select_implmode','optypelist_for_implmode',
+    'disable_reuse_memory','auto_tune_mode','aicore_num','buffer_optimize',
+    'enable_small_channel','fusion_switch_file','dynamic_batch_size','dynamic_image_size','log'
+  ];
+
+  const ArgNameReg = /^[A-Za-z0-9-_.]+$/;
+
 
   useEffect(() => {
     getData();
@@ -74,7 +85,16 @@ const EdgeInference = () => {
   const onSubmit = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const { code, data } = await submit(values);
+      const obj = {...values};
+      const { argsKey, argsValue } = obj;
+      if (argsKey && argsValue) {
+        obj.conversionArgs = {
+          [argsKey]: argsValue
+        }
+        delete obj.argsKey;
+        delete obj.argsValue;
+      }
+      const { code, data } = await submit(obj);
       if (code === 0) {
         message.success('提交成功！');
         getData();
@@ -252,7 +272,7 @@ const EdgeInference = () => {
     type === 1 ? setStatusType(v) : setName(v)
     setPageParams({ ...pageParams, pageNum: 1 });
   }
-
+  
   return (
     <PageHeaderWrapper>
       <Card>
@@ -292,6 +312,7 @@ const EdgeInference = () => {
           destroyOnClose
           maskClosable={false}
           className="inferenceModal"
+          width={600}
           footer={[
             <Button onClick={() => setModalFlag1(false)}>取消</Button>,
             <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>,
@@ -314,9 +335,9 @@ const EdgeInference = () => {
               name="conversionType"
               rules={[{ required: true, message: '请选择类型！' }]}
             >
-                <Select placeholder="请选择类型">
-                  {typesData.map(i => <Option value={i}>{i}</Option>)}
-                </Select>
+              <Select placeholder="请选择类型">
+                {typesData.map(i => <Option value={i}>{i}</Option>)}
+              </Select>
             </Form.Item>
             <Form.Item
               label="输入路径"
@@ -331,6 +352,30 @@ const EdgeInference = () => {
               rules={[{ required: true, message: '请填写输出路径！' }]}
             >
               <Input placeholder="请填写输出路径" />
+            </Form.Item>
+            <Form.Item
+              label="转换参数"
+              rules={[{ required: true }]}
+            >
+              <div>
+                <Form.Item 
+                  name="argsKey" 
+                  style={{ display: 'inline-block' }}
+                  rules={[{ required: Boolean(argValue), message: '请选择参数类型！' }]}
+                >
+                  <Select placeholder="请选择参数类型" style={{ width: 170 }} allowClear>
+                    {argsOptions.map(i => <Option value={i}>{i}</Option>)}
+                  </Select>
+                </Form.Item>
+                <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                <Form.Item 
+                  name="argsValue" 
+                  rules={[{ pattern: ArgNameReg, message: '只支持字母，数字，下划线，横线，点！' }]}
+                  style={{ display: 'inline-block' }}
+                >
+                  <Input style={{ width: 252 }} placeholder="请填写参数值" onChange={e => setArgValue(e.target.value)} />
+                </Form.Item>
+              </div>
             </Form.Item>
           </Form>
         </Modal>
