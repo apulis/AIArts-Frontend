@@ -95,7 +95,6 @@ const ModelTraining = (props) => {
     }
   };
   useEffect(() => {
-    console.log(111, currentDeviceType)
     if (distributedJob) {
       if (!currentDeviceType) return;
       // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
@@ -110,7 +109,6 @@ const ModelTraining = (props) => {
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
-      console.log(111, paramsDetailedData)
       haveSetedParamsDetail = true;
       const newParams = {
         ...paramsDetailedData.params,

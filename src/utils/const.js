@@ -33,3 +33,9 @@ export const sortText = {
 export const FilePathReg = /^(.*)\/$/;
 
 export const FilePathErrorText = '路径必须以 / 结尾！';
+
+export const DEVICE_TYPES = {
+  'npu.huawei.com/NPU': 'npu',
+  'nvidia.com/gpu': 'gpu',
+}
+
