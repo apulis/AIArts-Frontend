@@ -37,3 +37,9 @@ export async function push(data) {
     data: data,
   });
 }
+
+export async function deleteEG(id) {
+  return await request(`/${prefix}/${id}`, {
+    method: 'DELETE'
+  });
+}
