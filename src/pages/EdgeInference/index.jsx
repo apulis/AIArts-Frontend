@@ -86,14 +86,14 @@ const EdgeInference = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
       const obj = {...values};
-      const { argsKey, argsValue } = obj;
-      if (argsKey && argsValue) {
-        obj.conversionArgs = {
-          [argsKey]: argsValue
-        }
-        delete obj.argsKey;
-        delete obj.argsValue;
-      }
+      // const { argsKey, argsValue } = obj;
+      // if (argsKey && argsValue) {
+      //   obj.conversionArgs = {
+      //     [argsKey]: argsValue
+      //   }
+      //   delete obj.argsKey;
+      //   delete obj.argsValue;
+      // }
       const { code, data } = await submit(obj);
       if (code === 0) {
         message.success('提交成功！');
@@ -272,7 +272,7 @@ const EdgeInference = () => {
     type === 1 ? setStatusType(v) : setName(v)
     setPageParams({ ...pageParams, pageNum: 1 });
   }
-  
+
   return (
     <PageHeaderWrapper>
       <Card>
@@ -353,7 +353,7 @@ const EdgeInference = () => {
             >
               <Input placeholder="请填写输出路径" />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="转换参数"
               rules={[{ required: true }]}
             >
@@ -376,7 +376,7 @@ const EdgeInference = () => {
                   <Input style={{ width: 252 }} placeholder="请填写参数值" onChange={e => setArgValue(e.target.value)} />
                 </Form.Item>
               </div>
-            </Form.Item>
+            </Form.Item> */}
           </Form>
         </Modal>
       )}
