@@ -10,17 +10,17 @@ export default {
     '/ai_arts/api/': {
       // target: 'http://10.31.3.120:9000/',
       // target: 'http://sandbox2-master.sigsus.cn:56511/',
-      // target: 'http://219.133.167.42:30000/',
+      target: 'http://219.133.167.42:30000/',
       // target: 'http://10.31.3.220:8080/',  //xu.ky
-      target: 'http://121.46.18.83:50088/',
+      // target: 'http://121.46.18.83:50088/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
       },
     },
     '/custom-user-dashboard-backend/': {
-      // target: 'http://219.133.167.42:30000/',
-      target: 'http://121.46.18.83:50088/',
+      target: 'http://219.133.167.42:30000/',
+      // target: 'http://121.46.18.83:50088/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',

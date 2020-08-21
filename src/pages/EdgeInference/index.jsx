@@ -1,15 +1,16 @@
 import { message, Table, Modal, Form, Input, Button, Select, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './service';
+import { getEdgeInferences, submit, getTypes, getFD, submitFD, push, deleteEG } from './service';
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
 import moment from 'moment';
 import { NameReg, NameErrorText, sortText } from '@/utils/const';
-import { CloudUploadOutlined, SyncOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Search } = Input;
+const { confirm } = Modal;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
@@ -83,6 +84,29 @@ const EdgeInference = () => {
     setBtnLoading(false);
   };
 
+  const onDelete = id => {
+    confirm({
+      title: '确定要删除该推理吗？',
+      icon: <ExclamationCircleOutlined />,
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        const { code } = await deleteEG(id);
+        if (code === 0) {
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (jobs.length == 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            getData();
+          }
+          message.success('删除成功！');
+        }
+      },
+      onCancel() {}
+    });
+  }
+
   const columns = [
     {
       title: 'ID',
@@ -113,7 +137,7 @@ const EdgeInference = () => {
       render: item => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '转换成功' : jobStatus === 'failed' ? '转换失败' : status;
+        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '转换成功' : jobStatus === 'failed' || jobStatus === 'error' ? '转换失败' : status;
         return (<span>{status}</span>)
       }
     },
@@ -123,7 +147,10 @@ const EdgeInference = () => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled = (!(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId);
         return (
-          <Button disabled={disabled} icon={<CloudUploadOutlined style={{ fontSize: 22 }} />} shape="circle" onClick={() => onPush(jobId)} title="推送" />
+          <>
+            <a onClick={() => onPush(jobId)} disabled={disabled}>推送</a>
+            <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>删除</a>
+          </>
         )
       },
     },
@@ -215,7 +242,7 @@ const EdgeInference = () => {
       },
       {
         text: '转换失败',
-        status: 'failed-converting'
+        status: 'error,failed-converting'
       }
     ];
     return statusMap.map(i => <Option value={i.status}>{i.text}</Option>);
