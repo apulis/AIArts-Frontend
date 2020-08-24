@@ -85,9 +85,11 @@ const ParamsManage = () => {
     //   width: 70,
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
-    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine', render(val) {
-      return <div>{getNameFromDockerImage(val)}</div>
-    } },
+    {
+      title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine', render(val) {
+        return <div>{getNameFromDockerImage(val)}</div>;
+      }
+    },
     {
       title: '创建时间',
       sorter: true,
@@ -123,15 +125,10 @@ const ParamsManage = () => {
       pageSize: pageParams.pageSize,
       jobType: modelTrainingType,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]
+      order: sortText[sortedInfo.order],
+      scope: formValues.scope,
+      searchWord: formValues.searchWord
     };
-    if (formValues.scope) {
-      params.scope = formValues.scope;
-    }
-
-    if (formValues.searchWord) {
-      params.searchWord = formValues.searchWord;
-    }
     const res = await getParamsList(params);
   };
 
