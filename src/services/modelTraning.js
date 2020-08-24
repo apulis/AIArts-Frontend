@@ -10,10 +10,10 @@ export async function submitModelTraining(data) {
 
 export async function fetchAvilableResource() {
   const data = await request('/common/resource');
-  return data
+  return data;
 }
 
-export async function fetchTrainingList({pageNum, pageSize, status, search, sortedInfo}) {
+export async function fetchTrainingList({ pageNum, pageSize, status, search, sortedInfo }) {
   return await request(`/trainings/`, {
     params: {
       pageNum: pageNum,
@@ -64,14 +64,14 @@ export async function saveTrainingParams(data) {
   return await request('/templates', {
     method: 'POST',
     data
-  })
+  });
 }
 
 export async function updateParams(data) {
   return await request('/templates', {
     method: 'PUT',
     data
-  })
+  });
 }
 
 export async function fetchJobStatusSumary() {
@@ -86,8 +86,8 @@ export async function fetchPresetTemplates() {
       jobType: modelTrainingType,
       scope: 3,
     }
-    
-  })
+
+  });
 }
 
 export async function fetchPresetModel(id) {
@@ -100,5 +100,25 @@ export async function deleteJob(jobId) {
     params: {
       jobId,
     }
-  })
+  });
+}
+
+export async function fetchVisualizations(params) {
+  return await request(`/visual/list`, { params });
+}
+
+export async function createVisualization(params) {
+  return await request('/visual', {
+    method: 'POST',
+    data: params
+  });
+}
+
+export async function deleteVisualization(id) {
+  return await request(`/templates/`, {
+    method: 'DELETE',
+    params: {
+      id: id
+    }
+  });
 }

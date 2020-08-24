@@ -103,6 +103,10 @@ export default [
                 component: './ModelTraining/Submit',
               },
               {
+                path: '/model-training/createVisualization',
+                component: './ModelTraining/Visualization/CreateVisualization',
+              },
+              {
                 path: '/model-training/paramManage/:id/:type',
                 component: './ModelTraining/Submit',
               },
