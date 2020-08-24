@@ -3,12 +3,12 @@ import { Button, Table, Input, message, Card, Select } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
-import { sortText } from '@/utils/const';
-import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
+import { sortText, PAGEPARAMS } from '@/utils/const';
+import { fetchVisualizations, deleteVisualization } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
-export const statusList = [
+const statusList = [
   { value: 'all', label: '全部' },
   { value: 'unapproved', label: '未批准' },
   { value: 'queued', label: '队列中' },
@@ -27,100 +27,53 @@ const { Search } = Input;
 const { Option } = Select;
 
 const Visualization = () => {
-  const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [formValues, setFormValues] = useState({ status: 'all', jobName: '' });
+  const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [visualizations, setVisualizations] = useState([]);
   const [total, setTotal] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [pageNum, setPageNum] = useState(1);
-  const [currentStatus, setCurrentStatus] = useState('all');
-  const [jobSumary, setJobSumary] = useState([]);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: '',
-    columnKey: '',
+    order: ''
   });
-  const getTrainingList = async () => {
-    const res = await fetchTrainingList({ pageNum, pageSize, search, sortedInfo, status: currentStatus });
-    if (res.code === 0) {
-      const trainings = (res.data && res.data.Trainings) || [];
-      const total = res.data?.total;
-      setTotal(total);
-      setTrainingWorkList(trainings);
-      setTableLoading(false);
-    }
-  };
-  const handleChangeStatus = async (status) => {
-    setCurrentStatus(status);
-  };
 
-  useEffect(() => {
-    getTrainingList();
-  }, [currentStatus]);
-
-  const getJobStatusSumary = async () => {
-    const res = await fetchJobStatusSumary();
-    if (res.code === 0) {
-      const jobSumary = [{ value: 'all', label: '全部' }];
-      let total = 0;
-      Object.keys(res.data).forEach(k => {
-        let count = res.data[k];
-        total += count;
-        jobSumary.push({
-          label: statusList.find(status => status.value === k)?.label + `（${count}）`,
-          value: k
-        });
-      });
-      jobSumary[0].label = jobSumary[0].label + `（${total}）`;
-      setJobSumary(jobSumary);
-    }
-  };
-
-  useEffect(() => {
-    getTrainingList();
-    getJobStatusSumary();
-  }, []);
-  const onTableChange = async (pagination, filters, sorter) => {
-    console.log('setSortedInfo', sorter);
-    setSortedInfo(sorter);
-    console.log('sorter', sortText[sorter.order]);
-    const { current } = pagination;
-    setPageNum(current);
-    const searchSorterInfo = {
-      ...sorter,
-      // 正序，倒序，取消排序
-      orderBy: sortText[sorter.order] && sorter.columnKey,
-      order: sortText[sorter.order],
+  const getVisualizations = async () => {
+    const params = {
+      ...pageParams,
+      ...formValues,
+      orderBy: sortedInfo.columnKey,
+      order: sortText[sortedInfo.order],
     };
-    setTableLoading(true);
-    const res = await fetchTrainingList({
-      pageNum: current,
-      pageSize,
-      search,
-      status: currentStatus,
-      sortedInfo: searchSorterInfo,
-    });
+    const res = await fetchVisualizations(params);
     if (res.code === 0) {
-      setTableLoading(false);
-      setTrainingWorkList(res.data.Trainings);
+      const visualizations = (res.data && res.data.Templates) || [];
+      const total = res.data.total;
+      setTotal(total);
+      setVisualizations(visualizations);
+    }
+    setTableLoading(false);
+  };
+
+  const handleChangeStatus = (status) => {
+    setFormValues({ ...formValues, status: status });
+  };
+  const onJobNameChange = (jobName) => {
+    setFormValues({ ...formValues, jobName: jobName });
+  };
+  const onSortChange = (pagination, filters, sorter) => {
+    if (sorter.order !== false) {
+      setSortedInfo(sorter);
     }
   };
-  const removeTraining = async (id) => {
-    const res = await removeTrainings(id);
-    if (res.code === 0) {
-      message.success('已成功操作');
-      getTrainingList();
-    }
+  const pageParamsChange = (page, size) => {
+    setPageParams({ pageNum: page, pageSize: size });
   };
-  const searchList = async (s) => {
-    setSearch(s);
-    setTableLoading(true);
-    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s });
-    if (res.code === 0) {
-      setTrainingWorkList(res.data.Trainings);
-      setTableLoading(false);
-    }
-  };
+
+
+  useEffect(() => {
+    getVisualizations();
+  }, [sortedInfo, pageParams,formValues.status]);
+
   const handleDelete = async (id) => {
     //TODO
   };
@@ -129,14 +82,9 @@ const Visualization = () => {
   };
   const columns = [
     {
-      dataIndex: 'name',
+      dataIndex: 'jobName',
       title: '作业名称',
       key: 'jobName',
-      render(_text, item) {
-        return (
-          <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
-        );
-      },
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
     },
@@ -146,7 +94,7 @@ const Visualization = () => {
       render: (text, item) => getJobStatus(item.status),
     },
     {
-      dataIndex: 'outputPath',
+      dataIndex: 'TensorboardLogDir',
       title: '可视化日志路径',
     },
     {
@@ -162,7 +110,7 @@ const Visualization = () => {
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
     },
     {
-      dataIndex: 'desc',
+      dataIndex: 'description',
       title: '描述'
     },
     {
@@ -180,7 +128,7 @@ const Visualization = () => {
             {
               ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
                 ? <a onClick={() => removeTraining(item.id)}>停止</a>
-                : <Button type="link" disabled={['killing','killed','error'].includes(item.status)} >运行</Button>
+                : <Button type="link" disabled={['killing', 'killed', 'error'].includes(item.status)} >运行</Button>
             }
             <Button
               type="link"
@@ -201,29 +149,37 @@ const Visualization = () => {
           padding: '8'
         }}
       >
+        <Link to="/model-training/createVisualization">
+          <Button type="primary" href="">创建可视化作业</Button>
+        </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
-          <Select style={{ width: 120, marginRight: '20px' }} defaultValue={currentStatus} onChange={handleChangeStatus}>
+          <Select style={{ width: 120, marginRight: '20px' }} defaultValue={formValues.status} onChange={handleChangeStatus}>
             {
-              jobSumary.map(status => (
-                <Option value={status.value}>{status.label}</Option>
+              statusList.map(status => (
+                <Option key={status.value} value={status.value}>{status.label}</Option>
               ))
             }
           </Select>
-          <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={searchList} />
-          <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
+          <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={getVisualizations} onChange={e => onJobNameChange(e.target.value)} />
+          <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getVisualizations()}></Button>
         </div>
         <Table
           loading={tableLoading}
           style={{ marginTop: '30px' }}
           columns={columns}
-          dataSource={trainingWorkList}
-          onChange={onTableChange}
+          dataSource={visualizations}
+          onChange={onSortChange}
           pagination={{
-            defaultCurrent: 1,
-            defaultPageSize: 10,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize,
             total: total,
-            current: pageNum,
-            pageSize: pageSize,
+            showQuickJumper: true,
+            showTotal: (total) => `总共 ${total} 条`,
+            showSizeChanger: true,
+            onChange: pageParamsChange,
+            onShowSizeChange: pageParamsChange,
+            current: pageParams.pageNum,
+            pageSize: pageParams.pageSize,
           }}
         />
       </Card>
