@@ -31,6 +31,6 @@ export default {
   'menu.inferenceService.edgeInference': '边缘推理',
   'menu.modelTraining': '模型训练',
   'menu.resourceMonitoring': '资源监控',
-  'menu.modelTraining.visualization': '可视化',
+  'menu.modelTraining.visualization': '训练可视化',
   'menu.edgeInference': '边缘推理',
 };

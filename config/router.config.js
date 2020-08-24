@@ -89,14 +89,14 @@ export default [
                 component: './ModelTraining/List',
               },
               {
-                path: '/model-training/paramsManage',
-                name: 'paramsManage',
-                component: './ModelTraining/ParamsManage/ParamsManage'
-              },
-              {
                 path: '/model-training/visualization',
                 name: 'visualization',
                 component: './ModelTraining/Visualization/Visualization'
+              },
+              {
+                path: '/model-training/paramsManage',
+                name: 'paramsManage',
+                component: './ModelTraining/ParamsManage/ParamsManage'
               },
               {
                 path: '/model-training/submit',
