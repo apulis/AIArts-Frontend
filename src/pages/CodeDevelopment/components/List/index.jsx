@@ -27,23 +27,19 @@ const CodeList = (props) => {
   })
   useEffect(() => {
     renderStatusSelect()
-    const timer = setInterval(() => {
-      renderStatusSelect();
-    }, 3000)
-    return () => {
-      window.clearInterval(timer);
-    }
   }, [])
 
   useEffect(() => {
     renderTable(pageParams);
   }, [pageParams, sortInfo, curStatus])
+
   useEffect(() => {
     if (curStatus != '') {
       renderTable(pageObj);
       setPageParams(pageObj);
     }
   }, [curStatus])
+
   useEffect(() => {
     if (searchObj.type != undefined) {
       const type = searchObj.type
@@ -62,14 +58,14 @@ const CodeList = (props) => {
     const apiData = await apiGetCodeCount()
     if (apiData) {
       setStatusSearchArr(apiData)
-      setCurStatus(apiData[0].status)
+      // 只有第一次会重新赋值
+      if(curStatus==='')setCurStatus(apiData[0].status)
     }
   }
   const renderTable = async (pageParams, success) => {
     setLoading(true)
     const apiData = await apiGetCodes(pageParams)
     if (apiData) {
-      console.log(apiData)
       setCodes({
         codeEnvs: apiData.CodeEnvs,
         total: apiData.total
