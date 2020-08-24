@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, message, Card, Select } from 'antd';
+import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText, PAGEPARAMS } from '@/utils/const';
 import { fetchVisualizations, deleteVisualization } from '@/services/modelTraning';
-import { SyncOutlined } from '@ant-design/icons';
+import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+
+const { confirm } = Modal;
 
 const statusList = [
   { value: 'all', label: '全部' },
@@ -72,14 +74,35 @@ const Visualization = () => {
 
   useEffect(() => {
     getVisualizations();
-  }, [sortedInfo, pageParams,formValues.status]);
+  }, [sortedInfo, pageParams, formValues.status]);
 
   const handleDelete = async (id) => {
-    //TODO
+    confirm({
+      title: '删除可视化作业',
+      content: '删除操作无法恢复，是否继续？',
+      icon: <ExclamationCircleOutlined />,
+      okText: '确定',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        const res = await deleteVisualization(id);
+        if (res.code === 0) {
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (paramList.length == 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            getVisualizations();
+          }
+          message.success('删除成功');
+        } else {
+          message.error(`删除失败${error.msg}` || `删除失败`);
+        }
+      },
+      onCancel() {
+      },
+    });
   };
-  const handleOpenVisualization = async (id) => {
-    //TODO
-  };
+
   const columns = [
     {
       dataIndex: 'jobName',
@@ -121,7 +144,6 @@ const Visualization = () => {
             <Button
               type="link"
               disabled={['unapproved', 'queued', 'scheduling'].includes(item.status)}
-              onClick={handleOpenVisualization(item.id)}
             >
               打开
             </Button>
@@ -133,7 +155,9 @@ const Visualization = () => {
             <Button
               type="link"
               disabled={['killing', 'killed'].includes(item.status)}
-              onClick={handleDelete(item.id)}>
+              onClick={handleDelete(item.id)}
+              style={{ color: 'red' }}
+            >
               删除
             </Button>
           </>

@@ -19,7 +19,8 @@ export default function CreateVisualization() {
     const values = await validateFields();
     const res = await createVisualization(values);
     if (res.code === 0) {
-      message.success('创建成功')
+      message.success('创建成功');
+      history.push(goBackPath);
     }
   };
 
@@ -32,7 +33,7 @@ export default function CreateVisualization() {
         title='创建可视化作业'
       />
       <Form form={form}>
-        <Form.Item labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} style={{ marginTop: '30px' }} name="name" label="可视化作业名称" rules={[{ required: true }, { ...jobNameReg }]}>
+        <Form.Item labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} style={{ marginTop: '30px' }} name="jobName" label="可视化作业名称" rules={[{ required: true }, { ...jobNameReg }]}>
           <Input style={{ width: 300 }} placeholder="请输入可视化作业名称" />
         </Form.Item>
         <Form.Item labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="tensorboardLogDir" label="可视化日志路径" rules={[{ required: true }]}>

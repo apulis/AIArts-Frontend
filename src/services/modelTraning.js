@@ -110,12 +110,12 @@ export async function fetchVisualizations(params) {
 export async function createVisualization(params) {
   return await request('/visual', {
     method: 'POST',
-    data: params
+    params
   });
 }
 
 export async function deleteVisualization(id) {
-  return await request(`/templates/`, {
+  return await request(`/visual/`, {
     method: 'DELETE',
     params: {
       id: id
