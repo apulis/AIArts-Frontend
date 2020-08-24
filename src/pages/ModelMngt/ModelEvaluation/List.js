@@ -116,7 +116,6 @@ const List = () => {
   }
   const deleteEvaluationJob = async (id) => {
     const res = await deleteEvaluation(id);
-    debugger
     if (res.code === 0) {
       message.success('已成功删除');
       handleSearch();

@@ -27,7 +27,7 @@ export async function stopEvaluation(id) {
   });
 }
 export async function deleteEvaluation(id) {
-  return deleteJob(id)
+  return deleteJob(id);
 }
 
 export async function fetchEvaluationLog(id) {

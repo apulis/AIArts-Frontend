@@ -5,11 +5,31 @@ import { getEdgeInferences, submit, getTypes, getFD, submitFD, push, deleteEG } 
 import styles from './index.less';
 import moment from 'moment';
 import { PAGEPARAMS, NameReg, NameErrorText, sortText } from '@/utils/const';
-import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined, PauseOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined, PauseOutlined, DeleteOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import _ from 'lodash';
 
 const { Option } = Select;
 const { Search } = Input;
 const { confirm } = Modal;
+const initArg = {
+  key: '',
+  val: ''
+}
+const typeText = {
+  'converting': '转换中',
+  'pushing': '推送中',
+  'push success': '推送成功',
+  'push failed': '推送失败'
+}
+const argsOptions = [
+  'mode','weight','check_report','input_format','out_nodes','is_output_adjust_hw_layout',
+  'input_fp16_nodes','is_input_adjust_hw_layout','input_shape','json',
+  'dump_mode','om','op_name_map','insert_op_conf','output_type','singleop',
+  'precision_mode','op_select_implmode','optypelist_for_implmode',
+  'disable_reuse_memory','auto_tune_mode','aicore_num','buffer_optimize',
+  'enable_small_channel','fusion_switch_file','dynamic_batch_size','dynamic_image_size','log'
+];
+const ArgNameReg = /^[A-Za-z0-9-_.]+$/;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
@@ -24,29 +44,12 @@ const EdgeInference = () => {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [statusType, setStatusType] = useState('');
-  const [argValue, setArgValue] = useState('');
   const [total, setTotal] = useState(0);
+  const [argArr, setArgArr] = useState([{...initArg, time: new Date().getTime()}])
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
-  const typeText = {
-    'converting': '转换中',
-    'pushing': '推送中',
-    'push success': '推送成功',
-    'push failed': '推送失败'
-  }
-  const argsOptions = [
-    'mode','weight','check_report','input_format','out_nodes','is_output_adjust_hw_layout',
-    'input_fp16_nodes','is_input_adjust_hw_layout','input_shape','json',
-    'dump_mode','om','op_name_map','insert_op_conf','output_type','singleop',
-    'precision_mode','op_select_implmode','optypelist_for_implmode',
-    'disable_reuse_memory','auto_tune_mode','aicore_num','buffer_optimize',
-    'enable_small_channel','fusion_switch_file','dynamic_batch_size','dynamic_image_size','log'
-  ];
-
-  const ArgNameReg = /^[A-Za-z0-9-_.]+$/;
-
 
   useEffect(() => {
     getData();
@@ -85,20 +88,30 @@ const EdgeInference = () => {
   const onSubmit = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const obj = {...values};
-      // const { argsKey, argsValue } = obj;
-      // if (argsKey && argsValue) {
-      //   obj.conversionArgs = {
-      //     [argsKey]: argsValue
-      //   }
-      //   delete obj.argsKey;
-      //   delete obj.argsValue;
-      // }
-      const { code, data } = await submit(obj);
+      const { jobName, inputPath, outputPath, conversionType } = values
+      const temp = { ...values };
+      let conversionArgs = {};
+      delete temp.jobName;
+      delete temp.outputPath;
+      delete temp.inputPath;
+      delete temp.conversionType;
+      Object.keys(temp).forEach(i => {
+        if (temp[i]) {
+          const type = i.split('-')[0];
+          const time = i.split('-')[1];
+          if (type === 'argKey') {
+            conversionArgs[temp[i]] = '';
+          } else {
+            const key = temp[`argKey-${time}`];
+            conversionArgs[key] = temp[i];
+          }
+        }
+      })
+      const { code, data } = await submit({ jobName, inputPath, outputPath, conversionType, conversionArgs });
       if (code === 0) {
         message.success('提交成功！');
         getData();
-        setModalFlag1(false);
+        onCloseModal1();
       }
     });
     setBtnLoading(false);
@@ -273,6 +286,26 @@ const EdgeInference = () => {
     setPageParams({ ...pageParams, pageNum: 1 });
   }
 
+  const onArgsArrChange = (type, time, v) => {
+    const newArr = _.cloneDeep(argArr);
+    const idx = newArr.findIndex(i => i.time === time);
+    if (type === 1) {
+      newArr.push({ ...initArg, time: new Date().getTime()});
+    } else if (type === 2) {
+      newArr[idx].key = v;
+    } else if (type === 3) {
+      newArr[idx].val = v;
+    } else {
+      newArr.splice(idx, 1);
+    }
+    setArgArr(newArr);
+  }
+
+  const onCloseModal1 = () => {
+    setArgArr([{ ...initArg, time: new Date().getTime() }]);
+    setModalFlag1(false);
+  }
+
   return (
     <PageHeaderWrapper>
       <Card>
@@ -308,13 +341,13 @@ const EdgeInference = () => {
         <Modal
           title="新建推理"
           visible={modalFlag1}
-          onCancel={() => setModalFlag1(false)}
+          onCancel={onCloseModal1}
           destroyOnClose
           maskClosable={false}
           className="inferenceModal"
           width={600}
           footer={[
-            <Button onClick={() => setModalFlag1(false)}>取消</Button>,
+            <Button onClick={onCloseModal1}>取消</Button>,
             <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>,
           ]}
         >
@@ -353,30 +386,40 @@ const EdgeInference = () => {
             >
               <Input placeholder="请填写输出路径" />
             </Form.Item>
-            {/* <Form.Item
+            <Form.Item
               label="转换参数"
               rules={[{ required: true }]}
             >
-              <div>
-                <Form.Item 
-                  name="argsKey" 
-                  style={{ display: 'inline-block' }}
-                  rules={[{ required: Boolean(argValue), message: '请选择参数类型！' }]}
-                >
-                  <Select placeholder="请选择参数类型" style={{ width: 170 }} allowClear>
-                    {argsOptions.map(i => <Option value={i}>{i}</Option>)}
-                  </Select>
-                </Form.Item>
-                <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
-                <Form.Item 
-                  name="argsValue" 
-                  rules={[{ pattern: ArgNameReg, message: '只支持字母，数字，下划线，横线，点！' }]}
-                  style={{ display: 'inline-block' }}
-                >
-                  <Input style={{ width: 252 }} placeholder="请填写参数值" onChange={e => setArgValue(e.target.value)} />
-                </Form.Item>
+              {argArr.map((i, idx) => {
+                const { time, key, val } = i;
+                return (
+                  <div key={time}>
+                    <Form.Item 
+                      name={`argKey-${time}`}
+                      style={{ display: 'inline-block' }}
+                      rules={[{ required: Boolean(val), message: '请选择参数类型！' }]}
+                    >
+                      <Select placeholder="请选择参数类型" style={{ width: 170 }} allowClear onChange={v => onArgsArrChange(2, time, v )}>
+                        {argsOptions.map(m => <Option value={m} disabled={argArr.findIndex(n => n.key === m) > -1}>{m}</Option>)}
+                      </Select>
+                    </Form.Item>
+                    <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                    <Form.Item 
+                      name={`argVal-${time}`}
+                      rules={[{ pattern: ArgNameReg, message: '只支持字母，数字，下划线，横线，点！' }]}
+                      style={{ display: 'inline-block' }}
+                    >
+                      <Input style={{ width: 226 }} placeholder="请填写参数值" onChange={e => onArgsArrChange(3, time, e.target.value)} />
+                    </Form.Item>
+                    {argArr.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => onArgsArrChange(4, time)} />}
+                  </div>
+                )
+              })}
+              <div style={{ float: 'right' }} onClick={() => onArgsArrChange(1)}>
+                <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: 6 }} />
+                <a>点击增加参数</a>
               </div>
-            </Form.Item> */}
+            </Form.Item>
           </Form>
         </Modal>
       )}
