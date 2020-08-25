@@ -29,7 +29,7 @@ const argsOptions = [
   'disable_reuse_memory','auto_tune_mode','aicore_num','buffer_optimize',
   'enable_small_channel','fusion_switch_file','dynamic_batch_size','dynamic_image_size','log'
 ];
-const ArgNameReg = /^[A-Za-z0-9-_.]+$/;
+const ArgNameReg = /^[A-Za-z0-9-_."",]+$/;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
@@ -406,8 +406,9 @@ const EdgeInference = () => {
                     <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
                     <Form.Item 
                       name={`argVal-${time}`}
-                      rules={[{ pattern: ArgNameReg, message: '只支持字母，数字，下划线，横线，点！' }]}
+                      rules={[{ pattern: ArgNameReg, message: '只支持字母，数字，下划线，横线，点，双引号和逗号！' }]}
                       style={{ display: 'inline-block' }}
+                      className="speItem"
                     >
                       <Input style={{ width: 226 }} placeholder="请填写参数值" onChange={e => onArgsArrChange(3, time, e.target.value)} />
                     </Form.Item>
