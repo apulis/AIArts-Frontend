@@ -90,7 +90,15 @@ const Visualization = () => {
     getVisualizations();
   }, [sortedInfo, pageParams, formValues.status]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (item) => {
+    if (['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)) {
+      Modal.warning({
+        title: '删除提示',
+        content: '请先停止该任务',
+        okText: '确定'
+      });
+      return;
+    }
     confirm({
       title: '删除可视化作业',
       content: '删除操作无法恢复，是否继续？',
@@ -99,7 +107,7 @@ const Visualization = () => {
       okType: 'danger',
       cancelText: '取消',
       onOk: async () => {
-        const res = await deleteVisualization(id);
+        const res = await deleteVisualization(item.id);
         if (res.code === 0) {
           // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
           if (visualizations.length == 1 && pageParams.pageNum > 1) {
@@ -163,7 +171,7 @@ const Visualization = () => {
             }
             <Button
               type="link"
-              onClick={() => handleDelete(item.id)}
+              onClick={() => handleDelete(item)}
               style={{ color: 'red' }}
             >
               删除
