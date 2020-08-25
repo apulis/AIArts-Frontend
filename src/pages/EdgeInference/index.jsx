@@ -399,7 +399,14 @@ const EdgeInference = () => {
                       style={{ display: 'inline-block' }}
                       rules={[{ required: Boolean(val), message: '请选择参数类型！' }]}
                     >
-                      <Select placeholder="请选择参数类型" style={{ width: 170 }} allowClear onChange={v => onArgsArrChange(2, time, v )}>
+                      <Select 
+                        placeholder="请选择参数类型" 
+                        style={{ width: 170 }} 
+                        allowClear 
+                        optionFilterProp="children"
+                        showSearch
+                        onChange={v => onArgsArrChange(2, time, v )}
+                      >
                         {argsOptions.map(m => <Option value={m} disabled={argArr.findIndex(n => n.key === m) > -1}>{m}</Option>)}
                       </Select>
                     </Form.Item>
