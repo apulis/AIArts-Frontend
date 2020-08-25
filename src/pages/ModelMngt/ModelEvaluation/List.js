@@ -119,6 +119,7 @@ const List = () => {
     if (res.code === 0) {
       message.success('已成功删除');
       handleSearch();
+      getJobStatusSumary();
     }
   }
   const onSearchName = (name) => {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Descriptions, Modal } from 'antd';
 import { useParams } from 'umi';
-import { message, Form, Input, Tooltip } from 'antd';
+import { message, Form, Input, Tooltip, Pagination } from 'antd';
 import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
@@ -15,10 +15,8 @@ import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
-
-const Detail = () => {
-  const tensorboadrdURL = '/modelTraining';
-  
+let timer
+const Detail = () => {  
   const params = useParams();
   const logEl = useRef(null);
   const [form] = useForm();
@@ -27,20 +25,22 @@ const Detail = () => {
   const [logs, setLogs] = useState(undefined);
   const [jobDetail, setJobDetail] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
-  const getTrainingDetail = async () => {
+  const [logCurrentPage, setLogCurrentPage] = useState(1);
+  const [logtotal, setLogTotal] = useState(1);
+  const getTrainingDetail = async (options) => {
     const res = await fetchTrainingDetail(id);
     if (res.code === 0) {
       setJobDetail(res.data)
       const status = res.data.status;
       if (!['unapproved', 'queued', 'scheduling'].includes(status)) {
-        getTrainingLogs(id)
+        getTrainingLogs(id, { page: options.page })
       }
     }
   }
   useEffect(() => {
-    getTrainingDetail();
-    let timer = setInterval(() => {
-      getTrainingDetail()
+    getTrainingDetail({ page: logCurrentPage });
+    timer = setInterval(() => {
+      getTrainingDetail({ page: logCurrentPage })
     }, 3000);
     return () => {
       clearInterval(timer)
@@ -48,17 +48,23 @@ const Detail = () => {
   }, [])
   const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status)
   const jobFailed = ['failed'].includes(jobDetail.status)
-  const getTrainingLogs = async () => {
-    const res = await fetchTrainingLog(id);
+
+  const getTrainingLogs = async (id, options) => {
+    let page = logCurrentPage;
+    if (options) {
+      page = options.page;
+    }
+    const res = await fetchTrainingLog(id, page);
     const l = logEl.current;
     if (res.code === 0) {
       setLogs(res.data.log || '');
+      setLogTotal(res.data.maxPage || 1);
     }
   }
 
   const handleFetchTrainingLogs = async () => {
     const cancel = message.loading('获取日志中')
-    await getTrainingLogs()
+    await getTrainingLogs(id)
     cancel();
     message.success('成功获取日志')
   }
@@ -66,13 +72,11 @@ const Detail = () => {
   const saveTrainingDetail = async () => {
     const values = await validateFields(['name', 'desc', 'scope']);
     const submitData = {};
-    // submitData.scope = values.scope;
     submitData.scope = 2; // save as private
     submitData.jobType = modelTrainingType;
     submitData.templateData = {};
     submitData.templateData = Object.assign({}, jobDetail, values);
     delete submitData.templateData.id;
-    console.log('submitData', submitData)
     const res = await saveTrainingParams(submitData);
     if (res.code === 0) {
       message.success('保存成功');
@@ -80,22 +84,20 @@ const Detail = () => {
     }
   }
 
-
-  const stopTraining = () => {
-    //
-  }
-
   const commonLayout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 15 }
   };
 
-  const removeTraining = async () => {
-    const res = await removeTrainings(id);
-    if (res.code === 0) {
-      message.success('成功删除');
-    }
+  const changeLogPage = (page) => {
+    window.clearInterval(timer);
+    timer = setInterval(() => {
+      getTrainingDetail({ page })
+    }, 3000);
+    setLogCurrentPage(page);
+    getTrainingLogs(id, { page });
   }
+
   let setTemplateButtonDisabled = /^\/data/.test(jobDetail.codePath) || Object.keys(jobDetail).length === 0
   return (
     <div className={styles.modelDetail}>
@@ -127,9 +129,14 @@ const Detail = () => {
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>训练日志</div>
       {!jobStarted && !jobFailed && <Button type="primary" onClick={handleFetchTrainingLogs} style={{marginBottom: '20px', marginTop: '16px'}}>获取训练日志</Button>}
-      {typeof logs !== 'undefined' ? <pre ref={logEl} className={styles.logs}>
-        {logs}
-      </pre> : (<div>
+      {typeof logs !== 'undefined' ? <div style={{paddingBottom: '25px'}}>
+        <pre ref={logEl} className={styles.logs}>
+          {logs}
+        </pre>
+        {
+          logtotal && <Pagination defaultCurrent={1} total={logtotal} current={logCurrentPage} onChange={(page) => {changeLogPage(page)}} />
+        }
+      </div> : (<div>
         {
           jobStarted ?
             <div>训练任务尚未开始运行</div>
@@ -182,21 +189,6 @@ const Detail = () => {
             >
               <Input.TextArea />
             </FormItem>
-            {/* <FormItem
-              {...commonLayout}
-              name="scope"
-              label="是否为公开模板"
-              rules={[{ required: true }]}
-              initialValue={2}
-            >
-              <Radio.Group
-                options={[
-                  {value: 1, label: '是'},
-                  {value: 2, label: '否'}
-                ]}
-              >
-              </Radio.Group>
-            </FormItem> */}
           </Form>
         </Modal>
       }

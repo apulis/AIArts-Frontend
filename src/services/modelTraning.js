@@ -30,8 +30,10 @@ export async function fetchTrainingDetail(id) {
   return await request(`/trainings/${id}`);
 }
 
-export async function fetchTrainingLog(id) {
-  return await request(`/trainings/${id}/log`);
+export async function fetchTrainingLog(id, page) {
+  return await request(`/trainings/${id}/log`, {
+    params: { pageNum: page }
+  });
 }
 
 export async function stopTraining(id) {
