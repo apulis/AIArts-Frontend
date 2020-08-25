@@ -40,6 +40,7 @@ const Visualization = () => {
   });
 
   const getVisualizations = async () => {
+    setTableLoading(true);
     const params = {
       ...pageParams,
       ...formValues,
@@ -76,7 +77,7 @@ const Visualization = () => {
     getVisualizations();
   }, [sortedInfo, pageParams, formValues.status]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
     confirm({
       title: '删除可视化作业',
       content: '删除操作无法恢复，是否继续？',
@@ -154,8 +155,7 @@ const Visualization = () => {
             }
             <Button
               type="link"
-              disabled={['killing', 'killed'].includes(item.status)}
-              onClick={handleDelete(item.id)}
+              onClick={() => handleDelete(item.id)}
               style={{ color: 'red' }}
             >
               删除
