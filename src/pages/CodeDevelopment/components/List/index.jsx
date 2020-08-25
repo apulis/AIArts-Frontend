@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
 import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import { getCodes, stopCode,deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
+import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
@@ -59,7 +59,7 @@ const CodeList = (props) => {
     if (apiData) {
       setStatusSearchArr(apiData)
       // 只有第一次会重新赋值
-      if(curStatus==='')setCurStatus(apiData[0].status)
+      if (curStatus === '') setCurStatus(apiData[0].status)
     }
   }
   const renderTable = async (pageParams, success) => {
@@ -124,14 +124,19 @@ const CodeList = (props) => {
   }
   const apiDeleteCode = async (id) => {
     const obj = await deleteCode(id)
-    const { code,data, msg } = obj
+    const { code, data, msg } = obj
     if (code === 0) {
-      if(codes.codeEnvs.length ==1 && pageParams.pageNum > 1){
+      if (codes.codeEnvs.length == 1 && pageParams.pageNum > 1) {
         renderTable({ ...pageParams, pageNum: pageParams.pageNum - 1 });
         setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
       }
-      else{
+      else {
         renderTable(pageParams)
+      }
+      // 更新数组
+      const apiData = await apiGetCodeCount()
+      if (apiData) {
+        setStatusSearchArr(apiData)
       }
       message.success('删除成功');
     }
@@ -146,13 +151,13 @@ const CodeList = (props) => {
   const handleDelete = (item) => {
     const id = item.id
     const status = item.status
-    if(canStopStatus.has(status)){
+    if (canStopStatus.has(status)) {
       Modal.warning({
         title: '删除提示',
         content: '请先停止该任务',
-        okText:'确定'
+        okText: '确定'
       });
-    }else{
+    } else {
       apiDeleteCode(item.id)
     }
   }
@@ -227,8 +232,8 @@ const CodeList = (props) => {
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
-            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: 'red' } : {}}>停止</a>
-            <a onClick={() => handleDelete(codeItem)} style={{color:'red'}}>删除</a>
+            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
+            <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
           </Space>
         );
       },
