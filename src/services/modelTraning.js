@@ -122,3 +122,22 @@ export async function deleteVisualization(id) {
     }
   });
 }
+
+export async function switchVisualizationJobStatus(id, action) {
+  return await request(`/visual/`, {
+    method: 'PUT',
+    params: {
+      id: id,
+      status: action
+    }
+  });
+}
+
+export async function getTensorboardUrl(id) {
+  return await request(`/visual/endpoints`, {
+    method: 'GET',
+    params: {
+      id: id
+    }
+  });
+}

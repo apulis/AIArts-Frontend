@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
-import { Link } from 'umi';
+import { Link, history } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText, PAGEPARAMS } from '@/utils/const';
-import { fetchVisualizations, deleteVisualization } from '@/services/modelTraning';
+import { fetchVisualizations, deleteVisualization, switchVisualizationJobStatus, getTensorboardUrl } from '@/services/modelTraning';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
@@ -72,7 +72,20 @@ const Visualization = () => {
     setPageParams({ pageNum: page, pageSize: size });
   };
 
+  const changeJobStatus = async (id, action) => {
+    const res = await switchVisualizationJobStatus(id, action);
+    if (res.code === 0) {
+      getVisualizations();
+    }
+  };
 
+  const openTensorboard = async (id) => {
+    const res = await getTensorboardUrl(id);
+    if (res.code === 0) {
+      const { path } = res.data;
+      window.open(path, '_blank');
+    }
+  };
   useEffect(() => {
     getVisualizations();
   }, [sortedInfo, pageParams, formValues.status]);
@@ -89,7 +102,7 @@ const Visualization = () => {
         const res = await deleteVisualization(id);
         if (res.code === 0) {
           // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
-          if (paramList.length == 1 && pageParams.pageNum > 1) {
+          if (visualizations.length == 1 && pageParams.pageNum > 1) {
             setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
           } else {
             getVisualizations();
@@ -108,9 +121,9 @@ const Visualization = () => {
     {
       dataIndex: 'jobName',
       title: '作业名称',
-      key: 'jobName',
+      key: 'name',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order
     },
     {
       dataIndex: 'status',
@@ -124,14 +137,14 @@ const Visualization = () => {
     {
       dataIndex: 'createTime',
       title: '创建时间',
-      key: 'jobTime',
+      key: 'createTime',
       render(_text, item) {
         return (
           <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
         );
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order
     },
     {
       dataIndex: 'description',
@@ -142,16 +155,11 @@ const Visualization = () => {
       render(_text, item) {
         return (
           <>
-            <Button
-              type="link"
-              disabled={['unapproved', 'queued', 'scheduling'].includes(item.status)}
-            >
-              打开
-            </Button>
+            <Button type='link' onClick={() => { openTensorboard(item.id); }} disabled={!['running'].includes(item.status)}>打开</Button>
             {
               ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
-                ? <a onClick={() => removeTraining(item.id)}>停止</a>
-                : <Button type="link" disabled={['killing', 'killed', 'error'].includes(item.status)} >运行</Button>
+                ? <Button type="link" onClick={() => changeJobStatus(item.id, 'pause')} disabled={!['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)}>停止</Button>
+                : <Button type="link" onClick={() => changeJobStatus(item.id, 'running')} disabled={!['paused', 'killed'].includes(item.status)} >运行</Button>
             }
             <Button
               type="link"
