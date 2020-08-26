@@ -119,6 +119,7 @@ const List = () => {
     if (res.code === 0) {
       message.success('已成功删除');
       handleSearch();
+      getJobStatusSumary();
     }
   }
   const onSearchName = (name) => {
@@ -186,7 +187,7 @@ const List = () => {
           ):
           (
             <Space size="middle">
-            <span>已停止</span>
+            <span className="disabled">已停止</span>
             <a onClick={() => deleteEvaluationJob(item.id)} style={{color:'red'}}>删除</a>
             </Space>
             )

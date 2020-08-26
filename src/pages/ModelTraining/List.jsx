@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, message, Card, Select } from 'antd';
+import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
@@ -130,14 +130,30 @@ const List = () => {
     }
   }
 
-  const handleDeleteJob = async (jobId) => {
-    const res = await deleteJob(jobId);
-    if (res.code === 0) {
-      message.success('删除成功');
-      getTrainingList();
-      getJobStatusSumary();
-      
+  const handleDeleteJob = async (jobId, status) => {
+    const handleDelete = async () => {
+      const res = await deleteJob(jobId);
+      if (res.code === 0) {
+        message.success('删除成功');
+        getTrainingList();
+        getJobStatusSumary();
+      }
     }
+    if (['unapproved', 'queued', 'scheduling', 'running'].includes(status)) {
+      Modal.confirm({
+        title: '当前任务尚未停止',
+        content: '请先停止该任务',
+        onCancel() {
+
+        },
+        onOk() {
+          
+        }
+      })
+    } else {
+      handleDelete()
+    }
+    
   }
 
   const onSearchInput = (e) => {
@@ -194,11 +210,14 @@ const List = () => {
         return (
           <>
             {
-              ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)
-                ? <a onClick={() => removeTraining(item.id)}>停止</a>
+              ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
+                ? <div style={{display: 'flex'}}>
+                    <div style={{marginRight: '16px'}} onClick={() => removeTraining(item.id)}>停止</div>
+                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
+                  </div>
                 : <div style={{display: 'flex'}}>
-                    <div style={{marginRight: '16px'}}>已停止</div>
-                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id)}>删除</a>
+                    <div style={{marginRight: '16px'}} className="disabled">已停止</div>
+                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
                   </div>
             }
           </>
