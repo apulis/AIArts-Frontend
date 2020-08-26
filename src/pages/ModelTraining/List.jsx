@@ -43,8 +43,8 @@ const List = () => {
     columnKey: '',
   });
   const getTrainingList = async (reloadPage, options = {}) => {
-    const { pageSize: size, status } = options
-    let page = pageNum;
+    const { pageSize: size, status, pageNo } = options
+    let page = pageNo || pageNum;
     if (reloadPage) {
       page = 1
     }
@@ -112,7 +112,7 @@ const List = () => {
       setTrainingWorkList(res.data.Trainings);
     }
   }
-  const removeTraining = async (id) => {
+  const stopTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
       message.success('已成功操作');
@@ -135,7 +135,10 @@ const List = () => {
       const res = await deleteJob(jobId);
       if (res.code === 0) {
         message.success('删除成功');
-        getTrainingList();
+        if (trainingWorkList.length === 1) {
+          setPageNum(pageNum - 1);
+        }
+        getTrainingList(false, { pageNo: pageNum - 1 });
         getJobStatusSumary();
       }
     }
@@ -212,7 +215,7 @@ const List = () => {
             {
               ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
                 ? <div style={{display: 'flex'}}>
-                    <div style={{marginRight: '16px'}} onClick={() => removeTraining(item.id)}>停止</div>
+                    <div style={{marginRight: '16px'}} onClick={() => stopTraining(item.id)}>停止</div>
                     <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
                   </div>
                 : <div style={{display: 'flex'}}>
