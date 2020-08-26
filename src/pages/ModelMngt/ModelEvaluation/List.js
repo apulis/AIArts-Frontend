@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Table, Input, message, Card, Select, Popover,Space } from 'antd';
+import { Button, Table, Input, message, Card, Select, Popover, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
@@ -114,8 +114,18 @@ const List = () => {
       handleSearch();
     }
   }
-  const deleteEvaluationJob = async (id) => {
-    const res = await deleteEvaluation(id);
+  const deleteEvaluationJob = async (item) => {
+
+    if (canStop(item)) {
+      Modal.warning({
+        title: '删除提示',
+        content: '请先停止该任务',
+        okText: '确定'
+      });
+      return;
+    }
+
+    const res = await deleteEvaluation(item.id);
     if (res.code === 0) {
       message.success('已成功删除');
       handleSearch();
@@ -131,6 +141,10 @@ const List = () => {
     setPageParams({...pageParams, ...{pageNum: 1}});
     const name = searchEl.current.value;
     setFormValues({...formValues, ...{name}});
+  };
+
+  const canStop = (item) => {
+    return ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status);
   };
 
   const columns = [
@@ -179,18 +193,12 @@ const List = () => {
     {
       title: '操作',
       render(_text, item) {
-        return ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)?
-           (
-            <>
-            <a onClick={() => stopEvaluationJob(item.id)}>停止</a>
-            </>
-          ):
-          (
-            <Space size="middle">
-            <span className="disabled">已停止</span>
-            <a onClick={() => deleteEvaluationJob(item.id)} style={{color:'red'}}>删除</a>
-            </Space>
-            )
+        return (
+          <>
+            <Button type="link" onClick={() => stopEvaluationJob(item.id)} disabled={!canStop(item)}>停止</Button>
+            <Button type="link" danger onClick={() => deleteEvaluationJob(item)} >删除</Button>          
+          </>
+        )
       }
     }
   ]
