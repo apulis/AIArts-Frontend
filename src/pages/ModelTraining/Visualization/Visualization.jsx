@@ -83,6 +83,10 @@ const Visualization = () => {
     const res = await getTensorboardUrl(id);
     if (res.code === 0) {
       const { path } = res.data;
+      if (!path) {
+        message.info('服务正在准备中，请稍候再试');
+        return;
+      }
       window.open(path, '_blank');
     }
   };
