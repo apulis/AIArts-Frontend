@@ -134,7 +134,7 @@ const Detail = () => {
           {logs}
         </pre>
         {
-          logtotal && <Pagination defaultCurrent={1} total={logtotal} current={logCurrentPage} onChange={(page) => {changeLogPage(page)}} />
+          logtotal && <Pagination showSizeChanger={false} defaultCurrent={1} defaultPageSize={1} total={logtotal} current={logCurrentPage} onChange={(page) => {changeLogPage(page)}} />
         }
       </div> : (<div>
         {
