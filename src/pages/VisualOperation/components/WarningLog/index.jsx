@@ -11,7 +11,7 @@ const WarningLog = () => {
     const host = window.location.host;
     grafana = protocol + '//' + host + '/endpoints/grafana/';
   }
-  const url = `${grafana}alerting/list`;
+  const url = `${grafana}alerting/list?kiosk=tv`;
   return (
     <Card bodyStyle={{ padding: '0px 0px' }}>
       <Iframe url={url} width="100%" height="800" />
