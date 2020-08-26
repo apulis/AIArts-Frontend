@@ -29,7 +29,7 @@ const argsOptions = [
   'disable_reuse_memory','auto_tune_mode','aicore_num','buffer_optimize',
   'enable_small_channel','fusion_switch_file','dynamic_batch_size','dynamic_image_size','log'
 ];
-const ArgNameReg = /^[A-Za-z0-9-_."",]+$/;
+const ArgNameReg = /^[A-Za-z0-9-_."",:]+$/;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
@@ -345,7 +345,7 @@ const EdgeInference = () => {
           destroyOnClose
           maskClosable={false}
           className="inferenceModal"
-          width={600}
+          width={700}
           footer={[
             <Button onClick={onCloseModal1}>取消</Button>,
             <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>,
@@ -401,7 +401,7 @@ const EdgeInference = () => {
                     >
                       <Select 
                         placeholder="请选择参数类型" 
-                        style={{ width: 170 }} 
+                        style={{ width: 220 }} 
                         allowClear 
                         optionFilterProp="children"
                         showSearch
@@ -417,7 +417,7 @@ const EdgeInference = () => {
                       style={{ display: 'inline-block' }}
                       className="speItem"
                     >
-                      <Input style={{ width: 226 }} placeholder="请填写参数值" onChange={e => onArgsArrChange(3, time, e.target.value)} />
+                      <Input style={{ width: 276 }} placeholder="请填写参数值" onChange={e => onArgsArrChange(3, time, e.target.value)} />
                     </Form.Item>
                     {argArr.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => onArgsArrChange(4, time)} />}
                   </div>
