@@ -215,7 +215,7 @@ const List = () => {
             {
               ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
                 ? <div style={{display: 'flex'}}>
-                    <div style={{marginRight: '16px'}} onClick={() => stopTraining(item.id)}>停止</div>
+                    <a style={{marginRight: '16px', display: 'block'}} onClick={() => stopTraining(item.id)}>停止</a>
                     <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
                   </div>
                 : <div style={{display: 'flex'}}>
