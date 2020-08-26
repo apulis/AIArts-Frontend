@@ -187,7 +187,7 @@ const List = () => {
           ):
           (
             <Space size="middle">
-            <span>已停止</span>
+            <span className="disabled">已停止</span>
             <a onClick={() => deleteEvaluationJob(item.id)} style={{color:'red'}}>删除</a>
             </Space>
             )

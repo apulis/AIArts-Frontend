@@ -29,10 +29,10 @@ const EvaluationDetail = props => {
     // const cancel = message.loading('获取结果中');
     const res = await fetchEvaluationDetail(modelId);
     // cancel();
-    const { code, msg, data: { evaluation, log, indicator, confusion } } = res;
+    const { code, msg } = res;
     if (code === 0) {
       // message.success('成功获取结果');
-
+      const { data: { evaluation, log, indicator, confusion } } = res;
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
@@ -66,8 +66,9 @@ const EvaluationDetail = props => {
     const cancel = message.loading('获取结果中');
     const res = await fetchEvaluationDetail(modelId);
     cancel();
-    const { code, msg, data: { evaluation, log, indicator, confusion } } = res;
+    const { code, msg } = res;
     if (code === 0) {
+      const { data: { evaluation, log, indicator, confusion } } = res;
       message.success('成功获取结果');
 
       setEvaluationJob(evaluation);

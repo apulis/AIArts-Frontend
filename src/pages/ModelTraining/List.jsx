@@ -216,7 +216,7 @@ const List = () => {
                     <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
                   </div>
                 : <div style={{display: 'flex'}}>
-                    <div style={{marginRight: '16px'}}>已停止</div>
+                    <div style={{marginRight: '16px'}} className="disabled">已停止</div>
                     <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
                   </div>
             }
