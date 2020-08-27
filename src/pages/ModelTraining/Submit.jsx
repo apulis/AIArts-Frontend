@@ -220,6 +220,7 @@ const ModelTraining = (props) => {
     const values = await validateFields();
     let params = {};
     values.params && values.params.forEach(p => {
+      if (!p.key) return;
       params[p.key] = p.value;
     });
     if (isPretrainedModel) {
