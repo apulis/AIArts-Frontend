@@ -267,7 +267,7 @@ const EdgeInference = () => {
       },
       {
         text: '转换中',
-        status: 'running-converting'
+        status: 'running, scheduling, queued, unapproved-converting'
       },
       {
         text: '转换成功',
