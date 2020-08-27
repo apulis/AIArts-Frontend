@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Table, Input, message, Card, Select, Popover } from 'antd';
+import { Button, Table, Input, message, Card, Select, Popover, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { PAGEPARAMS, sortText } from '@/utils/const';
-import { getEvaluations, stopEvaluation, fetchJobStatusSumary } from './services';
+import { getEvaluations, stopEvaluation, fetchJobStatusSumary,deleteEvaluation } from './services';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { getNameFromDockerImage } from '@/utils/reg.js';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -109,8 +110,26 @@ const List = () => {
   const stopEvaluationJob = async (id) => {
     const res = await stopEvaluation(id);
     if (res.code === 0) {
-      message.success('已成功操作');
+      message.success('已成功停止');
       handleSearch();
+    }
+  }
+  const deleteEvaluationJob = async (item) => {
+
+    if (canStop(item)) {
+      Modal.warning({
+        title: '删除提示',
+        content: '请先停止该任务',
+        okText: '确定'
+      });
+      return;
+    }
+
+    const res = await deleteEvaluation(item.id);
+    if (res.code === 0) {
+      message.success('已成功删除');
+      handleSearch();
+      getJobStatusSumary();
     }
   }
   const onSearchName = (name) => {
@@ -122,6 +141,10 @@ const List = () => {
     setPageParams({...pageParams, ...{pageNum: 1}});
     const name = searchEl.current.value;
     setFormValues({...formValues, ...{name}});
+  };
+
+  const canStop = (item) => {
+    return ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status);
   };
 
   const columns = [
@@ -147,6 +170,9 @@ const List = () => {
     {
       dataIndex: 'engine',
       title: '引擎类型',
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       dataIndex: 'createTime',
@@ -169,12 +195,8 @@ const List = () => {
       render(_text, item) {
         return (
           <>
-            {
-              ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)
-                ? <a onClick={() => stopEvaluationJob(item.id)}>停止</a>
-                : <span>已停止</span>
-            }
-
+            <Button type="link" onClick={() => stopEvaluationJob(item.id)} disabled={!canStop(item)}>停止</Button>
+            <Button type="link" danger onClick={() => deleteEvaluationJob(item)} >删除</Button>          
           </>
         )
       }

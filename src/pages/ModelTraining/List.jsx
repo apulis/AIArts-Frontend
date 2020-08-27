@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, message, Card, Select } from 'antd';
+import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText } from '@/utils/const';
-import { fetchTrainingList, removeTrainings, fetchJobStatusSumary } from '@/services/modelTraning';
+import { fetchTrainingList, removeTrainings, fetchJobStatusSumary, deleteJob } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import style from './index.less'
+import { getNameFromDockerImage } from '@/utils/reg';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -42,8 +43,8 @@ const List = () => {
     columnKey: '',
   });
   const getTrainingList = async (reloadPage, options = {}) => {
-    const { pageSize: size, status } = options
-    let page = pageNum;
+    const { pageSize: size, status, pageNo } = options
+    let page = pageNo || pageNum;
     if (reloadPage) {
       page = 1
     }
@@ -111,7 +112,7 @@ const List = () => {
       setTrainingWorkList(res.data.Trainings);
     }
   }
-  const removeTraining = async (id) => {
+  const stopTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
       message.success('已成功操作');
@@ -127,6 +128,35 @@ const List = () => {
       setTableLoading(false);
       setTotal(res.data.total);
     }
+  }
+
+  const handleDeleteJob = async (jobId, status) => {
+    const handleDelete = async () => {
+      const res = await deleteJob(jobId);
+      if (res.code === 0) {
+        message.success('删除成功');
+        if (trainingWorkList.length === 1) {
+          setPageNum(pageNum - 1);
+        }
+        getTrainingList(false, { pageNo: pageNum - 1 });
+        getJobStatusSumary();
+      }
+    }
+    if (['unapproved', 'queued', 'scheduling', 'running'].includes(status)) {
+      Modal.confirm({
+        title: '当前任务尚未停止',
+        content: '请先停止该任务',
+        onCancel() {
+
+        },
+        onOk() {
+          
+        }
+      })
+    } else {
+      handleDelete()
+    }
+    
   }
 
   const onSearchInput = (e) => {
@@ -153,6 +183,9 @@ const List = () => {
     {
       dataIndex: 'engine',
       title: '引擎类型',
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       dataIndex: 'createTime',
@@ -180,11 +213,14 @@ const List = () => {
         return (
           <>
             {
-              ['unapproved', 'queued', 'scheduling', 'running',].includes(item.status)
-                ? <a onClick={() => removeTraining(item.id)}>停止</a>
+              ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
+                ? <div style={{display: 'flex'}}>
+                    <a style={{marginRight: '16px', display: 'block'}} onClick={() => stopTraining(item.id)}>停止</a>
+                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
+                  </div>
                 : <div style={{display: 'flex'}}>
-                    <div style={{marginRight: '16px'}}>已停止</div>
-                    {/* <a style={{color: 'red'}}>删除</a> */}
+                    <div style={{marginRight: '16px'}} className="disabled">已停止</div>
+                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
                   </div>
             }
           </>

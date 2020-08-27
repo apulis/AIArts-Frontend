@@ -7,7 +7,7 @@ import { addEvaluation, fetchPresetTemplates, getAllLabeledDatasets } from './se
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
 import curStyles from './index.less';
@@ -206,23 +206,28 @@ const ModelEvaluation = props => {
 
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
-    console.log('values', values, key);
-    [...runningParams].forEach((param, index) => {
-      param.key = values[index].key;
-      param.value = values[index].value;
-    });
-    const newRunningParams = [...runningParams].filter((param) => {
-      if (param.createTime) {
-        return param.createTime !== key;
-      } else {
-        return param.key !== key;
-      }
-    });
-    setRunningParams(newRunningParams);
-    setFieldsValue({
-      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
-    });
-  };
+    if (values.length === 1) {
+      setFieldsValue({
+        params: [{ key: '', value: ''}]
+      })
+    } else {
+      [...runningParams].forEach((param, index) => {
+        param.key = values[index].key;
+        param.value = values[index].value;
+      });
+      const newRunningParams = [...runningParams].filter((param) => {
+        if (param.createTime) {
+          return param.createTime !== key;
+        } else {
+          return param.key !== key;
+        }
+      });
+      setRunningParams(newRunningParams);
+      setFieldsValue({
+        params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      });
+    };
+  }
 
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
@@ -299,12 +304,14 @@ const ModelEvaluation = props => {
               <Input placeholder="请输入模型名称" disabled/>
             </Form.Item>
             <Divider style={{ borderColor: '#cdcdcd' }} />
-            <Form.Item {...layout} label="参数来源">
-              <Radio.Group defaultValue={1} buttonStyle="solid">
-                <Radio.Button value={1}>手动参数配置</Radio.Button>
-                <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入评估参数</Radio.Button>
-              </Radio.Group>
-            </Form.Item>
+            { !isPublic ?
+              <Form.Item {...layout} label="参数来源">
+                <Radio.Group defaultValue={1} buttonStyle="solid">
+                  <Radio.Button value={1}>手动参数配置</Radio.Button>
+                  <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入评估参数</Radio.Button>
+                </Radio.Group>
+              </Form.Item> : null
+            }
             <Form.Item
               {...layout}
               label="引擎"
@@ -314,7 +321,7 @@ const ModelEvaluation = props => {
               <Select>
                 {
                   engines && engines.map(f => (
-                    <Option value={f} key={f}>{f}</Option>
+                    <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
                   ))
                 }
               </Select>
@@ -373,9 +380,7 @@ const ModelEvaluation = props => {
                       <Form.Item initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args); } }]} name={['params', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
                         <Input style={{ width: 200 }} />
                       </Form.Item>
-                      {
-                        runningParams.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
-                      }
+                      <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
                     </div>
                   );
                 })

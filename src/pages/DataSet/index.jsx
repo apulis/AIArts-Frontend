@@ -151,8 +151,7 @@ const DataSetList = () => {
       okType: 'danger',
       cancelText: '取消',
       onOk: async () => {
-        const res = await deleteDataSet(id);
-        const { code } = res;
+        const { code } = await deleteDataSet(id);
         if (code === 0) {
           // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
           if (dataSets.data.length == 1 && pageParams.pageNum > 1) {

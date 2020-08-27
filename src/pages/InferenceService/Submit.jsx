@@ -10,7 +10,7 @@ import { history, withRouter } from 'umi';
 
 
 import styles from './index.less'
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
 
 const { TextArea } = Input; 
@@ -164,7 +164,7 @@ const SubmitModelTraining = (props) => {
           <Select placeholder="请选择" onChange={handleSelectFramework}>
             {
               frameWorks.map(f => (
-                <Option value={f}>{f}</Option>
+                <Option value={f}>{getNameFromDockerImage(f)}</Option>
               ))
             }
           </Select>

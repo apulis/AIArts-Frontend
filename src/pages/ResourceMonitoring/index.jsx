@@ -12,8 +12,8 @@ const ResourceMonitoring = () => {
     const host = window.location.host;
     grafana = protocol + '//' + host + '/endpoints/grafana/';
   }
-  const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}`;
-  const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}`;
+  const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}&kiosk=tv`;
+  const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
   return (
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '0px 0px' }}>

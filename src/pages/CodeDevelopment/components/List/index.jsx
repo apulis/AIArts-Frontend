@@ -2,17 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
 import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import { getCodes, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
+import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
 import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap, sortTextMap, pageObj } from '../../serviceController.js'
+import { getNameFromDockerImage } from '@/utils/reg.js';
 
 const CodeList = (props) => {
   const { Search } = Input;
   const { Option } = Select;
   const searchRef = useRef(null)
-  const [data, setData] = useState({ codeEnvs: [], total: 0 });
+  const [codes, setCodes] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(pageObj);// 页长
   const [statusSearchArr, setStatusSearchArr] = useState([])
@@ -26,24 +27,19 @@ const CodeList = (props) => {
   })
   useEffect(() => {
     renderStatusSelect()
-    const timer = setInterval(() => {
-      renderStatusSelect();
-    }, 3000)
-    return () => {
-      window.clearInterval(timer);
-    }
   }, [])
 
   useEffect(() => {
     renderTable(pageParams);
   }, [pageParams, sortInfo, curStatus])
+
   useEffect(() => {
-    
     if (curStatus != '') {
       renderTable(pageObj);
       setPageParams(pageObj);
     }
   }, [curStatus])
+
   useEffect(() => {
     if (searchObj.type != undefined) {
       const type = searchObj.type
@@ -62,15 +58,15 @@ const CodeList = (props) => {
     const apiData = await apiGetCodeCount()
     if (apiData) {
       setStatusSearchArr(apiData)
-      setCurStatus(apiData[0].status)
+      // 只有第一次会重新赋值
+      if (curStatus === '') setCurStatus(apiData[0].status)
     }
   }
   const renderTable = async (pageParams, success) => {
     setLoading(true)
     const apiData = await apiGetCodes(pageParams)
     if (apiData) {
-      console.log(apiData)
-      setData({
+      setCodes({
         codeEnvs: apiData.CodeEnvs,
         total: apiData.total
       })
@@ -86,7 +82,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -105,7 +100,6 @@ const CodeList = (props) => {
     if (code === 0) {
       return data
     } else {
-      message.error(msg);
       return null
     }
   }
@@ -118,19 +112,33 @@ const CodeList = (props) => {
       else {
         message.info('服务正在准备中，请稍候再试')
       }
-    } else {
-      message.error(msg)
     }
-
+  }
+  const apiStopCode = async (id) => {
+    const obj = await stopCode(id)
+    const { code, data, msg } = obj
+    if (code === 0) {
+      renderTable(pageParams);
+      message.success('停止成功');
+    }
   }
   const apiDeleteCode = async (id) => {
     const obj = await deleteCode(id)
     const { code, data, msg } = obj
     if (code === 0) {
-      renderTable(pageParams);
-      message.success('停止成功');
-    } else {
-      message.error(msg);
+      if (codes.codeEnvs.length == 1 && pageParams.pageNum > 1) {
+        renderTable({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+        setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+      }
+      else {
+        renderTable(pageParams)
+      }
+      // 更新数组
+      const apiData = await apiGetCodeCount()
+      if (apiData) {
+        setStatusSearchArr(apiData)
+      }
+      message.success('删除成功');
     }
   }
   const handleOpen = (item) => {
@@ -138,7 +146,20 @@ const CodeList = (props) => {
   }
   const handleStop = (item) => {
     const id = item.id
-    apiDeleteCode(item.id)
+    apiStopCode(item.id)
+  }
+  const handleDelete = (item) => {
+    const id = item.id
+    const status = item.status
+    if (canStopStatus.has(status)) {
+      Modal.warning({
+        title: '删除提示',
+        content: '请先停止该任务',
+        okText: '确定'
+      });
+    } else {
+      apiDeleteCode(item.id)
+    }
   }
   const handleSelectChange = (selectStatus) => {
     setCurStatus(selectStatus)
@@ -182,6 +203,9 @@ const CodeList = (props) => {
       title: '引擎类型',
       dataIndex: 'engine',
       ellipsis: true,
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
     },
     {
       title: '创建时间',
@@ -208,7 +232,8 @@ const CodeList = (props) => {
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
-            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: 'red' } : {}}>停止</a>
+            <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
+            <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
           </Space>
         );
       },
@@ -247,12 +272,12 @@ const CodeList = (props) => {
         </Col>
       </Row>
       <Table
-        dataSource={data.codeEnvs}
+        dataSource={codes.codeEnvs}
         columns={columns}
         onChange={handleSortChange}
         rowKey={r => r.id}
         pagination={{
-          total: data.total,
+          total: codes.total,
           showTotal: (total) => `总共 ${total} 条`,
           showQuickJumper: true,
           showSizeChanger: true,

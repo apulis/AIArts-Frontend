@@ -1,15 +1,35 @@
 import { message, Table, Modal, Form, Input, Button, Select, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getEdgeInferences, submit, getTypes, getFD, submitFD, push } from './service';
-import { PAGEPARAMS } from '@/utils/const';
+import { getEdgeInferences, submit, getTypes, getFD, submitFD, push, deleteEG } from './service';
 import styles from './index.less';
 import moment from 'moment';
-import { NameReg, NameErrorText, sortText } from '@/utils/const';
-import { CloudUploadOutlined, SyncOutlined } from '@ant-design/icons';
+import { PAGEPARAMS, NameReg, NameErrorText, sortText } from '@/utils/const';
+import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined, PauseOutlined, DeleteOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import _ from 'lodash';
 
 const { Option } = Select;
 const { Search } = Input;
+const { confirm } = Modal;
+const initArg = {
+  key: '',
+  val: ''
+}
+const typeText = {
+  'converting': '转换中',
+  'pushing': '推送中',
+  'push success': '推送成功',
+  'push failed': '推送失败'
+}
+const argsOptions = [
+  'mode','weight','check_report','input_format','out_nodes','is_output_adjust_hw_layout',
+  'input_fp16_nodes','is_input_adjust_hw_layout','input_shape','json',
+  'dump_mode','om','op_name_map','insert_op_conf','output_type','singleop',
+  'precision_mode','op_select_implmode','optypelist_for_implmode',
+  'disable_reuse_memory','auto_tune_mode','aicore_num','buffer_optimize',
+  'enable_small_channel','fusion_switch_file','dynamic_batch_size','dynamic_image_size','log'
+];
+const ArgNameReg = /^[A-Za-z0-9-_."",:]+$/;
 
 const EdgeInference = () => {
   const [form] = Form.useForm();
@@ -25,16 +45,11 @@ const EdgeInference = () => {
   const [name, setName] = useState('');
   const [statusType, setStatusType] = useState('');
   const [total, setTotal] = useState(0);
+  const [argArr, setArgArr] = useState([{...initArg, time: new Date().getTime()}])
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
-  const typeText = {
-    'converting': '转换中',
-    'pushing': '推送中',
-    'push success': '推送成功',
-    'push failed': '推送失败'
-  }
 
   useEffect(() => {
     getData();
@@ -73,15 +88,57 @@ const EdgeInference = () => {
   const onSubmit = () => {
     setBtnLoading(true);
     form.validateFields().then(async (values) => {
-      const { code, data } = await submit(values);
+      const { jobName, inputPath, outputPath, conversionType } = values
+      const temp = { ...values };
+      let conversionArgs = {};
+      delete temp.jobName;
+      delete temp.outputPath;
+      delete temp.inputPath;
+      delete temp.conversionType;
+      Object.keys(temp).forEach(i => {
+        if (temp[i]) {
+          const type = i.split('-')[0];
+          const time = i.split('-')[1];
+          if (type === 'argKey') {
+            conversionArgs[temp[i]] = '';
+          } else {
+            const key = temp[`argKey-${time}`];
+            conversionArgs[key] = temp[i];
+          }
+        }
+      })
+      const { code, data } = await submit({ jobName, inputPath, outputPath, conversionType, conversionArgs });
       if (code === 0) {
         message.success('提交成功！');
         getData();
-        setModalFlag1(false);
+        onCloseModal1();
       }
     });
     setBtnLoading(false);
   };
+
+  const onDelete = id => {
+    confirm({
+      title: '确定要删除该推理吗？',
+      icon: <ExclamationCircleOutlined />,
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        const { code } = await deleteEG(id);
+        if (code === 0) {
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (jobs.length == 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            getData();
+          }
+          message.success('删除成功！');
+        }
+      },
+      onCancel() {}
+    });
+  }
 
   const columns = [
     {
@@ -113,7 +170,7 @@ const EdgeInference = () => {
       render: item => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '转换成功' : jobStatus === 'failed' ? '转换失败' : status;
+        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '转换成功' : jobStatus === 'failed' || jobStatus === 'error' ? '转换失败' : status;
         return (<span>{status}</span>)
       }
     },
@@ -123,7 +180,10 @@ const EdgeInference = () => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled = (!(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId);
         return (
-          <Button disabled={disabled} icon={<CloudUploadOutlined style={{ fontSize: 22 }} />} shape="circle" onClick={() => onPush(jobId)} title="推送" />
+          <>
+            <a onClick={() => onPush(jobId)} disabled={disabled}>推送</a>
+            <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>删除</a>
+          </>
         )
       },
     },
@@ -207,7 +267,7 @@ const EdgeInference = () => {
       },
       {
         text: '转换中',
-        status: 'running-converting'
+        status: 'running, scheduling, queued, unapproved-converting'
       },
       {
         text: '转换成功',
@@ -215,7 +275,7 @@ const EdgeInference = () => {
       },
       {
         text: '转换失败',
-        status: 'failed-converting'
+        status: 'error,failed-converting'
       }
     ];
     return statusMap.map(i => <Option value={i.status}>{i.text}</Option>);
@@ -224,6 +284,26 @@ const EdgeInference = () => {
   const onSearchChange = (v, type) => {
     type === 1 ? setStatusType(v) : setName(v)
     setPageParams({ ...pageParams, pageNum: 1 });
+  }
+
+  const onArgsArrChange = (type, time, v) => {
+    const newArr = _.cloneDeep(argArr);
+    const idx = newArr.findIndex(i => i.time === time);
+    if (type === 1) {
+      newArr.push({ ...initArg, time: new Date().getTime()});
+    } else if (type === 2) {
+      newArr[idx].key = v;
+    } else if (type === 3) {
+      newArr[idx].val = v;
+    } else {
+      newArr.splice(idx, 1);
+    }
+    setArgArr(newArr);
+  }
+
+  const onCloseModal1 = () => {
+    setArgArr([{ ...initArg, time: new Date().getTime() }]);
+    setModalFlag1(false);
   }
 
   return (
@@ -261,12 +341,13 @@ const EdgeInference = () => {
         <Modal
           title="新建推理"
           visible={modalFlag1}
-          onCancel={() => setModalFlag1(false)}
+          onCancel={onCloseModal1}
           destroyOnClose
           maskClosable={false}
           className="inferenceModal"
+          width={700}
           footer={[
-            <Button onClick={() => setModalFlag1(false)}>取消</Button>,
+            <Button onClick={onCloseModal1}>取消</Button>,
             <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>,
           ]}
         >
@@ -287,9 +368,9 @@ const EdgeInference = () => {
               name="conversionType"
               rules={[{ required: true, message: '请选择类型！' }]}
             >
-                <Select placeholder="请选择类型">
-                  {typesData.map(i => <Option value={i}>{i}</Option>)}
-                </Select>
+              <Select placeholder="请选择类型">
+                {typesData.map(i => <Option value={i}>{i}</Option>)}
+              </Select>
             </Form.Item>
             <Form.Item
               label="输入路径"
@@ -304,6 +385,48 @@ const EdgeInference = () => {
               rules={[{ required: true, message: '请填写输出路径！' }]}
             >
               <Input placeholder="请填写输出路径" />
+            </Form.Item>
+            <Form.Item
+              label="转换参数"
+              rules={[{ required: true }]}
+            >
+              {argArr.map((i, idx) => {
+                const { time, key, val } = i;
+                return (
+                  <div key={time}>
+                    <Form.Item 
+                      name={`argKey-${time}`}
+                      style={{ display: 'inline-block' }}
+                      rules={[{ required: Boolean(val), message: '请选择参数类型！' }]}
+                    >
+                      <Select 
+                        placeholder="请选择参数类型" 
+                        style={{ width: 220 }} 
+                        allowClear 
+                        optionFilterProp="children"
+                        showSearch
+                        onChange={v => onArgsArrChange(2, time, v )}
+                      >
+                        {argsOptions.map(m => <Option value={m} disabled={argArr.findIndex(n => n.key === m) > -1}>{m}</Option>)}
+                      </Select>
+                    </Form.Item>
+                    <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                    <Form.Item 
+                      name={`argVal-${time}`}
+                      rules={[{ pattern: ArgNameReg, message: '只支持字母，数字，下划线，横线，点，双引号和逗号！' }]}
+                      style={{ display: 'inline-block' }}
+                      className="speItem"
+                    >
+                      <Input style={{ width: 276 }} placeholder="请填写参数值" onChange={e => onArgsArrChange(3, time, e.target.value)} />
+                    </Form.Item>
+                    {argArr.length > 1 && <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => onArgsArrChange(4, time)} />}
+                  </div>
+                )
+              })}
+              <div style={{ float: 'right' }} onClick={() => onArgsArrChange(1)}>
+                <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: 6 }} />
+                <a>点击增加参数</a>
+              </div>
             </Form.Item>
           </Form>
         </Modal>

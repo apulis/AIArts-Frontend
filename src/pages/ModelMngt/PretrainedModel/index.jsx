@@ -8,6 +8,7 @@ import { connect } from 'umi';
 import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
+import { getNameFromDockerImage } from '@/utils/reg';
 
 const { Search } = Input;
 
@@ -45,7 +46,7 @@ const ExpandDetails = (item) => {
           }
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="引擎类型">{item.engine}</Descriptions.Item>
+      <Descriptions.Item label="引擎类型">{getNameFromDockerImage(item.engine)}</Descriptions.Item>
       <Descriptions.Item label="模型输出">{item.outputPath}</Descriptions.Item>
     </Descriptions>
   );

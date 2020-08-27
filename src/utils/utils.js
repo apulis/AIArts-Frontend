@@ -128,17 +128,18 @@ export const getJobStatus = (status) => {
 
 export const getStatusColor = (status) => {
   const colorList = {
-    'unapproved': '#00008B',
-    'queued': '	#00AAAA',
-    'scheduling': '#9ACD32',
-    'running': '#0dbc79',
-    'finished': '#1890ff',
-    'failed': '#FF7744',
-    'pausing': '#FFFF33',
-    'paused': '#FFFF33',
-    'killing': '#C0C0C0',
+    'error': '#CC0000',
+    'failed': '#d48265',
+    'finished': '#2f4554',
+    'running': '#61a0a8',
     'killed': '#DDDDDD',
-    'error': '#FF0000',
+
+    'unapproved': '#91c7ae',
+    'queued': '#749f83',
+    'scheduling': '#9ACD32',
+    'pausing': '#ca8622',
+    'paused': '#bda29a',
+    'killing': '#C0C0C0',
   };
   return colorList[status] || '#1890ff';
 };
@@ -176,7 +177,6 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
     }
     return arr2;
   }
-  console.log(111, type)
   // npu
   return [0, 1, 2, 4, 8];
 };
@@ -237,6 +237,7 @@ export const omitText = function (str, len = 20) {
 export const formatParams = (obj) => {
   let result = [];
   for (let key in obj) {
+    if (!key) continue;
     result.push(`${key}=${obj[key]}`);
   }
   return result;
@@ -261,4 +262,8 @@ export const debounce = (fn, delay) => {
       fn.call(this);
     }, delay)
   }
+}
+
+export const getDeviceType = () => {
+  
 }
