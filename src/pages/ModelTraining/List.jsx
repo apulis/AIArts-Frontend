@@ -122,7 +122,7 @@ const List = () => {
   const searchList = async (s) => {
     setSearch(s);
     setTableLoading(true);
-    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s });
+    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s, status: currentStatus });
     if (res.code === 0) {
       setTrainingWorkList(res.data.Trainings);
       setTableLoading(false);
@@ -137,8 +137,10 @@ const List = () => {
         message.success('删除成功');
         if (trainingWorkList.length === 1) {
           setPageNum(pageNum - 1);
+          getTrainingList(false, { pageNo: pageNum - 1 });
+        } else {
+          getTrainingList(false, { pageNo: pageNum });
         }
-        getTrainingList(false, { pageNo: pageNum - 1 });
         getJobStatusSumary();
       }
     }
