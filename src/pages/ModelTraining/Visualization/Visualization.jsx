@@ -204,7 +204,7 @@ const Visualization = () => {
               ))
             }
           </Select>
-          <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={getVisualizations} onChange={e => onJobNameChange(e.target.value)} />
+          <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={() => { setPageParams({ ...pageParams, ...{ pageNum: 1 } }); getVisualizations(); }} onChange={e => onJobNameChange(e.target.value)} />
           <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getVisualizations()}></Button>
         </div>
         <Table
