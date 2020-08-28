@@ -137,8 +137,10 @@ const List = () => {
         message.success('删除成功');
         if (trainingWorkList.length === 1) {
           setPageNum(pageNum - 1);
+          getTrainingList(false, { pageNo: pageNum - 1 });
+        } else {
+          getTrainingList(false, { pageNo: pageNum });
         }
-        getTrainingList(false, { pageNo: pageNum - 1 });
         getJobStatusSumary();
       }
     }
