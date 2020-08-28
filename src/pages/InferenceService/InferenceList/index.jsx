@@ -242,6 +242,7 @@ const InferenceList = props => {
           } else {
             handleSearch();
           }
+          getJobStatusSumary();
           message.success(`Job删除成功！`);
         }else{
           message.error(`Job删除错误：${msg}。`);

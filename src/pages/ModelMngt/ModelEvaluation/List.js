@@ -125,11 +125,26 @@ const List = () => {
       return;
     }
 
-    const res = await deleteEvaluation(item.id);
-    if (res.code === 0) {
-      message.success('已成功删除');
-      handleSearch();
+    // const res = await deleteEvaluation(item.id);
+    // if (res.code === 0) {
+    //   message.success('已成功删除');
+    //   handleSearch();
+    //   getJobStatusSumary();
+    // }
+
+    const {code, msg} = await deleteEvaluation(item.id);
+
+    if(code === 0){
+      // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+      if (data.list.length === 1 && pageParams.pageNum > 1) {
+        setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+      } else {
+        handleSearch();
+      }
       getJobStatusSumary();
+      message.success(`删除成功！`);
+    }else{
+      message.error(`删除错误：${msg}。`);
     }
   }
   const onSearchName = (name) => {
@@ -219,7 +234,7 @@ const List = () => {
           }
         </Select>
         <Search ref={searchEl} style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={onSearchName} enterButton />
-        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={onRefresh}></Button>
+        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={handleSearch}></Button>
       </div>
       <Table
         loading={tableLoading}
