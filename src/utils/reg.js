@@ -4,7 +4,7 @@ export const jobNameReg = {
 };
 
 export const linuxPathReg = {
-  pattern: /^\/(\w+\r\n\/?)+$/,
+  pattern: /^\/$|(\/[a-zA-Z_0-9-]+)+$/,
   message: '路径必须以\'/\'开头, 只能包含字母,数字和下划线'
 };
 
