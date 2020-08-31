@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, message} from 'antd';
+import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { } from '@ant-design/icons';
 
@@ -12,7 +12,7 @@ const CodeUpload = (props) => {
   const uploadProps = {
     name: 'file',
     multiple: true,
-    data:{codePath},
+    data: { codePath },
     action: '/ai_arts/api/codes/upload',
     headers: {
       Authorization: 'Bearer ' + window.localStorage.token,
@@ -27,11 +27,11 @@ const CodeUpload = (props) => {
         message.error(`${info.file.name} 文件上传失败！`);
       }
     },
-    beforeUpload(file){
+    beforeUpload(file) {
       const { type, size } = file;
       return true
     },
-    onRemove(file){
+    onRemove(file) {
       if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
     }
   }
