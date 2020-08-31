@@ -315,7 +315,7 @@ const EdgeInference = () => {
           {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
           <div className={styles.searchWrap}>
             <Select onChange={v => onSearchChange(v, 1)} defaultValue={statusType}>{getOptions()}</Select>
-            <Search placeholder="请输入推理名称查询" enterButton onSearch={v => onSearchChange(v, 2)} />
+            <Search placeholder="请输入推理名称查询" enterButton onChange={e => setName(e.target.value)} onSearch={v => onSearchChange(v, 2)} />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
