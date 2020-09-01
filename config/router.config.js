@@ -117,7 +117,7 @@ export default [
               {
                 path: '/model-training/:id/detail',
                 component: './ModelTraining/Detail',
-              },
+              }
             ]
           },
           {
@@ -170,6 +170,15 @@ export default [
               {
                 path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
                 component: './ModelMngt/EvalMetricsMngt/component/EditMetrics'
+              },
+              {
+                path: '/ModelManagement/avisualis',
+                component: './ModelMngt/Avisualis',
+                name: 'avisualis',
+              },
+              {
+                path: '/ModelManagement/avisualis/detail',
+                component: './ModelMngt/Avisualis/detail',
               },
             ],
           },

@@ -1,7 +1,6 @@
 import { message, Form, Input, Button, Select, Radio, Upload } from 'antd';
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
-import styles from './index.less';
 import { FilePathReg, FilePathErrorText } from '@/utils/const';
 
 const { Dragger } = Upload;
@@ -80,7 +79,7 @@ const AddModalForm = (props, ref) => {
   console.log('fileLists', fileLists)
 
   return (
-    <Form form={form} className={styles.modalFormWrap} 
+    <Form form={form}
       initialValues={modalType ? editData : { sourceType: sourceType, isPrivate: isPrivate, isTranslated: false }}>
       <Form.Item
         label="数据集名称"

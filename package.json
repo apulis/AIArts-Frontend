@@ -60,7 +60,6 @@
     "child_process": "^1.0.2",
     "classnames": "^2.2.6",
     "connect-history-api-fallback": "^1.6.0",
-    "dva": "^2.4.0",
     "ecstatic": "^4.1.4",
     "gg-editor": "^2.0.2",
     "lodash": "^4.17.11",
