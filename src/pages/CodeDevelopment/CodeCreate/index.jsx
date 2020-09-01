@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef,forwardRef} from 'react';
-import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal,InputNumber,Card,Radio } from 'antd';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal, InputNumber, Card, Radio } from 'antd';
 import { history } from 'umi';
 import { postCode1, getResource } from '../service.js'
-import {utilGetDeviceNumArr,utilGetDeviceNumPerNodeArr} from '../serviceController.js'
+import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceController.js'
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
 const CodeCreate = () => {
   const [form] = Form.useForm();
-  const { validateFields, setFieldsValue,getFieldValue } = form;
+  const { validateFields, setFieldsValue, getFieldValue } = form;
   const { Option } = Select;
   const { TextArea } = Input;
   let [data, setData] = useState(null)
@@ -17,15 +17,15 @@ const CodeCreate = () => {
   const [engineNameArr, setEngineNameArr] = useState([])
   const [codePathPrefix, setCodePathPrefix] = useState('')
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([])
-  const [maxNodeNum,setMaxNodeNum] = useState(1)
+  const [maxNodeNum, setMaxNodeNum] = useState(1)
   useEffect(() => {// 初始化处理
     renderInitForm()
   }, [])// 更新处理
   useEffect(() => {// 初始化处理deviceNum
-    if(jobTrainingType=='RegularJob'){  
+    if (jobTrainingType == 'RegularJob') {
       renderInitRegularForm(deviceNumArr[0])
-    }else if(jobTrainingType=='PSDistJob'){
-      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0],deviceNumPerNodeArr[0] * 1)
+    } else if (jobTrainingType == 'PSDistJob') {
+      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1)
     }
   }, [jobTrainingType])// 更新处理
 
@@ -36,7 +36,7 @@ const CodeCreate = () => {
       const enginTypeArrData = Object.keys(result.aiFrameworks)
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
       const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
-      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo,result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || []
+      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo, result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || []
       const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo, deviceTypeArrData[0]) || [0]
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
       console.log('deviceTypeArrData[0]', deviceTypeArrData[0])
@@ -47,15 +47,15 @@ const CodeCreate = () => {
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
       setMaxNodeNum(maxNodeNumData)
       setDeviceNumArr(deviceNumArrData)
-      setFieldsValue({'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0]})
+      setFieldsValue({ 'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0] })
       renderInitRegularForm(deviceNumArrData[0])
     }
   }
-  const renderInitRegularForm = (deviceNum)=>{
-    setFieldsValue({'deviceNum':deviceNum })
+  const renderInitRegularForm = (deviceNum) => {
+    setFieldsValue({ 'deviceNum': deviceNum })
   }
-  const renderInitPSDistJobForm = (numPs,numPsWorker,deviceNum)=>{
-    setFieldsValue({numPs,numPsWorker,deviceNum})
+  const renderInitPSDistJobForm = (numPs, numPsWorker, deviceNum) => {
+    setFieldsValue({ numPs, numPsWorker, deviceNum })
   }
   const apiPostCode = async (values) => {
     const obj = await postCode1(values)
@@ -74,7 +74,7 @@ const CodeCreate = () => {
       return null
     }
   }
- 
+
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
@@ -85,26 +85,26 @@ const CodeCreate = () => {
 
   const handleEngineTypeChange = (engineType) => {
     const arr = data.aiFrameworks[engineType]
-    setFieldsValue({ 'engine': arr[0]||''})
+    setFieldsValue({ 'engine': arr[0] || '' })
     setEngineNameArr(arr)
   }
   const handleDeviceTypeChange = (index) => {
     const type = data['nodeInfo'][index]['gpuType']
     let arr = []
-    if(jobTrainingType=='RegularJob'){
-      arr = utilGetDeviceNumArr(data['nodeInfo'],type)
-      setFieldsValue({ 'deviceNum': arr[0]})
+    if (jobTrainingType == 'RegularJob') {
+      arr = utilGetDeviceNumArr(data['nodeInfo'], type)
+      setFieldsValue({ 'deviceNum': arr[0] })
       setDeviceNumArr(arr)
-    }else if (jobTrainingType=='PSDistJob'){
-      arr = utilGetDeviceNumPerNodeArr(data['nodeInfo'],type)
-      setFieldsValue({ 'numPsWorker': arr[0]})
+    } else if (jobTrainingType == 'PSDistJob') {
+      arr = utilGetDeviceNumPerNodeArr(data['nodeInfo'], type)
+      setFieldsValue({ 'numPsWorker': arr[0] })
       setDeviceNumPerNodeArr(arr)
       // todo
       setMaxNodeNum(result.nodeCountByDeviceType[index])
     }
   }
-  const handleCaclTotalDeviceNum = (nodeNum,perNodeDeviceNum)=>{
-    setFieldsValue({'deviceNum':nodeNum * perNodeDeviceNum})
+  const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
+    setFieldsValue({ 'deviceNum': nodeNum * perNodeDeviceNum })
   }
   const validateMessages = {
     required: '${label} 是必填项!',
@@ -139,7 +139,7 @@ const CodeCreate = () => {
           labelAlign='right'
           onFinish={handleSubmit}
           validateMessages={validateMessages}
-          initialValues = {{jobTrainingType:'RegularJob'}}
+          initialValues={{ jobTrainingType: 'RegularJob' }}
           form={form}
         >
           <Form.Item
@@ -171,9 +171,9 @@ const CodeCreate = () => {
             required
           >
             <Form.Item name='engineType' rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-              <Select onChange={()=>handleEngineTypeChange(getFieldValue('engineType'))}>
+              <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
                 {
-                  engineTypeArr.map((item,key) => (
+                  engineTypeArr.map((item, key) => (
                     <Option key={key} value={item}>{item}</Option>
                   ))
                 }
@@ -182,75 +182,75 @@ const CodeCreate = () => {
             <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
               <Select>
                 {
-                  engineNameArr.map((item,key) => (
-                    <Option  key={key} value={item}>{getNameFromDockerImage(item)}</Option>
+                  engineNameArr.map((item, key) => (
+                    <Option key={key} value={item}>{getNameFromDockerImage(item)}</Option>
                   ))
                 }
               </Select>
             </Form.Item>
           </Form.Item>
           <Form.Item
-              label="任务类型" 
-              name="jobTrainingType"
-              rules={[{ required: true }]} 
-            >
-              <Radio.Group onChange={e => setJobTrainingType(e.target.value)}>
-                <Radio value='RegularJob'>常规任务</Radio>
-                <Radio value='PSDistJob'>分布式任务</Radio>
-              </Radio.Group>
-            </Form.Item>
+            label="任务类型"
+            name="jobTrainingType"
+            rules={[{ required: true }]}
+          >
+            <Radio.Group onChange={e => setJobTrainingType(e.target.value)}>
+              <Radio value='RegularJob'>常规任务</Radio>
+              <Radio value='PSDistJob'>分布式任务</Radio>
+            </Radio.Group>
+          </Form.Item>
           <Form.Item
             label="设备类型"
             name="deviceType"
             rules={[{ required: true }]}
           >
-            <Select style={{ width: "50%" }}  onChange={(item,option)=>handleDeviceTypeChange(option.index)}>
+            <Select style={{ width: "50%" }} onChange={(item, option) => handleDeviceTypeChange(option.index)}>
               {
-                deviceTypeArr.map((item, index) => (<Option  key={index} value={item} index={index}>{item}</Option>))
+                deviceTypeArr.map((item, index) => (<Option key={index} value={item} index={index}>{item}</Option>))
               }
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' &&  <Form.Item
+          {jobTrainingType == 'RegularJob' && <Form.Item
             label="设备数量"
             name="deviceNum"
             rules={[{ required: true }]}
           >
             <Select style={{ width: "50%" }}>
               {
-                deviceNumArr.map((item,key) => (
+                deviceNumArr.map((item, key) => (
                   <Option key={key} value={item}>{item}</Option>
                 ))
               }
             </Select>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&<Form.Item
+          {jobTrainingType == 'PSDistJob' && <Form.Item
             label="节点数量"
             name="numPs"
             rules={[{ required: true }]}
-            
+
           >
-            <InputNumber  style={{ width: "50%" }} min={1} max={maxNodeNum} placeholder="请输入节点数量" onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
+            <InputNumber style={{ width: "50%" }} min={1} max={maxNodeNum} placeholder="请输入节点数量" onChange={() => handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))}>
             </InputNumber>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&<Form.Item
+          {jobTrainingType == 'PSDistJob' && <Form.Item
             label="单节点设备数量"
             name="numPsWorker"
             rules={[{ required: true }]}
-            
+
           >
-            <Select style={{ width: "50%" }} onChange={()=>handleCaclTotalDeviceNum(getFieldValue('numPs'),getFieldValue('numPsWorker'))}>
+            <Select style={{ width: "50%" }} onChange={() => handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))}>
               {
-                deviceNumPerNodeArr.map((item,key) => (
-                  <Option  key={key} value={item}>{item}</Option>
+                deviceNumPerNodeArr.map((item, key) => (
+                  <Option key={key} value={item}>{item}</Option>
                 ))
               }
             </Select>
           </Form.Item>}
-          {jobTrainingType == 'PSDistJob' &&  <Form.Item
+          {jobTrainingType == 'PSDistJob' && <Form.Item
             label="全部设备数量"
             name="deviceNum"
           >
-            <Input  style={{ width: "50%" }} disabled>
+            <Input style={{ width: "50%" }} disabled>
             </Input>
           </Form.Item>}
           <Form.Item {...buttonItemLayout}>
