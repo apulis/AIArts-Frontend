@@ -12,7 +12,7 @@ COPY . /home/AIArts
 RUN yarn build
 
 
-FROM node:14-alpine
+FROM node:12-alpine
 RUN mkdir -p /home/app/dist && mkdir -p /home/app/server
 WORKDIR /home/app/server
 COPY --from=0 /home/AIArts/dist ../dist
