@@ -148,6 +148,7 @@ const List = () => {
       Modal.confirm({
         title: '当前任务尚未停止',
         content: '请先停止该任务',
+        cancelButtonProps: { hidden: true },
         onCancel() {
 
         },
