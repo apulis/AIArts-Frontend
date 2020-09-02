@@ -1,7 +1,7 @@
 const common = {
   namespace: 'common',
   state: {
-    interval: 3000,
+    interval: localStorage.interval || 3000,
   },
   effects: {
     * changeInterval({ payload }, { put }) {
@@ -15,6 +15,9 @@ const common = {
         type: 'updateInterval',
         payload,
       })
+      if (payload) {
+        localStorage.interval = payload;
+      }
     }
   },
   reducers: {

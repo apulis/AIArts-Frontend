@@ -236,6 +236,13 @@ export default [
             authority: ['AI_ARTS_ALL'],
           },
           {
+            path: '/Setting',
+            name: 'setting',
+            icon: 'Setting',
+            component: './Setting',
+            authority: ['AI_ARTS_ALL'],
+          },
+          {
             component: '404',
           },
         ],
