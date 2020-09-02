@@ -1,5 +1,13 @@
 import { fetchCommonResource } from "@/services/common";
 
+let devices = {}
+
+export function beforeSumbitJob(isDistributed, deviceType, deviceNum) {
+  console.log('111', isDistributed, deviceType, deviceNum)
+  console.log('devices', devices)
+  return false
+  
+}
 
 const ResourceModole = {
   namespace: 'resource',
@@ -13,8 +21,9 @@ const ResourceModole = {
         const { data: { resources } } = res;
         yield put({
           type: 'updateState',
-          payload: {devices: resources}
+          payload: { devices: resources }
         });
+        devices = resources;
       }
     },
   },

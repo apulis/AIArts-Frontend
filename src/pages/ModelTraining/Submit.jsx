@@ -9,6 +9,8 @@ import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
+import { beforeSumbitJob } from '@/models/resource';
+import { connect } from 'dva';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -215,6 +217,11 @@ const ModelTraining = (props) => {
     }
   }, [presetParamsVisible]);
 
+  useEffect(() => {
+    props.dispatch({
+      type: 'resource/fetchResource'
+    })
+  }, [])
 
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -253,13 +260,30 @@ const ModelTraining = (props) => {
       if (values.jobtrainingtype === 'PSDistJob') {
         values.numPs = 1;
       }
-      const cancel = message.loading('正在提交');
-      const res = await submitModelTraining(values);
-      cancel();
-      if (res.code === 0) {
-        message.success('成功创建');
-        history.push('/model-training/modelTraining');
+      const submitJobInner = async () => {
+        const cancel = message.loading('正在提交');
+        const res = await submitModelTraining(values);
+        cancel();
+        if (res.code === 0) {
+          message.success('成功创建');
+          history.push('/model-training/modelTraining');
+        }
       }
+      if (!beforeSumbitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum)) {
+        Modal.confirm({
+          title: '当前暂无可用训练资源',
+          content: '是否继续提交',
+          onOk() {
+            submitJobInner()
+          },
+          onCancel() {
+
+          }
+        })
+      } else {
+        submitJobInner();
+      }
+      
     }
   };
   const addParams = () => {
@@ -671,4 +695,4 @@ const ModelTraining = (props) => {
 };
 
 
-export default ModelTraining;
+export default connect()(ModelTraining);
