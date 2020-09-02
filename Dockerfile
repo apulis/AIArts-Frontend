@@ -4,8 +4,9 @@ RUN mkdir -p /home/AIArts
 WORKDIR /home/AIArts
 
 ADD package.json .
+ADD yarn.lock .
 RUN yarn config set registry 'https://registry.npm.taobao.org'
-RUN yarn
+RUN yarn install --frozen-lockfile 
 
 COPY . /home/AIArts
 
