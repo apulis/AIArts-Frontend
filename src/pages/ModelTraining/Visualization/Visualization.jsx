@@ -97,7 +97,7 @@ const Visualization = () => {
   const handleDelete = (item) => {
     if (['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)) {
       Modal.warning({
-        title: '删除提示',
+        title: '当前任务尚未停止',
         content: '请先停止该任务',
         okText: '确定'
       });
