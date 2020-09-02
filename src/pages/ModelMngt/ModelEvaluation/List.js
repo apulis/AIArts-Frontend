@@ -118,7 +118,7 @@ const List = () => {
 
     if (canStop(item)) {
       Modal.warning({
-        title: '删除提示',
+        title: '当前任务尚未停止',
         content: '请先停止该任务',
         okText: '确定'
       });
