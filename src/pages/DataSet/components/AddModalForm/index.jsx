@@ -76,7 +76,6 @@ const AddModalForm = (props, ref) => {
       setFileLists([...newFileList]);
     }
   };
-  console.log('fileLists', fileLists)
 
   return (
     <Form form={form}

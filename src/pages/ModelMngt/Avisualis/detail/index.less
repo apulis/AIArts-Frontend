@@ -1,19 +1,17 @@
-.aaa {
-  width: 100px;
-  height: 500px;
-  display: inline-block;
-  background-color: red;
-  margin-left: 300px;
-  // cursor: move !important;
+.avisualisWrap {
+  min-width: 1400px !important;
+  height: calc(85vh);
+  :global {
+    .ant-card {
+      display: inline-block;
+      height: calc(100vh);
+      width: 280px;
+      vertical-align: top;
+      background: #f8f8f8;
+    }
+    .ant-tree {
+      background: #f8f8f8;
+    }
+  }
 }
-.bbb {
-  width: 100px;
-  height: 500px;
-  display: inline-block;
-  background-color: black;
-  margin-left: 100px;
-  // cursor: move !important;
-}
-.noCur {
-  // cursor: no-drop !important;
-}
+

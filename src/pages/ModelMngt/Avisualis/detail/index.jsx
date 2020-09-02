@@ -1,10 +1,9 @@
-import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select, Tree } from 'antd';
+import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select, Tree, PageHeader } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 // import { getDatasets, edit, deleteDataSet, add, download } from './service';
-import { PAGEPARAMS, sortText, NameReg, NameErrorText } from '@/utils/const';
 import styles from './index.less';
-import { Link, history, useDispatch } from 'umi';
+import { useDispatch } from 'umi';
 import {
   DownOutlined,
   FrownOutlined,
@@ -12,8 +11,9 @@ import {
   MehOutlined,
   FrownFilled,
 } from '@ant-design/icons'
-import moment from 'moment';
 import { connect } from 'dva';
+import G6Edit from '../components/G6Edit';
+import ItemPanel from '../components/ItemPanel';
 
 const { confirm } = Modal;
 const { Search } = Input;
@@ -22,7 +22,6 @@ const AvisualisDetail = ({ global }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const [avisualis, setAvisualis] = useState({ data: [], total: 0 });
-  const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -34,11 +33,10 @@ const AvisualisDetail = ({ global }) => {
       }
     });
     getData();
-  }, [pageParams]);
+  }, []);
 
   const getData = async (text) => {
     setLoading(true);
-    
     setLoading(false);
   };
 
@@ -62,26 +60,33 @@ const AvisualisDetail = ({ global }) => {
     }
   ];
 
-  const overD = (e) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
+  const onDragEnd = ({event, node}) => {
+    const { dataTransfer, pageX } = event;
+    if (dataTransfer.dropEffect !== 'none' && pageX > 384) {
+      console.log('---e')
+    }
   }
 
   return (
-    <div>
-      <Card>
-        <Tree
-          showIcon
-          defaultExpandAll
-          draggable
-          switcherIcon={<DownOutlined />}
-          treeData={treeData}
-          onDragEnd={({event, node}) => console.log('-----end', node)}
-          onDragStart={({event, node}) => {event.dataTransfer.effectAllowed = 'move'}}
-        />
-       </Card>
-      <div className={styles.aaa} draggable="true" onDrop={e => overD(e)} onDragOver={e => overD(e)}></div>
-    </div>
+    <PageHeaderWrapper title={false}>
+      <div className={styles.avisualisWrap}>
+        <Card loading={loading}>
+          <Tree
+            showIcon
+            defaultExpandAll
+            draggable
+            switcherIcon={<DownOutlined />}
+            treeData={treeData}
+            onDragEnd={onDragEnd}
+            onDragStart={({event, node}) => event.dataTransfer.effectAllowed = 'move'}
+          />
+        </Card>
+        <G6Edit />
+        <Card>
+          <ItemPanel />
+        </Card>
+      </div>
+    </PageHeaderWrapper>
   );
 };
 
