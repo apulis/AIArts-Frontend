@@ -15,9 +15,16 @@ const Setting = ({ common, dispatch }) => {
     wrapperCol: { span: 8 }
   };
   const changeInterval = async () => {
-    const result = await validateFields(['interval'])
-    console.log('result', result)
+    const result = await validateFields(['interval']);
+    const { interval } = result;
+    if (typeof interval !== 'undefined') {
+      dispatch({
+        type: 'common/changeInterval',
+        payload: interval,
+      })
+    }
   }
+  const defaultInterval = common.interval === null ? 0 : common.interval;
   return (
     <PageHeaderWrapper>
       <div>
@@ -27,16 +34,16 @@ const Setting = ({ common, dispatch }) => {
           {...commonLayout}
         >
           <FormItem name="interval">
-            <Select style={{ width: 120 }} defaultValue={common.interval}>
-              {[0, 3, 5, 10, 30].map(val => (
-                <Option value={val * 1000}>{val}秒</Option>
+            <Select style={{ width: 120 }} defaultValue={defaultInterval}>
+              {[0, 3, 5, 10, 30].map(val => val * 1000).map(val => (
+                <Option value={val}>{(val || 0) / 1000}秒</Option>
               ))}
             </Select>
           </FormItem>
         </Form>
         
         
-        <Button type="primary" onChange={changeInterval} style={{ marginLeft: '40px' }}>确定</Button>
+        <Button type="primary" onClick={changeInterval} style={{ marginLeft: '40px' }}>确定</Button>
         </div>
 
     </PageHeaderWrapper>
