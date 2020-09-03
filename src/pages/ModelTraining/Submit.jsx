@@ -269,7 +269,7 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       }
-      if (!beforeSumbitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum)) {
+      if (!beforeSumbitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
           title: '当前暂无可用训练资源',
           content: '是否继续提交',
@@ -686,7 +686,6 @@ const ModelTraining = (props) => {
           }
 
         </Form>
-
       </Modal>
       <Button type="primary" style={{ float: 'right', marginBottom: '16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>

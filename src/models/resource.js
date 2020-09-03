@@ -6,10 +6,10 @@ export function beforeSumbitJob(isDistributed, deviceType, deviceNum, distribute
   const detail = devices[deviceType].detail;
   const allocatables = detail.map(val => val.allocatable);
   const maxAllocatables = Math.max(allocatables);
-  maxAllocatables.sort((x, y) => y - x);
+  allocatables.sort((x, y) => y - x);
   if (isDistributed) {
     const { nodeNum } = distributedJobOptions;
-    if (deviceNum <= maxAllocatables[nodeNum - 1]) {
+    if (deviceNum <= allocatables[nodeNum - 1]) {
       return true;
     }
   } else {
