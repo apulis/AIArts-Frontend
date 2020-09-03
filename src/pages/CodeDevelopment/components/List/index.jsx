@@ -8,6 +8,9 @@ import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
 import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap, sortTextMap, pageObj } from '../../serviceController.js'
 import { getNameFromDockerImage } from '@/utils/reg.js';
+import { connect } from 'dva';
+import useInterval from '@/hooks/useInterval';
+
 
 const CodeList = (props) => {
   const { Search } = Input;
@@ -25,6 +28,16 @@ const CodeList = (props) => {
     orderBy: '',
     order: ''
   })
+
+  useInterval(async () => {
+    console.log('xxxxxx', props.common.interval)
+    const apiData = await apiGetCodeCount()
+    if (apiData) {
+      setStatusSearchArr(apiData)
+    }
+    renderTable(pageParams)
+  }, props.common.interval)
+
   useEffect(() => {
     renderStatusSelect()
   }, [])
@@ -306,4 +319,4 @@ const CodeList = (props) => {
 
 }
 
-export default CodeList;
+export default connect(({ common }) => ({ common }))(CodeList);
