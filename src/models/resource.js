@@ -2,7 +2,7 @@ import { fetchCommonResource } from "@/services/common";
 
 let devices = {}
 
-export function beforeSumbitJob(isDistributed, deviceType, deviceNum, distributedJobOptions) {
+export function beforeSubmitJob(isDistributed, deviceType, deviceNum, distributedJobOptions) {
   const detail = devices[deviceType].detail;
   const allocatables = detail.map(val => val.allocatable);
   const maxAllocatables = Math.max(allocatables);

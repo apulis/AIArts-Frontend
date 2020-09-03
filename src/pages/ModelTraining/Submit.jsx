@@ -9,7 +9,7 @@ import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
-import { beforeSumbitJob } from '@/models/resource';
+import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
 
 const { TextArea } = Input;
@@ -269,7 +269,7 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       }
-      if (!beforeSumbitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
+      if (!beforeSubmitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
           title: '当前暂无可用训练设备，继续提交将会进入等待队列',
           content: '是否继续',
