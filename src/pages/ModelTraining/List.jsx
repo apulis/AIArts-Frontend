@@ -9,6 +9,8 @@ import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import style from './index.less'
 import { getNameFromDockerImage } from '@/utils/reg';
+import { connect } from 'dva';
+import useInterval from '@/hooks/useInterval';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -28,7 +30,7 @@ export const statusList = [
 const { Search } = Input;
 const { Option } = Select;
 
-const List = () => {
+const List = (props) => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -42,6 +44,11 @@ const List = () => {
     order: '',
     columnKey: '',
   });
+
+  useInterval(() => {
+    console.log('interval', props.common.interval)
+  }, props.common.interval)
+
   const getTrainingList = async (reloadPage, options = {}) => {
     const { pageSize: size, status, pageNo } = options
     let page = pageNo || pageNum;
@@ -280,4 +287,4 @@ const List = () => {
   )
 }
 
-export default List;
+export default connect(({ common }) => ({ common }))(List);
