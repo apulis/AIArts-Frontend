@@ -8,7 +8,7 @@ const { Option } = Select;
 const FormItem = Form.Item;
 
 const Setting = ({ common, dispatch }) => {
-  const form = Form.useForm();
+  const [form] = Form.useForm();
   const { validateFields } = form;
   const commonLayout = {
     labelCol: { span: 4 },
@@ -23,7 +23,7 @@ const Setting = ({ common, dispatch }) => {
       <div>
         <h2>数据刷新时间配置</h2>
         <Form
-          // form={form}
+          form={form}
           {...commonLayout}
         >
           <FormItem name="interval">
