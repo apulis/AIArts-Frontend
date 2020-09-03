@@ -9,7 +9,7 @@ import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
-import { beforeSumbitJob } from '@/models/resource';
+import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
 
 const { TextArea } = Input;
@@ -269,10 +269,10 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       }
-      if (!beforeSumbitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum)) {
+      if (!beforeSubmitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
-          title: '当前暂无可用训练资源',
-          content: '是否继续提交',
+          title: '当前暂无可用训练设备，继续提交将会进入等待队列',
+          content: '是否继续',
           onOk() {
             submitJobInner()
           },
@@ -350,6 +350,7 @@ const ModelTraining = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
+    setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
   };
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
@@ -370,7 +371,9 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
-      setCurrentDeviceType(currentSelected.params.deviceType);
+      const deviceType = currentSelected.params.deviceType;
+      setCurrentDeviceType(deviceType);
+      setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
@@ -504,6 +507,9 @@ const ModelTraining = (props) => {
             <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
         </FormItem>
+        {
+          String(totalNodes)
+        }
         {
           distributedJob && <FormItem
             label="节点数量"
@@ -686,7 +692,6 @@ const ModelTraining = (props) => {
           }
 
         </Form>
-
       </Modal>
       <Button type="primary" style={{ float: 'right', marginBottom: '16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>
@@ -695,4 +700,4 @@ const ModelTraining = (props) => {
 };
 
 
-export default connect()(ModelTraining);
+export default connect(({ resource }) => ({ resource }))(ModelTraining);
