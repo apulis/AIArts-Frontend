@@ -350,6 +350,7 @@ const ModelTraining = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
+    setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
   };
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
@@ -370,7 +371,9 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
-      setCurrentDeviceType(currentSelected.params.deviceType);
+      const deviceType = currentSelected.params.deviceType;
+      setCurrentDeviceType(deviceType);
+      setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
@@ -504,6 +507,9 @@ const ModelTraining = (props) => {
             <Radio value={'RegularJob'}>否</Radio>
           </Radio.Group>
         </FormItem>
+        {
+          String(totalNodes)
+        }
         {
           distributedJob && <FormItem
             label="节点数量"
@@ -694,4 +700,4 @@ const ModelTraining = (props) => {
 };
 
 
-export default connect()(ModelTraining);
+export default connect(({ resource }) => ({ resource }))(ModelTraining);
