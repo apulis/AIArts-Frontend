@@ -162,7 +162,7 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
     for (let index in nodeInfo) {
       const nodeItem = nodeInfo[index];
       if (nodeItem['gpuType'] === type) {
-        const capacityObj = nodeItem['gpu_capacity'];
+        const capacityObj = nodeItem['gpu_capacity'] || 0;
         arr.push(capacityObj[type]);
       }
     }
@@ -187,7 +187,7 @@ export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
     for (let index in nodeInfo) {
       const nodeItem = nodeInfo[index];
       if (nodeItem['gpuType'] === type) {
-        const capacityObj = nodeItem['gpu_capacity'];
+        const capacityObj = nodeItem['gpu_capacity'] || 0;
         arr.push(capacityObj[type]);
       }
     }
