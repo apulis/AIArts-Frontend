@@ -23,7 +23,7 @@ const Setting = ({ common, dispatch }) => {
       <div>
         <h2>数据刷新时间配置</h2>
         <Form
-          form={form}
+          // form={form}
           {...commonLayout}
         >
           <FormItem name="interval">
