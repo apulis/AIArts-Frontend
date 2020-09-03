@@ -271,8 +271,8 @@ const ModelTraining = (props) => {
       }
       if (!beforeSumbitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
-          title: '当前暂无可用训练资源',
-          content: '是否继续提交',
+          title: '当前暂无可用训练设备，继续提交将会进入等待队列',
+          content: '是否继续',
           onOk() {
             submitJobInner()
           },
