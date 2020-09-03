@@ -1,6 +1,7 @@
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
 import { isObject } from './types';
+import { checkIfGpuOrNpu } from '@/models/resource';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -156,18 +157,13 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
   if (nodeInfo == undefined || !type) {
     return []
   }
-  // gpu
-  if (type === 'nvidia_gpu_amd64') {
+  if (checkIfGpuOrNpu(type) === 'GPU') {
     let arr = [];
     for (let index in nodeInfo) {
       const nodeItem = nodeInfo[index];
       if (nodeItem['gpuType'] === type) {
-        // gpu
-        if (nodeItem['gpuType'] == 'nvidia_gpu_amd64') {
-          const capacityObj = nodeItem['gpu_capacity'];
-          arr.push(capacityObj[type]);
-
-        }
+        const capacityObj = nodeItem['gpu_capacity'];
+        arr.push(capacityObj[type]);
       }
     }
     const num = Math.max(...arr);
@@ -176,9 +172,9 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
       arr2.push(i);
     }
     return arr2;
+  } else if (checkIfGpuOrNpu(type) === 'NPU') {
+    return [0, 1, 2, 4, 8];
   }
-  // npu
-  return [0, 1, 2, 4, 8];
 };
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
 export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
@@ -186,17 +182,13 @@ export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
     return []
   }
   // gpu
-  if (type === 'nvidia_gpu_amd64') {
+  if (checkIfGpuOrNpu(type) === 'GPU') {
     let arr = [];
     for (let index in nodeInfo) {
       const nodeItem = nodeInfo[index];
       if (nodeItem['gpuType'] === type) {
-        // gpu
-        if (nodeItem['gpuType'] == 'nvidia_gpu_amd64') {
-          const capacityObj = nodeItem['gpu_capacity'];
-          arr.push(capacityObj[type]);
-
-        }
+        const capacityObj = nodeItem['gpu_capacity'];
+        arr.push(capacityObj[type]);
       }
     }
     const num = Math.max(...arr);
@@ -207,9 +199,9 @@ export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
       temp *= 2;
     }
     return arr2;
+  } else if (checkIfGpuOrNpu(type) === 'NPU') {
+    return [8];
   }
-  // npu
-  return [8];
 };
 
 export const isEmptyObject = (obj) => {
