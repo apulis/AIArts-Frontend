@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Select, Button, Form } from 'antd';
+import { Select, Button, Form, message } from 'antd';
 import { connect } from 'dva';
 
 const { Option } = Select;
@@ -12,8 +12,9 @@ const Setting = ({ common, dispatch }) => {
   const { validateFields } = form;
   const commonLayout = {
     labelCol: { span: 4 },
-    wrapperCol: { span: 8 }
+    wrapperCol: { span: 16 },
   };
+
   const changeInterval = async () => {
     const result = await validateFields(['interval']);
     const { interval } = result;
@@ -22,28 +23,31 @@ const Setting = ({ common, dispatch }) => {
         type: 'common/changeInterval',
         payload: interval,
       })
+      message.success('设置成功');
     }
   }
+
   const defaultInterval = common.interval === null ? 0 : common.interval;
   return (
     <PageHeaderWrapper>
-      <div>
-        <h2>数据刷新时间配置</h2>
+      <div style={{width: '100%'}}>
         <Form
           form={form}
           {...commonLayout}
         >
-          <FormItem name="interval">
+          <FormItem name="interval" label="页面数据刷新时间">
             <Select style={{ width: 120 }} defaultValue={defaultInterval}>
               {[0, 3, 5, 10, 30].map(val => val * 1000).map(val => (
                 <Option value={val}>{(val || 0) / 1000}秒</Option>
               ))}
             </Select>
           </FormItem>
+          <Form.Item wrapperCol={{ ...commonLayout.wrapperCol, offset: 3 }}>
+            <Button type="primary" onClick={changeInterval} style={{ marginLeft: '40px' }}>确定</Button>
+          </Form.Item>
         </Form>
         
         
-        <Button type="primary" onClick={changeInterval} style={{ marginLeft: '40px' }}>确定</Button>
         </div>
 
     </PageHeaderWrapper>
