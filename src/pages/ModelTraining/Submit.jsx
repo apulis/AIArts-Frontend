@@ -276,9 +276,7 @@ const ModelTraining = (props) => {
           onOk() {
             submitJobInner()
           },
-          onCancel() {
-
-          }
+          onCancel() {}
         })
       } else {
         submitJobInner();
