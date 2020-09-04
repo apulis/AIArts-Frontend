@@ -244,7 +244,7 @@ const ModelEvaluation = props => {
         startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length) || '',
         paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length) || '',
       }
-      setFieldsValue({...currentSelected.params, ...suffixParams});
+      setFieldsValue({...currentSelected.params, ...suffixParams, engine: getNameFromDockerImage(currentSelected.params.engine)});
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};
@@ -508,7 +508,7 @@ const ModelEvaluation = props => {
                       引擎类型
                   </Col>
                     <Col span={19}>
-                      {p.params.engine}
+                      {getNameFromDockerImage(p.params.engine)}
                     </Col>
                   </Row>
                 </TabPane>
