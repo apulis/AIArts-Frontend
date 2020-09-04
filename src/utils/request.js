@@ -45,10 +45,10 @@ export const errorHandler = async (error) => {
   try {
     _response = await response.json();
   } catch (e) {
-    notification.error({
-      message: '请求错误',
-      description: '请稍后再试',
-    });
+    // notification.error({
+    //   message: '请求错误',
+    //   description: '请稍后再试',
+    // });
   }
   if (!_response) {
     return {};

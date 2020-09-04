@@ -360,6 +360,7 @@ const ModelTraining = (props) => {
         codePath: currentSelected.params.codePath,
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
+        engine: getNameFromDockerImage(currentSelected.params.engine)
       });
       const params = Object.entries(currentSelected.params.params || {}).map(item => {
         var obj = {};
@@ -679,7 +680,7 @@ const ModelTraining = (props) => {
                       引擎类型
                   </Col>
                     <Col span={19}>
-                      {p.params.engine}
+                      {getNameFromDockerImage(p.params.engine)}
                     </Col>
                   </Row>
                 </TabPane>
