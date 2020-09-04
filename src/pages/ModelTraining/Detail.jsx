@@ -89,10 +89,6 @@ const Detail = (props) => {
   };
 
   const changeLogPage = (page) => {
-    window.clearInterval(timer);
-    timer = setInterval(() => {
-      getTrainingDetail({ page })
-    }, 3000);
     setLogCurrentPage(page);
     getTrainingLogs(id, { page });
   }
