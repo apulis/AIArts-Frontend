@@ -231,6 +231,7 @@ const AvisualisDetail = ({ global }) => {
     const { dataTransfer, pageX } = event;
     if (dataTransfer.dropEffect !== 'none' && pageX > 384) {
       const { nodes, edges } = flowChartData;
+      const { changeData, fitCenter } = flowChartRef.current.graph;
       // let _nodes = _.cloneDeep(nodes), _edges = _.cloneDeep(edges);
       // _nodes.push({
       //   id: '8',
@@ -258,18 +259,81 @@ const AvisualisDetail = ({ global }) => {
 
       // setFlowChartData({ nodes: _nodes, edges: _edges})
 
-      const model = {
-        id: '8',
-        label: 'node',
-        address: 'cq',
-        // x: 200,
-        // y: 150,
-        style: {
-          fill: 'blue',
-        },
-      };
-      console.log('-----', flowChartRef.current)
-      flowChartRef.current.graph.addItem('8', model);
+      
+      changeData({
+        nodes: [
+          {
+            id: '1',
+            dataType: 'alps',
+            name: 'alps_file1',
+          },
+          {
+            id: '2',
+            dataType: 'alps',
+            name: 'alps_file2',
+          },
+          {
+            id: '3',
+            dataType: 'alps',
+            name: 'alps_file3',
+          },
+          {
+            id: '4',
+            dataType: 'alps',
+            name: 'alps_file3',
+          },
+          {
+            id: '5',
+            dataType: 'alps',
+            name: 'alps_file3'
+          },
+          {
+            id: '6',
+            dataType: 'alps',
+            name: 'alps_file3',
+          },
+          {
+            id: '7',
+            dataType: 'alps',
+            name: 'alps_file3',
+          },{
+            id: '8',
+            dataType: 'alps',
+            name: '234324234234',
+          },
+        ],
+        edges: [
+          {
+            source: '1',
+            target: '2',
+          },
+          {
+            source: '2',
+            target: '3',
+          },
+          {
+            source: '3',
+            target: '4',
+          },
+          {
+            source: '4',
+            target: '5',
+          },
+          {
+            source: '5',
+            target: '6',
+          },
+          {
+            source: '6',
+            target: '7',
+          },
+          {
+            source: '7',
+            target: '8',
+          }
+        ],
+      })
+      fitCenter();
     }
   }
   
