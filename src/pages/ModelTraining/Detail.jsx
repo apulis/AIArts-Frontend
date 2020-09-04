@@ -41,6 +41,10 @@ const Detail = (props) => {
   }
   useEffect(() => {
     getTrainingDetail({ page: logCurrentPage });
+    return () => {
+      fetchTrainingDetail.cancel();
+      fetchTrainingLog.cancel();
+    }
   }, [])
   useInterval(() => {
     getTrainingDetail({ page: logCurrentPage })
