@@ -4,8 +4,6 @@ import { modelTrainingType } from '@/utils/const';
 
 const CancelToken = Request.CancelToken;
 
-let cancelFetchTrainingDetail;
-let cancelFetchTrainingLog;
 
 export async function submitModelTraining(data) {
   return await request('/trainings', {
