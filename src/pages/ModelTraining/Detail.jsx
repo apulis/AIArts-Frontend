@@ -12,11 +12,13 @@ import styles from './index.less';
 import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
+import useInterval from '@/hooks/useInterval';
+import { connect } from 'dva';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
-let timer
-const Detail = () => {  
+
+const Detail = (props) => {  
   const params = useParams();
   const logEl = useRef(null);
   const [form] = useForm();
@@ -39,13 +41,10 @@ const Detail = () => {
   }
   useEffect(() => {
     getTrainingDetail({ page: logCurrentPage });
-    timer = setInterval(() => {
-      getTrainingDetail({ page: logCurrentPage })
-    }, 3000);
-    return () => {
-      clearInterval(timer)
-    }
   }, [])
+  useInterval(() => {
+    getTrainingDetail({ page: logCurrentPage })
+  }, props.common.interval)
   const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status)
   const jobFailed = ['failed'].includes(jobDetail.status)
 
@@ -200,7 +199,7 @@ const Detail = () => {
 
 
 
-export default Detail;
+export default connect(({ common }) => ({ common }))(Detail);
 
 
 
