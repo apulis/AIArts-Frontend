@@ -30,139 +30,110 @@ const CodeList = (props) => {
     order: ''
   })
 
-  useInterval(async () => {
-    console.log('xxxxxx', props.common.interval)
-    const apiData = await apiGetCodeCount()
-    if (apiData) {
-      setStatusSearchArr(apiData)
-    }
-    renderTable(pageParams)
-  }, props.common.interval)
-
-  useEffect(() => {
-    renderStatusSelect()
-  }, [])
-
-  useEffect(() => {
-    renderTable(pageParams);
-  }, [pageParams, sortInfo, curStatus])
-
-  useEffect(() => {
-    if (curStatus != '') {
-      renderTable(pageObj);
-      setPageParams(pageObj);
-    }
-  }, [curStatus])
-
-  useEffect(() => {
-    if (searchObj.type != undefined) {
-      const type = searchObj.type
-      if (type === 'search') {
-        renderTable(pageParams);
-      } else if (type === 'fresh') {
-        renderTable(pageParams, () => { message.success('刷新成功') })
-      }
-    }
-  }
-    , [searchObj])
-
-
   const renderStatusSelect = async () => {
-    // todo
-    const apiData = await apiGetCodeCount()
+    const apiData = await apiGetCodeCount();
     if (apiData) {
       setStatusSearchArr(apiData)
       // 只有第一次会重新赋值
-      if (curStatus === '') setCurStatus(apiData[0].status)
+      if (curStatus === '') setCurStatus(apiData[0].status);
     }
   }
+
   const renderTable = async (pageParams, success) => {
-    setLoading(true)
-    const apiData = await apiGetCodes(pageParams)
+    setLoading(true);
+    const apiData = await apiGetCodes(pageParams);
     if (apiData) {
       setCodes({
         codeEnvs: apiData.CodeEnvs,
         total: apiData.total
-      })
+      });
       if (success) {
         success()
       }
     }
     setLoading(false);
   };
+
   const apiGetCodeCount = async () => {
-    const obj = await getCodeCount()
-    const { code, data, msg } = obj
+    const obj = await getCodeCount();
+    const { code, data, msg } = obj;
     if (code === 0) {
-      return data
+      return data;
     } else {
-      return null
+      return null;
     }
   }
+
   const apiGetCodes = async (pageParams) => {
-    const params = { ...pageParams }
-    params['status'] = isEmptyString(curStatus) ? 'all' : curStatus
+    const params = { ...pageParams };
+    params['status'] = isEmptyString(curStatus) ? 'all' : curStatus;
     if (!isEmptyString(searchObj.word)) {
-      params['searchWord'] = searchObj.word
+      params['searchWord'] = searchObj.word;
     }
     if (sortInfo.order && !isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
-      params['orderBy'] = sortColumnMap[sortInfo.orderBy]
-      params['order'] = sortTextMap[sortInfo.order]
+      params['orderBy'] = sortColumnMap[sortInfo.orderBy];
+      params['order'] = sortTextMap[sortInfo.order];
     }
     const obj = await getCodes(params);
-    const { code, data, msg } = obj
+    const { code, data, msg } = obj;
     if (code === 0) {
-      return data
+      return data;
     } else {
-      return null
+      return null;
     }
   }
+
   const apiOpenJupyter = async (id) => {
-    const { code, data, msg } = await getJupyterUrl(id)
+    const { code, data, msg } = await getJupyterUrl(id);
     if (code === 0) {
       if (data.name === 'ipython' && data.status === 'running' && data.accessPoint) {
-        window.open(data.accessPoint)
+        window.open(data.accessPoint);
       }
       else {
-        message.info('服务正在准备中，请稍候再试')
+        message.info('服务正在准备中，请稍候再试');
       }
     }
   }
+
   const apiStopCode = async (id) => {
-    const obj = await stopCode(id)
+    const obj = await stopCode(id);
     const { code, data, msg } = obj
     if (code === 0) {
       renderTable(pageParams);
       message.success('停止成功');
     }
   }
+
   const apiDeleteCode = async (id) => {
-    const obj = await deleteCode(id)
-    const { code, data, msg } = obj
+    const obj = await deleteCode(id);
+    const { code, data, msg } = obj;
     if (code === 0) {
       if (codes.codeEnvs.length == 1 && pageParams.pageNum > 1) {
         renderTable({ ...pageParams, pageNum: pageParams.pageNum - 1 });
         setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
       }
       else {
-        renderTable(pageParams)
+        renderTable(pageParams);
       }
       // 更新数组
-      const apiData = await apiGetCodeCount()
+      const apiData = await apiGetCodeCount();
       if (apiData) {
-        setStatusSearchArr(apiData)
+        setStatusSearchArr(apiData);
       }
       message.success('删除成功');
     }
   }
+
   const handleOpen = (item) => {
-    apiOpenJupyter(item.id)
+    apiOpenJupyter(item.id);
   }
+
   const handleStop = (item) => {
-    apiStopCode(item.id)
+    apiStopCode(item.id);
   }
+
   const handleDelete = (item) => {
-    const status = item.status
+    const status = item.status;
     if (canStopStatus.has(status)) {
       Modal.warning({
         title: '当前任务尚未停止',
@@ -170,33 +141,41 @@ const CodeList = (props) => {
         okText: '确定'
       });
     } else {
-      apiDeleteCode(item.id)
+      apiDeleteCode(item.id);
     }
   }
+
   const handleSelectChange = (selectStatus) => {
-    setCurStatus(selectStatus)
+    setCurStatus(selectStatus);
   }
+
   const handleSearch = (searchWord) => {
-    setSearchObj({ type: 'search', word: searchWord })
+    setSearchObj({ type: 'search', word: searchWord });
   }
+
   const handleFresh = () => {
-    const value = searchRef.current.state.value
-    setSearchObj({ type: 'fresh', word: value })
+    const value = searchRef.current.state.value;
+    setSearchObj({ type: 'fresh', word: value });
   }
+
   const handlePageParamsChange = (pageNum, pageSize) => {
     setPageParams({ pageNum, pageSize });
-  };
-  const handleOpenModal = (codeItem) => {
-    setModalData(codeItem)
-    setModalFlag(true)
   }
+
+  const handleOpenModal = (codeItem) => {
+    setModalData(codeItem);
+    setModalFlag(true);
+  }
+
   const handleSortChange = (pagination, filters, sorter) => {
-    const { field: orderBy, order } = sorter
+    const { field: orderBy, order } = sorter;
     setSortInfo({ orderBy, order });
   }
+
   const handleCreateCodeDev = () => {
-    history.push('/codeDevelopment/add')
+    history.push('/codeDevelopment/add');
   }
+
   const columns = [
     {
       title: '开发环境名称',
@@ -251,6 +230,45 @@ const CodeList = (props) => {
       },
     },
   ];
+
+  useInterval(async () => {
+    const apiData = await apiGetCodeCount();
+    if (apiData) {
+      setStatusSearchArr(apiData);
+    }
+    renderTable(pageParams);
+    return () => {
+      getCodes.cancel();
+      getCodeCount.cancel();
+    }
+  }, props.common.interval);
+
+  useEffect(() => {
+    renderStatusSelect();
+  }, []);
+
+  useEffect(() => {
+    renderTable(pageParams);
+  }, [pageParams, sortInfo, curStatus]);
+
+  useEffect(() => {
+    if (curStatus != '') {
+      renderTable(pageObj);
+      setPageParams(pageObj);
+    }
+  }, [curStatus]);
+
+  useEffect(() => {
+    if (searchObj.type != undefined) {
+      const type = searchObj.type;
+      if (type === 'search') {
+        renderTable(pageParams);
+      } else if (type === 'fresh') {
+        renderTable(pageParams, () => { message.success('刷新成功') });
+      }
+    }
+  }, [searchObj]);
+
   return (
     <>
       <Row style={{ marginBottom: "20px" }}>

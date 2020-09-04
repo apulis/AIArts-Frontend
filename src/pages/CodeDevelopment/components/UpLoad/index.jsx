@@ -4,9 +4,9 @@ import { InboxOutlined } from '@ant-design/icons';
 
 const { Dragger } = Upload;
 const CodeUpload = (props) => {
-  console.log(props)
-  const modalData = props.modalData
-  const { codePath } = modalData
+  console.log(props);
+  const modalData = props.modalData;
+  const { codePath } = modalData;
   const [fileList, setFileList] = useState([]);
   const uploadProps = {
     name: 'file',
@@ -42,7 +42,6 @@ const CodeUpload = (props) => {
         </p>
         <p className="ant-upload-text">请点击或拖入文件上传（支持多文件）</p>
       </Dragger>
-
     </>
   )
 }
