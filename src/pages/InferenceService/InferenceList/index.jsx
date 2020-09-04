@@ -48,7 +48,7 @@ const InferenceList = props => {
         })
       })
       jobSumary[0].label = jobSumary[0].label  + `（${total}）`
-      setJobSumary(jobSumary)
+      setJobSumary(jobSumary);
     }
   };
   
@@ -196,7 +196,8 @@ const InferenceList = props => {
     });
   };
 
-  const isStopDisabled = item =>{
+  const isStopDisabled = item => {
+    // TODO
     if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
       return false;
     }else{

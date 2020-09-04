@@ -508,9 +508,6 @@ const ModelTraining = (props) => {
           </Radio.Group>
         </FormItem>
         {
-          String(totalNodes)
-        }
-        {
           distributedJob && <FormItem
             label="节点数量"
             {...commonLayout}

@@ -4,12 +4,14 @@ import { history } from 'umi';
 import { postCode1, getResource } from '../service.js'
 import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceController.js'
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
+
+const { Option } = Select;
+const { TextArea } = Input;
+
 const CodeCreate = () => {
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
-  const { Option } = Select;
-  const { TextArea } = Input;
-  let [data, setData] = useState(null)
+  const [data, setData] = useState(null)
   const [deviceTypeArr, setDeviceTypeArr] = useState([])// 更新状态是异步的
   const [deviceNumArr, setDeviceNumArr] = useState([])
   const [engineTypeArr, setEngineTypeArr] = useState([])
@@ -18,9 +20,11 @@ const CodeCreate = () => {
   const [codePathPrefix, setCodePathPrefix] = useState('')
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([])
   const [maxNodeNum, setMaxNodeNum] = useState(1)
+
   useEffect(() => {// 初始化处理
     renderInitForm()
   }, [])// 更新处理
+
   useEffect(() => {// 初始化处理deviceNum
     if (jobTrainingType == 'RegularJob') {
       renderInitRegularForm(deviceNumArr[0])
@@ -210,19 +214,20 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' && <Form.Item
-            label="设备数量"
-            name="deviceNum"
-            rules={[{ required: true }]}
-          >
-            <Select style={{ width: "50%" }}>
-              {
-                deviceNumArr.map((item, key) => (
-                  <Option key={key} value={item}>{item}</Option>
-                ))
-              }
-            </Select>
-          </Form.Item>}
+          {jobTrainingType == 'RegularJob' && 
+            <Form.Item
+              label="设备数量"
+              name="deviceNum"
+              rules={[{ required: true }]}
+            >
+              <Select style={{ width: "50%" }}>
+                {
+                  deviceNumArr.map((item, key) => (
+                    <Option key={key} value={item}>{item}</Option>
+                  ))
+                }
+              </Select>
+            </Form.Item>}
           {jobTrainingType == 'PSDistJob' && <Form.Item
             label="节点数量"
             name="numPs"
