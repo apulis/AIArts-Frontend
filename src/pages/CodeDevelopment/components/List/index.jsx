@@ -9,9 +9,10 @@ import CodeUpload from '../UpLoad'
 import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap, sortTextMap, pageObj } from '../../serviceController.js'
 import { getNameFromDockerImage } from '@/utils/reg.js';
 
+const { Search } = Input;
+const { Option } = Select;
+
 const CodeList = (props) => {
-  const { Search } = Input;
-  const { Option } = Select;
   const searchRef = useRef(null)
   const [codes, setCodes] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
@@ -145,11 +146,9 @@ const CodeList = (props) => {
     apiOpenJupyter(item.id)
   }
   const handleStop = (item) => {
-    const id = item.id
     apiStopCode(item.id)
   }
   const handleDelete = (item) => {
-    const id = item.id
     const status = item.status
     if (canStopStatus.has(status)) {
       Modal.warning({
@@ -262,12 +261,11 @@ const CodeList = (props) => {
               placeholder="输入开发环境名称查询"
               ref={searchRef}
               onSearch={value => handleSearch(value)}
+              // onChange
               style={{ width: 210 }}
               enterButton
             />
-            <span>
-              <Button onClick={() => handleFresh()} icon={<SyncOutlined />} style={{ marginLeft: '3px' }} />
-            </span>
+            <Button onClick={() => handleFresh()} icon={<SyncOutlined />} style={{ marginLeft: '3px' }} />
           </div>
         </Col>
       </Row>
