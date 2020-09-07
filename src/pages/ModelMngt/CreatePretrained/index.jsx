@@ -150,7 +150,6 @@ const CreatePretrained = props => {
 
       setFieldsValue({
         ...currentSelected.params, 
-        engine: getNameFromDockerImage(currentSelected.params.engine)
       });
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {

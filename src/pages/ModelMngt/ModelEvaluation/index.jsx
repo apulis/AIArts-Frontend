@@ -244,7 +244,7 @@ const ModelEvaluation = props => {
         startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length) || '',
         paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length) || '',
       }
-      setFieldsValue({...currentSelected.params, ...suffixParams, engine: getNameFromDockerImage(currentSelected.params.engine)});
+      setFieldsValue({...currentSelected.params, ...suffixParams});
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};

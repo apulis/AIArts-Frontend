@@ -231,8 +231,7 @@ const EditMetrics = (props) => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
     if (currentSelected) {
       setFieldsValue({
-        ...currentSelected.params, 
-        engine: getNameFromDockerImage(currentSelected.params.engine)
+        ...currentSelected.params,
       });
       console.log('currentSelected.params.params', currentSelected.params.params);
       const params = Object.entries(currentSelected.params.params || {}).map(item => {
