@@ -175,7 +175,7 @@ const Detail = (props) => {
               {...commonLayout}
               name="engine"
               label="引擎类型"
-              initialValue={jobDetail.engine}
+              initialValue={getNameFromDockerImage(jobDetail.engine)}
               rules={[{ required: true }]}
             >
               <Input disabled />
