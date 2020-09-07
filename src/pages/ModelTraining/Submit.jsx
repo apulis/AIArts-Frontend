@@ -117,8 +117,8 @@ const ModelTraining = (props) => {
         outputPath: subCodePathPrefix(paramsDetailedData.params.outputPath),
         codePath: subCodePathPrefix(paramsDetailedData.params.codePath),
         startupFile: subCodePathPrefix(paramsDetailedData.params.startupFile),
+        engine: getNameFromDockerImage(paramsDetailedData.params.engine)
       }
-      console.log('newParams', newParams)
       setParamsDetailedData({
         ...paramsDetailedData,
         params: newParams
@@ -153,6 +153,7 @@ const ModelTraining = (props) => {
         obj['value'] = item[1];
         return obj;
       });
+      data.params.engine = getNameFromDockerImage(data.params.engine);
       if (typeCreate) {
         data.params.name = '';
       }
