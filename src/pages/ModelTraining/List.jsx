@@ -46,7 +46,7 @@ const List = (props) => {
   });
 
   useInterval(() => {
-    console.log('interval', props.common.interval)
+    getTrainingList();
   }, props.common.interval)
 
   const getTrainingList = async (reloadPage, options = {}) => {
