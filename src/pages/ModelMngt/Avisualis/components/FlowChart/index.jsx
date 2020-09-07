@@ -1,8 +1,10 @@
-// import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select, Tree, PageHeader } from 'antd';
+import { Card } from 'antd';
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import styles from './index.less';
 import G6 from '@antv/g6';
 import insertCss from 'insert-css';
+import { PageLoading } from '@ant-design/pro-layout';
+import ItemPanel from '../ItemPanel';
 
 insertCss(`
   .g6-minimap-container {
@@ -14,11 +16,14 @@ insertCss(`
 `);
 
 const FlowChart = (props, ref) => {
-  const { flowChartData } = props;
   const [graph, setGraph] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [flowChartData, setFlowChartData] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useImperativeHandle(ref, () => ({ 
     graph: graph,
+    handleDragEnd: handleDragEnd
   }));
 
   
@@ -27,13 +32,177 @@ const FlowChart = (props, ref) => {
   }, []);
 
   const getData = async () => {
-    G6.registerNode(
-      'sql',
+    setLoading(true);
+    const data = {
+      nodes: [
+        {
+          id: '1',
+          dataType: 'alps',
+          name: 'alps_file1',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+        {
+          id: '2',
+          dataType: 'alps',
+          name: 'alps_file2',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+        {
+          id: '3',
+          dataType: 'alps',
+          name: 'alps_file3',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+        {
+          id: '4',
+          dataType: 'alps',
+          name: 'alps_file3',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+        {
+          id: '5',
+          dataType: 'alps',
+          name: 'alps_file3',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+        {
+          id: '6',
+          dataType: 'alps',
+          name: 'alps_file3',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+        {
+          id: '7',
+          dataType: 'alps',
+          name: 'alps_file3',
+          conf: [
+            {
+              label: 'conf',
+              value: 'pai_graph.conf',
+            },
+            {
+              label: 'dot',
+              value: 'pai_graph.dot',
+            },
+            {
+              label: 'init',
+              value: 'init.rc',
+            },
+          ],
+        },
+      ],
+      edges: [
+        {
+          source: '1',
+          target: '2',
+        },
+        {
+          source: '2',
+          target: '3',
+        },
+        {
+          source: '3',
+          target: '4',
+        },
+        {
+          source: '4',
+          target: '5',
+        },
+        {
+          source: '5',
+          target: '6',
+        },
+        {
+          source: '6',
+          target: '7',
+        }
+      ],
+    };
+    setFlowChartData(data);
+    G6.registerNode('flowChart',
       {
         drawShape(cfg, group) {
           const rect = group.addShape('rect', {
             attrs: {
-              x: -75,
+              x: -125,
               y: -25,
               width: 250,
               height: 50,
@@ -48,10 +217,12 @@ const FlowChart = (props, ref) => {
               attrs: {
                 text: cfg.name,
                 x: 0,
-                y: 10,
+                y: 0,
                 fill: 'black',
                 fontSize: 18,
                 fontWeight: 'bold',
+                textAlign: 'center',
+                textBaseline: 'middle',
                 cursor: 'move',
               },
               name: 'text-shape',
@@ -78,7 +249,7 @@ const FlowChart = (props, ref) => {
         controlPoints: true,
       },
       defaultNode: {
-        type: 'sql'
+        type: 'flowChart'
       },
       defaultEdge: {
         type: 'cubic-vertical',
@@ -114,50 +285,53 @@ const FlowChart = (props, ref) => {
           "customer-events",
         ]
       },
-      // fitView: true,
       plugins: [minimap],
     });
-    _graph.data(flowChartData);
+    _graph.data(data);
     // _graph.zoom(3);
     _graph.render();
-    _graph.on('node:mouseenter', (e) => {
+
+    _graph.on('node:mouseenter', e => {
       const nodeItem = e.item; // 获取鼠标进入的节点元素对象
       _graph.setItemState(nodeItem, 'hover', true); // 设置当前节点的 hover 状态为 true
     });
     
     // 鼠标离开节点
-    _graph.on('node:mouseleave', (e) => {
+    _graph.on('node:mouseleave', e => {
       const nodeItem = e.item; // 获取鼠标离开的节点元素对象
       _graph.setItemState(nodeItem, 'hover', false); // 设置当前节点的 hover 状态为 false
     });
+
     // Click a node
-    _graph.on('node:click', (e) => {
+    _graph.on('node:click', e => {
       // Swich the 'click' state of the node to be false
       const clickNodes = _graph.findAllByState('node', 'click');
-      clickNodes.forEach((cn) => {
+      clickNodes.forEach(cn => {
         _graph.setItemState(cn, 'click', false);
       });
       const nodeItem = e.item; // et the clicked item
       _graph.setItemState(nodeItem, 'click', true); // Set the state 'click' of the item to be true
+      console.log('-------node:click', nodeItem)
+      setSelectedItem(nodeItem);
     });
+
+    _graph.on('keydown', e => {
+      console.log('-------', e)
+      const { keyCode } = e;
+      const allNodes = _graph.get('nodes');
+      console.log('-------aaaaaaaaa', allNodes)
+      if (keyCode === 8 || keyCode === 46) {
+
+      }
+    });
+
     _graph.fitCenter();
-    setGraph(_graph)
+    setGraph(_graph);
+    setLoading(false);
   };
 
-  const handleDragEnd = (e) => {
-
-    // let str = Math.round(Math.random() * 100).toString();
-    // let point = graph.getPointByClient(e.clientX, e.clientY);
-    // graph.addItem("node", {
-    //   id: str,
-    //   type: "rect",
-    //   label: str,
-    //   size: [180, 80],
-    //   x: parseInt(point.x - 40),
-    //   y: parseInt(point.y - 40),
-    //   comboId: null
-    // });
-    graph.changeData({
+  const handleDragEnd = e => {
+    let newData = {
       nodes: [
         {
           id: '1',
@@ -229,14 +403,21 @@ const FlowChart = (props, ref) => {
           target: '8',
         }
       ],
-    })
+    }
+    setFlowChartData(newData);
+    graph.changeData(newData);
     graph.fitCenter();
   }
 
   return (
-    <div className={styles.G6Content} id="container">
-      <div draggable onDragEnd={handleDragEnd}>11111111111111111111111</div>
-    </div>
+    <>
+      <div className={styles.G6Content} id="container">
+        {loading ? <PageLoading /> : null}
+      </div>
+      <Card title="dsd">
+        <ItemPanel />
+      </Card>
+    </>
   );
 };
 
