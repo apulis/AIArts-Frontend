@@ -1,120 +1,133 @@
 import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import { Form, Input, Button, Select, Tooltip, Row, Col, PageHeader, message, Modal, InputNumber, Card, Radio } from 'antd';
-import { history } from 'umi';
+import { history,connect } from 'umi';
 import { postCode1, getResource } from '../service.js'
 import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceController.js'
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
+import { beforeSubmitJob } from '@/models/resource';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
-const CodeCreate = () => {
+const CodeCreate = (props) => {
+  useEffect(() => {
+    props.dispatch({
+      type: 'resource/fetchResource'
+    })
+  }, [])
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
-  const [data, setData] = useState(null)
-  const [deviceTypeArr, setDeviceTypeArr] = useState([])// 更新状态是异步的
-  const [deviceNumArr, setDeviceNumArr] = useState([])
-  const [engineTypeArr, setEngineTypeArr] = useState([])
+  const [resource, setResource] = useState(null);
+  const [deviceTypeArr, setDeviceTypeArr] = useState([]);// 更新状态是异步的
+  const [deviceNumArr, setDeviceNumArr] = useState([]);
+  const [engineTypeArr, setEngineTypeArr] = useState([]);
   const [jobTrainingType, setJobTrainingType] = useState('RegularJob');
-  const [engineNameArr, setEngineNameArr] = useState([])
-  const [codePathPrefix, setCodePathPrefix] = useState('')
-  const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([])
-  const [maxNodeNum, setMaxNodeNum] = useState(1)
-
-  useEffect(() => {// 初始化处理
-    renderInitForm()
-  }, [])// 更新处理
-
-  useEffect(() => {// 初始化处理deviceNum
-    if (jobTrainingType == 'RegularJob') {
-      renderInitRegularForm(deviceNumArr[0])
-    } else if (jobTrainingType == 'PSDistJob') {
-      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1)
-    }
-  }, [jobTrainingType])// 更新处理
+  const [engineNameArr, setEngineNameArr] = useState([]);
+  const [codePathPrefix, setCodePathPrefix] = useState('');
+  const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([]);
+  const [maxNodeNum, setMaxNodeNum] = useState(1);
 
   const renderInitForm = async () => {
-    const result = await apiGetResource()
+    const result = await apiGetResource();
     if (result) {
-      setData(result)
-      const enginTypeArrData = Object.keys(result.aiFrameworks)
-      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]]
-      const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType))
-      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo, result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || []
-      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo, deviceTypeArrData[0]) || [0]
-      const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]  // todo 静态数据
-      console.log('deviceTypeArrData[0]', deviceTypeArrData[0])
-      setCodePathPrefix(result.codePathPrefix)
-      setEngineTypeArr(enginTypeArrData)
-      setEngineNameArr(engineNameArrData)
-      setDeviceTypeArr(deviceTypeArrData)
-      setDeviceNumPerNodeArr(deviceNumPerNodeArrData)
-      setMaxNodeNum(maxNodeNumData)
-      setDeviceNumArr(deviceNumArrData)
-      setFieldsValue({ 'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0] })
-      renderInitRegularForm(deviceNumArrData[0])
+      setResource(result);
+      const enginTypeArrData = Object.keys(result.aiFrameworks);
+      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]];
+      const deviceTypeArrData = result.deviceList.map((item) => (item.deviceType));
+      const deviceNumPerNodeArrData = utilGetDeviceNumPerNodeArr(result.nodeInfo, result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType']) || [];
+      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo, deviceTypeArrData[0]) || [0];
+      const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]];  // todo 静态数据
+      console.log('deviceTypeArrData[0]', deviceTypeArrData[0]);
+      setCodePathPrefix(result.codePathPrefix);
+      setEngineTypeArr(enginTypeArrData);
+      setEngineNameArr(engineNameArrData);
+      setDeviceTypeArr(deviceTypeArrData);
+      setDeviceNumPerNodeArr(deviceNumPerNodeArrData);
+      setMaxNodeNum(maxNodeNumData);
+      setDeviceNumArr(deviceNumArrData);
+      setFieldsValue({ 'engineType': enginTypeArrData[0], 'engine': engineNameArrData[0], 'deviceType': deviceTypeArrData[0] });
+      renderInitRegularForm(deviceNumArrData[0]);
     }
   }
+
   const renderInitRegularForm = (deviceNum) => {
-    setFieldsValue({ 'deviceNum': deviceNum })
+    setFieldsValue({ 'deviceNum': deviceNum });
   }
+
   const renderInitPSDistJobForm = (numPs, numPsWorker, deviceNum) => {
-    setFieldsValue({ numPs, numPsWorker, deviceNum })
+    setFieldsValue({ numPs, numPsWorker, deviceNum });
   }
+
   const apiPostCode = async (values) => {
-    const obj = await postCode1(values)
-    const { code, data, msg } = obj
+    const obj = await postCode1(values);
+    const { code, data, msg } = obj;
     if (code === 0) {
       message.success('创建成功')
-      history.push('/codeDevelopment')
+      history.push('/codeDevelopment');
     }
   }
   const apiGetResource = async () => {
-    const obj = await getResource()
-    const { code, data, msg } = obj
+    const obj = await getResource();
+    const { code, data, msg } = obj;
     if (code === 0) {
-      return data
+      return data;
     } else {
-      return null
+      return null;
     }
   }
 
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
-    delete values["engineType"]
-    values.codePath = codePathPrefix + values.codePath
-    apiPostCode(values)
+    delete values["engineType"];
+    values.codePath = codePathPrefix + values.codePath;
+    if(!beforeSubmitJob(values.jobTrainingType === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })){
+      Modal.confirm({
+        title: '当前暂无可用训练设备，继续提交将会进入等待队列',
+        content: '是否继续',
+        onOk() {
+          apiPostCode(values);
+        },
+        onCancel() {
+        }
+      })
+    } else {
+      apiPostCode(values);
+    }
   }
 
   const handleEngineTypeChange = (engineType) => {
-    const arr = data.aiFrameworks[engineType]
-    setFieldsValue({ 'engine': arr[0] || '' })
-    setEngineNameArr(arr)
+    const arr = resource.aiFrameworks[engineType];
+    setFieldsValue({ 'engine': arr[0] || '' });
+    setEngineNameArr(arr);
   }
+
   const handleDeviceTypeChange = (index) => {
-    const type = data['nodeInfo'][index]['gpuType']
-    let arr = []
+    const type = resource['nodeInfo'][index]['gpuType'];
+    let arr = [];
     if (jobTrainingType == 'RegularJob') {
-      arr = utilGetDeviceNumArr(data['nodeInfo'], type)
-      setFieldsValue({ 'deviceNum': arr[0] })
-      setDeviceNumArr(arr)
+      arr = utilGetDeviceNumArr(resource['nodeInfo'], type);
+      setFieldsValue({ 'deviceNum': arr[0] });
+      setDeviceNumArr(arr);
     } else if (jobTrainingType == 'PSDistJob') {
-      arr = utilGetDeviceNumPerNodeArr(data['nodeInfo'], type)
-      setFieldsValue({ 'numPsWorker': arr[0] })
-      setDeviceNumPerNodeArr(arr)
+      arr = utilGetDeviceNumPerNodeArr(resource['nodeInfo'], type);
+      setFieldsValue({ 'numPsWorker': arr[0] });
+      setDeviceNumPerNodeArr(arr);
       // todo
-      setMaxNodeNum(result.nodeCountByDeviceType[index])
+      setMaxNodeNum(result.nodeCountByDeviceType[index]);
     }
   }
+
   const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
-    setFieldsValue({ 'deviceNum': nodeNum * perNodeDeviceNum })
+    setFieldsValue({ 'deviceNum': nodeNum * perNodeDeviceNum });
   }
+
   const validateMessages = {
     required: '${label} 是必填项!',
     types: {
     },
   }
+
   const formItemLayout = {
     labelCol: {
       span: 4
@@ -122,7 +135,8 @@ const CodeCreate = () => {
     wrapperCol: {
       span: 12
     },
-  };
+  }
+
   const buttonItemLayout = {
     wrapperCol: {
       span: 2,
@@ -130,6 +144,17 @@ const CodeCreate = () => {
     }
   }
 
+  useEffect(() => {// 初始化处理
+    renderInitForm();
+  }, []);// 更新处理
+
+  useEffect(() => {// 初始化处理deviceNum
+    if (jobTrainingType == 'RegularJob') {
+      renderInitRegularForm(deviceNumArr[0]);
+    } else if (jobTrainingType == 'PSDistJob') {
+      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1);
+    }
+  }, [jobTrainingType]);// 更新处理
 
   return (
     <>
@@ -214,7 +239,7 @@ const CodeCreate = () => {
               }
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' && 
+          {jobTrainingType == 'RegularJob' &&
             <Form.Item
               label="设备数量"
               name="deviceNum"
@@ -268,4 +293,6 @@ const CodeCreate = () => {
 
 }
 
-export default CodeCreate;
+export default connect(({ resource }) => ({
+  devices: resource.devices
+}))(CodeCreate);

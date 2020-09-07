@@ -1,24 +1,34 @@
+import Request from 'umi-request';
 import request from '@/utils/request';
 import { statusMap } from './serviceController'
 import { deleteJob } from '@/services/modelTraning'
 import { forEach } from 'lodash';
 
+const CancelToken = Request.CancelToken;
+
 export async function getCodes(params) {
   return request('/codes', {
     params,
+    cancelToken: new CancelToken(function(c) {
+      getCodes.cancel = c;
+    })
   });
 }
+
 export async function searchData(params) {
   return request('/codes', {
     params,
   });
 }
+
 export async function stopCode(id) {
   return request(`/codes/${id}`, { method: 'DELETE' })
 }
+
 export async function deleteCode(id) {
   return deleteJob(id)
 }
+
 export async function getJupyterUrl(id) {
   return request(`/codes/${id}/jupyter`)
 }
@@ -34,9 +44,13 @@ export async function postCode1(data) {
     data
   });
 }
+
 export async function getCodeCount() {
   const response = await request('/common/job/summary', {
     params: { jobType: 'codeEnv' },
+    cancelToken: new CancelToken(function(c) {
+      getCodeCount.cancel = c;
+    })
   });
   const { code, data, msg } = response
   const myRes = { code, msg }
