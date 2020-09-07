@@ -26,8 +26,8 @@ const EnumDeviceTypes = {
 }
 
 export function checkIfGpuOrNpu(deviceType) {
-  const deviceStr = devices[deviceType].deviceStr;
-  return EnumDeviceTypes[deviceStr];
+  const deviceStr = devices[deviceType]?.deviceStr;
+  return EnumDeviceTypes[deviceStr] || EnumDeviceTypes['nvidia.com/gpu'];
 }
 
 
