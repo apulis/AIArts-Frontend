@@ -7,7 +7,7 @@ import { generateKey } from '../ModelTraining/Submit';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { createInference, getAllSupportInference, getAllComputedDevice } from '@/services/inferenceService';
 import { history, withRouter } from 'umi';
-
+// import { beforeSubmitJob } from '@/models/resource';
 
 import styles from './index.less'
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
@@ -44,19 +44,37 @@ const SubmitModelTraining = (props) => {
       submitData.params[p.key] = p.value;
     });
     if (submitData.device === 'CPU') {
-      submitData.image = availImage[0]
+      submitData.image = availImage[0];
     } else if (submitData.device === 'GPU') {
-      submitData.image = availImage[1]
+      submitData.image = availImage[1];
     }
     const currentFramework = submitData.framework;
     const currentInference = allSupportInference.find(val => val.framework === currentFramework);
     submitData.image = availImage[currentInference?.device?.findIndex(val => val === submitData.device)];    
-    const res = await createInference(submitData);
-    if (res.code === 0) {
-      cancel();
-      message.success('成功提交');
-      history.push('/Inference/central')
-    }
+    
+    // const submitJobInner = async () => {
+      const res = await createInference(submitData);
+      if (res.code === 0) {
+        cancel();
+        message.success('成功提交');
+        history.push('/Inference/central')
+      }
+    // }
+
+    // if (!beforeSubmitJob(false, submitData.device, values.deviceNum)) {
+    //   Modal.confirm({
+    //     title: '当前暂无可用推理设备，继续提交将会进入等待队列',
+    //     content: '是否继续',
+    //     onOk() {
+    //       submitJobInner()
+    //     },
+    //     onCancel() {
+
+    //     }
+    //   })
+    // } else {
+    //   submitJobInner();
+    // }    
   }
 
   const getAvailableResource = async () => {
@@ -99,7 +117,13 @@ const SubmitModelTraining = (props) => {
     getAvailableResource();
     fetchComputedDevice();
     initModelPath();
-  }, [])
+  }, []);
+
+  // useEffect(() => {
+  //   props.dispatch({
+  //     type: 'resource/fetchResource'
+  //   })
+  // }, []);
 
   const addParams = () => {
     const newRunningParams = runningParams.concat({

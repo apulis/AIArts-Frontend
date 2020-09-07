@@ -33,4 +33,5 @@ export default {
   'menu.resourceMonitoring': '资源监控',
   'menu.modelTraining.visualization': '训练可视化',
   'menu.edgeInference': '边缘推理',
+  'menu.setting': '设置',
 };

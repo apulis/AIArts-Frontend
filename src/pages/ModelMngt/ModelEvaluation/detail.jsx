@@ -142,8 +142,13 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
           <Descriptions.Item label="运行参数">{evaluationJob && evaluationJob.params && formatParams(evaluationJob.params).map(p => <div>{p}</div>)}</Descriptions.Item>
         </Descriptions>
-        <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>评估结果</div>
-        <Button type="primary" onClick={getLateastLogs} style={{ marginTop: '16px' }}>获取评估结果</Button>
+        {
+          !['unapproved', 'queued', 'scheduling', 'error'].includes(evaluationJob?.status) && 
+            <>
+              <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>评估结果</div>
+              <Button type="primary" onClick={getLateastLogs} style={{ marginTop: '16px' }}>获取评估结果</Button>
+            </>
+        }
         {confusion && JSON.stringify(confusion) != "{}" &&
           <table border={1} className={styles.confusionTable}>
             <tr>

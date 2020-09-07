@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import { } from '@ant-design/icons';
 
 const { Dragger } = Upload;
 const CodeUpload = (props) => {

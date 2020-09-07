@@ -5,10 +5,12 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useParams } from 'umi';
 import moment from 'moment';
 
-import { fetchInferenceList, fetchInferenceDetail, createInference, startRecognition, fetchInferenceLog } from '../../services/inferenceService';
+import { fetchInferenceDetail, fetchInferenceLog } from '../../services/inferenceService';
 
 import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
+import useInterval from '@/hooks/useInterval';
+import { connect } from 'dva';
 
 export function getBase64(img, callback) {
   const reader = new FileReader();
@@ -16,7 +18,7 @@ export function getBase64(img, callback) {
   reader.readAsDataURL(img);
 }
 
-const InferenceDetail = () => {
+const InferenceDetail = (props) => {
   const [imageUrl, setImageUrl] = useState('');
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,14 +49,15 @@ const InferenceDetail = () => {
   useEffect(() => {
     getInferenceDetail();
     getInferenceLog();
-    let timer = setInterval(() => {
-      getInferenceDetail();
-      getInferenceLog();
-    }, 3000)
     return () => {
-      clearInterval(timer);
+      fetchInferenceDetail.cancel();
+      fetchInferenceLog.cancel();
     }
   }, [])
+  useInterval(() => {
+    getInferenceDetail();
+    getInferenceLog();
+  }, props.common.interval)
   const handleChange = info => {
     if (info.file.status === 'uploading') {
       setImageUrl('');
@@ -180,4 +183,4 @@ const InferenceDetail = () => {
 
 
 
-export default InferenceDetail;
+export default connect(({ common }) => ({ common }))(InferenceDetail);
