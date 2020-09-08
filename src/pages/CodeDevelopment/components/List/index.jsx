@@ -238,8 +238,8 @@ const CodeList = (props) => {
     }
     renderTable(pageParams);
     return () => {
-      getCodes.cancel();
-      getCodeCount.cancel();
+      getCodes.cancel && getCodes.cancel();
+      getCodeCount.cancel && getCodeCount.cancel();
     }
   }, props.common.interval);
 

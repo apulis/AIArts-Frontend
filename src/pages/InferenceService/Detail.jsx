@@ -50,8 +50,8 @@ const InferenceDetail = (props) => {
     getInferenceDetail();
     getInferenceLog();
     return () => {
-      fetchInferenceDetail.cancel();
-      fetchInferenceLog.cancel();
+      fetchInferenceDetail.cancel && fetchInferenceDetail.cancel();
+      fetchInferenceLog.cancel && fetchInferenceLog.cancel();
     }
   }, [])
   useInterval(() => {
