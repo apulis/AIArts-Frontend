@@ -26,7 +26,10 @@ export async function fetchTrainingList({ pageNum, pageSize, status, search, sor
       searchWord: search || undefined,
       orderBy: sortedInfo?.orderBy || undefined,
       order: sortedInfo?.order || undefined,
-    }
+    },
+    cancelToken: new CancelToken(function(c) {
+      fetchTrainingList.cancel = c;
+    })
   });
 }
 

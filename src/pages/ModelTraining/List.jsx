@@ -90,7 +90,10 @@ const List = (props) => {
 
   useEffect(() => {
     getTrainingList(true);
-    getJobStatusSumary()
+    getJobStatusSumary();
+    return () => {
+      fetchTrainingList.cancel && fetchTrainingList.cancel();
+    }
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {
     console.log('setSortedInfo', sorter)
