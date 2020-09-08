@@ -8,7 +8,7 @@ import { connect } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
-import { fetchJobStatusSumary } from './services';
+import { fetchJobStatusSumary, getInferences } from './services';
 import { statusList } from '@/pages/ModelTraining/List';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
@@ -57,11 +57,13 @@ const InferenceList = props => {
     getJobStatusSumary();
     return () => {
       fetchJobStatusSumary.cancel && fetchJobStatusSumary.cancel();
+      getInferences.cancel && getInferences.cancel();
     }
   }, []);
 
   useInterval(() => {
     getJobStatusSumary();
+    handleSearch();
   }, props.common.interval)
 
   useEffect(() => {
