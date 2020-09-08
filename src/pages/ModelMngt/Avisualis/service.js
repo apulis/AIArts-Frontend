@@ -6,8 +6,8 @@ export async function getDatasets(params) {
   });
 }
 
-export async function getDatasetDetail(id) {
-  return request(`/datasets/${id}`);
+export async function getPanel(type) {
+  return request(`/models/${type}/panel`);
 }
 
 export async function edit(id, data) {

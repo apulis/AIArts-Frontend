@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useForm } from 'react';
-import { getDatasets, edit, deleteDataSet, add, download } from './service';
+import { getDatasets } from './service';
 import { PAGEPARAMS, sortText, NameReg, NameErrorText } from '@/utils/const';
 import styles from './index.less';
 import { Link, history } from 'umi';
@@ -11,9 +11,9 @@ import moment from 'moment';
 const { confirm } = Modal;
 const { Search } = Input;
 const TYPES = [
-  { text: '图像分类', key: 'Image Classification'},
-  { text: '语义分割', key: 'Semantic Segmentation'},
-  { text: '目标检测', key: 'Object Detection'}
+  { text: '图像分类', val: 'Avisualis_Classfication'},
+  { text: '语义分割', val: 'Avisualis_SemanticSegmentation'},
+  { text: '目标检测', val: 'Avisualis_ObjectDetection'}
 ];
 const MODELTYPES = [
   { text: 'Pytorch样例模型', key: 'Pytorch样例模型'},
@@ -26,7 +26,6 @@ const Avisualis = () => {
   const [avisualis, setAvisualis] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
-  const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [type, setType] = useState('');
@@ -72,9 +71,7 @@ const Avisualis = () => {
 
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
-      setBtnLoading(true);
-      history.push('/ModelManagement/avisualis/detail');
-      setBtnLoading(false);
+      history.push(`/ModelManagement/avisualis/detail?type=${values.type}`);
     });
   };
 
@@ -84,10 +81,10 @@ const Avisualis = () => {
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => <Link to={{ pathname: '/ModelManagement/avisualis/detail', query: { id: item.id } }}>{item.name}</Link>,
+      render: item => <Link to={{ pathname: '/ModelManagement/avisualis/detail', query: { id: item.id, type: 'Avisualis_Classfication' } }}>{item.name}</Link>,
     },
     {
-      title: '任务类型',
+      title: '模型用途',
       dataIndex: 'type'
     },
     {
@@ -172,7 +169,7 @@ const Avisualis = () => {
           className={styles.avisualisModal}
           footer={[
             <Button onClick={() => setModalFlag(false)}>取消</Button>,
-            <Button type="primary" loading={btnLoading} onClick={onSubmit}>提交</Button>
+            <Button type="primary" onClick={onSubmit}>下一步</Button>
           ]}
         >
           <Form form={form} preserve={false} initialValues={{ way: way }}>
@@ -188,7 +185,7 @@ const Avisualis = () => {
               <Input placeholder="请输入模型名称" />
             </Form.Item>
             <Form.Item
-              label="任务类型"
+              label="模型用途"
               name="type"
               rules={[{ required: true, message: '请选择任务类型！' }]}
             >

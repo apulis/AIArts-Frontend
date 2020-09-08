@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select, Tree, PageHeader } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useForm } from 'react';
-// import { getDatasets, edit, deleteDataSet, add, download } from './service';
+import { getPanel } from '../service';
 import styles from './index.less';
 import { useDispatch } from 'umi';
 import {
@@ -18,10 +18,10 @@ import _ from 'lodash';
 const { confirm } = Modal;
 const { Search } = Input;
 
-const AvisualisDetail = ({ global }) => {
+const AvisualisDetail = (props, { global }) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const [avisualis, setAvisualis] = useState({ data: [], total: 0 });
+  const [panelData, setPanelData] = useState([]);
   const [btnLoading, setBtnLoading] = useState(false);
   const flowChartRef = useRef();
 
@@ -36,7 +36,32 @@ const AvisualisDetail = ({ global }) => {
   }, []);
 
   const getData = async (text) => {
-    
+    const { code, data } = await getPanel(props.location.query.type);
+    if (code === 0 && data) {
+      const { panel } = data;
+      if (panel && panel.length) {
+        let _treeData = [], _children = [];
+        panel.forEach((i, idx) => {
+          const { children, name } = i;
+          if (children &&  children.length) {
+            children.forEach((c, cdx) => {
+              const key = Object.keys(c)[0];
+              _children.push({
+                title: key,
+                key: `${idx}-${cdx}`,
+                config: c[key]
+              })
+            })
+          }
+          _treeData.push({
+            title: `步骤${idx + 1}：${name}`,
+            key: `${idx}`,
+            children: _children
+          })
+        })
+        setPanelData(_treeData);
+      }
+    }
   };
 
   const treeData = [
@@ -79,7 +104,7 @@ const AvisualisDetail = ({ global }) => {
             defaultExpandAll
             draggable
             switcherIcon={<DownOutlined />}
-            treeData={treeData}
+            treeData={panelData}
             onDragEnd={onDragEnd}
             onDragStart={({event, node}) => event.dataTransfer.effectAllowed = 'move'}
           />

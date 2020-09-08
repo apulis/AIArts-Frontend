@@ -5,6 +5,7 @@ import G6 from '@antv/g6';
 import insertCss from 'insert-css';
 import { PageLoading } from '@ant-design/pro-layout';
 import ItemPanel from '../ItemPanel';
+import { Children } from 'react';
 
 insertCss(`
   .g6-minimap-container {
@@ -37,136 +38,37 @@ const FlowChart = (props, ref) => {
       nodes: [
         {
           id: '1',
-          dataType: 'alps',
           name: 'alps_file1',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
+          config: []
         },
         {
           id: '2',
-          dataType: 'alps',
           name: 'alps_file2',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
         },
         {
           id: '3',
-          dataType: 'alps',
           name: 'alps_file3',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
+          
         },
         {
           id: '4',
-          dataType: 'alps',
           name: 'alps_file3',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
+          
         },
         {
           id: '5',
-          dataType: 'alps',
           name: 'alps_file3',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
+         
         },
         {
           id: '6',
-          dataType: 'alps',
           name: 'alps_file3',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
+          
         },
         {
           id: '7',
-          dataType: 'alps',
           name: 'alps_file3',
-          conf: [
-            {
-              label: 'conf',
-              value: 'pai_graph.conf',
-            },
-            {
-              label: 'dot',
-              value: 'pai_graph.dot',
-            },
-            {
-              label: 'init',
-              value: 'init.rc',
-            },
-          ],
+          
         },
       ],
       edges: [
@@ -320,7 +222,7 @@ const FlowChart = (props, ref) => {
       const { keyCode } = e;
       const allNodes = _graph.get('nodes');
       console.log('-------aaaaaaaaa', allNodes)
-      if (keyCode === 8 || keyCode === 46) {
+      if ((keyCode === 8 || keyCode === 46) && selectedItem) {
 
       }
     });
@@ -335,41 +237,33 @@ const FlowChart = (props, ref) => {
       nodes: [
         {
           id: '1',
-          dataType: 'alps',
           name: 'alps_file1',
         },
         {
           id: '2',
-          dataType: 'alps',
           name: 'alps_file2',
         },
         {
           id: '3',
-          dataType: 'alps',
           name: 'alps_file3',
         },
         {
           id: '4',
-          dataType: 'alps',
           name: 'alps_file3',
         },
         {
           id: '5',
-          dataType: 'alps',
           name: 'alps_file3'
         },
         {
           id: '6',
-          dataType: 'alps',
           name: 'alps_file3',
         },
         {
           id: '7',
-          dataType: 'alps',
           name: 'alps_file3',
         },{
           id: '8',
-          dataType: 'alps',
           name: '234324234234',
         },
       ],

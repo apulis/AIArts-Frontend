@@ -9,10 +9,10 @@ import moment from 'moment';
 
 const { Panel } = Collapse;
 
-const DataSetDetail = () => {
+const DataSetDetail = (props) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const id = new URLSearchParams(window.location.search).get('id');
+  const id = props.location.query.id;
 
   useEffect(() => {
     getData();
