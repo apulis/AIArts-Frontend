@@ -1,6 +1,9 @@
 import request from '@/utils/request';
+import Request from 'umi-request';
+
 import { inferenceJobType } from '@/utils/const';
 
+const CancelToken = Request.CancelToken;
 export async function getInferences(params) {
   return request(`/inferences/ListInferenceJob`, {
     params
@@ -40,5 +43,9 @@ export async function updateInference(data = {}) {
 }
 
 export async function fetchJobStatusSumary() {
-  return await request(`/common/job/summary?jobType=${inferenceJobType}`);
+  return await request(`/common/job/summary?jobType=${inferenceJobType}`, {
+    cancelToken: new CancelToken(function(c) {
+      fetchJobStatusSumary.cancel = c;
+    })
+  });
 }

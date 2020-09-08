@@ -12,6 +12,7 @@ import { fetchJobStatusSumary } from './services';
 import { statusList } from '@/pages/ModelTraining/List';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
+import useInterval from '@/hooks/useInterval';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -54,7 +55,14 @@ const InferenceList = props => {
   
   useEffect(() => {
     getJobStatusSumary();
+    return () => {
+      fetchJobStatusSumary.cancel && fetchJobStatusSumary.cancel();
+    }
   }, []);
+
+  useInterval(() => {
+    getJobStatusSumary();
+  }, props.common.interval)
 
   useEffect(() => {
     handleSearch();
@@ -295,7 +303,8 @@ const InferenceList = props => {
   );
 };
 
-export default connect(({ inferenceList, loading }) => ({
+export default connect(({ inferenceList, loading, common }) => ({
   inferenceList,
   loading: loading.models.inferenceList,
+  common,
 }))(InferenceList);
