@@ -7,6 +7,8 @@ import moment from 'moment';
 import { PAGEPARAMS, NameReg, NameErrorText, sortText } from '@/utils/const';
 import { CloudUploadOutlined, SyncOutlined, ExclamationCircleOutlined, PauseOutlined, DeleteOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import _ from 'lodash';
+import useInterval from '@/hooks/useInterval';
+import { connect } from 'dva';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -31,7 +33,7 @@ const argsOptions = [
 ];
 const ArgNameReg = /^[A-Za-z0-9-_."",:]+$/;
 
-const EdgeInference = () => {
+const EdgeInference = (props) => {
   const [form] = Form.useForm();
   const [jobs, setJobs] = useState([]);
   const [typesData, setTypesData] = useState([]);
@@ -53,15 +55,22 @@ const EdgeInference = () => {
 
   useEffect(() => {
     getData();
+    return () => {
+      getEdgeInferences.cancel && getEdgeInferences.cancel();
+    }
   }, [pageParams, sortedInfo]);
+
+  useInterval(() => {
+    getData(null, true);
+  }, props.common.interval);
 
   useEffect(() => {
     getFdInfo();
     getTypesData();
   }, []);
 
-  const getData = async (text) => {
-    setLoading(true);
+  const getData = async (text, isInterval) => {
+    !isInterval && setLoading(true);
     const searchType = statusType && statusType.split('-') ? statusType.split('-') : [];
     const params = { 
       ...pageParams, 
@@ -473,4 +482,4 @@ const EdgeInference = () => {
   );
 };
 
-export default EdgeInference;
+export default connect(({ common }) => ({ common }))(EdgeInference);
