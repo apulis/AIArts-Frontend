@@ -11,6 +11,8 @@ import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
 import styles from '@/pages/ModelTraining/index.less';
 import curStyles from './index.less';
+import { connect } from 'dva';
+import { beforeSubmitJob } from '@/models/resource';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -132,7 +134,11 @@ const ModelEvaluation = props => {
       message.error(msg);
     }
   }
-
+  useEffect(() => {
+    props.dispatch({
+      type: 'resource/fetchResource'
+    })
+  }, [])
   const onFinish = async (values) => {
     let params = {};
     values.params && values.params.forEach(p => {
@@ -157,14 +163,28 @@ const ModelEvaluation = props => {
       deviceNum,
       paramPath: codePathPrefix + argumentsFile,
     };
-    const { code, msg } = await addEvaluation(evalParams);
-
-    if (code === 0) {
-      message.success(`创建评估成功`);
-      history.push('/ModelManagement/MyModels');
-    } else {
-      msg && message.error(`创建评估失败:${msg}`);
+    const submitJobInner = async () => {
+      const { code, msg } = await addEvaluation(evalParams);
+      if (code === 0) {
+        message.success(`创建评估成功`);
+        history.push('/ModelManagement/MyModels');
+      } else {
+        msg && message.error(`创建评估失败:${msg}`);
+      }
     }
+    if (!beforeSubmitJob(false, deviceType, deviceNum)) {
+      Modal.confirm({
+        title: '当前暂无可用训练设备，继续提交将会进入等待队列',
+        content: '是否继续',
+        onOk() {
+          submitJobInner()
+        },
+        onCancel() {}
+      })
+    } else {
+      submitJobInner();
+    }
+    
   };
 
   const handleDatasetChange = (value, option) => {
@@ -522,4 +542,4 @@ const ModelEvaluation = props => {
   );
 };
 
-export default ModelEvaluation;
+export default connect(() => ({}))(ModelEvaluation);
