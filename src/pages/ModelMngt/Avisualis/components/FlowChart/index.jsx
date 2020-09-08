@@ -5,7 +5,8 @@ import G6 from '@antv/g6';
 import insertCss from 'insert-css';
 import { PageLoading } from '@ant-design/pro-layout';
 import ItemPanel from '../ItemPanel';
-import { Children } from 'react';
+import { getAvisualisDetail } from '../../service';
+import _ from 'lodash';
 
 insertCss(`
   .g6-minimap-container {
@@ -17,13 +18,13 @@ insertCss(`
 `);
 
 const FlowChart = (props, ref) => {
+  const { isNewAdd, transformData } = props;
   const [graph, setGraph] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [flowChartData, setFlowChartData] = useState({});
   const [loading, setLoading] = useState(true);
 
-  useImperativeHandle(ref, () => ({ 
-    graph: graph,
+  useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd
   }));
 
@@ -34,70 +35,74 @@ const FlowChart = (props, ref) => {
 
   const getData = async () => {
     setLoading(true);
-    const data = {
-      nodes: [
-        {
-          id: '1',
-          name: 'alps_file1',
-          config: []
-        },
-        {
-          id: '2',
-          name: 'alps_file2',
-        },
-        {
-          id: '3',
-          name: 'alps_file3',
+    if (!isNewAdd) {
+
+    }
+    let data = {};
+    // data = {
+    //   nodes: [
+    //     {
+    //       id: '1',
+    //       name: 'alps_file1',
+    //       config: []
+    //     },
+    //     {
+    //       id: '2',
+    //       name: 'alps_file2',
+    //     },
+    //     {
+    //       id: '3',
+    //       name: 'alps_file3',
           
-        },
-        {
-          id: '4',
-          name: 'alps_file3',
+    //     },
+    //     {
+    //       id: '4',
+    //       name: 'alps_file3',
           
-        },
-        {
-          id: '5',
-          name: 'alps_file3',
+    //     },
+    //     {
+    //       id: '5',
+    //       name: 'alps_file3',
          
-        },
-        {
-          id: '6',
-          name: 'alps_file3',
+    //     },
+    //     {
+    //       id: '6',
+    //       name: 'alps_file3',
           
-        },
-        {
-          id: '7',
-          name: 'alps_file3',
+    //     },
+    //     {
+    //       id: '7',
+    //       name: 'alps_file3',
           
-        },
-      ],
-      edges: [
-        {
-          source: '1',
-          target: '2',
-        },
-        {
-          source: '2',
-          target: '3',
-        },
-        {
-          source: '3',
-          target: '4',
-        },
-        {
-          source: '4',
-          target: '5',
-        },
-        {
-          source: '5',
-          target: '6',
-        },
-        {
-          source: '6',
-          target: '7',
-        }
-      ],
-    };
+    //     },
+    //   ],
+    //   edges: [
+    //     {
+    //       source: '1',
+    //       target: '2',
+    //     },
+    //     {
+    //       source: '2',
+    //       target: '3',
+    //     },
+    //     {
+    //       source: '3',
+    //       target: '4',
+    //     },
+    //     {
+    //       source: '4',
+    //       target: '5',
+    //     },
+    //     {
+    //       source: '5',
+    //       target: '6',
+    //     },
+    //     {
+    //       source: '6',
+    //       target: '7',
+    //     }
+    //   ],
+    // };
     setFlowChartData(data);
     G6.registerNode('flowChart',
       {
@@ -232,75 +237,38 @@ const FlowChart = (props, ref) => {
     setLoading(false);
   };
 
-  const handleDragEnd = e => {
-    let newData = {
-      nodes: [
-        {
-          id: '1',
-          name: 'alps_file1',
-        },
-        {
-          id: '2',
-          name: 'alps_file2',
-        },
-        {
-          id: '3',
-          name: 'alps_file3',
-        },
-        {
-          id: '4',
-          name: 'alps_file3',
-        },
-        {
-          id: '5',
-          name: 'alps_file3'
-        },
-        {
-          id: '6',
-          name: 'alps_file3',
-        },
-        {
-          id: '7',
-          name: 'alps_file3',
-        },{
-          id: '8',
-          name: '234324234234',
-        },
-      ],
-      edges: [
-        {
-          source: '1',
-          target: '2',
-        },
-        {
-          source: '2',
-          target: '3',
-        },
-        {
-          source: '3',
-          target: '4',
-        },
-        {
-          source: '4',
-          target: '5',
-        },
-        {
-          source: '5',
-          target: '6',
-        },
-        {
-          source: '6',
-          target: '7',
-        },
-        {
-          source: '7',
-          target: '8',
-        }
-      ],
+  const handleDragEnd = node => {
+    const { title, key, config } = node;
+    let newData = {}, 
+        newNodes = {
+          id: key,
+          name: title,
+          config: config
+        };
+    if (Object.keys(flowChartData).length) {
+      newData = _.cloneDeep(flowChartData);
+      const edgesLen = newData.edges.length;
+      const nodesLen = newData.nodes.length;
+      const temp = {
+        source: newData.nodes[nodesLen - 1].id,
+        target: key
+      };
+      if (edgesLen) {
+        newData.edges.push(temp)
+      } else {
+        newData.edges[0] = temp;
+      }
+      newData.nodes.push(newNodes);
+    } else {
+      newData = {
+        nodes: [newNodes],
+        edges: []
+      }
     }
     setFlowChartData(newData);
     graph.changeData(newData);
     graph.fitCenter();
+    transformData(null, newData);
   }
 
   return (

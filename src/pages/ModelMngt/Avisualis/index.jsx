@@ -1,12 +1,13 @@
 import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useForm } from 'react';
-import { getDatasets } from './service';
+import { getAvisualis } from './service';
 import { PAGEPARAMS, sortText, NameReg, NameErrorText } from '@/utils/const';
 import styles from './index.less';
-import { Link, history } from 'umi';
+import { Link, history, useDispatch } from 'umi';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { connect } from 'dva';
 
 const { confirm } = Modal;
 const { Search } = Input;
@@ -15,20 +16,21 @@ const TYPES = [
   { text: '语义分割', val: 'Avisualis_SemanticSegmentation'},
   { text: '目标检测', val: 'Avisualis_ObjectDetection'}
 ];
-const MODELTYPES = [
-  { text: 'Pytorch样例模型', key: 'Pytorch样例模型'},
-  { text: '工服安全帽检测', key: '工服安全帽检测'},
-  { text: 'XRAY违禁品检测项目', key: 'XRAY违禁品检测项目'}
-];
+// const MODELTYPES = [
+//   { text: 'Pytorch样例模型', key: 'Pytorch样例模型'},
+//   { text: '工服安全帽检测', key: '工服安全帽检测'},
+//   { text: 'XRAY违禁品检测项目', key: 'XRAY违禁品检测项目'}
+// ];
 
 const Avisualis = () => {
   const [form] = Form.useForm();
-  const [avisualis, setAvisualis] = useState({ data: [], total: 0 });
+  const dispatch = useDispatch();
+  const [avisualisData, setAvisualisData] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
-  const [type, setType] = useState('');
+  const [modelTypesData, setModelTypeData] = useState('');
   const [way, setWay] = useState(1);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
@@ -39,22 +41,22 @@ const Avisualis = () => {
     getData();
   }, [pageParams, sortedInfo]);
 
-  const getData = async (text) => {
+  const getData = async () => {
     setLoading(true);
     const params = { 
       ...pageParams, 
-      name: name, 
+      // name: name, 
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]
+      order: sortText[sortedInfo.order],
+      isAdvance: false
     };
-    const { code, data } = await getDatasets(params);
+    const { code, data } = await getAvisualis(params);
     if (code === 0 && data) {
-      const { total, datasets } = data;
-      setAvisualis({
-        data: datasets,
+      const { total, models } = data;
+      setAvisualisData({
+        data: models,
         total: total,
       });
-      text && message.success(text);
     }
     setLoading(false);
   };
@@ -70,7 +72,13 @@ const Avisualis = () => {
   }
 
   const onSubmit = () => {
-    addModalFormRef.current.form.validateFields().then(async (values) => {
+    form.validateFields().then(async (values) => {
+      dispatch({
+        type: 'avisualis/saveData',
+        payload: {
+          addFormData: values
+        }
+      });
       history.push(`/ModelManagement/avisualis/detail?type=${values.type}`);
     });
   };
@@ -131,22 +139,34 @@ const Avisualis = () => {
     });
   }
 
+  const onClickAdd = async () => {
+    setModalFlag(true);
+    const params = { 
+      pageNum: 1,
+      pageSize: 999,
+      isAdvance: true,
+      use: 'Avisualis'
+    };
+    const { code, data } = await getAvisualis(params);
+    if (code === 0 && data) setModelTypeData(data.models);
+  }
+
   return (
     <PageHeaderWrapper>
       <Card>
         <div className={styles.avisualisWrap}>
-          <Button type="primary" style={{ marginBottom: 16 }} onClick={() => setModalFlag(true)}>新建模型</Button>
+          <Button type="primary" style={{ marginBottom: 16 }} onClick={onClickAdd}>新建模型</Button>
           <div className={styles.searchWrap}>
             <Search placeholder="请输入模型名称查询" enterButton onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })} onChange={e => setName(e.target.value)} />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
             columns={columns}
-            dataSource={avisualis.data}
+            dataSource={avisualisData.data}
             rowKey={r => r.id}
             onChange={onSortChange}
             pagination={{
-              total: avisualis.total,
+              total: avisualisData.total,
               showQuickJumper: true,
               showTotal: total => `总共 ${total} 条`,
               showSizeChanger: true,
@@ -190,7 +210,7 @@ const Avisualis = () => {
               rules={[{ required: true, message: '请选择任务类型！' }]}
             >
               <Select placeholder="请选择类型">
-                {TYPES.map(i => <Option value={i.key}>{i.text}</Option>)}
+                {TYPES.map(i => <Option value={i.val}>{i.text}</Option>)}
               </Select>
             </Form.Item>
             <Form.Item
@@ -212,7 +232,7 @@ const Avisualis = () => {
               rules={[{ required: true, message: '请选择模型！' }]}
             >
               <Select placeholder="请选择模型">
-                {MODELTYPES.map(i => <Option value={i.key}>{i.text}</Option>)}
+                {modelTypesData.map(i => <Option value={i.id}>{i.name}</Option>)}
               </Select>
             </Form.Item>}
           </Form>
@@ -222,4 +242,4 @@ const Avisualis = () => {
   );
 };
 
-export default Avisualis;
+export default connect(({ avisualis }) => ({ avisualis }))(Avisualis);
