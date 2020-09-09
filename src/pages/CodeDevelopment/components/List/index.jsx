@@ -39,8 +39,8 @@ const CodeList = (props) => {
     }
   }
 
-  const renderTable = async (pageParams, success) => {
-    setLoading(true);
+  const renderTable = async (pageParams, success, withLoading) => {
+    if (withLoading) setLoading(true);
     const apiData = await apiGetCodes(pageParams);
     if (apiData) {
       setCodes({
@@ -236,7 +236,7 @@ const CodeList = (props) => {
     if (apiData) {
       setStatusSearchArr(apiData);
     }
-    renderTable(pageParams);
+    renderTable(pageParams, () => {}, false);
     return () => {
       getCodes.cancel && getCodes.cancel();
       getCodeCount.cancel && getCodeCount.cancel();
