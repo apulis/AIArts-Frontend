@@ -11,15 +11,12 @@ import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
+import { isBoolean } from 'lodash';
 
 const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 export const generateKey = () => {
   return new Date().getTime();
@@ -52,10 +49,10 @@ const ModelTraining = (props) => {
     isFromPresetModel = true;
   }
   const goBackPath = isFromPresetModel ? '/ModelManagement/PretrainedModels' : (readParam ? '/model-training/paramsManage' : '/model-training/modelTraining');
-
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
+  const [userFrameWorks, setUserFrameWorks] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
   const [bootFileModalVisible, setBootFileModalVisible] = useState(false);
@@ -371,7 +368,12 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
-      const deviceType = currentSelected.params.deviceType;
+      const { deviceType, engine } = currentSelected.params;
+      if (frameWorks.includes(engine)) {
+        setEngineSource(1);
+      } else if (userFrameWorks.includes(engine)) {
+        setEngineSource(2);
+      }
       setCurrentDeviceType(deviceType);
       setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
       setImportedTrainingParams(true);
@@ -431,12 +433,15 @@ const ModelTraining = (props) => {
         </Radio.Group>
       </FormItem>}
       <Form form={form}>
-        <FormItem {...commonLayout} label="选择引擎来源">
-          <Radio.Group defaultValue={1} onChange={(e) => {setEngineSource(e.target.value)}} style={{ width: '300px' }}>
-            <Radio value={1}>预置引擎</Radio>
-            <Radio value={2}>已保存引擎</Radio>
-          </Radio.Group>
-        </FormItem>
+        {
+          isSubmitPage && <FormItem {...commonLayout} label="选择引擎来源">
+            <Radio.Group value={engineSource} onChange={(e) => {setEngineSource(e.target.value)}} style={{ width: '300px' }}>
+              <Radio value={1}>预置引擎</Radio>
+              <Radio value={2}>已保存引擎</Radio>
+            </Radio.Group>
+          </FormItem>
+        }
+        
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
           <Select style={{ width: 300 }} disabled={typeCreate} >
             {
