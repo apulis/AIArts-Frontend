@@ -39,7 +39,7 @@ const CodeList = (props) => {
     }
   }
 
-  const renderTable = async (pageParams, success, withLoading) => {
+  const renderTable = async (pageParams, success, withLoading = true) => {
     if (withLoading) setLoading(true);
     const apiData = await apiGetCodes(pageParams);
     if (apiData) {
