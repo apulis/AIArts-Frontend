@@ -237,14 +237,14 @@ const CodeList = (props) => {
       setStatusSearchArr(apiData);
     }
     renderTable(pageParams, () => {}, false);
-    return () => {
-      getCodes.cancel && getCodes.cancel();
-      getCodeCount.cancel && getCodeCount.cancel();
-    }
   }, props.common.interval);
 
   useEffect(() => {
     renderStatusSelect();
+    return () => {
+      getCodes.cancel && getCodes.cancel();
+      getCodeCount.cancel && getCodeCount.cancel();
+    }
   }, []);
 
   useEffect(() => {
