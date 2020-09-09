@@ -42,7 +42,7 @@ const List = (props) => {
     order: '',
   });
   const searchEl = useRef(null);
-  const handleSearch = async () => {
+  const handleSearch = async (withLoading = true) => {
     const params = {
       ...pageParams,
       orderBy: sortedInfo.columnKey,
@@ -57,7 +57,7 @@ const List = (props) => {
       params.search = formValues.name;
     }
 
-    setTableLoading(true);
+    if (withLoading) setTableLoading(true);
     const res = await getEvaluations(params);
     if (res.code === 0) {
       const trainings = (res.data && res.data.evaluations) || [];
@@ -105,7 +105,7 @@ const List = (props) => {
 
   useInterval(() => {
     getJobStatusSumary();
-    handleSearch();
+    handleSearch(false);
   }, props.common.interval);
 
   const pageParamsChange = (page, size) => {
