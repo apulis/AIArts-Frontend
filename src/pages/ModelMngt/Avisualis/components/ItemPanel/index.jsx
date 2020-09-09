@@ -1,4 +1,4 @@
-import { message, Form, Input, Button, Radio, Select, Descriptions } from 'antd';
+import { message, Form, Input, Button, Radio, Select, Descriptions, InputNumber  } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
 import { history } from 'umi';

@@ -14,12 +14,6 @@ const { confirm } = Modal;
 const { Search } = Input;
 const { Option } = Select;
 
-// const MODELTYPES = [
-//   { text: 'Pytorch样例模型', key: 'Pytorch样例模型'},
-//   { text: '工服安全帽检测', key: '工服安全帽检测'},
-//   { text: 'XRAY违禁品检测项目', key: 'XRAY违禁品检测项目'}
-// ];
-
 const Avisualis = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();

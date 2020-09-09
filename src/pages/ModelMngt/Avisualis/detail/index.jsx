@@ -104,7 +104,7 @@ const AvisualisDetail = (props) => {
   if (loading) {
     return <PageLoading />
   }
-  
+
   return (
     <PageHeaderWrapper title={false}>
       <div className={styles.avisualisWrap}>

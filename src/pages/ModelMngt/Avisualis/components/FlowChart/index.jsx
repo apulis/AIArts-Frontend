@@ -25,8 +25,7 @@ const FlowChart = (props, ref) => {
   const [selectItem, setSelectItem] = useState(null);
 
   useImperativeHandle(ref, () => ({
-    handleDragEnd: handleDragEnd,
-    graph: graph
+    handleDragEnd: handleDragEnd
   }));
 
   
@@ -153,7 +152,6 @@ const FlowChart = (props, ref) => {
           "customer-events",
         ]
       },
-      enabledStack: true,
       plugins: [minimap],
     });
     _graph.data(data);
@@ -189,7 +187,7 @@ const FlowChart = (props, ref) => {
         const _id = selectedItem[0]._cfg.id;
         allNodes.forEach(i => {
           if (i._cfg.id === _id) {
-            deleteNode(_graph, apiData);
+            // deleteNode(_graph, apiData);
             return;
           }
         })
@@ -239,6 +237,7 @@ const FlowChart = (props, ref) => {
   const deleteNode = (_graph, apiData) => {
     let newData = _.cloneDeep(_graph);
     const { nodes, edges } = newData.cfg;
+
     nodes && nodes.length && nodes.pop();
     edges && edges.length && edges.pop();
     const newNodes = nodes.map(i => {
@@ -265,7 +264,6 @@ const FlowChart = (props, ref) => {
     _graph.fitCenter();
     transformData(apiData, temp);
   }
-  console.log('------------ssss', selectItem)
 
 
   return (
