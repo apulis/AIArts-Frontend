@@ -15,3 +15,10 @@ export async function getAvisualisDetail(params) {
     params: params,
   });
 }
+
+export async function submitAvisualis(data) {
+  return await request('/trainings', {
+    method: 'POST',
+    data
+  });
+}

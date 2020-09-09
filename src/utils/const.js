@@ -39,3 +39,8 @@ export const DEVICE_TYPES = {
   'nvidia.com/gpu': 'gpu',
 }
 
+export const MODELSTYPES = [
+  { text: '图像分类', val: 'Avisualis_Classfication'},
+  { text: '语义分割', val: 'Avisualis_SemanticSegmentation'},
+  { text: '目标检测', val: 'Avisualis_ObjectDetection'}
+];

@@ -26,8 +26,8 @@ const AvisualisDetail = (props) => {
   const [panelData, setPanelData] = useState([]);
   const [btnLoading, setBtnLoading] = useState(false);
   const flowChartRef = useRef();
-  const [addFormData, setAddFormData] = useState(avisualis.addFormData);
-  const [apiData, setApiData] = useState({});
+  const [apiData, setApiData] = useState({ panel: [] });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch({
@@ -40,150 +40,36 @@ const AvisualisDetail = (props) => {
   }, []);
 
   const getData = async (text) => {
-    // const { code, data } = await getPanel(type);
-    const {code, data} = { code :0,data: [
-      {
-        "name": "Input",
-        "children": [
-          {
-            "coco": [
-              {
-                "key": "class_num",
-                "type": "disabled",
-                "value": 80
-              }
-            ]
-          },
-          {
-            "voc": [
-              {
-                "key": "class_num",
-                "type": "disabled",
-                "value": 20
-              }
-            ]
+    setLoading(true);
+    const { code, data } = await getPanel(type);
+    if (code === 0 && data) {
+      const { panel, codePath, engine, startupFile } = data;
+      if (panel && panel.length) {
+        transformData(panel);
+        setApiData(data);
+        dispatch({
+          type: 'avisualis/saveData',
+          payload: {
+            addFormData: {
+              ...avisualis.addFormData,
+              codePath: codePath,
+              engine: engine,
+              startupFile: startupFile
+            }
           }
-        ]
-      },
-      {
-        "name": "Backbone",
-        "children": [
-          {
-            "ResNet": [
-              {
-                "key": "depth",
-                "type": "select",
-                "value": [
-                  50,
-                  101,
-                  152
-                ]
-              }
-            ]
-          },
-          {
-            "ResNeXt": [
-              {
-                "key": "depth",
-                "type": "select",
-                "value": [
-                  50,
-                  101,
-                  152
-                ]
-              }
-            ]
-          },
-          {
-            "SEResNet": [
-              {
-                "key": "depth",
-                "type": "select",
-                "value": [
-                  50,
-                  101
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "name": "neck",
-        "children": [
-          {
-            "AdaptiveAvgMaxPool2d": [
-              {}
-            ]
-          },
-          {
-            "AdaptiveCatAvgMaxPool2d": [
-            ]
-          },
-          {
-            "GlobalAveragePooling": [
-            ]
-          }
-        ]
-      },
-    
-      {
-        "name": "Optimizer",
-        "children": [
-          {
-            "SGD": [
-              {
-                "key": "learning_rate",
-                "type": "number",
-                "value": 0.001
-              }
-            ]
-          },
-          {
-            "ADAM": [
-              {
-                "key": "learning_rate",
-                "type": "number",
-                "value": 0.001
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Output",
-        "children": [
-          {
-            "output": [
-              {
-                "key": "work_dir",
-                "type": "string",
-                "value": "./work_dir"
-              },
-              {
-                "key": "total_epochs",
-                "type": "number",
-                "value": 100
-              }
-            ]
-          }
-        ]
+        });
       }
-    ]}
-    if (code === 0 && data && data.length) {
-      transformData(data);
-      setApiData(data);
     }
+    setLoading(false);
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || apiData, childrenDisabled = false;
-    _data.forEach((i, idx) => {
+    let _treeData = [], _children = [], _data = data || apiData.panel, childrenDisabled = false;
+    _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.nodes ? newData.nodes.length : 0;
         childrenDisabled = len > 0 && !(len < (idx + 1));
       }
-
       let _children = [];
       const { children, name } = i;
       if (children &&  children.length) {
@@ -191,16 +77,15 @@ const AvisualisDetail = (props) => {
           const key = Object.keys(c)[0];
           _children.push({
             title: key,
-            key: `${idx}-${cdx}`,
+            key: `${name}-${key}`,
             config: c[key],
             disabled: childrenDisabled
           })
         })
       }
-      console.log('----111111111111111111', _children)
       _treeData.push({
         title: `步骤${idx + 1}：${name}`,
-        key: `${idx}`,
+        key: `${name}`,
         children: _children,
         disabled: true
       })
@@ -210,13 +95,16 @@ const AvisualisDetail = (props) => {
 
   const onDragEnd = ({event, node}) => {
     const { dataTransfer, pageX } = event;
-    console.log('------onDragEndonDragEnd', node)
     if (dataTransfer.dropEffect !== 'none' && pageX > 384) {
       const { handleDragEnd } = flowChartRef.current;
       handleDragEnd && handleDragEnd(node);
     }
   }
 
+  if (loading) {
+    return <PageLoading />
+  }
+  
   return (
     <PageHeaderWrapper title={false}>
       <div className={styles.avisualisWrap}>
@@ -231,7 +119,12 @@ const AvisualisDetail = (props) => {
             onDragStart={({event, node}) => event.dataTransfer.effectAllowed = 'move'}
           /> : null}
         </Card>
-        <FlowChart ref={flowChartRef} transformData={transformData} isNewAdd={Boolean(id)} />
+        <FlowChart 
+          ref={flowChartRef} 
+          transformData={transformData} 
+          isNewAdd={Boolean(id)}
+          apiData={apiData.panel}
+        />
       </div>
     </PageHeaderWrapper>
   );
