@@ -75,6 +75,7 @@ const ModelTraining = (props) => {
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [paramsDetailedData, setParamsDetailedData] = useState({});
   const [importedTrainingParams, setImportedTrainingParams] = useState(false);
+  const [engineSource, setEngineSource] = useState(1);
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -309,6 +310,7 @@ const ModelTraining = (props) => {
     });
     callback();
   };
+
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
     if (values.length === 1) {
@@ -349,6 +351,7 @@ const ModelTraining = (props) => {
     setCurrentDeviceType(deviceType);
     setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
   };
+
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
     if (currentSelected) {
@@ -428,10 +431,16 @@ const ModelTraining = (props) => {
         </Radio.Group>
       </FormItem>}
       <Form form={form}>
+        <FormItem {...commonLayout} label="选择引擎来源">
+          <Radio.Group defaultValue={1} onChange={(e) => {setEngineSource(e.target.value)}} style={{ width: '300px' }}>
+            <Radio value={1}>预置引擎</Radio>
+            <Radio value={2}>已保存引擎</Radio>
+          </Radio.Group>
+        </FormItem>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
           <Select style={{ width: 300 }} disabled={typeCreate} >
             {
-              frameWorks.map(f => (
+              engineSource === 1 && frameWorks.map(f => (
                 <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
               ))
             }
