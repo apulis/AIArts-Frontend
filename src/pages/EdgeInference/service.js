@@ -1,10 +1,15 @@
 import request from '@/utils/request';
+import Request from 'umi-request';
 
 const prefix = 'edge_inferences';
+const CancelToken = Request.CancelToken;
 
 export async function getEdgeInferences(params) {
   return request(`/${prefix}`, {
     params: params,
+    cancelToken: new CancelToken(function(c) {
+      getEdgeInferences.cancel = c;
+    })
   });
 }
 
