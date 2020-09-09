@@ -26,6 +26,7 @@ const CodeCreate = (props) => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([]);
   const [maxNodeNum, setMaxNodeNum] = useState(1);
+  const [engineSource, setEngineSource] = useState(1);
 
   const renderInitForm = async () => {
     const result = await apiGetResource();
@@ -195,6 +196,12 @@ const CodeCreate = (props) => {
           >
             <Input addonBefore={codePathPrefix} placeholder="代码存储路径" />
           </Form.Item>
+          <Form.Item label="选择引擎来源">
+            <Radio.Group value={engineSource} onChange={(e) => {setEngineSource(e.target.value)}} style={{ width: '300px' }}>
+              <Radio value={1}>预置引擎</Radio>
+              <Radio value={2}>已保存引擎</Radio>
+            </Radio.Group>
+          </Form.Item>
           <Form.Item
             label="引擎类型"
             required
@@ -202,7 +209,7 @@ const CodeCreate = (props) => {
             <Form.Item name='engineType' rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
               <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
                 {
-                  engineTypeArr.map((item, key) => (
+                  engineSource === 1 && engineTypeArr.map((item, key) => (
                     <Option key={key} value={item}>{item}</Option>
                   ))
                 }
