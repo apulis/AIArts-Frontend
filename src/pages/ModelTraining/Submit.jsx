@@ -266,7 +266,7 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       }
-      if (!beforeSubmitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
+      if (!beforeSubmitJob(values.jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
           title: '当前暂无可用训练设备，继续提交将会进入等待队列',
           content: '是否继续',
