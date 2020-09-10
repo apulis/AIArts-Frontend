@@ -299,7 +299,10 @@ const CodeList = (props) => {
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
             <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
-            <a onClick={() => toSaveImage(codeItem.id)}>保存镜像</a>
+            {
+              codeItem.status === 'running' && 
+                <a onClick={() => toSaveImage(codeItem.id)}>保存镜像</a>
+            }
           </Space>
         );
       },
