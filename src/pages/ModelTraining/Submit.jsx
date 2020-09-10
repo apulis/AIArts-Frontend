@@ -254,7 +254,7 @@ const ModelTraining = (props) => {
         history.push(goBackPath);
       }
     } else {
-      if (values.jobtrainingtype === 'PSDistJob') {
+      if (values.jobTrainingType === 'PSDistJob') {
         values.numPs = 1;
       }
       const submitJobInner = async () => {
@@ -266,7 +266,7 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       }
-      if (!beforeSubmitJob(values.jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
+      if (!beforeSubmitJob(values.jobTrainingType === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
           title: '当前暂无可用训练设备，继续提交将会进入等待队列',
           content: '是否继续',
@@ -512,7 +512,7 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob" onChange={handleDistributedJob}>
+        <FormItem label="是否分布式训练" name="jobTrainingType" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob" onChange={handleDistributedJob}>
           <Radio.Group style={{ width: '300px' }}>
             <Radio value={'PSDistJob'}>是</Radio>
             <Radio value={'RegularJob'}>否</Radio>
