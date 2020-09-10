@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
+import { Table, Select, Space, Button, Row, Col, Input, message, Modal, Form } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
 import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
 import moment from 'moment';
@@ -18,6 +18,8 @@ const { Option } = Select;
 const CodeList = (props) => {
   const searchRef = useRef(null);
   const [isReady,setIsReady] = useState(false);
+  const searchRef = useRef(null)
+  const [form] = Form.useForm();
   const [codes, setCodes] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(pageObj);// 页长
@@ -26,6 +28,7 @@ const CodeList = (props) => {
   const [searchObj, setSearchObj] = useState({})
   const [modalFlag, setModalFlag] = useState(false);
   const [modalData, setModalData] = useState({})
+  const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
     order: ''
@@ -181,7 +184,7 @@ const CodeList = (props) => {
     }
   }
 
-  const handleOpen = (item) => {
+  const handleOpen = (item) => { 
     apiOpenJupyter(item.id);
   }
 
@@ -233,6 +236,11 @@ const CodeList = (props) => {
     history.push('/codeDevelopment/add');
   }
 
+  const commonLayout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 12 },
+  };
+
   const columns = [
     {
       title: '开发环境名称',
@@ -245,6 +253,7 @@ const CodeList = (props) => {
       title: '状态',
       dataIndex: 'status',
       ellipsis: true,
+      width: '80px',
       render: status => statusMap[status]?.local,
     },
     {
@@ -267,6 +276,7 @@ const CodeList = (props) => {
       title: '代码存储目录',
       dataIndex: 'codePath',
       ellipsis: true,
+      width: '120px'
     },
     {
       title: '描述',
@@ -275,6 +285,7 @@ const CodeList = (props) => {
     },
     {
       title: '操作',
+      align: 'center',
       render: (codeItem) => {
         return (
           <Space size="middle">
@@ -282,6 +293,7 @@ const CodeList = (props) => {
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
             <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
+            <a onClick={() => {setSaveImageModalVisible(true)}}>保存镜像</a>
           </Space>
         );
       },
@@ -334,6 +346,11 @@ const CodeList = (props) => {
       }
     }
   }, [searchObj]);
+
+  const handleSaveImage = () => {
+    setSaveImageModalVisible(false);
+    //
+  }
 
   return (
     <>
@@ -396,6 +413,26 @@ const CodeList = (props) => {
           <CodeUpload modalData={modalData}></CodeUpload>
         </Modal>
       )}
+      <Modal
+        title="保存镜像"
+        visible={saveImageModalVisible}
+        onCancel={() => {setSaveImageModalVisible(false)}}
+        onOk={() => {handleSaveImage()}}
+      >
+        <Form
+          form={form}
+        >
+          <Form.Item {...commonLayout} label="名称" name="name" rules={[{required: true}]}>
+            <Input style={{width: '280px'}} />
+          </Form.Item>
+          <Form.Item {...commonLayout} label="描述" name="desc">
+            <Input style={{width: '280px'}} />
+          </Form.Item>
+          <Form.Item {...commonLayout} label="版本" name="version">
+            <Input style={{width: '280px'}} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   )
 
