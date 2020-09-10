@@ -1,16 +1,10 @@
 import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select, Tree, PageHeader } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useForm } from 'react';
-import { getPanel } from '../service';
+import { getPanel, getAvisualisDetail } from '../service';
 import styles from './index.less';
-import { useDispatch } from 'umi';
-import {
-  DownOutlined,
-  FrownOutlined,
-  SmileOutlined,
-  MehOutlined,
-  FrownFilled,
-} from '@ant-design/icons'
+import { useDispatch, history } from 'umi';
+import { DownOutlined } from '@ant-design/icons'
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
 import _ from 'lodash';
@@ -28,6 +22,8 @@ const AvisualisDetail = (props) => {
   const flowChartRef = useRef();
   const [apiData, setApiData] = useState({ panel: [] });
   const [loading, setLoading] = useState(true);
+  const [detailData, setDetailData] = useState({});
+  const { addFormData } = avisualis;
 
   useEffect(() => {
     dispatch({
@@ -39,8 +35,28 @@ const AvisualisDetail = (props) => {
     getData();
   }, []);
 
-  const getData = async (text) => {
+  const getData = async () => {
     setLoading(true);
+    if (!Object.keys(addFormData).length && !id) history.push('/ModelManagement/avisualis');
+    let _addFormData = _.cloneDeep(addFormData);
+    if (id) {
+      const { code, data } = await getAvisualisDetail(id);
+      if (code === 0 && data) {
+        const { nodes, edges } = data.model.params;
+        const transformNodes = JSON.parse(nodes).map(i => {
+          return {
+            ...i,
+            id: `${i.id}-${i.name}`
+          }
+        })
+        const _detailData = {
+          nodes: transformNodes,
+          edges: JSON.parse(edges),
+        };
+        setDetailData(_detailData);
+        _addFormData = data.model;
+      }
+    }
     const { code, data } = await getPanel(type);
     if (code === 0 && data) {
       const { panel, codePath, engine, startupFile } = data;
@@ -51,7 +67,7 @@ const AvisualisDetail = (props) => {
           type: 'avisualis/saveData',
           payload: {
             addFormData: {
-              ...avisualis.addFormData,
+              ..._addFormData,
               codePath: codePath,
               engine: engine,
               startupFile: startupFile
@@ -64,7 +80,7 @@ const AvisualisDetail = (props) => {
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || apiData.panel, childrenDisabled = false;
+    let _treeData = [], _children = [], _data = data || apiData.panel, childrenDisabled = id ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.nodes ? newData.nodes.length : 0;
@@ -79,7 +95,8 @@ const AvisualisDetail = (props) => {
             title: key,
             key: `${name}-${key}`,
             config: c[key],
-            disabled: childrenDisabled
+            disabled: childrenDisabled,
+            idx: idx
           })
         })
       }
@@ -122,8 +139,9 @@ const AvisualisDetail = (props) => {
         <FlowChart 
           ref={flowChartRef} 
           transformData={transformData} 
-          isNewAdd={Boolean(id)}
+          id={id}
           apiData={apiData.panel}
+          detailData={detailData || {}}
         />
       </div>
     </PageHeaderWrapper>

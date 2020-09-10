@@ -2,9 +2,10 @@ import { message, Form, Input, Button, Radio, Select, Descriptions, InputNumber 
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
 import { history } from 'umi';
-import { submitAvisualis } from '../../service';
+import { submitAvisualis, getAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
+import _ from 'lodash';
 
 const { Option } = Select;
 
@@ -18,55 +19,72 @@ const ItemPanel = (props) => {
   }, []);
 
   const getData = () => {
-
   }
 
-  const onSubmit = () => {
-    form.validateFields().then(async (values) => {
-      if (values.deviceType === 'PSDistJob') {
-        values.numPs = 1;
-        values.deviceNum = values.deviceTotal;
+  const onSubmit = async() => {
+    const _addFormData = _.cloneDeep(addFormData);
+    const _flowChartData = _.cloneDeep(flowChartData);
+    if (_addFormData.deviceType === 'PSDistJob') {
+      _addFormData.numPs = 1;
+      _addFormData.deviceNum = _addFormData.deviceTotal;
+    }
+    const { nodes, edges } = flowChartData;
+    _addFormData.datasetPath = nodes[0].config[0].value;
+    _addFormData.outputPath = nodes[nodes.length - 1].config[0].value;
+    _addFormData.paramPath = _addFormData.outputPath;
+    const newNodes = nodes.map(i => {
+      return {
+        ...i,
+        id: i.id.split('-')[0]
       }
-      const { nodes } = flowChartData;
-      values.datasetPath = nodes[0].config.data_path;
-      values.outputPath = nodes[nodes.length - 1].config.work_dir;
-      console.log('----', { ...values, ...addFormData })
-      const { code, data } = await submitAvisualis({ ...values, ...addFormData, ...flowChartData });
-      if (code === 0) {
-        message.success('创建成功！');
-        history.push('/ModelManagement/avisualis');
+    });
+    const newEdges = edges.map(i => {
+      const { source, target } = i;
+      return {
+        source: source,
+        target: target
       }
-    })
+    });
+    const { code, data } = await submitAvisualis({
+      ..._addFormData,
+      nodes: newNodes,
+      edges: newEdges
+    });
+    if (code === 0) {
+      message.success('创建成功！');
+      history.push('/ModelManagement/avisualis');
+    }
   }
 
   const getConfig = () => {
     const { config } = selectItem._cfg.model;
     return config.map(i => {
       const { type, value, key } = i;
-      if (type === 'string') {
-        return (<Form.Item name={key} label={key} rules={[{ required: true, message: `请输入${key}` }]}>
-          <Input placeholder={`请输入${key}`} />
+      if (type === 'string' || type === 'disabled') {
+        return (
+        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+          <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} />
         </Form.Item>)
       } else if (type === 'number') {
-        return (<Form.Item name={key} label={key} rules={[{ required: true, message: `请输入${key}` }]}>
+        return (
+        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>)
       } else if (type === 'select') {
-        return (<Form.Item name={key} label={key} rules={[{ required: true, message: `请选择${key}！` }]}>
+        return (
+        <Form.Item name={key} label={key} rules={[{ required: true, message: `请选择${key}！` }]}>
           <Select placeholder="请选择">
-            {value.map(o => <Option value={o}>{o}</Option>)}
+            {value.map(o => <Option key={o} value={o}>{o}</Option>)}
           </Select>
-        </Form.Item>)
-      } else if (type === 'disabled') {
-        return ( <Form.Item name={key} label={key} rules={[{ required: true }]}>
-          <Input disabled />
         </Form.Item>)
       }
     }) 
   }
 
   const onSaveConfig = () => {
-    
+    form.validateFields().then(async (values) => {
+
+    })
   }
 
   const getMODELSTYPESText = () => {
@@ -78,7 +96,7 @@ const ItemPanel = (props) => {
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        <Button type="primary" onClick={onSaveConfig}>创建模型</Button>
+        <Button type="primary" onClick={onSubmit}>创建模型</Button>
       </div>
       {selectItem ?
         <>
@@ -86,7 +104,7 @@ const ItemPanel = (props) => {
           <Form form={form}>
             {getConfig()}
           </Form>
-          <Button type="primary" onClick={onSaveConfig}  style={{ marginLeft: 16, float: 'right' }}>保存配置</Button>
+          <Button type="primary" onClick={onSaveConfig} style={{ marginLeft: 16, float: 'right' }}>保存配置</Button>
         </> :
         <Descriptions column={1} title="模型详情">
         <Descriptions.Item label="模型名称">{addFormData.name || '--'}</Descriptions.Item>

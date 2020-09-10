@@ -1,7 +1,7 @@
 import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef, useForm } from 'react';
-import { getAvisualis } from './service';
+import { getAvisualis, deleteAvisualis } from './service';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import styles from './index.less';
 import { Link, history, useDispatch } from 'umi';
@@ -37,10 +37,10 @@ const Avisualis = () => {
     setLoading(true);
     const params = { 
       ...pageParams, 
-      // name: name, 
+      name: name, 
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
-      isAdvance: false
+      use: 'Avisualis'
     };
     const { code, data } = await getAvisualis(params);
     if (code === 0 && data) {
@@ -85,18 +85,18 @@ const Avisualis = () => {
     },
     {
       title: '模型用途',
-      dataIndex: 'type'
+      dataIndex: 'use'
     },
     {
       title: '简介',
-      dataIndex: 'desc',
+      dataIndex: 'description',
     },
     {
       title: '创建时间',
-      key: 'updatedAt',
-      dataIndex: 'updatedAt',
+      key: 'createdAt',
+      dataIndex: 'createdAt',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'updatedAt' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
@@ -116,10 +116,10 @@ const Avisualis = () => {
       okType: 'danger',
       cancelText: '取消',
       onOk: async () => {
-        const { code } = await deleteDataSet(id);
+        const { code } = await deleteAvisualis(id);
         if (code === 0) {
           // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
-          if (dataSets.data.length == 1 && pageParams.pageNum > 1) {
+          if (avisualisData.data.length == 1 && pageParams.pageNum > 1) {
             setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
           } else {
             getData();

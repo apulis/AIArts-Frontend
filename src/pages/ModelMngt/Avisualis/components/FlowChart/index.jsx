@@ -1,4 +1,4 @@
-import { Card } from 'antd';
+import { Card, message } from 'antd';
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import styles from './index.less';
 import G6 from '@antv/g6';
@@ -18,16 +18,15 @@ insertCss(`
 `);
 
 const FlowChart = (props, ref) => {
-  const { isNewAdd, transformData, apiData } = props;
+  const { id, transformData, apiData, detailData } = props;
   const [graph, setGraph] = useState(null);
-  const [flowChartData, setFlowChartData] = useState({});
+  const [flowChartData, setFlowChartData] = useState(detailData);
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
 
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd
   }));
-
   
   useEffect(() => {
     getData();
@@ -35,11 +34,6 @@ const FlowChart = (props, ref) => {
 
   const getData = async () => {
     setLoading(true);
-    if (!isNewAdd) {
-
-    }
-    let data = {};
-    setFlowChartData(data);
     G6.registerNode('flowChart',
       {
         drawShape(cfg, group) {
@@ -154,7 +148,7 @@ const FlowChart = (props, ref) => {
       },
       plugins: [minimap],
     });
-    _graph.data(data);
+    _graph.data(flowChartData);
     _graph.render();
 
     _graph.on('node:mouseenter', e => {
@@ -176,7 +170,7 @@ const FlowChart = (props, ref) => {
       });
       const nodeItem = e.item; // et the clicked item
       _graph.setItemState(nodeItem, 'click', true); // Set the state 'click' of the item to be true
-      setSelectItem(nodeItem)
+      setSelectItem(nodeItem);
     });
 
     _graph.on('keydown', e => {
@@ -187,7 +181,7 @@ const FlowChart = (props, ref) => {
         const _id = selectedItem[0]._cfg.id;
         allNodes.forEach(i => {
           if (i._cfg.id === _id) {
-            // deleteNode(_graph, apiData);
+            deleteNode(_graph, apiData);
             return;
           }
         })
@@ -200,14 +194,20 @@ const FlowChart = (props, ref) => {
   };
 
   const handleDragEnd = node => {
-    const { title, key, config } = node;
+    const { title, key, config, idx } = node;
+    const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
     let newData = {}, 
         newNodes = {
           id: key,
           name: title,
-          config: config
+          config: config,
+          idx: idx
         };
-    if (Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length) {
+    if ((hasNodes && idx > flowChartData.nodes.length) || (!hasNodes && idx > 0)) {
+      message.warning('只能按照步骤顺序依次拖拽！');
+      return;
+    }
+    if (hasNodes) {
       newData = _.cloneDeep(flowChartData);
       const { edges, nodes } = newData;
       const edgesLen = edges.length;
@@ -232,12 +232,12 @@ const FlowChart = (props, ref) => {
     graph.changeData(newData);
     graph.fitCenter();
     transformData(null, newData);
+    setSelectItem(null);
   }
 
   const deleteNode = (_graph, apiData) => {
     let newData = _.cloneDeep(_graph);
     const { nodes, edges } = newData.cfg;
-
     nodes && nodes.length && nodes.pop();
     edges && edges.length && edges.pop();
     const newNodes = nodes.map(i => {

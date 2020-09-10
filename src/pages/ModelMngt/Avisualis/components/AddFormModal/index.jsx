@@ -11,7 +11,7 @@ const AddFormModal = (props, ref) => {
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const { modelTypesData } = props;
   const [way, setWay] = useState(1);
-  const [jobtrainingtype, setJobtrainingtype] = useState('RegularJob');
+  const [jobTrainingType, setJobtrainingtype] = useState('RegularJob');
   const [nodeInfo, setNodeInfo] = useState([]);
   const [deviceTotal, setDeviceTotal] = useState(0);
   const [deviceList, setDeviceList] = useState([]);
@@ -29,13 +29,13 @@ const AddFormModal = (props, ref) => {
   useEffect(() => {
     if (!deviceType) return;
     let list = [];
-    if (jobtrainingtype === 'PSDistJob') {
+    if (jobTrainingType === 'PSDistJob') {
       list = getDeviceNumPerNodeArrByNodeType(nodeInfo, deviceType);
     } else {
       list = getDeviceNumArrByNodeType(nodeInfo, deviceType);
     }
     setAvailableDeviceNumList(list);
-  }, [jobtrainingtype, nodeInfo, deviceType]);
+  }, [jobTrainingType, nodeInfo, deviceType]);
 
   const getData = async () => {
     const { code, data } = await fetchAvilableResource();
@@ -53,7 +53,7 @@ const AddFormModal = (props, ref) => {
   };
 
   return (
-    <Form form={form} preserve={false} initialValues={{ way: way, jobtrainingtype: jobtrainingtype, numPsWorker: 1 }}>
+    <Form form={form} preserve={false} initialValues={{ way: way, jobTrainingType: jobTrainingType, numPsWorker: 1 }}>
       <Form.Item
         label="模型名称"
         name="name"
@@ -76,18 +76,18 @@ const AddFormModal = (props, ref) => {
       </Form.Item>
       <Form.Item
         label="简介"
-        name="desc"
+        name="description"
         rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]} 
       >
         <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
       </Form.Item>
-      <Form.Item label="是否分布式训练" rules={[{ required: true }]} name="jobtrainingtype">
+      <Form.Item label="是否分布式训练" rules={[{ required: true }]} name="jobTrainingType">
         <Radio.Group onChange={e => setJobtrainingtype(e.target.value)}>
-          <Radio value={'PSDistJob'}>是</Radio>
-          <Radio value={'RegularJob'}>否</Radio>
+          <Radio value='PSDistJob'>是</Radio>
+          <Radio value='RegularJob'>否</Radio>
         </Radio.Group>
       </Form.Item>
-      {jobtrainingtype === 'PSDistJob' && <Form.Item
+      {jobTrainingType === 'PSDistJob' && <Form.Item
         label="节点数量"
         name="numPsWorker"
         rules={[
@@ -122,7 +122,7 @@ const AddFormModal = (props, ref) => {
         </Select>
       </Form.Item>
       {deviceType && <Form.Item
-        label={jobtrainingtype === 'PSDistJob' ? "每个节点设备数量" : "设备数量"}
+        label={jobTrainingType === 'PSDistJob' ? "每个节点设备数量" : "设备数量"}
         name="deviceNum"
         rules={[{ required: true, message: '请选择设备数量！' }]}
       >
@@ -132,7 +132,7 @@ const AddFormModal = (props, ref) => {
           ))}
         </Select>
       </Form.Item>}
-      {jobtrainingtype === 'PSDistJob' && <Form.Item
+      {jobTrainingType === 'PSDistJob' && <Form.Item
         label="设备总数"
         name="deviceTotal"
       >
