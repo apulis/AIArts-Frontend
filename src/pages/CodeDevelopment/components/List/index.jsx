@@ -126,7 +126,7 @@ const CodeList = (props) => {
     }
   }
 
-  const handleOpen = (item) => {
+  const handleOpen = (item) => { 
     apiOpenJupyter(item.id);
   }
 

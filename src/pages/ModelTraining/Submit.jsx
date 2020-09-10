@@ -7,7 +7,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
-import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
@@ -465,7 +465,7 @@ const ModelTraining = (props) => {
               : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
-        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
+        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, startUpFileReg]}>
           {
             isPretrainedModel || importedTrainingParams ? <Input style={{ width: 420 }} disabled={isPretrainedModel} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />

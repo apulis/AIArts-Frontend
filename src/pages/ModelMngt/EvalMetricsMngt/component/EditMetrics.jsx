@@ -8,7 +8,7 @@ import { fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, updateP
 
 import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
-import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 
 const { TextArea } = Input;
@@ -300,7 +300,7 @@ const EditMetrics = (props) => {
         >
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
-        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
+        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, startUpFileReg]}>
           <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>

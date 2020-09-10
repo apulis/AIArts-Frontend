@@ -20,3 +20,5 @@ export const getNameFromDockerImage = (tag) => {
   }
   return tag.replace(/(.+\/)/, '');
 };
+
+export const startUpFileReg = { pattern: /\.py|\.sh$/, message: '需要填写 python 或 shell 文件' }
