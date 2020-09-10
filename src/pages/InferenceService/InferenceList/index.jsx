@@ -48,7 +48,7 @@ const InferenceList = props => {
         })
       })
       jobSumary[0].label = jobSumary[0].label  + `（${total}）`
-      setJobSumary(jobSumary)
+      setJobSumary(jobSumary);
     }
   };
   
@@ -75,8 +75,6 @@ const InferenceList = props => {
       title: '作业名称',
       dataIndex: 'jobName',
       key: 'jobName',
-      // ellipsis: true,
-      // width: 150
       render(_text, item) {
         return (
           <Link to={`/Inference/${item.jobId}/detail`}>{item.jobName}</Link>
@@ -87,23 +85,14 @@ const InferenceList = props => {
     },
     {
       title: '使用模型',
-      // dataIndex: 'model',
-      // ellipsis: true,
-      // width: 100
       render: (text, item) => item.jobParams?.model_base_path,
     },
     {
       title: '状态',
-      // dataIndex: 'jobStatus',
-      // ellipsis: true,
-      // width: 100
       render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
       title: '引擎类型',
-      // dataIndex: 'engineType',
-      // ellipsis: true,
-      // width: 100,
       render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework),
     },
     {
@@ -111,35 +100,25 @@ const InferenceList = props => {
       dataIndex: 'jobTime',
       key: 'jobTime',
       render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
-      // ellipsis: true,
-      // width: 150,
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,         
     },
     {
       title: '运行时长',
-      // dataIndex: 'runDuration',
-      // ellipsis: true,
-      // width: 100,
       render: (text, item) => formatDuration(moment.duration(item.duration)),
     },
     {
       title: '服务地址',
-      // dataIndex: 'serverAddr',
       ellipsis: true,
-      // width: 100,
       render: (text, item) => item['inference-url'] ? item['inference-url'] : '',
     },
     {
       title: '描述',
       dataIndex: 'desc',
-      // ellipsis: true,
-      // width: 150
       render: (text, item) => item.jobParams?.desc
     },
     {
       title: '操作',
-      // width: 120,
       align: 'center',
       render: (item) => {
         return (
@@ -196,7 +175,8 @@ const InferenceList = props => {
     });
   };
 
-  const isStopDisabled = item =>{
+  const isStopDisabled = item => {
+    // TODO
     if(item.jobStatus === 'running' || item.jobStatus === 'queued' || item.jobStatus === 'scheduling'|| item.jobStatus === 'unapproved'){
       return false;
     }else{

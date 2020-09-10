@@ -10,21 +10,16 @@ let logTimer = null
 const VersionMngt = (props) => {
   // let logTimer = null // 放这访问不到
   const { Title, Paragraph, Text } = Typography;
-  const [initData, setInitData] = useState({})
-  const [vHistoryNum, setVHistoryNum] = useState(10)
-  const [versionInfo, setVersionInfo] = useState({})
-  const [versionLogs, setVersionLogs] = useState([])
-  const [upgradeText, setUpgradeText] = useState('一键升级')
-  const [upgrading, setUpgrading] = useState(false)
-  const [logs, setLogs] = useState('')
-  const [historyVisible, setHistoryVisible] = useState(false)
-  const [checkingFlag, setCheckingFlag] = useState(false)
-  useEffect(() => {
-    renderInit()
-    return () => {
-      clearInterval(logTimer)
-    }
-  }, [])
+  const [initData, setInitData] = useState({});
+  const [vHistoryNum, setVHistoryNum] = useState(10);
+  const [versionInfo, setVersionInfo] = useState({});
+  const [versionLogs, setVersionLogs] = useState([]);
+  const [upgradeText, setUpgradeText] = useState('一键升级');
+  const [upgrading, setUpgrading] = useState(false);
+  const [logs, setLogs] = useState('');
+  const [historyVisible, setHistoryVisible] = useState(false);
+  const [checkingFlag, setCheckingFlag] = useState(false);
+
   const renderInit = async () => {
     const result = await apiGetInitData()
     if (result) {
@@ -41,6 +36,14 @@ const VersionMngt = (props) => {
       }
     }
   }
+
+  useEffect(() => {
+    renderInit();
+    return () => {
+      clearInterval(logTimer);
+    }
+  }, []);
+
   const upgradIngStatusHandler = async (logData) => {
     switch (logData.status) {
       case 'not ready':
@@ -58,6 +61,7 @@ const VersionMngt = (props) => {
         break
     }
   }
+
   const upgradeManager = async (step) => {
     switch (step) {
       case 'init':
@@ -124,16 +128,16 @@ const VersionMngt = (props) => {
         break
     }
   }
+
   const apiGetInitData = async () => {
     const { code, data, msg } = await getInitData()
     let return_data = null
     if (code === 0) {
-      return_data = data
-    } else {
-      message.error('请求异常');
+      return data
     }
-    return return_data
+    message.error('请求异常');
   }
+
   const apiGetUpgradeInfo = async () => {
     const { code, data, msg } = await getUpgradeInfo()
     let return_data = null
@@ -144,6 +148,7 @@ const VersionMngt = (props) => {
     }
     return return_data
   }
+
   const apiUpgrade = async () => {
     const { code, data, msg } = await upgrade()
     switch (code) {
@@ -170,6 +175,7 @@ const VersionMngt = (props) => {
     }
     return false
   }
+
   const apiGetUpgradeLog = async () => {
     const { code, data, msg } = await getUpgradeLog()
     let return_data = null
@@ -218,7 +224,7 @@ const VersionMngt = (props) => {
       <Descriptions title="本地升级" style={{ marginTop: "30px" }}>
       </Descriptions>
       <div>
-        <Button type="primary" onClick={() => { if (!checkingFlag) upgradeManager('check') }} disabled={upgradeText === '一键升级' ? false : true}>
+        <Button type="primary" onClick={() => { if (!checkingFlag) upgradeManager('check') }} disabled={upgradeText !== '一键升级'}>
           {upgradeText}
         </Button>
         {upgrading && <div style={{ height: '120px', marginTop: '14px' }}>
@@ -242,11 +248,11 @@ const VersionMngt = (props) => {
           )}
         </Timeline>
           <div style={{ display: 'flex', justifyContent: 'center', position: 'absolute', width: '100%', bottom: '10px' }}>
-            <Button type='primary' onClick={() => { handleLoadMoreHistory() }}>
+            <Button type='primary' onClick={ handleLoadMoreHistory }>
               更多历史
             </Button>
           </div>
-        </div>
+        </div> 
       </Modal>}
     </Card>
   )

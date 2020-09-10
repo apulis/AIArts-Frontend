@@ -9,6 +9,8 @@ import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
+import { beforeSubmitJob } from '@/models/resource';
+import { connect } from 'dva';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -116,7 +118,6 @@ const ModelTraining = (props) => {
         codePath: subCodePathPrefix(paramsDetailedData.params.codePath),
         startupFile: subCodePathPrefix(paramsDetailedData.params.startupFile),
       }
-      console.log('newParams', newParams)
       setParamsDetailedData({
         ...paramsDetailedData,
         params: newParams
@@ -215,6 +216,11 @@ const ModelTraining = (props) => {
     }
   }, [presetParamsVisible]);
 
+  useEffect(() => {
+    props.dispatch({
+      type: 'resource/fetchResource'
+    })
+  }, [])
 
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -253,13 +259,28 @@ const ModelTraining = (props) => {
       if (values.jobtrainingtype === 'PSDistJob') {
         values.numPs = 1;
       }
-      const cancel = message.loading('正在提交');
-      const res = await submitModelTraining(values);
-      cancel();
-      if (res.code === 0) {
-        message.success('成功创建');
-        history.push('/model-training/modelTraining');
+      const submitJobInner = async () => {
+        const cancel = message.loading('正在提交');
+        const res = await submitModelTraining(values);
+        cancel();
+        if (res.code === 0) {
+          message.success('成功创建');
+          history.push('/model-training/modelTraining');
+        }
       }
+      if (!beforeSubmitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
+        Modal.confirm({
+          title: '当前暂无可用训练设备，继续提交将会进入等待队列',
+          content: '是否继续',
+          onOk() {
+            submitJobInner()
+          },
+          onCancel() {}
+        })
+      } else {
+        submitJobInner();
+      }
+      
     }
   };
   const addParams = () => {
@@ -326,6 +347,7 @@ const ModelTraining = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
+    setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
   };
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
@@ -346,7 +368,9 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
-      setCurrentDeviceType(currentSelected.params.deviceType);
+      const deviceType = currentSelected.params.deviceType;
+      setCurrentDeviceType(deviceType);
+      setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
@@ -652,7 +676,7 @@ const ModelTraining = (props) => {
                       引擎类型
                   </Col>
                     <Col span={19}>
-                      {p.params.engine}
+                      {getNameFromDockerImage(p.params.engine)}
                     </Col>
                   </Row>
                 </TabPane>
@@ -662,7 +686,6 @@ const ModelTraining = (props) => {
           }
 
         </Form>
-
       </Modal>
       <Button type="primary" style={{ float: 'right', marginBottom: '16px' }} onClick={handleSubmit}>{typeEdit ? '保存' : '立即创建'}</Button>
     </div>
@@ -671,4 +694,4 @@ const ModelTraining = (props) => {
 };
 
 
-export default ModelTraining;
+export default connect(({ resource }) => ({ resource }))(ModelTraining);

@@ -8,7 +8,7 @@ import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/i
 import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 import { fetchAvilableResource } from '@/services/modelTraning';
-import { jobNameReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import { fetchPresetTemplates } from './services';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { formatParams } from '@/utils/utils';
@@ -148,7 +148,9 @@ const CreatePretrained = props => {
         delete currentSelected.params.name
       }
 
-      setFieldsValue(currentSelected.params);
+      setFieldsValue({
+        ...currentSelected.params, 
+      });
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params|| {}).map(item => {
         var obj = {};
@@ -553,7 +555,7 @@ const CreatePretrained = props => {
                       引擎类型
                   </Col>
                     <Col span={19}>
-                      {p.params.engine}
+                      {getNameFromDockerImage(p.params.engine)}
                     </Col>
                   </Row>
                 </TabPane>

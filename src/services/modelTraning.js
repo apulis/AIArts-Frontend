@@ -1,5 +1,9 @@
+import Request from 'umi-request';
 import request from '../utils/request';
 import { modelTrainingType } from '@/utils/const';
+
+const CancelToken = Request.CancelToken;
+
 
 export async function submitModelTraining(data) {
   return await request('/trainings', {
@@ -27,12 +31,19 @@ export async function fetchTrainingList({ pageNum, pageSize, status, search, sor
 }
 
 export async function fetchTrainingDetail(id) {
-  return await request(`/trainings/${id}`);
+  return await request(`/trainings/${id}`, {
+    cancelToken: new CancelToken(function(c) {
+      fetchTrainingDetail.cancel = c;
+    })
+  });
 }
 
 export async function fetchTrainingLog(id, page) {
   return await request(`/trainings/${id}/log`, {
-    params: { pageNum: page }
+    params: { pageNum: page },
+    cancelToken: new CancelToken(function(c) {
+      fetchTrainingLog.cancel = c;
+    })
   });
 }
 
@@ -88,7 +99,6 @@ export async function fetchPresetTemplates() {
       jobType: modelTrainingType,
       scope: 3,
     }
-
   });
 }
 
