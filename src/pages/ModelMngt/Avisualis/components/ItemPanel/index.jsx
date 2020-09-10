@@ -1,8 +1,8 @@
-import { message, Form, Input, Button, Radio, Select, Descriptions, InputNumber  } from 'antd';
+import { message, Form, Input, Button, Select, Descriptions, InputNumber } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
 import { history } from 'umi';
-import { submitAvisualis, getAvisualis } from '../../service';
+import { submitAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
 import _ from 'lodash';
@@ -11,17 +11,16 @@ const { Option } = Select;
 
 const ItemPanel = (props) => {
   const [form] = Form.useForm();
-  const { avisualis, flowChartData, selectItem } = props;
+  const { avisualis, flowChartData, selectItem, setFlowChartData, id } = props;
   const { addFormData } = avisualis;
+  const [btnLoading, setBtnLoading] = useState(false);
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
-  }
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   const onSubmit = async() => {
+    setBtnLoading(true);
     const _addFormData = _.cloneDeep(addFormData);
     const _flowChartData = _.cloneDeep(flowChartData);
     if (_addFormData.deviceType === 'PSDistJob') {
@@ -54,12 +53,13 @@ const ItemPanel = (props) => {
       message.success('创建成功！');
       history.push('/ModelManagement/avisualis');
     }
+    setBtnLoading(false);
   }
 
   const getConfig = () => {
     const { config } = selectItem._cfg.model;
     return config.map(i => {
-      const { type, value, key } = i;
+      const { type, value, key, options } = i;
       if (type === 'string' || type === 'disabled') {
         return (
         <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
@@ -72,9 +72,9 @@ const ItemPanel = (props) => {
         </Form.Item>)
       } else if (type === 'select') {
         return (
-        <Form.Item name={key} label={key} rules={[{ required: true, message: `请选择${key}！` }]}>
+        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
           <Select placeholder="请选择">
-            {value.map(o => <Option key={o} value={o}>{o}</Option>)}
+            {options.map(o => <Option key={o} value={o}>{o}</Option>)}
           </Select>
         </Form.Item>)
       }
@@ -83,7 +83,14 @@ const ItemPanel = (props) => {
 
   const onSaveConfig = () => {
     form.validateFields().then(async (values) => {
-
+      const newValues = Object.keys(values).map(i => values[i]);
+      const cloneData = _.cloneDeep(flowChartData);
+      const selectIdx = selectItem._cfg.model.idx;
+      cloneData.nodes[selectIdx].config.forEach((m, n) => {
+        m.value = newValues[n];
+      });
+      setFlowChartData(cloneData);
+      message.success('保存成功！');
     })
   }
 
@@ -96,7 +103,7 @@ const ItemPanel = (props) => {
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        <Button type="primary" onClick={onSubmit}>创建模型</Button>
+        <Button type="primary" loading={btnLoading} onClick={onSubmit}>{id ? '保存模型' : '创建模型'}</Button>
       </div>
       {selectItem ?
         <>
@@ -113,8 +120,6 @@ const ItemPanel = (props) => {
       </Descriptions>}
     </div>
   );
-
- 
 };
 
 export default connect(({ avisualis }) => ({ avisualis }))(ItemPanel);

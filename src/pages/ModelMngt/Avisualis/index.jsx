@@ -1,6 +1,6 @@
-import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select } from 'antd';
+import { message, Table, Modal, Input, Button, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef, useForm } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getAvisualis, deleteAvisualis } from './service';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import styles from './index.less';
@@ -12,10 +12,8 @@ import AddFormModal from './components/AddFormModal';
 
 const { confirm } = Modal;
 const { Search } = Input;
-const { Option } = Select;
 
 const Avisualis = () => {
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const [avisualisData, setAvisualisData] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);

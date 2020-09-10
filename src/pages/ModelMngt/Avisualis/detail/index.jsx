@@ -1,6 +1,8 @@
-import { message, Table, Modal, Form, Input, Button, Card, TextArea, Radio, Select, Tree, PageHeader } from 'antd';
+
+
+import { Modal, Form, Input, Card, Tree } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef, useForm } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getPanel, getAvisualisDetail } from '../service';
 import styles from './index.less';
 import { useDispatch, history } from 'umi';
@@ -16,9 +18,7 @@ const AvisualisDetail = (props) => {
   const { avisualis, location } = props;
   const { type, id } = location.query;
   const dispatch = useDispatch();
-  const [form] = Form.useForm();
   const [panelData, setPanelData] = useState([]);
-  const [btnLoading, setBtnLoading] = useState(false);
   const flowChartRef = useRef();
   const [apiData, setApiData] = useState({ panel: [] });
   const [loading, setLoading] = useState(true);

@@ -272,7 +272,12 @@ const FlowChart = (props, ref) => {
         {loading ? <PageLoading /> : null}
       </div>
       <Card title={false} style={{ position: 'relative' }}>
-        <ItemPanel flowChartData={flowChartData} selectItem={selectItem} />
+        <ItemPanel
+          flowChartData={flowChartData}
+          selectItem={selectItem}
+          setFlowChartData={setFlowChartData}
+          id={id}
+        />
       </Card>
     </>
   );
