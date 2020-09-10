@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
 import { Table, Select, Space, Button, Row, Col, Input, message, Modal, Form } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
+import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount, createSaveImage } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
@@ -10,6 +10,7 @@ import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap
 import { getNameFromDockerImage } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
+import FormItem from 'antd/lib/form/FormItem';
 
 
 const { Search } = Input;
@@ -27,6 +28,7 @@ const CodeList = (props) => {
   const [searchObj, setSearchObj] = useState({})
   const [modalFlag, setModalFlag] = useState(false);
   const [modalData, setModalData] = useState({})
+  const [currentHandledJobId, setCurrentHandledJobId] = useState('')
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
@@ -240,6 +242,11 @@ const CodeList = (props) => {
     wrapperCol: { span: 12 },
   };
 
+  const toSaveImage = (id) => {
+    setSaveImageModalVisible(true);
+    setCurrentHandledJobId(id);
+  }
+
   const columns = [
     {
       title: '开发环境名称',
@@ -292,7 +299,7 @@ const CodeList = (props) => {
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
             <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
-            <a onClick={() => {setSaveImageModalVisible(true)}}>保存镜像</a>
+            <a onClick={() => toSaveImage(codeItem.id)}>保存镜像</a>
           </Space>
         );
       },
@@ -334,7 +341,7 @@ const CodeList = (props) => {
   }, [curStatus]);
 
   useEffect(() => {
-    if(isReady){
+    if (isReady) {
       if (searchObj.type != undefined) {
         const type = searchObj.type;
         if (type === 'search') {
@@ -346,9 +353,17 @@ const CodeList = (props) => {
     }
   }, [searchObj]);
 
-  const handleSaveImage = () => {
-    setSaveImageModalVisible(false);
-    //
+  const handleSaveImage = async () => {
+    if (currentHandledJobId) {
+      const values = await form.validateFields()
+      values.isPrivate = true
+      values.jobId = currentHandledJobId
+      const res = await createSaveImage(values);
+      if (res.code === 0) {
+        renderTable();
+        setSaveImageModalVisible(false);
+      }
+    }
   }
 
   return (
@@ -415,7 +430,7 @@ const CodeList = (props) => {
       <Modal
         title="保存镜像"
         visible={saveImageModalVisible}
-        onCancel={() => {setSaveImageModalVisible(false)}}
+        onCancel={() => {setSaveImageModalVisible(false);setCurrentHandledJobId('')}}
         onOk={() => {handleSaveImage()}}
       >
         <Form
@@ -424,10 +439,10 @@ const CodeList = (props) => {
           <Form.Item {...commonLayout} label="名称" name="name" rules={[{required: true}]}>
             <Input style={{width: '280px'}} />
           </Form.Item>
-          <Form.Item {...commonLayout} label="描述" name="desc">
+          <Form.Item {...commonLayout} label="版本" name="version" rules={[{required: true}]}>
             <Input style={{width: '280px'}} />
           </Form.Item>
-          <Form.Item {...commonLayout} label="版本" name="version">
+          <Form.Item {...commonLayout} label="描述" name="description" rules={[{required: true}]}>
             <Input style={{width: '280px'}} />
           </Form.Item>
         </Form>

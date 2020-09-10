@@ -2,7 +2,6 @@ import Request from 'umi-request';
 import request from '@/utils/request';
 import { statusMap } from './serviceController'
 import { deleteJob } from '@/services/modelTraning'
-import { forEach } from 'lodash';
 
 const CancelToken = Request.CancelToken;
 
@@ -65,4 +64,11 @@ export async function getCodeCount() {
     myRes['data'] = myData
   }
   return myRes
+}
+
+export async function createSaveImage(data) {
+  return await request('/saved_imgs', {
+    method: 'POST',
+    data
+  })
 }
