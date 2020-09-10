@@ -18,7 +18,6 @@ const { Option } = Select;
 const CodeList = (props) => {
   const searchRef = useRef(null);
   const [isReady,setIsReady] = useState(false);
-  const searchRef = useRef(null)
   const [form] = Form.useForm();
   const [codes, setCodes] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
