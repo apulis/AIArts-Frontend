@@ -361,6 +361,9 @@ const CodeList = (props) => {
           <Form.Item {...commonLayout} label="描述" name="desc">
             <Input style={{width: '280px'}} />
           </Form.Item>
+          <Form.Item {...commonLayout} label="版本" name="version">
+            <Input style={{width: '280px'}} />
+          </Form.Item>
         </Form>
       </Modal>
     </>
