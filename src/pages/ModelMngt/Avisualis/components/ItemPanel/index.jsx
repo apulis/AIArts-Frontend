@@ -115,11 +115,15 @@ const ItemPanel = (props) => {
       </div>
       {selectItem ?
         <>
-          <div className="ant-descriptions-title">节点配置</div>
+          <div className="ant-descriptions-title">{`${selectItem._cfg.model.config.length > 0 ? '节点配置' : '该节点无配置项'}`}</div>
           <Form form={form}>
             {getConfig()}
           </Form>
-          <Button type="primary" onClick={onSaveConfig} style={{ marginLeft: 16, float: 'right' }}>保存配置</Button>
+          <div style={{ float: 'right', textAlign: 'right' }}>
+            {selectItem._cfg.model.config.length > 0 && 
+            <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
+            <Button type="primary" onClick={onSaveConfig}>更换节点</Button>
+          </div>
         </> :
         <Descriptions column={1} title="模型详情">
         <Descriptions.Item label="模型名称">{addFormData.name || '--'}</Descriptions.Item>

@@ -40,9 +40,9 @@ const FlowChart = forwardRef((props, ref) => {
         drawShape(cfg, group) {
           const rect = group.addShape('rect', {
             attrs: {
-              x: -125,
+              x: -140,
               y: -25,
-              width: 250,
+              width: 280,
               height: 50,
               radius: 10,
               stroke: '#1890ff',
