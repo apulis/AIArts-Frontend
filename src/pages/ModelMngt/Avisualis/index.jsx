@@ -32,7 +32,7 @@ const Avisualis = () => {
     getData();
   }, [pageParams, sortedInfo]);
 
-  const getData = async () => {
+  const getData = async (text) => {
     setLoading(true);
     const params = { 
       ...pageParams, 
@@ -48,6 +48,7 @@ const Avisualis = () => {
         data: models,
         total: total,
       });
+      text && message.success(text);
     }
     setLoading(false);
   };
