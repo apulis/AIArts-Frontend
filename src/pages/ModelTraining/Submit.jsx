@@ -47,7 +47,7 @@ const ModelTraining = (props) => {
   if (requestType === 'PretrainedModel') {
     isFromPresetModel = true;
   }
-  const goBackPath = isFromPresetModel ? '/ModelManagement/PretrainedModels' : (readParam ? '/model-training/paramsManage' : '/model-training/modelTraining');
+  const goBackPath = isFromPresetModel ? '/model-training/PretrainedModels' : (readParam ? '/model-training/paramsManage' : '/model-training/modelTraining');
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
