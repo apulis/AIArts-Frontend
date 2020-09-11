@@ -26,3 +26,10 @@ export async function deleteAvisualis(id) {
     method: 'DELETE'
   });
 }
+
+export async function patchAvisualis(id, data) {
+  return await request(`/models/${id}`, {
+    method: 'POST',
+    data: data,
+  });
+}

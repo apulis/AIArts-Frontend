@@ -2,6 +2,7 @@ export default {
   namespace: 'avisualis',
   state: {
     addFormData: {},
+    panelApiData: { panel: [] }
   },
   reducers: {
     // 更新 state

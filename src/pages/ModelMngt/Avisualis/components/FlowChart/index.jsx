@@ -5,8 +5,8 @@ import G6 from '@antv/g6';
 import insertCss from 'insert-css';
 import { PageLoading } from '@ant-design/pro-layout';
 import ItemPanel from '../ItemPanel';
-import { getAvisualisDetail } from '../../service';
 import _ from 'lodash';
+import { connect } from 'dva';
 
 insertCss(`
   .g6-minimap-container {
@@ -17,12 +17,13 @@ insertCss(`
   }
 `);
 
-const FlowChart = (props, ref) => {
-  const { id, transformData, apiData, detailData } = props;
+const FlowChart = forwardRef((props, ref) => {
+  const { id, transformData, detailData, avisualis } = props;
   const [graph, setGraph] = useState(null);
   const [flowChartData, setFlowChartData] = useState(detailData);
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
+  const { panelApiData } = avisualis;
 
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd
@@ -39,9 +40,9 @@ const FlowChart = (props, ref) => {
         drawShape(cfg, group) {
           const rect = group.addShape('rect', {
             attrs: {
-              x: -125,
+              x: -140,
               y: -25,
-              width: 250,
+              width: 280,
               height: 50,
               radius: 10,
               stroke: '#1890ff',
@@ -74,32 +75,32 @@ const FlowChart = (props, ref) => {
     const minimap = new G6.Minimap({
       size: [150, 100],
     });
-    // const toolbar = new G6.ToolBar({
-    //   getContent: () => {
-    //     return `
-    //       <ul>
-    //         <li code='add'>测试</li>
-    //         <li code="autoZoom">
-    //           <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="24">
-    //             <path d="M684.288 305.28l0.128-0.64-0.128-0.64V99.712c0-19.84 15.552-35.904 34.496-35.712a35.072 35.072 0 0 1 34.56 35.776v171.008h170.944c19.648 0 35.84 15.488 35.712 34.432a35.072 35.072 0 0 1-35.84 34.496h-204.16l-0.64-0.128a32.768 32.768 0 0 1-20.864-7.552c-1.344-1.024-2.816-1.664-3.968-2.816-0.384-0.32-0.512-0.768-0.832-1.088a33.472 33.472 0 0 1-9.408-22.848zM305.28 64a35.072 35.072 0 0 0-34.56 35.776v171.008H99.776A35.072 35.072 0 0 0 64 305.216c0 18.944 15.872 34.496 35.84 34.496h204.16l0.64-0.128a32.896 32.896 0 0 0 20.864-7.552c1.344-1.024 2.816-1.664 3.904-2.816 0.384-0.32 0.512-0.768 0.768-1.088a33.024 33.024 0 0 0 9.536-22.848l-0.128-0.64 0.128-0.704V99.712A35.008 35.008 0 0 0 305.216 64z m618.944 620.288h-204.16l-0.64 0.128-0.512-0.128c-7.808 0-14.72 3.2-20.48 7.68-1.28 1.024-2.752 1.664-3.84 2.752-0.384 0.32-0.512 0.768-0.832 1.088a33.664 33.664 0 0 0-9.408 22.912l0.128 0.64-0.128 0.704v204.288c0 19.712 15.552 35.904 34.496 35.712a35.072 35.072 0 0 0 34.56-35.776V753.28h170.944c19.648 0 35.84-15.488 35.712-34.432a35.072 35.072 0 0 0-35.84-34.496z m-593.92 11.52c-0.256-0.32-0.384-0.768-0.768-1.088-1.088-1.088-2.56-1.728-3.84-2.688a33.088 33.088 0 0 0-20.48-7.68l-0.512 0.064-0.64-0.128H99.84a35.072 35.072 0 0 0-35.84 34.496 35.072 35.072 0 0 0 35.712 34.432H270.72v171.008c0 19.84 15.552 35.84 34.56 35.776a35.008 35.008 0 0 0 34.432-35.712V720l-0.128-0.64 0.128-0.704a33.344 33.344 0 0 0-9.472-22.848zM512 374.144a137.92 137.92 0 1 0 0.128 275.84A137.92 137.92 0 0 0 512 374.08z"></path>
-    //           </svg>
-    //         </li>
-    //       </ul>
-    //     `
-    //   },
-    //   handleClick: (code, graph) => {
-    //     if (code === 'add') {
-    //       graph.addItem('node', {
-    //         id: 'node2',
-    //         label: 'node2',
-    //         x: 300,
-    //         y: 150
-    //       })
-    //     } else if (code === 'undo') {
-    //       toolbar.undo()
-    //     }
-    //   }
-    // });
+    const toolbar = new G6.ToolBar({
+      getContent: () => {
+        return `
+          <ul>
+            <li code="delete">
+              <span role="img" aria-label="delete" class="anticon anticon-delete"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg></span>
+            </li>
+              <li code="realZoom">
+              <span role="img" aria-label="border-outer" class="anticon anticon-border-outer"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="border-outer" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M880 112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656zM484 366h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zM302 548h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm364 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-182 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm0 182h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8z"></path></svg></span>
+            </li>
+            <li code="autoZoom">
+              <span role="img" aria-label="compress" class="anticon anticon-compress"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="compress" width="1em" height="1em" fill="currentColor" aria-hidden="true"><defs><style></style></defs><path d="M326 664H104c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V696c0-17.7-14.3-32-32-32zm16-576h-48c-8.8 0-16 7.2-16 16v176H104c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V104c0-8.8-7.2-16-16-16zm578 576H698c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V744h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0-384H746V104c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16z"></path></svg></span>
+            </li>
+          </ul>
+        `
+      },
+      handleClick: (code, graph) => {
+        if (code === 'realZoom') {
+          graph.fitCenter();
+        } else if (code === 'autoZoom') {
+          graph.fitView();
+        }else if (code === 'delete') {
+          deleteNode(graph);
+        }
+      }
+    });
     let _graph = new G6.Graph({
       container: 'container',
       width: 800,
@@ -146,20 +147,18 @@ const FlowChart = (props, ref) => {
           "customer-events",
         ]
       },
-      plugins: [minimap],
+      plugins: [minimap, toolbar],
     });
     _graph.data(flowChartData);
     _graph.render();
 
     _graph.on('node:mouseenter', e => {
-      const nodeItem = e.item; // 获取鼠标进入的节点元素对象
-      _graph.setItemState(nodeItem, 'hover', true); // 设置当前节点的 hover 状态为 true
+      _graph.setItemState(e.item, 'hover', true); // 设置当前节点的 hover 状态为 true
     });
     
     // 鼠标离开节点
     _graph.on('node:mouseleave', e => {
-      const nodeItem = e.item; // 获取鼠标离开的节点元素对象
-      _graph.setItemState(nodeItem, 'hover', false); // 设置当前节点的 hover 状态为 false
+      _graph.setItemState(e.item, 'hover', false); // 设置当前节点的 hover 状态为 false
     });
 
     // Click a node
@@ -168,24 +167,18 @@ const FlowChart = (props, ref) => {
       clickNodes.forEach(cn => {
         _graph.setItemState(cn, 'click', false);
       });
-      const nodeItem = e.item; // et the clicked item
+      const nodeItem = e.item;
       _graph.setItemState(nodeItem, 'click', true); // Set the state 'click' of the item to be true
       setSelectItem(nodeItem);
     });
 
+    _graph.on('canvas:click', e => {
+      setSelectItem(null);
+    });
+
     _graph.on('keydown', e => {
       const { keyCode } = e;
-      const allNodes = _graph.get('nodes');
-      const selectedItem = _graph.findAllByState("node", "selected");
-      if ((keyCode === 8 || keyCode === 46) && selectedItem && selectedItem.length) {
-        const _id = selectedItem[0]._cfg.id;
-        allNodes.forEach(i => {
-          if (i._cfg.id === _id) {
-            deleteNode(_graph, apiData);
-            return;
-          }
-        })
-      }
+      if (keyCode === 8 || keyCode === 46) deleteNode(_graph);
     });
 
     _graph.fitCenter();
@@ -235,36 +228,50 @@ const FlowChart = (props, ref) => {
     setSelectItem(null);
   }
 
-  const deleteNode = (_graph, apiData) => {
-    let newData = _.cloneDeep(_graph);
-    const { nodes, edges } = newData.cfg;
-    nodes && nodes.length && nodes.pop();
-    edges && edges.length && edges.pop();
-    const newNodes = nodes.map(i => {
-      const { id, name, config } = i._cfg.model;
-      return {
-        id: id,
-        name: name,
-        config: config
+  const deleteNode = (graph) => {
+    const allNodes = graph.get('nodes');
+    const selectedItem = graph.findAllByState("node", "selected");
+    if (selectedItem && selectedItem.length) {
+      const _id = selectedItem[0]._cfg.id;
+      if (_id !== allNodes[allNodes.length - 1]._cfg.id) {
+        message.warning('只能按照模型顺序依次删除！');
+        return;
       }
-    })
-    const newEdges = edges.map(i => {
-      const { source, target } = i._cfg.model;
-      return {
-        source: source,
-        target: target
-      }
-    })
-    const temp = {
-      nodes: newNodes,
-      edges: newEdges
-    };
-    setFlowChartData(temp);
-    _graph.changeData(temp);
-    _graph.fitCenter();
-    transformData(apiData, temp);
+      allNodes.forEach(i => {
+        if (i._cfg.id === _id) {
+          let newData = _.cloneDeep(graph);
+          const { nodes, edges } = newData.cfg;
+          nodes && nodes.length && nodes.pop();
+          edges && edges.length && edges.pop();
+          const newNodes = nodes.map(i => {
+            const { id, name, config } = i._cfg.model;
+            return {
+              id: id,
+              name: name,
+              config: config
+            }
+          })
+          const newEdges = edges.map(i => {
+            const { source, target } = i._cfg.model;
+            return {
+              source: source,
+              target: target
+            }
+          })
+          const temp = {
+            nodes: newNodes,
+            edges: newEdges
+          };
+          setFlowChartData(temp);
+          graph.changeData(temp);
+          graph.fitCenter();
+          transformData(panelApiData.panel, temp);
+          setSelectItem(null);
+          return;
+        }
+      })
+    }
   }
-
 
   return (
     <>
@@ -281,6 +288,11 @@ const FlowChart = (props, ref) => {
       </Card>
     </>
   );
-};
+});
 
-export default forwardRef(FlowChart);
+const mapStateToProps = (state) => {
+  return {
+    avisualis: state.avisualis
+  }
+}
+export default connect(mapStateToProps, null, null, { forwardRef: true })(FlowChart);

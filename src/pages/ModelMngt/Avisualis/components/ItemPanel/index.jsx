@@ -1,8 +1,8 @@
 import { message, Form, Input, Button, Select, Descriptions, InputNumber } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
-import { history } from 'umi';
-import { submitAvisualis } from '../../service';
+import { history, useDispatch } from 'umi';
+import { submitAvisualis, patchAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
 import _ from 'lodash';
@@ -10,16 +10,18 @@ import _ from 'lodash';
 const { Option } = Select;
 
 const ItemPanel = (props) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const { avisualis, flowChartData, selectItem, setFlowChartData, id } = props;
-  const { addFormData } = avisualis;
+  const { addFormData, panelApiData } = avisualis;
   const [btnLoading, setBtnLoading] = useState(false);
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-
   const onSubmit = async() => {
+    const { nodes, edges } = flowChartData;
+    if (nodes.length !== panelApiData.panel.length) {
+      message.warning('请完成剩余步骤！');
+      return;
+    }
     setBtnLoading(true);
     const _addFormData = _.cloneDeep(addFormData);
     const _flowChartData = _.cloneDeep(flowChartData);
@@ -27,7 +29,6 @@ const ItemPanel = (props) => {
       _addFormData.numPs = 1;
       _addFormData.deviceNum = _addFormData.deviceTotal;
     }
-    const { nodes, edges } = flowChartData;
     _addFormData.datasetPath = nodes[0].config[0].value;
     _addFormData.outputPath = nodes[nodes.length - 1].config[0].value;
     _addFormData.paramPath = _addFormData.outputPath;
@@ -44,13 +45,20 @@ const ItemPanel = (props) => {
         target: target
       }
     });
-    const { code, data } = await submitAvisualis({
+    const submitData = {
       ..._addFormData,
       nodes: newNodes,
-      edges: newEdges
-    });
+      edges: newEdges,
+    };
+    const { code, data } = id ? await patchAvisualis(id, submitData) : await submitAvisualis(submitData);
     if (code === 0) {
-      message.success('创建成功！');
+      message.success(`${id ? '保存' : '创建'}成功！`);
+      dispatch({
+        type: 'avisualis/saveData',
+        payload: {
+          addFormData: {}
+        }
+      });
       history.push('/ModelManagement/avisualis');
     }
     setBtnLoading(false);
@@ -107,11 +115,15 @@ const ItemPanel = (props) => {
       </div>
       {selectItem ?
         <>
-          <div className="ant-descriptions-title">节点配置</div>
+          <div className="ant-descriptions-title">{`${selectItem._cfg.model.config.length > 0 ? '节点配置' : '该节点无配置项'}`}</div>
           <Form form={form}>
             {getConfig()}
           </Form>
-          <Button type="primary" onClick={onSaveConfig} style={{ marginLeft: 16, float: 'right' }}>保存配置</Button>
+          <div style={{ float: 'right', textAlign: 'right' }}>
+            {selectItem._cfg.model.config.length > 0 && 
+            <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
+            <Button type="primary" onClick={onSaveConfig}>更换节点</Button>
+          </div>
         </> :
         <Descriptions column={1} title="模型详情">
         <Descriptions.Item label="模型名称">{addFormData.name || '--'}</Descriptions.Item>
