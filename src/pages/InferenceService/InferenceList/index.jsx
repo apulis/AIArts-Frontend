@@ -8,10 +8,11 @@ import { connect } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
-import { fetchJobStatusSumary } from './services';
+import { fetchJobStatusSumary, getInferences } from './services';
 import { statusList } from '@/pages/ModelTraining/List';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
+import useInterval from '@/hooks/useInterval';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -54,7 +55,16 @@ const InferenceList = props => {
   
   useEffect(() => {
     getJobStatusSumary();
+    return () => {
+      fetchJobStatusSumary.cancel && fetchJobStatusSumary.cancel();
+      getInferences.cancel && getInferences.cancel();
+    }
   }, []);
+
+  useInterval(() => {
+    getJobStatusSumary();
+    handleSearch();
+  }, props.common.interval)
 
   useEffect(() => {
     handleSearch();
@@ -295,7 +305,8 @@ const InferenceList = props => {
   );
 };
 
-export default connect(({ inferenceList, loading }) => ({
+export default connect(({ inferenceList, loading, common }) => ({
   inferenceList,
   loading: loading.models.inferenceList,
+  common,
 }))(InferenceList);

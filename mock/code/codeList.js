@@ -88,8 +88,3 @@ function deleteCode(req, res, u, b){
 
 }
 
-export default {
-  'GET /ai_arts/api/codes': getCodes,
-  'POST /ai_arts/api/code': postCode,
-  'DELETE /ai_arts/api/code':deleteCode// code/??动态路由匹配
-};

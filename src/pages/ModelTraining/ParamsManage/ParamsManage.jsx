@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Select, Card, message } from 'antd';
-import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Modal, Table, Input, Button, Select, Card, message, Upload } from 'antd';
+import { SyncOutlined, ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
+import { fetchTemplates, removeTemplate, fetchTemplateById, saveTrainingParams } from '../../../services/modelTraning';
 import { PAGEPARAMS, sortText, modelTrainingType } from '@/utils/const';
 import { getNameFromDockerImage } from '@/utils/reg.js';
 import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
 import styles from '@/global.less';
+import { downloadStringAsFile } from '@/utils/utils';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -21,11 +22,13 @@ const ParamsManage = () => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [importedParamsModalVisible, setImportedParamsModalVisible] = useState(false);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: ''
   });
   const [currentScope, setCurrentScope] = useState(3);
+  const [uploadParamsObj, setUploadParamsObj] = useState(undefined);
   const scopeList = [
     { value: 3, label: '全部' },
     { value: 1, label: '公有' },
@@ -70,6 +73,23 @@ const ParamsManage = () => {
     });
   };
 
+  const saveTemplateAsFile = async (id, name) => {
+    const cancel = message.loading();
+    const res = await fetchTemplateById(id);
+    if (res.code === 0) {
+      cancel();
+      const metaData = res.data.metaData
+      if (metaData) {
+        delete metaData.creator;
+        delete metaData.createdAt;
+        delete metaData.updatedAt;
+        delete metaData.id;
+      }
+      const data = JSON.stringify(res.data, null, 2)
+      downloadStringAsFile(data, `${name}.json`);
+    }
+  }
+
   const columns = [
     {
       title: '参数配置名称',
@@ -108,11 +128,13 @@ const ParamsManage = () => {
       title: '操作',
       render: item => {
         const id = item.metaData.id;
+        const name = item.params.name;
         return (
           <>
             <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
+            <a style={{marginLeft: '12px'}} onClick={() => saveTemplateAsFile(id, name)}>导出为文件</a>
           </>
         );
       },
@@ -162,6 +184,36 @@ const ParamsManage = () => {
     handleSearch();
   }, [pageParams, sortedInfo]);
 
+  const beforeUpload = (file) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const result = JSON.parse(e.target.result)
+        const newTemplate = {}
+        newTemplate.scope = result.metaData?.scope;
+        newTemplate.jobType = result.metaData?.jobType;
+        newTemplate.templateData = Object.assign({}, result.params)
+
+        setUploadParamsObj(newTemplate);
+      } catch (err) {
+        message.error(err);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  const saveFileAsTemplate = async () => {
+    if (!uploadParamsObj) {
+      message.error('没有可用的内容');
+      return;
+    }
+    const res = await saveTrainingParams(uploadParamsObj);
+    if (res.code === 0) {
+      setImportedParamsModalVisible(false);
+      handleSearch();
+    }
+  }
+
   return (
     <PageHeaderWrapper>
       <Card bordered={false}
@@ -171,9 +223,10 @@ const ParamsManage = () => {
       >
         <div
           style={{
-            padding: '24px 0 24px 24px'
+            padding: '24px 0 24px 24px',
           }}
         >
+          <Button onClick={() => {setImportedParamsModalVisible(true)}} type="primary">导入训练参数文件</Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {
@@ -209,6 +262,15 @@ const ParamsManage = () => {
           loading={tableLoading}
         />
       </Card>
+      <Modal
+        visible={importedParamsModalVisible}
+        onCancel={() => {setImportedParamsModalVisible(false)}}
+        onOk={saveFileAsTemplate}
+      >
+        <Upload beforeUpload={beforeUpload}>
+          <Button icon={<UploadOutlined />}>上传 json 文件</Button>
+        </Upload>
+      </Modal>
     </PageHeaderWrapper >
   );
 };

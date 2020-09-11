@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Button, Row, Col, Input, message, Modal, Form } from 'antd';
+import { Table, Select, Space, Button, Row, Col, Input, message, Modal } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount, createSaveImage } from '../../service.js';
+import { getCodes, stopCode, deleteCode, getJupyterUrl, getCodeCount } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js'
 import CodeUpload from '../UpLoad'
@@ -10,16 +10,13 @@ import { statusMap, canOpenStatus, canStopStatus, canUploadStatus, sortColumnMap
 import { getNameFromDockerImage } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
-import FormItem from 'antd/lib/form/FormItem';
 
 
 const { Search } = Input;
 const { Option } = Select;
 
 const CodeList = (props) => {
-  const searchRef = useRef(null);
-  const [isReady,setIsReady] = useState(false);
-  const [form] = Form.useForm();
+  const searchRef = useRef(null)
   const [codes, setCodes] = useState({ codeEnvs: [], total: 0 });
   const [loading, setLoading] = useState(true);
   const [pageParams, setPageParams] = useState(pageObj);// 页长
@@ -28,107 +25,36 @@ const CodeList = (props) => {
   const [searchObj, setSearchObj] = useState({})
   const [modalFlag, setModalFlag] = useState(false);
   const [modalData, setModalData] = useState({})
-  const [currentHandledJobId, setCurrentHandledJobId] = useState('')
-  const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
     order: ''
   })
 
-  const renderStatusSelect = async (type = 'init') => {
+  const renderStatusSelect = async () => {
     const apiData = await apiGetCodeCount();
-    if(!apiData) return;
-    switch(type){
-      case 'init':
-        setStatusSearchArr(apiData)
-        setCurStatus(apiData[0]?.status);
-        break;
-      case 'update':
-        setStatusSearchArr(apiData)
-        break;
+    if (apiData) {
+      setStatusSearchArr(apiData)
+      // 只有第一次会重新赋值
+      if (curStatus === '') setCurStatus(apiData[0].status);
     }
   }
 
-  const renderTable = async (type = 'init', options) => {
-    let params;
-    let apiData;
-    let needLoading = true;
-    // 构造参数传递，必需参数pageParams、status，可选参数searchWord、orderBy、order
-    params =  {...pageParams, status: curStatus}; 
-    switch(type){
-      case 'init':
-        setLoading(true);
-        params = {...params,...pageObj,status:'all'}
-        break;
-      case 'sort':
-        params['orderBy'] = sortColumnMap[sortInfo.orderBy];
-        params['order'] = sortTextMap[sortInfo.order];
-        if (!isEmptyString(searchObj.word)) {
-          params['searchWord'] = searchObj.word;
-        }
-      case 'interval':
-        needLoading = false;
-        // 根据当前参数刷新
-        if (!isEmptyString(searchObj.word)) {
-          params['searchWord'] = searchObj.word;
-        }
-        if (sortInfo.order && !isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
-          params['orderBy'] = sortColumnMap[sortInfo.orderBy];
-          params['order'] = sortTextMap[sortInfo.order];
-        }
-        break;
-      case 'deleteItem':
-        needLoading = false;
-        if (!isEmptyString(searchObj.word)) {
-          params['searchWord'] = searchObj.word;
-        }
-        if (sortInfo.order && !isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
-          params['orderBy'] = sortColumnMap[sortInfo.orderBy];
-          params['order'] = sortTextMap[sortInfo.order];
-        }
-        // 修正最后一页
-        if (codes.codeEnvs.length == 1 && pageParams.pageNum > 1) {
-          params['pageNum'] = pageParams.pageNum - 1;
-        }
-        break;
-      case 'statusChange':
-        console.log('statusChange renderTable');
-        setLoading(true);
-        if (!isEmptyString(searchObj.word)) {
-          params['searchWord'] = searchObj.word;
-        }
-        // 修正，回到第一页
-        params = {...params,...pageObj}
-        break;
-      case 'search':
-        setLoading(true);
-        params['searchWord'] = searchObj.word;
-        break;
-      case 'pageChange':
-      case 'fresh':
-        console.log('pageChange renderTable');
-        setLoading(true);
-        if (!isEmptyString(searchObj.word)) {
-          params['searchWord'] = searchObj.word;
-        }
-        if (sortInfo.order && !isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
-          params['orderBy'] = sortColumnMap[sortInfo.orderBy];
-          params['order'] = sortTextMap[sortInfo.order];
-        }
-        break;
-    }
-    apiData = await apiGetCodes(params);
+  const renderTable = async (pageParams, success, withLoading = true) => {
+    if (withLoading) setLoading(true);
+    const apiData = await apiGetCodes(pageParams);
     if (apiData) {
       setCodes({
         codeEnvs: apiData.CodeEnvs,
         total: apiData.total
       });
-      if (options?.callback) {
-        options.callback();
+      if (success) {
+        success()
       }
     }
-    if(needLoading) setLoading(false);
+    setLoading(false);
   };
+
+  
 
   const apiGetCodeCount = async () => {
     const obj = await getCodeCount();
@@ -140,7 +66,16 @@ const CodeList = (props) => {
     }
   }
 
-  const apiGetCodes = async (params) => {
+  const apiGetCodes = async (pageParams) => {
+    const params = { ...pageParams };
+    params['status'] = isEmptyString(curStatus) ? 'all' : curStatus;
+    if (!isEmptyString(searchObj.word)) {
+      params['searchWord'] = searchObj.word;
+    }
+    if (sortInfo.order && !isEmptyString(sortInfo.orderBy) && !isEmptyString(sortInfo.order)) {
+      params['orderBy'] = sortColumnMap[sortInfo.orderBy];
+      params['order'] = sortTextMap[sortInfo.order];
+    }
     const obj = await getCodes(params);
     const { code, data, msg } = obj;
     if (code === 0) {
@@ -166,7 +101,7 @@ const CodeList = (props) => {
     const obj = await stopCode(id);
     const { code, data, msg } = obj
     if (code === 0) {
-      renderTable('update');
+      renderTable(pageParams);
       message.success('停止成功');
     }
   }
@@ -175,17 +110,23 @@ const CodeList = (props) => {
     const obj = await deleteCode(id);
     const { code, data, msg } = obj;
     if (code === 0) {
-      renderTable('deleteItem');
       if (codes.codeEnvs.length == 1 && pageParams.pageNum > 1) {
-          // 冗余请求，因为修正分页参数，导致触发监听拉取新数据
+        renderTable({ ...pageParams, pageNum: pageParams.pageNum - 1 });
         setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
       }
-      renderStatusSelect('update');
+      else {
+        renderTable(pageParams);
+      }
+      // 更新数组
+      const apiData = await apiGetCodeCount();
+      if (apiData) {
+        setStatusSearchArr(apiData);
+      }
       message.success('删除成功');
     }
   }
 
-  const handleOpen = (item) => { 
+  const handleOpen = (item) => {
     apiOpenJupyter(item.id);
   }
 
@@ -237,16 +178,6 @@ const CodeList = (props) => {
     history.push('/codeDevelopment/add');
   }
 
-  const commonLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 12 },
-  };
-
-  const toSaveImage = (id) => {
-    setSaveImageModalVisible(true);
-    setCurrentHandledJobId(id);
-  }
-
   const columns = [
     {
       title: '开发环境名称',
@@ -259,7 +190,6 @@ const CodeList = (props) => {
       title: '状态',
       dataIndex: 'status',
       ellipsis: true,
-      width: '80px',
       render: status => statusMap[status]?.local,
     },
     {
@@ -282,7 +212,6 @@ const CodeList = (props) => {
       title: '代码存储目录',
       dataIndex: 'codePath',
       ellipsis: true,
-      width: '120px'
     },
     {
       title: '描述',
@@ -291,7 +220,6 @@ const CodeList = (props) => {
     },
     {
       title: '操作',
-      align: 'center',
       render: (codeItem) => {
         return (
           <Space size="middle">
@@ -299,25 +227,22 @@ const CodeList = (props) => {
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
             <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
-            {
-              codeItem.status === 'running' && 
-                <a onClick={() => toSaveImage(codeItem.id)}>保存镜像</a>
-            }
           </Space>
         );
       },
     },
   ];
 
-  useInterval(async () => {
-    renderStatusSelect('update');
-    renderTable('interval');
-  }, props.common.interval);
+  // useInterval(async () => {
+  //   const apiData = await apiGetCodeCount();
+  //   if (apiData) {
+  //     setStatusSearchArr(apiData);
+  //   }
+  //   renderTable(pageParams, () => {}, false);
+  // }, props.common.interval);
 
   useEffect(() => {
-    setIsReady(true);
-    renderStatusSelect('init');
-    renderTable('init');
+    renderStatusSelect();
     return () => {
       getCodes.cancel && getCodes.cancel();
       getCodeCount.cancel && getCodeCount.cancel();
@@ -325,49 +250,26 @@ const CodeList = (props) => {
   }, []);
 
   useEffect(() => {
-    if(isReady){
-      renderTable('pageChange');
-    }
-  }, [pageParams]);
+    renderTable(pageParams);
+  }, [pageParams, sortInfo, curStatus]);
 
   useEffect(() => {
-    if(isReady){
-      renderTable('sort');
-    }
-  }, [sortInfo]);
-
-  useEffect(() => {
-    if(isReady){
-      setPageParams(pageObj); // 冗余请求
-      renderTable('statusChange');
+    if (curStatus != '') {
+      renderTable(pageObj);
+      setPageParams(pageObj);
     }
   }, [curStatus]);
 
   useEffect(() => {
-    if (isReady) {
-      if (searchObj.type != undefined) {
-        const type = searchObj.type;
-        if (type === 'search') {
-          renderTable('search');
-        } else if (type === 'fresh') {
-          renderTable('fresh', {callback: () => { message.success('刷新成功')}});
-        }
+    if (searchObj.type != undefined) {
+      const type = searchObj.type;
+      if (type === 'search') {
+        renderTable(pageParams);
+      } else if (type === 'fresh') {
+        renderTable(pageParams, () => { message.success('刷新成功') });
       }
     }
   }, [searchObj]);
-
-  const handleSaveImage = async () => {
-    if (currentHandledJobId) {
-      const values = await form.validateFields()
-      values.isPrivate = true
-      values.jobId = currentHandledJobId
-      const res = await createSaveImage(values);
-      if (res.code === 0) {
-        renderTable();
-        setSaveImageModalVisible(false);
-      }
-    }
-  }
 
   return (
     <>
@@ -430,26 +332,6 @@ const CodeList = (props) => {
           <CodeUpload modalData={modalData}></CodeUpload>
         </Modal>
       )}
-      <Modal
-        title="保存镜像"
-        visible={saveImageModalVisible}
-        onCancel={() => {setSaveImageModalVisible(false);setCurrentHandledJobId('')}}
-        onOk={() => {handleSaveImage()}}
-      >
-        <Form
-          form={form}
-        >
-          <Form.Item {...commonLayout} label="名称" name="name" rules={[{required: true}]}>
-            <Input style={{width: '280px'}} />
-          </Form.Item>
-          <Form.Item {...commonLayout} label="版本" name="version" rules={[{required: true}]}>
-            <Input style={{width: '280px'}} />
-          </Form.Item>
-          <Form.Item {...commonLayout} label="描述" name="description" rules={[{required: true}]}>
-            <Input style={{width: '280px'}} />
-          </Form.Item>
-        </Form>
-      </Modal>
     </>
   )
 

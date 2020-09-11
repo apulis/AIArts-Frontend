@@ -22,7 +22,7 @@ export default {
   'menu.visualOperation': '可视化运维',
   'menu.modelManagement': '模型管理',
   'menu.modelManagement.myModels': '我的模型',
-  'menu.modelManagement.pretraindedModels': '预置模型',
+  'menu.modelTraining.pretraindedModels': '预置模型',
   'menu.modelManagement.modelEvaluation': '模型评估',
   'menu.modelManagement.modelEvaluationList': '评估列表',
   'menu.modelManagement.evaluationMetricsManage':'评估参数管理',

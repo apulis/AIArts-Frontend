@@ -47,7 +47,7 @@ const OverView = ({ user }) => {
     const requestArr = pieData.map(i => getPieData({ jobType: i.params }));
     let obj = pieData;
     const res = await Promise.all(requestArr);
-    res.forEach((i, idx) => {
+    res && res.length && res.forEach((i, idx) => {
       const keys = Object.keys(i.data);
       if (keys.length) {
         obj[idx].value = keys.map(v => { return {x: getJobStatus(v), y: i.data[v], color: getStatusColor(v)} })

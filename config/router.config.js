@@ -99,6 +99,11 @@ export default [
                 component: './ModelTraining/ParamsManage/ParamsManage'
               },
               {
+                path: '/model-training/PretrainedModels',
+                name: 'pretraindedModels',
+                component: './ModelMngt/PretrainedModel',
+              },
+              {
                 path: '/model-training/submit',
                 component: './ModelTraining/Submit',
               },
@@ -137,11 +142,6 @@ export default [
                 path: '/ModelManagement/MyModels',
                 name: 'myModels',
                 component: './ModelMngt/ModelList',
-              },
-              {
-                path: '/ModelManagement/PretrainedModels',
-                name: 'pretraindedModels',
-                component: './ModelMngt/PretrainedModel',
               },
               {
                 path: '/ModelManagement/CreateEvaluation',

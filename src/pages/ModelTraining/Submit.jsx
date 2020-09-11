@@ -4,10 +4,10 @@ import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined, CompassOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams, getUserDockerImages } from '../../services/modelTraning';
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
-import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
@@ -16,10 +16,6 @@ const { TextArea } = Input;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
 
 export const generateKey = () => {
   return new Date().getTime();
@@ -51,11 +47,11 @@ const ModelTraining = (props) => {
   if (requestType === 'PretrainedModel') {
     isFromPresetModel = true;
   }
-  const goBackPath = isFromPresetModel ? '/ModelManagement/PretrainedModels' : (readParam ? '/model-training/paramsManage' : '/model-training/modelTraining');
-
+  const goBackPath = isFromPresetModel ? '/model-training/PretrainedModels' : (readParam ? '/model-training/paramsManage' : '/model-training/modelTraining');
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
+  const [userFrameWorks, setUserFrameWorks] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
   const [bootFileModalVisible, setBootFileModalVisible] = useState(false);
@@ -75,6 +71,8 @@ const ModelTraining = (props) => {
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [paramsDetailedData, setParamsDetailedData] = useState({});
   const [importedTrainingParams, setImportedTrainingParams] = useState(false);
+  const [engineSource, setEngineSource] = useState(1);
+
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -96,6 +94,15 @@ const ModelTraining = (props) => {
       setNofeInfo(nodeInfo);
     }
   };
+  const fetchUserDockerImages = async () => {
+    const res = await getUserDockerImages()
+    if (res.code === 0) {
+      const images = res.data.savedImages?.map(val => {
+        return { fullName: val.fullName, id: val.id };
+      })
+      setUserFrameWorks(images)
+    }
+  }
   useEffect(() => {
     if (distributedJob) {
       if (!currentDeviceType) return;
@@ -199,7 +206,10 @@ const ModelTraining = (props) => {
     if (isPretrainedModel) {
       getPresetModel();
     }
-  }, [codePathPrefix]);
+    if (isSubmitPage) {
+      fetchUserDockerImages();
+    }
+  }, []);
 
   useEffect(() => {
     if (presetParamsVisible) {
@@ -256,7 +266,7 @@ const ModelTraining = (props) => {
         history.push(goBackPath);
       }
     } else {
-      if (values.jobtrainingtype === 'PSDistJob') {
+      if (values.jobTrainingType === 'PSDistJob') {
         values.numPs = 1;
       }
       const submitJobInner = async () => {
@@ -268,7 +278,7 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       }
-      if (!beforeSubmitJob(jobtrainingtype === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
+      if (!beforeSubmitJob(values.jobTrainingType === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })) {
         Modal.confirm({
           title: '当前暂无可用训练设备，继续提交将会进入等待队列',
           content: '是否继续',
@@ -309,6 +319,7 @@ const ModelTraining = (props) => {
     });
     callback();
   };
+
   const removeRuningParams = async (key) => {
     const values = await getFieldValue('params');
     if (values.length === 1) {
@@ -349,6 +360,7 @@ const ModelTraining = (props) => {
     setCurrentDeviceType(deviceType);
     setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
   };
+
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
     if (currentSelected) {
@@ -368,7 +380,12 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params
       })
-      const deviceType = currentSelected.params.deviceType;
+      const { deviceType, engine } = currentSelected.params;
+      if (frameWorks.includes(engine)) {
+        setEngineSource(1);
+      } else if (userFrameWorks.includes(engine)) {
+        setEngineSource(2);
+      }
       setCurrentDeviceType(deviceType);
       setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
       setImportedTrainingParams(true);
@@ -428,11 +445,25 @@ const ModelTraining = (props) => {
         </Radio.Group>
       </FormItem>}
       <Form form={form}>
+        {
+          isSubmitPage && <FormItem {...commonLayout} label="选择引擎来源">
+            <Radio.Group value={engineSource} onChange={(e) => {setEngineSource(e.target.value)}} style={{ width: '300px' }}>
+              <Radio value={1}>预置引擎</Radio>
+              <Radio value={2}>已保存引擎</Radio>
+            </Radio.Group>
+          </FormItem>
+        }
+        
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
           <Select style={{ width: 300 }} disabled={typeCreate} >
             {
-              frameWorks.map(f => (
+              engineSource === 1 && frameWorks.map(f => (
                 <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
+              ))
+            }
+            {
+              engineSource === 2 && userFrameWorks.map(f => (
+                <Option value={f.fullName} key={f.id}>{getNameFromDockerImage(f.fullName)}</Option>
               ))
             }
           </Select>
@@ -451,7 +482,7 @@ const ModelTraining = (props) => {
               : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
-        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, { pattern: /\.py$/, message: '需要填写一个 python 文件' }]}>
+        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, startUpFileReg]}>
           {
             isPretrainedModel || importedTrainingParams ? <Input style={{ width: 420 }} disabled={isPretrainedModel} />
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
@@ -498,7 +529,7 @@ const ModelTraining = (props) => {
             <a>点击增加参数</a>
           </div>
         </FormItem>
-        <FormItem label="是否分布式训练" name="jobtrainingtype" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob" onChange={handleDistributedJob}>
+        <FormItem label="是否分布式训练" name="jobTrainingType" {...commonLayout} rules={[{ required: true }]} initialValue="RegularJob" onChange={handleDistributedJob}>
           <Radio.Group style={{ width: '300px' }}>
             <Radio value={'PSDistJob'}>是</Radio>
             <Radio value={'RegularJob'}>否</Radio>
