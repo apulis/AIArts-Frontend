@@ -47,7 +47,7 @@ export default {
   'menu.editor.koni': 'Koni Editor',
   'menu.modelManagement': 'Model Management',
   'menu.modelManagement.myModels': 'My Models',
-  'menu.modelManagement.pretraindedModels': 'Pretrained Models',
+  'menu.modelTraining.pretraindedModels': 'Pretrained Models',
   'menu.modelManagement.modelEvaluation': 'Model Evaluation',
   'menu.modelManagement.modelEvaluationList': 'Model Evaluation List',
   'menu.modelManagement.evaluationMetricsManage': 'Evaluation Metrics Manage',

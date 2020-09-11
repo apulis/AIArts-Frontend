@@ -36,11 +36,11 @@ const CreateModel = props => {
 
   const onFinish = async (values) => {
     // console.log(values);
-    const { name, description, jobId, modelPath } = values;
+    const { name, description, argumentPath, jobId, modelPath } = values;
     const data = {
       name,
       description,
-      // paramPath: codePathPrefix + argumentPath,
+      paramPath: argumentPath ? (codePathPrefix + argumentPath) : undefined,
       jobId: jobId || '',
       codePath: modelPath || '',
       isAdvance: false,
@@ -212,14 +212,14 @@ const CreateModel = props => {
                 <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）</p>
               </Dragger>
             </Form.Item>}
-            {/* <Form.Item
+            {modelFileType === '1' && <Form.Item
               {...layout}
               name="argumentPath"
               label="模型权重文件"
               rules={[{ required: true, message: '模型权重文件不能为空!' }]}
             >
               <Input addonBefore={codePathPrefix} placeholder="请输入模型权重文件" />
-            </Form.Item>             */}
+            </Form.Item>             }
             <Form.Item
                 name="jobId"
                 hidden            
