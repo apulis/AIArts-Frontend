@@ -5,6 +5,7 @@ import { postCode1, getResource } from '../service.js'
 import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceController.js'
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
 import { beforeSubmitJob } from '@/models/resource';
+import { getUserDockerImages } from '@/services/modelTraning.js';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -27,7 +28,7 @@ const CodeCreate = (props) => {
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([]);
   const [maxNodeNum, setMaxNodeNum] = useState(1);
   const [engineSource, setEngineSource] = useState(1);
-
+  const [userFrameWorks, setUserFrameWorks] = useState([]);
   const renderInitForm = async () => {
     const result = await apiGetResource();
     if (result) {
@@ -50,6 +51,22 @@ const CodeCreate = (props) => {
       renderInitRegularForm(deviceNumArrData[0]);
     }
   }
+
+  const fetchUserDockerImages = async () => {
+    const res = await getUserDockerImages()
+    if (res.code === 0) {
+      const images = res.data.savedImages?.map(val => {
+        return { fullName: val.fullName, id: val.id };
+      })
+      setUserFrameWorks(images)
+    }
+  }
+
+  useEffect(() => {
+    fetchUserDockerImages()
+  }, [])
+
+  
 
   const renderInitRegularForm = (deviceNum) => {
     setFieldsValue({ 'deviceNum': deviceNum });
@@ -149,6 +166,15 @@ const CodeCreate = (props) => {
     renderInitForm();
   }, []);// 更新处理
 
+  useEffect(() => {
+    console.log(111, engineSource)
+    if (engineSource === 2 && userFrameWorks.length) {
+      setFieldsValue({
+        engine: userFrameWorks[0].fullName
+      })
+    } 
+  }, [engineSource])
+
   useEffect(() => {// 初始化处理deviceNum
     if (jobTrainingType == 'RegularJob') {
       renderInitRegularForm(deviceNumArr[0]);
@@ -202,29 +228,43 @@ const CodeCreate = (props) => {
               <Radio value={2}>已保存引擎</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
-            label="引擎类型"
-            required
-          >
-            <Form.Item name='engineType' rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-              <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
-                {
-                  engineSource === 1 && engineTypeArr.map((item, key) => (
-                    <Option key={key} value={item}>{item}</Option>
-                  ))
-                }
-              </Select>
+          {
+            engineSource === 1 && <Form.Item
+              label="引擎类型"
+              required
+            >
+              <Form.Item name='engineType' rules={[{ required: true, message: '请选择 引擎类型' }]} style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
+                <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
+                  {
+                    engineSource === 1 && engineTypeArr.map((item, key) => (
+                      <Option key={key} value={item}>{item}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>
+              <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
+                <Select>
+                  {
+                    engineNameArr.map((item, key) => (
+                      <Option key={key} value={item}>{getNameFromDockerImage(item)}</Option>
+                    ))
+                  }
+                </Select>
+              </Form.Item>
             </Form.Item>
-            <Form.Item name="engine" rules={[{ required: true, message: '请选择 引擎名称' }]} style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}>
+          }
+          {
+            engineSource === 2 && <Form.Item name="engine" label="引擎类型" rules={[{ required: true, message: '请选择 引擎名称' }]}>
               <Select>
                 {
-                  engineNameArr.map((item, key) => (
-                    <Option key={key} value={item}>{getNameFromDockerImage(item)}</Option>
+                  userFrameWorks.map((item, key) => (
+                    <Option key={item.id} value={item.fullName}>{getNameFromDockerImage(item.fullName)}</Option>
                   ))
                 }
               </Select>
             </Form.Item>
-          </Form.Item>
+          }
+          
           <Form.Item
             label="任务类型"
             name="jobTrainingType"

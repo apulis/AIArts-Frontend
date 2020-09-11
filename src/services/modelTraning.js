@@ -156,3 +156,13 @@ export async function getTensorboardUrl(id) {
     }
   });
 }
+
+export async function getUserDockerImages() {
+  return await request(`/saved_imgs`, {
+    method: 'GET',
+    params: {
+      pageNum: 1,
+      pageSize: 9999,
+    }
+  });
+}

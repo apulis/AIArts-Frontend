@@ -4,14 +4,13 @@ import { history, useParams } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined, CompassOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams } from '../../services/modelTraning';
+import { submitModelTraining, fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, fetchPresetModel, updateParams, getUserDockerImages } from '../../services/modelTraning';
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
 import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
-import { isBoolean } from 'lodash';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -73,6 +72,7 @@ const ModelTraining = (props) => {
   const [paramsDetailedData, setParamsDetailedData] = useState({});
   const [importedTrainingParams, setImportedTrainingParams] = useState(false);
   const [engineSource, setEngineSource] = useState(1);
+
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
@@ -94,6 +94,15 @@ const ModelTraining = (props) => {
       setNofeInfo(nodeInfo);
     }
   };
+  const fetchUserDockerImages = async () => {
+    const res = await getUserDockerImages()
+    if (res.code === 0) {
+      const images = res.data.savedImages?.map(val => {
+        return { fullName: val.fullName, id: val.id };
+      })
+      setUserFrameWorks(images)
+    }
+  }
   useEffect(() => {
     if (distributedJob) {
       if (!currentDeviceType) return;
@@ -197,7 +206,10 @@ const ModelTraining = (props) => {
     if (isPretrainedModel) {
       getPresetModel();
     }
-  }, [codePathPrefix]);
+    if (isSubmitPage) {
+      fetchUserDockerImages();
+    }
+  }, []);
 
   useEffect(() => {
     if (presetParamsVisible) {
@@ -447,6 +459,11 @@ const ModelTraining = (props) => {
             {
               engineSource === 1 && frameWorks.map(f => (
                 <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
+              ))
+            }
+            {
+              engineSource === 2 && userFrameWorks.map(f => (
+                <Option value={f.fullName} key={f.id}>{getNameFromDockerImage(f.fullName)}</Option>
               ))
             }
           </Select>
