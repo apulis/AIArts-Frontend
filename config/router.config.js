@@ -99,7 +99,7 @@ export default [
                 component: './ModelTraining/ParamsManage/ParamsManage'
               },
               {
-                path: '/ModelManagement/PretrainedModels',
+                path: '/model-training/PretrainedModels',
                 name: 'pretraindedModels',
                 component: './ModelMngt/PretrainedModel',
               },
