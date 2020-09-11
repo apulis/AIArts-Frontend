@@ -26,7 +26,10 @@ export async function fetchTrainingList({ pageNum, pageSize, status, search, sor
       searchWord: search || undefined,
       orderBy: sortedInfo?.orderBy || undefined,
       order: sortedInfo?.order || undefined,
-    }
+    },
+    cancelToken: new CancelToken(function(c) {
+      fetchTrainingList.cancel = c;
+    })
   });
 }
 
@@ -150,6 +153,16 @@ export async function getTensorboardUrl(id) {
     method: 'GET',
     params: {
       id: id
+    }
+  });
+}
+
+export async function getUserDockerImages() {
+  return await request(`/saved_imgs`, {
+    method: 'GET',
+    params: {
+      pageNum: 1,
+      pageSize: 9999,
     }
   });
 }

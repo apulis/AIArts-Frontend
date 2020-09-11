@@ -8,6 +8,8 @@ import { getEvaluations, stopEvaluation, fetchJobStatusSumary,deleteEvaluation }
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getNameFromDockerImage } from '@/utils/reg.js';
+import { connect } from 'dva';
+import useInterval from '@/hooks/useInterval';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -27,7 +29,7 @@ export const statusList = [
 const { Search } = Input;
 const { Option } = Select;
 
-const List = () => {
+const List = (props) => {
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -40,7 +42,7 @@ const List = () => {
     order: '',
   });
   const searchEl = useRef(null);
-  const handleSearch = async () => {
+  const handleSearch = async (withLoading = true) => {
     const params = {
       ...pageParams,
       orderBy: sortedInfo.columnKey,
@@ -55,7 +57,7 @@ const List = () => {
       params.search = formValues.name;
     }
 
-    setTableLoading(true);
+    if (withLoading) setTableLoading(true);
     const res = await getEvaluations(params);
     if (res.code === 0) {
       const trainings = (res.data && res.data.evaluations) || [];
@@ -91,11 +93,20 @@ const List = () => {
 
   useEffect(() => {
     getJobStatusSumary();
+    return () => {
+      fetchJobStatusSumary.cancel && fetchJobStatusSumary.cancel();
+      getEvaluations.cancel && getEvaluations.cancel();
+    }
   }, []);
 
   useEffect(() => {
     handleSearch();
   }, [pageParams, formValues, sortedInfo]);
+
+  useInterval(() => {
+    getJobStatusSumary();
+    handleSearch(false);
+  }, props.common.interval);
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -259,4 +270,4 @@ const List = () => {
   )
 }
 
-export default List;
+export default connect(({ common }) => ({ common }))(List);

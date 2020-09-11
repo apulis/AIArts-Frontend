@@ -1,6 +1,9 @@
 import request from '@/utils/request';
 import { modelEvaluationType } from '@/utils/const';
 import {deleteJob} from '@/services/modelTraning'
+import Request from 'umi-request';
+
+const CancelToken = Request.CancelToken;
 
 export async function getTrainingJobs(params) {
   return await request(`/trainings`, {
@@ -10,7 +13,10 @@ export async function getTrainingJobs(params) {
 
 export async function getEvaluations(params) {
   return await request(`/evaluations`, {
-    params
+    params,
+    cancelToken: new CancelToken(function(c) {
+      getEvaluations.cancel = c;
+    })
   });
 }
 
@@ -44,7 +50,11 @@ export async function fetchEvaluationDetail(id) {
 }
 
 export async function fetchJobStatusSumary() {
-  return await request(`/common/job/summary?jobType=${modelEvaluationType}`);
+  return await request(`/common/job/summary?jobType=${modelEvaluationType}`, {
+    cancelToken: new CancelToken(function(c) {
+      fetchJobStatusSumary.cancel = c;
+    })
+  });
 }
 
 export async function saveEvaluationParams(data) {

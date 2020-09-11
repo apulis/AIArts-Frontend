@@ -46,15 +46,17 @@ const List = (props) => {
   });
 
   useInterval(() => {
-    getTrainingList();
+    getTrainingList(undefined, undefined, false);
+    getJobStatusSumary();
   }, props.common.interval)
 
-  const getTrainingList = async (reloadPage, options = {}) => {
+  const getTrainingList = async (reloadPage, options = {}, withLoading = true) => {
     const { pageSize: size, status, pageNo } = options
     let page = pageNo || pageNum;
     if (reloadPage) {
       page = 1
     }
+    if (withLoading) setTableLoading(true)
     const res = await fetchTrainingList({pageNum: page, pageSize: size || pageSize, search, sortedInfo, status: status || currentStatus});
     if (res.code === 0) {
       setPageNum(page);
@@ -90,7 +92,10 @@ const List = (props) => {
 
   useEffect(() => {
     getTrainingList(true);
-    getJobStatusSumary()
+    getJobStatusSumary();
+    return () => {
+      fetchTrainingList.cancel && fetchTrainingList.cancel();
+    }
   }, [])
   const onTableChange = async (pagination, filters, sorter) => {
     console.log('setSortedInfo', sorter)
