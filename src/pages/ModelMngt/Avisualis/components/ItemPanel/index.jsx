@@ -2,7 +2,7 @@ import { message, Form, Input, Button, Select, Descriptions, InputNumber } from 
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
 import { history, useDispatch } from 'umi';
-import { submitAvisualis } from '../../service';
+import { submitAvisualis, patchAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
 import _ from 'lodash';
@@ -45,13 +45,14 @@ const ItemPanel = (props) => {
         target: target
       }
     });
-    const { code, data } = await submitAvisualis({
+    const submitData = {
       ..._addFormData,
       nodes: newNodes,
       edges: newEdges,
-    });
+    };
+    const { code, data } = id ? await patchAvisualis(id, submitData) : await submitAvisualis(submitData);
     if (code === 0) {
-      message.success('创建成功！');
+      message.success(`${id ? '保存' : '创建'}成功！`);
       dispatch({
         type: 'avisualis/saveData',
         payload: {
