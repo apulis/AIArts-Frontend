@@ -1,7 +1,7 @@
 import { message, Form, Input, Button, Select, Descriptions, InputNumber } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
-import { history } from 'umi';
+import { history, useDispatch } from 'umi';
 import { submitAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
@@ -10,16 +10,18 @@ import _ from 'lodash';
 const { Option } = Select;
 
 const ItemPanel = (props) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const { avisualis, flowChartData, selectItem, setFlowChartData, id } = props;
-  const { addFormData } = avisualis;
+  const { addFormData, panelApiData } = avisualis;
   const [btnLoading, setBtnLoading] = useState(false);
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
-
   const onSubmit = async() => {
+    const { nodes, edges } = flowChartData;
+    if (nodes.length !== panelApiData.panel.length) {
+      message.warning('请完成剩余步骤！');
+      return;
+    }
     setBtnLoading(true);
     const _addFormData = _.cloneDeep(addFormData);
     const _flowChartData = _.cloneDeep(flowChartData);
@@ -27,7 +29,6 @@ const ItemPanel = (props) => {
       _addFormData.numPs = 1;
       _addFormData.deviceNum = _addFormData.deviceTotal;
     }
-    const { nodes, edges } = flowChartData;
     _addFormData.datasetPath = nodes[0].config[0].value;
     _addFormData.outputPath = nodes[nodes.length - 1].config[0].value;
     _addFormData.paramPath = _addFormData.outputPath;
@@ -47,10 +48,16 @@ const ItemPanel = (props) => {
     const { code, data } = await submitAvisualis({
       ..._addFormData,
       nodes: newNodes,
-      edges: newEdges
+      edges: newEdges,
     });
     if (code === 0) {
       message.success('创建成功！');
+      dispatch({
+        type: 'avisualis/saveData',
+        payload: {
+          addFormData: {}
+        }
+      });
       history.push('/ModelManagement/avisualis');
     }
     setBtnLoading(false);

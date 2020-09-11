@@ -20,10 +20,9 @@ const AvisualisDetail = (props) => {
   const dispatch = useDispatch();
   const [panelData, setPanelData] = useState([]);
   const flowChartRef = useRef();
-  const [apiData, setApiData] = useState({ panel: [] });
   const [loading, setLoading] = useState(true);
   const [detailData, setDetailData] = useState({});
-  const { addFormData } = avisualis;
+  const { addFormData, panelApiData } = avisualis;
 
   useEffect(() => {
     dispatch({
@@ -54,7 +53,9 @@ const AvisualisDetail = (props) => {
           edges: JSON.parse(edges),
         };
         setDetailData(_detailData);
-        _addFormData = data.model;
+        if (!(_addFormData.way && _addFormData.way === 2)) {
+          _addFormData = data.model;
+        }
       }
     }
     const { code, data } = await getPanel(type);
@@ -62,7 +63,6 @@ const AvisualisDetail = (props) => {
       const { panel, codePath, engine, startupFile } = data;
       if (panel && panel.length) {
         transformData(panel);
-        setApiData(data);
         dispatch({
           type: 'avisualis/saveData',
           payload: {
@@ -71,7 +71,8 @@ const AvisualisDetail = (props) => {
               codePath: codePath,
               engine: engine,
               startupFile: startupFile
-            }
+            },
+            panelApiData: data
           }
         });
       }
@@ -80,7 +81,7 @@ const AvisualisDetail = (props) => {
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || apiData.panel, childrenDisabled = id ? true : false;
+    let _treeData = [], _children = [], _data = data || panelApiData.panel, childrenDisabled = id ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.nodes ? newData.nodes.length : 0;
@@ -140,7 +141,6 @@ const AvisualisDetail = (props) => {
           ref={flowChartRef} 
           transformData={transformData} 
           id={id}
-          apiData={apiData.panel}
           detailData={detailData || {}}
         />
       </div>

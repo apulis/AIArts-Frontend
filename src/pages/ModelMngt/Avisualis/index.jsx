@@ -1,4 +1,4 @@
-import { message, Table, Modal, Input, Button, Card } from 'antd';
+import { message, Table, Modal, Input, Button, Card, Space } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getAvisualis, deleteAvisualis } from './service';
@@ -9,6 +9,7 @@ import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { connect } from 'dva';
 import AddFormModal from './components/AddFormModal';
+import { getJobStatus } from '@/utils/utils';
 
 const { confirm } = Modal;
 const { Search } = Input;
@@ -63,13 +64,15 @@ const Avisualis = () => {
 
   const onSubmit = () => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
+      const { use, way, model } = values;
       dispatch({
         type: 'avisualis/saveData',
         payload: {
           addFormData: values
         }
       });
-      history.push(`/ModelManagement/avisualis/detail?type=${values.use}`);
+      const parmas = way === 2 ? `type=${use}&&id=${model}` : `type=${use}`;
+      history.push(`/ModelManagement/avisualis/detail?${parmas}`);
     });
   };
 
@@ -80,6 +83,11 @@ const Avisualis = () => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       render: item => <Link to={{ pathname: '/ModelManagement/avisualis/detail', query: { id: item.id, type: 'Avisualis_Classfication' } }}>{item.name}</Link>,
+    },
+    {
+      dataIndex: 'status',
+      title: '状态',
+      render: (text, item) => <Link to={`/model-training/${item.jobId}/detail`}>{getJobStatus(text)}</Link>,
     },
     {
       title: '模型用途',
@@ -100,8 +108,13 @@ const Avisualis = () => {
     {
       title: '操作',
       render: item => {
-        const { id } = item;
-        return (<a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>)
+        const { id, status } = item;
+        return (
+          <Space size="middle">
+            <a onClick={() =>  history.push(`/ModelManagement/CreateEvaluation?modelId=${id}`)} disabled={status !== 'finished'}>模型评估</a>
+            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>
+          </Space>
+        )
       },
     },
   ];
