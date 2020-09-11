@@ -19,7 +19,7 @@ const TrainingJobModal = props => {
 
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [current, setCurrent] = useState(undefined);
-
+  console.log(123, props)
   useEffect(() => {
     dispatch({
       type: 'jobList/fetch',
@@ -89,7 +89,18 @@ const TrainingJobModal = props => {
           style: {
             marginBottom: 0
           },
-          pageSize: 5
+          pageSize: 5,
+          total: data.pagination.total,
+          onChange: (page) => {
+            dispatch({
+              type: 'jobList/fetch',
+              payload: {
+                pageNum: page,
+                pageSize: 5,
+                status: 'finished'
+              },
+            });
+          }
         }}
         loading={loading}
         dataSource={data.list}
