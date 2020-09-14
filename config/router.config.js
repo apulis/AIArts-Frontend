@@ -177,7 +177,7 @@ export default [
                 name: 'avisualis',
               },
               {
-                path: '/ModelManagement/avisualis/detail',
+                path: '/ModelManagement/avisualis/detail/:id',
                 component: './ModelMngt/Avisualis/detail',
               },
             ],
