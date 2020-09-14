@@ -109,6 +109,12 @@ const AvisualisDetail = (props) => {
       })
     })
     setPanelData(_treeData);
+    dispatch({
+      type: 'avisualis/saveData',
+      payload: {
+        treeData: _treeData
+      }
+    });
   }
 
   const onDragEnd = ({event, node}) => {
@@ -119,9 +125,7 @@ const AvisualisDetail = (props) => {
     }
   }
 
-  if (loading) {
-    return <PageLoading />
-  }
+  if (loading) return <PageLoading />;
 
   return (
     <PageHeaderWrapper title={false}>

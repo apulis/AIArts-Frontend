@@ -13,12 +13,21 @@ const ItemPanel = (props) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const { avisualis, flowChartData, selectItem, setFlowChartData, id } = props;
-  const { addFormData, panelApiData } = avisualis;
+  const { addFormData, treeData } = avisualis;
   const [btnLoading, setBtnLoading] = useState(false);
+  const [modalFlag, setModalFlag] = useState(false);
+  const [changeNodeOptions, setChangeNodeOptions] = useState([]);
+
+  useEffect(() => {
+    if (selectItem) {
+      const child = treeData.find(i => selectItem._cfg.model.id.split('-')[0] === i.key).children;
+      setChangeNodeOptions(child);
+    }
+  }, [selectItem]);
 
   const onSubmit = async() => {
     const { nodes, edges } = flowChartData;
-    if (nodes.length !== panelApiData.panel.length) {
+    if (nodes.length !== treeData.length) {
       message.warning('请完成剩余步骤！');
       return;
     }
@@ -50,7 +59,8 @@ const ItemPanel = (props) => {
       nodes: newNodes,
       edges: newEdges,
     };
-    const { code, data } = id ? await patchAvisualis(id, submitData) : await submitAvisualis(submitData);
+    // const { code, data } = id ? await patchAvisualis(id, submitData) : await submitAvisualis(submitData);
+    const { code, data } = await submitAvisualis(submitData);
     if (code === 0) {
       message.success(`${id ? '保存' : '创建'}成功！`);
       dispatch({
@@ -106,7 +116,11 @@ const ItemPanel = (props) => {
     const data = MODELSTYPES.find(i => i.val === addFormData.use);
     return data ? data.text : '--';
   }
-  
+
+  // console.log("-------", selectItem)
+  // console.log("-------treeData", treeData)
+
+
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
@@ -122,7 +136,7 @@ const ItemPanel = (props) => {
           <div style={{ float: 'right', textAlign: 'right' }}>
             {selectItem._cfg.model.config.length > 0 && 
             <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
-            <Button type="primary" onClick={onSaveConfig}>更换节点</Button>
+            {/* {changeNodeOptions.length > 1 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
           </div>
         </> :
         <Descriptions column={1} title="模型详情">
@@ -130,6 +144,23 @@ const ItemPanel = (props) => {
         <Descriptions.Item label="模型用途">{getMODELSTYPESText()}</Descriptions.Item>
         <Descriptions.Item label="简介">{addFormData.desc || '--'}</Descriptions.Item>
       </Descriptions>}
+      {modalFlag && (
+        <Modal
+          title="更换节点"
+          visible={modalFlag}
+          onCancel={() => setModalFlag(false)}
+          destroyOnClose
+          maskClosable={false}
+          footer={[
+            <Button onClick={() => setModalFlag(false)}>取消</Button>,
+            <Button type="primary" onClick={onSubmit}>更换</Button>
+          ]}
+        >
+          <Select placeholder="请选择节点">
+            {changeNodeOptions.map(i => <Option value={i.key}>{i.title}</Option>)}
+          </Select>
+        </Modal>
+      )}
     </div>
   );
 };
