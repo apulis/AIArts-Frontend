@@ -167,11 +167,17 @@ const CodeCreate = (props) => {
   }, []);// 更新处理
 
   useEffect(() => {
-    console.log(111, engineSource)
-    if (engineSource === 2 && userFrameWorks.length) {
-      setFieldsValue({
-        engine: userFrameWorks[0].fullName
-      })
+    if (engineSource === 2) {
+      if (userFrameWorks.length) {
+        setFieldsValue({
+          engine: userFrameWorks[0].fullName || '',
+        })
+      } else {
+        setFieldsValue({
+          engine: '',
+        })
+      }
+      
     } 
   }, [engineSource])
 
@@ -255,7 +261,9 @@ const CodeCreate = (props) => {
           }
           {
             engineSource === 2 && <Form.Item name="engine" label="引擎类型" rules={[{ required: true, message: '请选择 引擎名称' }]}>
-              <Select>
+              <Select
+                showSearch
+              >
                 {
                   userFrameWorks.map((item, key) => (
                     <Option key={item.id} value={item.fullName}>{getNameFromDockerImage(item.fullName)}</Option>
