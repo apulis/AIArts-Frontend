@@ -265,7 +265,7 @@ const CodeCreate = (props) => {
                 showSearch
               >
                 {
-                  filteredUserFrameWorks.map((item, key) => (
+                  userFrameWorks.map((item, key) => (
                     <Option key={item.id} value={item.fullName}>{getNameFromDockerImage(item.fullName)}</Option>
                   ))
                 }
