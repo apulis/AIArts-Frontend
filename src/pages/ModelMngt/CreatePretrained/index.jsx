@@ -205,7 +205,7 @@ const CreatePretrained = props => {
 
     if (code === 0) {
       message.success(`创建成功`);
-      history.push('/ModelManagement/PretrainedModels');
+      history.push('/model-training/PretrainedModels');
     } else {
       msg && message.error(`创建失败:${msg}`);
     }
@@ -280,7 +280,7 @@ const CreatePretrained = props => {
     <>
       <PageHeader
         ghost={false}
-        onBack={() => history.push('/ModelManagement/PretrainedModels')}
+        onBack={() => history.push('/model-training/PretrainedModels')}
         title="录入预置模型"
       >
         <div

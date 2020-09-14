@@ -70,7 +70,7 @@ const Detail = (props) => {
     await getTrainingLogs(id)
     cancel();
     message.success('成功获取日志')
-  }
+  } 
 
   const saveTrainingDetail = async () => {
     const values = await validateFields(['name', 'desc', 'scope']);
