@@ -37,9 +37,9 @@ const AvisualisDetail = (props) => {
 
   const getData = async () => {
     setLoading(true);
-    if (!Object.keys(addFormData).length && !modelId && !detailId) history.push('/ModelManagement/avisualis');
+    if (!Object.keys(addFormData).length && !modelId && !Number(detailId)) history.push('/ModelManagement/avisualis');
     let _addFormData = _.cloneDeep(addFormData);
-    if (modelId || detailId) {
+    if (Boolean(Number(modelId)) || Boolean(Number(detailId))) {
       const { code, data } = await getAvisualisDetail(modelId || detailId);
       if (code === 0 && data) {
         const { nodes, edges } = data.model.params;
@@ -82,7 +82,8 @@ const AvisualisDetail = (props) => {
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || panelApiData.panel, childrenDisabled = modelId || detailId ? true : false;
+    let _treeData = [], _children = [], _data = data || panelApiData.panel, 
+    childrenDisabled = (Boolean(Number(modelId)) || Boolean(Number(detailId))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.nodes ? newData.nodes.length : 0;

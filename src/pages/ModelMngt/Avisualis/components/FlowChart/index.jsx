@@ -304,7 +304,7 @@ const FlowChart = forwardRef((props, ref) => {
           flowChartData={flowChartData}
           selectItem={selectItem}
           setFlowChartData={setFlowChartData}
-          detailId={detailId}
+          detailId={Number(detailId)}
           onChangeNode={onChangeNode}
         />
       </Card>

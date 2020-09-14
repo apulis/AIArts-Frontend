@@ -73,7 +73,7 @@ const Avisualis = () => {
         }
       });
       const parmas = way === 2 ? `type=${use}&&modelId=${model}` : `type=${use}`;
-      history.push(`/ModelManagement/avisualis/detail?${parmas}`);
+      history.push(`/ModelManagement/avisualis/detail/${`add`}?${parmas}`);
     });
   };
 
