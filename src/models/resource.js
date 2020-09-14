@@ -22,7 +22,7 @@ export function beforeSubmitJob(isDistributed, deviceType, deviceNum, distribute
 
 const EnumDeviceTypes = {
   'nvidia.com/gpu': 'GPU',
-  'huawei.com/npu': 'NPU',
+  'npu.huawei.com/NPU': 'NPU',
 }
 
 export function checkIfGpuOrNpu(deviceType) {

@@ -1,4 +1,4 @@
-import { message, Form, Input, Button, Select, Descriptions, InputNumber } from 'antd';
+import { message, Form, Input, Button, Select, Descriptions, InputNumber, Modal } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less'; 
 import { history, useDispatch } from 'umi';
@@ -12,16 +12,18 @@ const { Option } = Select;
 const ItemPanel = (props) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const { avisualis, flowChartData, selectItem, setFlowChartData, id } = props;
+  const { avisualis, flowChartData, selectItem, setFlowChartData, detailId, onChangeNode } = props;
   const { addFormData, treeData } = avisualis;
   const [btnLoading, setBtnLoading] = useState(false);
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
+  const [changeNodeKey, setChangeNodeKey] = useState({});
 
   useEffect(() => {
     if (selectItem) {
-      const child = treeData.find(i => selectItem._cfg.model.id.split('-')[0] === i.key).children;
-      setChangeNodeOptions(child);
+      const selectId = selectItem._cfg.model.id;
+      const child = treeData.find(i => selectId.split('-')[0] === i.key).children;
+      setChangeNodeOptions(child.filter(i => i.key !== selectId));
     }
   }, [selectItem]);
 
@@ -59,10 +61,9 @@ const ItemPanel = (props) => {
       nodes: newNodes,
       edges: newEdges,
     };
-    // const { code, data } = id ? await patchAvisualis(id, submitData) : await submitAvisualis(submitData);
-    const { code, data } = await submitAvisualis(submitData);
+    const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
     if (code === 0) {
-      message.success(`${id ? '保存' : '创建'}成功！`);
+      message.success(`${detailId ? '保存' : '创建'}成功！`);
       dispatch({
         type: 'avisualis/saveData',
         payload: {
@@ -117,17 +118,25 @@ const ItemPanel = (props) => {
     return data ? data.text : '--';
   }
 
-  // console.log("-------", selectItem)
-  // console.log("-------treeData", treeData)
-
+  const selectChangeNode = () => {
+    if (!changeNodeKey) {
+      message.warning('请选择更换节点');
+      return;
+    }
+    const success = onChangeNode(changeNodeKey);
+    if (success) {
+      setModalFlag(false);
+      message.success('更换成功！');
+    }
+  }
 
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        <Button type="primary" loading={btnLoading} onClick={onSubmit}>{id ? '保存模型' : '创建模型'}</Button>
+        <Button type="primary" loading={btnLoading} onClick={onSubmit}>{detailId ? '保存模型' : '创建模型'}</Button>
       </div>
-      {selectItem ?
+      {selectItem && selectItem._cfg ?
         <>
           <div className="ant-descriptions-title">{`${selectItem._cfg.model.config.length > 0 ? '节点配置' : '该节点无配置项'}`}</div>
           <Form form={form}>
@@ -136,7 +145,7 @@ const ItemPanel = (props) => {
           <div style={{ float: 'right', textAlign: 'right' }}>
             {selectItem._cfg.model.config.length > 0 && 
             <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
-            {/* {changeNodeOptions.length > 1 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
+            {/* {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
           </div>
         </> :
         <Descriptions column={1} title="模型详情">
@@ -153,10 +162,10 @@ const ItemPanel = (props) => {
           maskClosable={false}
           footer={[
             <Button onClick={() => setModalFlag(false)}>取消</Button>,
-            <Button type="primary" onClick={onSubmit}>更换</Button>
+            <Button type="primary" onClick={selectChangeNode}>更换</Button>
           ]}
         >
-          <Select placeholder="请选择节点">
+          <Select placeholder="请选择节点" style={{ width: '100%' }} onChange={v => setChangeNodeKey(v)}>
             {changeNodeOptions.map(i => <Option value={i.key}>{i.title}</Option>)}
           </Select>
         </Modal>

@@ -12,17 +12,28 @@
         padding: 24px 16px;
         overflow-y: scroll;
         height: calc(100vh);
-    }
+      }
     }
     .ant-tree {
       background: #f8f8f8;
       .ant-tree-title {
         font-size: 18px;
+        margin-left: 8px;
       }
       .ant-tree-treenode-disabled .ant-tree-title {
         color: #1890ff !important;
         font-weight: bold; 
       }
+      .ant-tree-switcher svg {
+        font-size: 16px;
+        vertical-align: sub;
+      }
+      .ant-tree-iconEle svg {
+        font-size: 24px;
+      }
+    }
+    .treeCard .ant-card-body {
+      padding: 24px 16px 24px 0;
     }
   }
 }

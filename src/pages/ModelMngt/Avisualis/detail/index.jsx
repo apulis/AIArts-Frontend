@@ -6,7 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getPanel, getAvisualisDetail } from '../service';
 import styles from './index.less';
 import { useDispatch, history } from 'umi';
-import { DownOutlined } from '@ant-design/icons'
+import { DownOutlined, FolderOutlined, FolderOpenOutlined, FolderOpenTwoTone } from '@ant-design/icons'
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
 import _ from 'lodash';
@@ -16,7 +16,8 @@ const { Search } = Input;
 
 const AvisualisDetail = (props) => {
   const { avisualis, location } = props;
-  const { type, id } = location.query;
+  const { type, modelId } = location.query;
+  const detailId = props.match.params.id;
   const dispatch = useDispatch();
   const [panelData, setPanelData] = useState([]);
   const flowChartRef = useRef();
@@ -36,10 +37,10 @@ const AvisualisDetail = (props) => {
 
   const getData = async () => {
     setLoading(true);
-    if (!Object.keys(addFormData).length && !id) history.push('/ModelManagement/avisualis');
+    if (!Object.keys(addFormData).length && !modelId && !Number(detailId)) history.push('/ModelManagement/avisualis');
     let _addFormData = _.cloneDeep(addFormData);
-    if (id) {
-      const { code, data } = await getAvisualisDetail(id);
+    if (Boolean(Number(modelId)) || Boolean(Number(detailId))) {
+      const { code, data } = await getAvisualisDetail(modelId || detailId);
       if (code === 0 && data) {
         const { nodes, edges } = data.model.params;
         const transformNodes = JSON.parse(nodes).map(i => {
@@ -81,7 +82,8 @@ const AvisualisDetail = (props) => {
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || panelApiData.panel, childrenDisabled = id ? true : false;
+    let _treeData = [], _children = [], _data = data || panelApiData.panel, 
+    childrenDisabled = (Boolean(Number(modelId)) || Boolean(Number(detailId))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.nodes ? newData.nodes.length : 0;
@@ -105,7 +107,9 @@ const AvisualisDetail = (props) => {
         title: `步骤${idx + 1}：${name}`,
         key: `${name}`,
         children: _children,
-        disabled: true
+        disabled: true,
+        icon: <FolderOpenTwoTone />,
+        // titleRender: (nodeData) => <div className="test">{`步骤${idx + 1}：${name}`}</div>,
       })
     })
     setPanelData(_treeData);
@@ -130,7 +134,7 @@ const AvisualisDetail = (props) => {
   return (
     <PageHeaderWrapper title={false}>
       <div className={styles.avisualisWrap}>
-        <Card>
+        <Card className="treeCard">
           {panelData.length ? <Tree
             showIcon
             defaultExpandAll
@@ -144,8 +148,9 @@ const AvisualisDetail = (props) => {
         <FlowChart 
           ref={flowChartRef} 
           transformData={transformData} 
-          id={id}
+          detailId={detailId}
           detailData={detailData || {}}
+          detailId={detailId}
         />
       </div>
     </PageHeaderWrapper>

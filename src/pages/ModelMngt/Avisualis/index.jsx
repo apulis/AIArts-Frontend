@@ -72,8 +72,8 @@ const Avisualis = () => {
           addFormData: values
         }
       });
-      const parmas = way === 2 ? `type=${use}&&id=${model}` : `type=${use}`;
-      history.push(`/ModelManagement/avisualis/detail?${parmas}`);
+      const parmas = way === 2 ? `type=${use}&&modelId=${model}` : `type=${use}`;
+      history.push(`/ModelManagement/avisualis/detail/${`add`}?${parmas}`);
     });
   };
 
@@ -83,7 +83,7 @@ const Avisualis = () => {
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => <Link to={{ pathname: '/ModelManagement/avisualis/detail', query: { id: item.id, type: 'Avisualis_Classfication' } }}>{item.name}</Link>,
+      render: item => <Link to={{ pathname: `/ModelManagement/avisualis/detail/${item.id}`, query: { type: 'Avisualis_Classfication' } }}>{item.name}</Link>,
     },
     {
       dataIndex: 'status',

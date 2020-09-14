@@ -18,12 +18,12 @@ insertCss(`
 `);
 
 const FlowChart = forwardRef((props, ref) => {
-  const { id, transformData, detailData, avisualis } = props;
+  const { transformData, detailData, avisualis, detailId } = props;
   const [graph, setGraph] = useState(null);
   const [flowChartData, setFlowChartData] = useState(detailData);
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
-  const { panelApiData } = avisualis;
+  const { panelApiData, treeData } = avisualis;
 
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd
@@ -273,6 +273,27 @@ const FlowChart = forwardRef((props, ref) => {
     }
   }
 
+  const onChangeNode = (id) => {
+    const fId = id.split('-')[0];
+    const fIdx = treeData.findIndex(i => fId === i.key);
+    const changeChildTemp = treeData[fIdx].children;
+    const changeNode = changeChildTemp.find(i => i.key === id);
+    const cloneData = _.cloneDeep(flowChartData);
+    const { title, key, config } = changeNode;
+    cloneData.nodes[fIdx] = {
+      id: key,
+      name: title,
+      config: config
+    };
+    cloneData.edges[fIdx].source = id;
+    if (fIdx !== 0) cloneData.edges[fIdx - 1].target = id;
+    setSelectItem(null);
+    setFlowChartData(cloneData);
+    graph.changeData(cloneData);
+    graph.fitCenter();
+    return true;
+  }
+
   return (
     <>
       <div className={styles.G6Content} id="container">
@@ -283,7 +304,8 @@ const FlowChart = forwardRef((props, ref) => {
           flowChartData={flowChartData}
           selectItem={selectItem}
           setFlowChartData={setFlowChartData}
-          id={id}
+          detailId={Number(detailId)}
+          onChangeNode={onChangeNode}
         />
       </Card>
     </>
