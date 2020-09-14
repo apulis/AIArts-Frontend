@@ -168,10 +168,17 @@ const CodeCreate = (props) => {
 
   useEffect(() => {
     console.log(111, engineSource)
-    if (engineSource === 2 && userFrameWorks.length) {
-      setFieldsValue({
-        engine: userFrameWorks[0].fullName
-      })
+    if (engineSource === 2) {
+      if (userFrameWorks.length) {
+        setFieldsValue({
+          engine: userFrameWorks[0].fullName || '',
+        })
+      } else {
+        setFieldsValue({
+          engine: '',
+        })
+      }
+      
     } 
   }, [engineSource])
 
