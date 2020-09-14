@@ -167,7 +167,6 @@ const CodeCreate = (props) => {
   }, []);// 更新处理
 
   useEffect(() => {
-    console.log(111, engineSource)
     if (engineSource === 2) {
       if (userFrameWorks.length) {
         setFieldsValue({
