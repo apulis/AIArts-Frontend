@@ -168,7 +168,7 @@ const ModelEvaluation = props => {
       const { code, msg } = await addEvaluation(evalParams);
       if (code === 0) {
         message.success(`创建评估成功`);
-        history.push('/ModelManagement/MyModels');
+        history.push('/ModelManagement/ModelEvaluation/List');
       } else {
         msg && message.error(`创建评估失败:${msg}`);
       }
