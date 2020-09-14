@@ -127,7 +127,7 @@ const ItemPanel = (props) => {
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
         <Button type="primary" loading={btnLoading} onClick={onSubmit}>{id ? '保存模型' : '创建模型'}</Button>
       </div>
-      {selectItem ?
+      {selectItem && selectItem._cfg ?
         <>
           <div className="ant-descriptions-title">{`${selectItem._cfg.model.config.length > 0 ? '节点配置' : '该节点无配置项'}`}</div>
           <Form form={form}>
