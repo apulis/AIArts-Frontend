@@ -261,9 +261,11 @@ const CodeCreate = (props) => {
           }
           {
             engineSource === 2 && <Form.Item name="engine" label="引擎类型" rules={[{ required: true, message: '请选择 引擎名称' }]}>
-              <Select>
+              <Select
+                showSearch
+              >
                 {
-                  userFrameWorks.map((item, key) => (
+                  filteredUserFrameWorks.map((item, key) => (
                     <Option key={item.id} value={item.fullName}>{getNameFromDockerImage(item.fullName)}</Option>
                   ))
                 }
