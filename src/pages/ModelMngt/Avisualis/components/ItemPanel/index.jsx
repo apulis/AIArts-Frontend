@@ -142,7 +142,7 @@ const ItemPanel = (props) => {
         <Descriptions column={1} title="模型详情">
         <Descriptions.Item label="模型名称">{addFormData.name || '--'}</Descriptions.Item>
         <Descriptions.Item label="模型用途">{getMODELSTYPESText()}</Descriptions.Item>
-        <Descriptions.Item label="简介">{addFormData.desc || '--'}</Descriptions.Item>
+        <Descriptions.Item label="简介">{addFormData.description || '--'}</Descriptions.Item>
       </Descriptions>}
       {modalFlag && (
         <Modal
