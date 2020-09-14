@@ -455,7 +455,7 @@ const ModelTraining = (props) => {
         }
         
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
-          <Select style={{ width: 300 }} disabled={typeCreate} >
+          <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2} >
             {
               engineSource === 1 && frameWorks.map(f => (
                 <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>

@@ -66,6 +66,7 @@ export const errorHandler = async (error) => {
     
     if (status === 401) {
       const href = window.location.href;
+      console.log('-----', !/localhost/.test(href))
       if (!/localhost/.test(href)) {
         const queryString = stringify({
           redirect: window.location.href,
