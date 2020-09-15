@@ -177,6 +177,10 @@ export default [
                 name: 'avisualis',
               },
               {
+                path: '/ModelManagement/avisualis/templateList',
+                component: './ModelMngt/Avisualis/templateList',
+              },
+              {
                 path: '/ModelManagement/avisualis/detail/:id',
                 component: './ModelMngt/Avisualis/detail',
               },

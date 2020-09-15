@@ -6,6 +6,7 @@ import { submitAvisualis, patchAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
 import _ from 'lodash';
+import AddFormModal from '../AddFormModal';
 
 const { Option } = Select;
 
@@ -18,6 +19,7 @@ const ItemPanel = (props) => {
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
+  const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config.length > 0;
 
   useEffect(() => {
     if (selectItem) {
@@ -136,23 +138,19 @@ const ItemPanel = (props) => {
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
         <Button type="primary" loading={btnLoading} onClick={onSubmit}>{detailId ? '保存模型' : '创建模型'}</Button>
       </div>
-      {selectItem && selectItem._cfg ?
+      <Descriptions title="模型详情"></Descriptions>
+      <AddFormModal />
+      {hasSelectItem &&
         <>
-          <div className="ant-descriptions-title">{`${selectItem._cfg.model.config.length > 0 ? '节点配置' : '该节点无配置项'}`}</div>
+          <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
           <Form form={form}>
             {getConfig()}
           </Form>
-          <div style={{ float: 'right', textAlign: 'right' }}>
-            {selectItem._cfg.model.config.length > 0 && 
-            <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
-            {/* {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
-          </div>
-        </> :
-        <Descriptions column={1} title="模型详情">
-        <Descriptions.Item label="模型名称">{addFormData.name || '--'}</Descriptions.Item>
-        <Descriptions.Item label="模型用途">{getMODELSTYPESText()}</Descriptions.Item>
-        <Descriptions.Item label="简介">{addFormData.description || '--'}</Descriptions.Item>
-      </Descriptions>}
+        </>}
+        <div style={{ float: 'right', textAlign: 'right' }}>
+          {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
+          {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>}
+        </div>
       {modalFlag && (
         <Modal
           title="更换节点"

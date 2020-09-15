@@ -37,52 +37,57 @@ const AvisualisDetail = (props) => {
 
   const getData = async () => {
     setLoading(true);
-    if (!Object.keys(addFormData).length && !modelId && !Number(detailId)) history.push('/ModelManagement/avisualis');
-    let _addFormData = _.cloneDeep(addFormData);
-    if (Boolean(Number(modelId)) || Boolean(Number(detailId))) {
-      const { code, data } = await getAvisualisDetail(modelId || detailId);
-      if (code === 0 && data) {
-        const { nodes, edges } = data.model.params;
-        const transformNodes = JSON.parse(nodes).map(i => {
-          return {
-            ...i,
-            id: `${i.id}-${i.name}`
-          }
-        })
-        const _detailData = {
-          nodes: transformNodes,
-          edges: JSON.parse(edges),
-        };
-        setDetailData(_detailData);
-        if (!(_addFormData.way && _addFormData.way === 2)) {
-          _addFormData = data.model;
-        }
-      }
-    }
-    const { code, data } = await getPanel(type);
+    // if (!Object.keys(addFormData).length && !modelId && !Number(detailId)) history.push('/ModelManagement/avisualis');
+    // let _addFormData = _.cloneDeep(addFormData);
+    // if (Boolean(Number(modelId)) || Boolean(Number(detailId))) {
+      
+    // }
+    const { code, data } = await getAvisualisDetail(modelId || detailId);
     if (code === 0 && data) {
-      const { panel, codePath, engine, startupFile } = data;
-      if (panel && panel.length) {
-        transformData(panel);
+      const { params, codePath, engine, startupFile } = data.model;
+      const { nodes, edges, panel } = params;
+      const _panel = JSON.parse(panel);
+      const transformNodes = JSON.parse(nodes).map(i => {
+        return {
+          ...i,
+          id: `${i.id}-${i.name}`
+        }
+      })
+      const _detailData = {
+        nodes: transformNodes,
+        edges: JSON.parse(edges),
+      };
+      setDetailData(_detailData);
+      console.log('-------_panel', JSON.parse(panel))
+      if (_panel && _panel.length) {
+        transformData(_panel);
         dispatch({
           type: 'avisualis/saveData',
           payload: {
             addFormData: {
-              ..._addFormData,
+              ...addFormData,
               codePath: codePath,
               engine: engine,
               startupFile: startupFile
             },
-            panelApiData: data
+            panelApiData: _panel
           }
         });
       }
+      // if (!(_addFormData.way && _addFormData.way === 2)) {
+      //   _addFormData = data.model;
+      // }
     }
+    // const { code, data } = await getPanel(type);
+    // if (code === 0 && data) {
+    //   const { panel, codePath, engine, startupFile } = data;
+      
+    // }
     setLoading(false);
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || panelApiData.panel, 
+    let _treeData = [], _children = [], _data = data || panelApiData, 
     childrenDisabled = (Boolean(Number(modelId)) || Boolean(Number(detailId))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {

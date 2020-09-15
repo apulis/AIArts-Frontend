@@ -9,7 +9,6 @@ const { Option } = Select
 const AddFormModal = (props, ref) => {
   const [form] = Form.useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
-  const { modelTypesData } = props;
   const [way, setWay] = useState(1);
   const [jobTrainingType, setJobtrainingtype] = useState('RegularJob');
   const [nodeInfo, setNodeInfo] = useState([]);
@@ -138,7 +137,7 @@ const AddFormModal = (props, ref) => {
       >
         <Input value={deviceTotal} disabled />
       </Form.Item>}
-      <Form.Item label="创建方式" rules={[{ required: true }]} name="way">
+      {/* <Form.Item label="创建方式" rules={[{ required: true }]} name="way">
         <Radio.Group onChange={e => setWay(e.target.value)}>
           <Radio value={1}>自定义</Radio>
           <Radio value={2}>使用内置模型</Radio>
@@ -152,7 +151,7 @@ const AddFormModal = (props, ref) => {
         <Select placeholder="请选择模型">
           {modelTypesData.map(i => <Option value={i.id}>{i.name}</Option>)}
         </Select>
-      </Form.Item>}
+      </Form.Item>} */}
     </Form>
   );
 };

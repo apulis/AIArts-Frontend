@@ -265,7 +265,7 @@ const FlowChart = forwardRef((props, ref) => {
           setFlowChartData(temp);
           graph.changeData(temp);
           graph.fitCenter();
-          transformData(panelApiData.panel, temp);
+          transformData(panelApiData, temp);
           setSelectItem(null);
           return;
         }
