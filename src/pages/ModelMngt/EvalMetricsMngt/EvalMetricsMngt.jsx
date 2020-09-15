@@ -9,6 +9,7 @@ import moment from 'moment';
 import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail';
 import styles from '@/global.less';
 import { getNameFromDockerImage } from '@/utils/reg';
+import { downloadStringAsFile } from '@/utils/utils';
 
 const { confirm } = Modal;
 const { Option } = Select;
@@ -71,10 +72,17 @@ const EvalMetricsMngt = () => {
     setFormValues({ scope: 2, searchWord: '' });
   };
 
+  const handleSaveAsFile = (item) => {
+    delete item.metaData.createAt;
+    delete item.metaData.updateAt;
+    downloadStringAsFile(JSON.stringify(item, null, 2), `${item.metaData.name}.json`)
+  }
+
   const columns = [
     {
       title: '评估参数名称',
       sorter: true,
+      width: '16%',
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       dataIndex: ['params', 'name'],
       key: 'name',
@@ -86,9 +94,15 @@ const EvalMetricsMngt = () => {
     //   width: 70,
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
-    { title: '引擎类型', dataIndex: ['params', 'engine'], key: 'engine', render(value) {
-      return <div>{getNameFromDockerImage(value)}</div>
-    } },
+    {
+      title: '引擎类型',
+      dataIndex: ['params', 'engine'],
+      width: '16%',
+      key: 'engine',
+      render(value) {
+        return <div>{getNameFromDockerImage(value)}</div>
+      }
+    },
     {
       title: '创建时间',
       sorter: true,
@@ -99,18 +113,20 @@ const EvalMetricsMngt = () => {
     },
     {
       title: '描述',
-      width: '25%',
       ellipsis: true,
+      width: '16%',
       dataIndex: ['params', 'desc']
     },
     {
       title: '操作',
+      align: 'center',
       render: item => {
         const id = item.metaData.id;
         return (
           <>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
+            <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)} >保存为文件</a>
           </>
         );
       },
