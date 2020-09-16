@@ -244,6 +244,14 @@ export default [
             component: './VisualOperation',
             authority: ['AI_ARTS_ALL'],
           },
+          
+          {
+            path: '/Image',
+            name: 'image',
+            icon: 'PictureOutlined',
+            component: './ImageManage/List',
+            authority: ['AI_ARTS_ALL'],
+          },
           {
             path: '/Setting',
             name: 'setting',
