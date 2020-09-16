@@ -63,7 +63,7 @@ const InferenceList = props => {
 
   useInterval(() => {
     getJobStatusSumary();
-    handleSearch(true);
+    handleSearch(false);
   }, props.common.interval)
 
   useEffect(() => {
@@ -168,7 +168,7 @@ const InferenceList = props => {
     });
   };
 
-  const handleSearch = (withLoading) => {
+  const handleSearch = (withLoading = true) => {
     if (withLoading) {
       setLoading(true);
     }
