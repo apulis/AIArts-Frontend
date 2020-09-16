@@ -33,6 +33,11 @@ const EvaluationDetail = props => {
     if (code === 0) {
       // message.success('成功获取结果');
       const { data: { evaluation, log, indicator, confusion } } = res;
+      debugger
+      if('visualPath' in evaluation.params){
+        evaluation.visualPath = evaluation.params.visualPath;
+        delete evaluation.params['visualPath'];
+      }
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
@@ -70,7 +75,10 @@ const EvaluationDetail = props => {
     if (code === 0) {
       const { data: { evaluation, log, indicator, confusion } } = res;
       message.success('成功获取结果');
-
+      if('visualPath' in evaluation.params){
+        evaluation.visualPath = evaluation.params.visualPath;
+        delete evaluation.params['visualPath'];
+      }
       setEvaluationJob(evaluation);
       setLogs(log);
       setIndicator(indicator);
@@ -133,6 +141,7 @@ const EvaluationDetail = props => {
           <Descriptions.Item label="测试数据集">{evaluationJob && (evaluationJob.datasetName ? evaluationJob.datasetName : evaluationJob.datasetPath)}</Descriptions.Item>
           <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
           <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
+          <Descriptions.Item label="可视化路径">{evaluationJob?.visualPath}</Descriptions.Item>
           <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
           { evaluationJob && evaluationJob.paramPath ?
             <Descriptions.Item label="模型权重文件">{evaluationJob?.paramPath}</Descriptions.Item>
