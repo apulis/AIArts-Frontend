@@ -110,7 +110,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       onOk={handleSelectModalPath}
       width="65%"
     >
-      <div style={{ marginTop: '20px', paddingBottom: '20px' }}>
+      <div style={{ marginTop: '20px', paddingBottom: '10px', overflow: 'hidden' }}>
         <Search
           style={{ width: '200px', marginRight:'20px', float: 'right' }}
           placeholder="请输入模型名称"
@@ -124,6 +124,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
           type: 'radio',
           ...rowSelection,
         }}
+        style={{ marginTop: '10px' }}
         rowKey="id"
         dataSource={modelPaths.list}
         onChange={onSortChange}
