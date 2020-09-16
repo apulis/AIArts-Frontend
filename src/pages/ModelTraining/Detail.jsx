@@ -32,6 +32,11 @@ const Detail = (props) => {
   const getTrainingDetail = async (options) => {
     const res = await fetchTrainingDetail(id);
     if (res.code === 0) {
+      const data = res.data;
+      if('visualPath' in data.params){
+      data.visualPath = data.params.visualPath;
+      delete data.params['visualPath'];
+      }
       setJobDetail(res.data)
       const status = res.data.status;
       if (!['unapproved', 'queued', 'scheduling'].includes(status)) {
@@ -121,7 +126,8 @@ const Detail = (props) => {
         <Descriptions.Item label="计算节点规格">{jobDetail.deviceType}</Descriptions.Item>
         <Descriptions.Item label="训练数据集">{jobDetail.datasetPath}</Descriptions.Item>
         <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
-        <Descriptions.Item label="输出路径">{jobDetail.outputPath}</Descriptions.Item>
+        <Descriptions.Item label="可视化路径">{jobDetail.outputPath}</Descriptions.Item>
+        <Descriptions.Item label="输出路径">{jobDetail.visualPath}</Descriptions.Item>
         {
           jobDetail.checkpoint && <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
         }
