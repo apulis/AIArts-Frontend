@@ -26,7 +26,7 @@ const SubmitModelTraining = (props) => {
   const [currentEngineName, setCurrentEngineName] = useState('');
   const [supportedInference, setSupportedInference] = useState({});
   const [currentVersion, setCurrentVersion] = useState('');
-  const [selectModalPathModalVisible, setSelectModalPathVisible] = useState(false);
+  const [selectModelPathModalVisible, setSelectModelPathVisible] = useState(false);
   const [currentModelUsedEngine, setCurrentModelUsedEngine] = useState('');
 
   const [form] = useForm();
@@ -174,7 +174,7 @@ const SubmitModelTraining = (props) => {
   }
 
   const handleSelectModelPath = (row) => {
-    setSelectModalPathVisible(false);
+    setSelectModelPathVisible(false);
     if (!row) return
     setFieldsValue({
       modelPath: row.outputPath,
@@ -219,7 +219,7 @@ const SubmitModelTraining = (props) => {
             <Input placeholder="请输入推理模型路径" style={{ width: '230px' }} />
           </FormItem>
           <FormItem style={{ display: 'inline-block', width: '36px' }}>
-            <Button icon={<FolderOpenOutlined />} onClick={() => setSelectModalPathVisible(true)}></Button>
+            <Button icon={<FolderOpenOutlined />} onClick={() => setSelectModelPathVisible(true)}></Button>
           </FormItem>
           {
             currentModelUsedEngine && <FormItem>
@@ -298,10 +298,10 @@ const SubmitModelTraining = (props) => {
       <Button disabled={buttonDisabled} type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
     </div>
     {
-      selectModalPathModalVisible && <SelectModelPath
-        visible={selectModalPathModalVisible}
+      selectModelPathModalVisible && <SelectModelPath
+        visible={selectModelPathModalVisible}
         onOk={handleSelectModelPath}
-        onCancel={() => setSelectModalPathVisible(false)}
+        onCancel={() => setSelectModelPathVisible(false)}
       />
     }
     </PageHeader>
