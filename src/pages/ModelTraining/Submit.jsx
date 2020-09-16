@@ -242,13 +242,15 @@ const ModelTraining = (props) => {
     if (isPretrainedModel) {
       values.codePath = values.codePath;
       values.startupFile =  values.startupFile;
-      values.outputPath = codePathPrefix + values.outputPath
+      values.outputPath = codePathPrefix + values.outputPath;
+      values.visualPath = codePathPrefix + values.visualPath;
     } else if (importedTrainingParams) {
       //
     } else {
       values.codePath = codePathPrefix + values.codePath;
       values.startupFile = codePathPrefix + values.startupFile;
-      values.outputPath = codePathPrefix + values.outputPath
+      values.outputPath = codePathPrefix + values.outputPath;
+      values.visualPath = codePathPrefix + values.visualPath;
     }
     values.params = params;
     if (distributedJob) {
@@ -488,7 +490,12 @@ const ModelTraining = (props) => {
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
+        <FormItem name="visualPath" labelCol={{ span: 4 }} label="可视化路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
+          {
+            <Input addonBefore={needOutputPathCodePrefix ? codePathPrefix : null} style={{ width: 420 }} />
+          }
+        </FormItem>
+        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" rules={[{required: isPretrainedModel}]}>
           {
             <Input addonBefore={needOutputPathCodePrefix ? codePathPrefix : null} style={{ width: 420 }} />
           }
