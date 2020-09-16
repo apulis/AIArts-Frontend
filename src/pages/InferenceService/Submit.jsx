@@ -22,8 +22,7 @@ const SubmitModelTraining = (props) => {
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [deviceList, setDeviceList] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
-  const [availImage, setAvailImage] = useState([]);
-  //
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [currentEngineName, setCurrentEngineName] = useState('');
   const [supportedInference, setSupportedInference] = useState({});
   const [currentVersion, setCurrentVersion] = useState('');
@@ -40,22 +39,23 @@ const SubmitModelTraining = (props) => {
 
   const handleSubmit = async () => {
     const values = await validateFields();
+    setButtonDisabled(true);
     const cancel = message.loading('正在提交');
     const submitData = {};
     submitData.framework = values.engineName;
+    submitData.version = values.engineVersion;
     submitData.jobName = values.workName;
-    submitData.model_base_path = values.modelName;
-    submitData.device = getFieldValue('deviceType');
+    submitData.model_base_path = values.modelPath;
     submitData.desc = values.desc;
     submitData.params = {};
     submitData.gpuType = values.deviceType;
     submitData.resourcegpu = values.resourcegpu;
     values.runningParams && values.runningParams.forEach(p => {
       if (!p.key) return;
-      submitData.params[p.key] = p. value;
+      submitData.params[p.key] = p.value;
     });
-    submitData.image = values.engineName + ":" + values.engineVersion;
     const res = await createInference(submitData);
+    setButtonDisabled(false);
     if (res.code === 0) {
       cancel();
       message.success('成功提交');
@@ -117,7 +117,7 @@ const SubmitModelTraining = (props) => {
     const initialModelPath = decodeURIComponent(query.modelPath || '').split('?')[0];
     if (initialModelPath) {
       setFieldsValue({
-        modelName: initialModelPath,
+        modelPath: initialModelPath,
       })
     }
   }
@@ -177,7 +177,7 @@ const SubmitModelTraining = (props) => {
     setSelectModalPathVisible(false);
     if (!row) return
     setFieldsValue({
-      modelName: row.outputPath,
+      modelPath: row.outputPath,
     })
     setCurrentModelUsedEngine(`当前模型使用的引擎是：${getNameFromDockerImage(row.engine)}`)
   }
@@ -212,7 +212,7 @@ const SubmitModelTraining = (props) => {
       <Form form={form}>
         <FormItem labelCol={commonLayout.labelCol} label="推理模型路径" required>
           <FormItem
-            name="modelName"
+            name="modelPath"
             rules={[{ required: true }]}
             style={{ display: 'inline-block', width: '250px' }}
           >
@@ -295,7 +295,7 @@ const SubmitModelTraining = (props) => {
         </FormItem>
         
       </Form>
-      <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
+      <Button disabled={buttonDisabled} type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
     </div>
     {
       selectModalPathModalVisible && <SelectModelPath
