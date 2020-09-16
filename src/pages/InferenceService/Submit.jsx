@@ -11,6 +11,7 @@ import { history, withRouter } from 'umi';
 
 import styles from './index.less'
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
+import SelectModelPath from '@/components/BizComponent/SelectModelPath';
 
 
 const { TextArea } = Input; 
@@ -25,8 +26,18 @@ const SubmitModelTraining = (props) => {
   const [currentGpuType, setCurrentGpuType] = useState('');
   const [availImage, setAvailImage] = useState([]);
   const [allSupportInference, setAllSupportInference] = useState([]);
+  //
+  const [currentEngineName, setCurrentEngineName] = useState('');
+  const [supportedInference, setSupportedInference] = useState({});
+  const [currentVersion, setCurrentVersion] = useState('');
+  const [selectModalPathModalVisible, setSelectModalPathVisible] = useState(false);
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
+
+  //
+  const engineNameList = Object.keys(supportedInference);
+
+  const [engineVersionList, setEngineVersionList] = useState([]);
 
   const handleSubmit = async () => {
     const values = await validateFields();
@@ -41,7 +52,7 @@ const SubmitModelTraining = (props) => {
     submitData.gpuType = values.gpuType;
     submitData.resourcegpu = 1;
     values.runningParams && values.runningParams.forEach(p => {
-      submitData.params[p.key] = p.value;
+      submitData.params[p.key] = p. value;
     });
     if (submitData.device === 'CPU') {
       submitData.image = availImage[0];
@@ -52,46 +63,47 @@ const SubmitModelTraining = (props) => {
     const currentInference = allSupportInference.find(val => val.framework === currentFramework);
     submitData.image = availImage[currentInference?.device?.findIndex(val => val === submitData.device)];    
     
-    // const submitJobInner = async () => {
-      const res = await createInference(submitData);
-      if (res.code === 0) {
-        cancel();
-        message.success('成功提交');
-        history.push('/Inference/central')
-      }
-    // }
-
-    // if (!beforeSubmitJob(false, submitData.device, values.deviceNum)) {
-    //   Modal.confirm({
-    //     title: '当前暂无可用推理设备，继续提交将会进入等待队列',
-    //     content: '是否继续',
-    //     onOk() {
-    //       submitJobInner()
-    //     },
-    //     onCancel() {
-
-    //     }
-    //   })
-    // } else {
-    //   submitJobInner();
-    // }    
+    const res = await createInference(submitData);
+    if (res.code === 0) {
+      cancel();
+      message.success('成功提交');
+      history.push('/Inference/central')
+    } 
   }
 
   const getAvailableResource = async () => {
     const res = await getAllSupportInference()
     if (res.code === 0) {
-      const deviceList = res.data[0];
-      setAllSupportInference(res.data);
-      let { device } = deviceList;
-      setFrameWorks(res.data.map(val => val.framework));
-      if (device.length > 0) {
+      const supportedInference = res.data;
+      setSupportedInference(supportedInference);
+      const engineNameList = Object.keys(supportedInference);
+      if (engineNameList.length) {
+        // 初始化表单内容
+        const firstEngineName = engineNameList[0];
+        const engineVersionList = Object.keys(supportedInference[firstEngineName]);
+        const firstEngineVersion = engineVersionList[0];
+        setEngineVersionList(engineVersionList)
         setFieldsValue({
-          deviceType: device[0]
+          engineName: firstEngineName,
+          engineVersion: firstEngineVersion,
         })
+        setDeviceList(Object.keys(supportedInference[firstEngineName][firstEngineVersion]))
       }
-      setDeviceList(device);
     }
   }
+
+  useEffect(() => {
+    if (currentEngineName) {
+      const currentEngineVersionList = Object.keys(supportedInference[currentEngineName])
+      setEngineVersionList(currentEngineVersionList);
+      setFieldsValue({
+        engineVersion: currentEngineVersionList[0],
+      })
+      setCurrentVersion(currentEngineVersionList[0])
+    }
+    
+  }, [currentEngineName])
+
 
   const fetchComputedDevice = async () => {
     const res = await getAllComputedDevice();
@@ -118,12 +130,6 @@ const SubmitModelTraining = (props) => {
     fetchComputedDevice();
     initModelPath();
   }, []);
-
-  // useEffect(() => {
-  //   props.dispatch({
-  //     type: 'resource/fetchResource'
-  //   })
-  // }, []);
 
   const addParams = () => {
     const newRunningParams = runningParams.concat({
@@ -162,10 +168,33 @@ const SubmitModelTraining = (props) => {
     labelCol: { span: 4 },
     wrapperCol: { span: 8 },
   }
-  const handleSelectFramework = () => {
-    const currentFramework = getFieldValue('frameWork');
-    setAvailImage(allSupportInference.find(val => val.framework === currentFramework).image);
+
+  const handleEngineChange = (type, val) => {
+    if (type === 'name') {
+      setCurrentEngineName(val);
+    } else if (type === 'version') {
+      setCurrentVersion(val);
+    }
   }
+
+  const handleSelectModelPath = (row) => {
+    setSelectModalPathVisible(false);
+    if (!row) return
+    setFieldsValue({
+      modelName: row.outputPath,
+    })
+  }
+
+  useEffect(() => {
+    if (currentEngineName && currentVersion) {
+      const deviceList = Object.keys(supportedInference[currentEngineName][currentVersion]);
+      setDeviceList(deviceList)
+      setFieldsValue({
+        deviceType: deviceList[0],
+      })
+    }
+  }, [currentEngineName, currentVersion])
+
   return (
     <PageHeader
       ghost={false}
@@ -184,19 +213,42 @@ const SubmitModelTraining = (props) => {
       <Divider style={{ borderColor: '#cdcdcd' }} />
       <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
       <Form form={form}>
-        <FormItem {...commonLayout} name="frameWork" label="引擎" rules={[{ required: true }]}>
-          <Select placeholder="请选择" onChange={handleSelectFramework}>
-            {
-              frameWorks.map(f => (
-                <Option value={f}>{getNameFromDockerImage(f)}</Option>
-              ))
-            }
-          </Select>
+        <FormItem labelCol={commonLayout.labelCol} label="推理模型路径" required>
+          <FormItem
+            name="modelName"
+            rules={[{ required: true }]}
+            style={{ display: 'inline-block', width: '250px' }}
+          >
+            <Input placeholder="请输入推理模型路径" style={{ width: '230px' }} />
+          </FormItem>
+          <FormItem style={{ display: 'inline-block', width: '36px' }}>
+            <Button icon={<FolderOpenOutlined />} onClick={() => setSelectModalPathVisible(true)}></Button>
+          </FormItem>
         </FormItem>
-        <FormItem {...commonLayout}  label="使用模型" name="modelName" rules={[{ required: true, message: '请输入模型' }]}>
-          <Input placeholder="请输入使用模型" style={{width: '260px'}} />
+        <FormItem {...commonLayout} label="引擎" required>
+          <FormItem
+            name="engineName"
+            style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+          >
+            <Select placeholder="引擎名称" onChange={(name) => handleEngineChange('name', name)}>
+              {
+                engineNameList.map(val => (
+                  <Option value={val}>{getNameFromDockerImage(val)}</Option>
+                ))
+              }
+            </Select>
+          </FormItem>
+          <FormItem name="engineVersion" style={{ display: 'inline-block', width: 'cal(50% - 8px)', marginLeft: '10px'}}>
+            <Select placeholder="引擎版本" onChange={(version) => handleEngineChange('version', version)}>
+              {
+                engineVersionList.map(val => (
+                  <Option value={val}>{val}</Option>
+                ))
+              }
+            </Select>
+          </FormItem>
         </FormItem>
-        <FormItem label="作业参数" labelCol={{ span: 4 }} >
+        <FormItem label="作业参数" labelCol={{ span: 4 }}>
           {
             runningParams.map((param, index) => {
               return (
@@ -224,26 +276,31 @@ const SubmitModelTraining = (props) => {
           <Select placeholder="请选择" style={{ width: '260px' }} onChange={() => setCurrentGpuType(getFieldValue('deviceType'))}>
             {
               deviceList.map(d => (
-                <Option value={d}>{d}</Option>
+                <Option value={d}>{d.toUpperCase()}</Option>
               ))
             }
           </Select>
         </FormItem>
-        {
-          currentGpuType === 'GPU' && (<FormItem label="GPU 类型" name="gpuType" {...commonLayout} rules={[{ required: false }]}>
-            <Select placeholder="请选择" style={{ width: '260px' }}>
-              {
-                computedDeviceList.map(c => (
-                  <Option value={c}>{c}</Option>
-                ))
-              }
-            </Select>
-          </FormItem>)
-        }
+        <FormItem label="GPU 类型" name="gpuType" {...commonLayout} rules={[{ required: false }]}>
+          <Select placeholder="请选择" style={{ width: '260px' }}>
+            {
+              computedDeviceList.map(c => (
+                <Option value={c}>{c}</Option>
+              ))
+            }
+          </Select>
+        </FormItem>
         
       </Form>
       <Button type="primary" style={{ float: 'right' }} onClick={handleSubmit}>立即创建</Button>
     </div>
+    {
+      selectModalPathModalVisible && <SelectModelPath
+        visible={selectModalPathModalVisible}
+        onOk={handleSelectModelPath}
+        onCancel={() => setSelectModalPathVisible(false)}
+      />
+    }
     </PageHeader>
   )
 }
