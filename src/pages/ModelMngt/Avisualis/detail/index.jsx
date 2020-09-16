@@ -37,28 +37,24 @@ const AvisualisDetail = (props) => {
 
   const getData = async () => {
     setLoading(true);
-    // if (!Object.keys(addFormData).length && !modelId && !Number(detailId)) history.push('/ModelManagement/avisualis');
-    // let _addFormData = _.cloneDeep(addFormData);
-    // if (Boolean(Number(modelId)) || Boolean(Number(detailId))) {
-      
-    // }
     const { code, data } = await getAvisualisDetail(modelId || detailId);
     if (code === 0 && data) {
       const { params, codePath, engine, startupFile } = data.model;
       const { nodes, edges, panel } = params;
       const _panel = JSON.parse(panel);
-      const transformNodes = JSON.parse(nodes).map(i => {
-        return {
-          ...i,
-          id: `${i.id}-${i.name}`
-        }
-      })
-      const _detailData = {
-        nodes: transformNodes,
-        edges: JSON.parse(edges),
-      };
-      setDetailData(_detailData);
-      console.log('-------_panel', JSON.parse(panel))
+      if (nodes && edges) {
+        const transformNodes = JSON.parse(nodes).map(i => {
+          return {
+            ...i,
+            id: `${i.id}-${i.name}`
+          }
+        })
+        const _detailData = {
+          nodes: transformNodes,
+          edges: JSON.parse(edges),
+        };
+        setDetailData(_detailData);
+      }
       if (_panel && _panel.length) {
         transformData(_panel);
         dispatch({
@@ -74,15 +70,7 @@ const AvisualisDetail = (props) => {
           }
         });
       }
-      // if (!(_addFormData.way && _addFormData.way === 2)) {
-      //   _addFormData = data.model;
-      // }
     }
-    // const { code, data } = await getPanel(type);
-    // if (code === 0 && data) {
-    //   const { panel, codePath, engine, startupFile } = data;
-      
-    // }
     setLoading(false);
   };
 

@@ -63,20 +63,6 @@ const Avisualis = () => {
     }
   }
 
-  const onSubmit = () => {
-    addFormModalRef.current.form.validateFields().then(async (values) => {
-      const { use, way, model } = values;
-      dispatch({
-        type: 'avisualis/saveData',
-        payload: {
-          addFormData: values
-        }
-      });
-      const parmas = way === 2 ? `type=${use}&&modelId=${model}` : `type=${use}`;
-      history.push(`/ModelManagement/avisualis/detail/${`add`}?${parmas}`);
-    });
-  };
-
   const columns = [
     {
       title: '模型名称',
@@ -143,18 +129,6 @@ const Avisualis = () => {
     });
   }
 
-  const onClickAdd = async () => {
-    // setModalFlag(true);
-    // const params = { 
-    //   pageNum: 1,
-    //   pageSize: 999,
-    //   isAdvance: true,
-    //   use: 'Avisualis'
-    // };
-    // const { code, data } = await getAvisualis(params);
-    // if (code === 0 && data) setModelTypeData(data.models);
-  }
-
   return (
     <PageHeaderWrapper>
       <Card>
@@ -183,25 +157,6 @@ const Avisualis = () => {
           />
         </div>
       </Card>
-      {/* {modalFlag && (
-        <Modal
-          title="新建模型"
-          visible={modalFlag}
-          onCancel={() => setModalFlag(false)}
-          destroyOnClose
-          maskClosable={false}
-          className={styles.avisualisModal}
-          footer={[
-            <Button onClick={() => setModalFlag(false)}>取消</Button>,
-            <Button type="primary" onClick={onSubmit}>下一步</Button>
-          ]}
-        >
-          <AddFormModal 
-            modelTypesData={modelTypesData}
-            ref={addFormModalRef} 
-          />
-        </Modal>
-      )} */}
     </PageHeaderWrapper>
   );
 };

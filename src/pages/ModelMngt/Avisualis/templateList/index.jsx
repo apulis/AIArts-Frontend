@@ -1,12 +1,11 @@
-import { message, Button, Card, Collapse, PageHeader } from 'antd';
+import { Card, Collapse, PageHeader } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect } from 'react';
 import { getAvisualis } from '../service';
 import { PAGEPARAMS } from '@/utils/const';
 import styles from './index.less';
-import { Link, history, useDispatch } from 'umi';
-import { ExclamationCircleOutlined, SyncOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { connect } from 'dva';
+import { Link, history } from 'umi';
+import { EllipsisOutlined } from '@ant-design/icons';
 import noDataImg from '../../../../assets/no_data.png';
 import modelIconImg from '../../../../assets/modelIconImg.png';
 import appIconImg from '../../../../assets/appIconImg.png';
@@ -15,7 +14,6 @@ const { Panel } = Collapse;
 const { Meta } = Card;
 
 const TemplateList = () => {
-  const dispatch = useDispatch();
   const [modelTplData, setModelTplData] = useState({ data: [], total: 0 });
   const [appTplData, setAppTplData] = useState({ data: [], total: 0 });
   const [mPageParams, setMPageParams] = useState(PAGEPARAMS);
@@ -129,4 +127,4 @@ const TemplateList = () => {
   );
 };
 
-export default connect(({ avisualis }) => ({ avisualis }))(TemplateList);
+export default TemplateList;

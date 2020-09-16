@@ -20,6 +20,7 @@ const ItemPanel = (props) => {
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
   const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config.length > 0;
+  const addFormModalRef = useRef();
 
   useEffect(() => {
     if (selectItem) {
@@ -30,51 +31,53 @@ const ItemPanel = (props) => {
   }, [selectItem]);
 
   const onSubmit = async() => {
-    const { nodes, edges } = flowChartData;
-    if (nodes.length !== treeData.length) {
-      message.warning('请完成剩余步骤！');
-      return;
-    }
-    setBtnLoading(true);
-    const _addFormData = _.cloneDeep(addFormData);
-    const _flowChartData = _.cloneDeep(flowChartData);
-    if (_addFormData.deviceType === 'PSDistJob') {
-      _addFormData.numPs = 1;
-      _addFormData.deviceNum = _addFormData.deviceTotal;
-    }
-    _addFormData.datasetPath = nodes[0].config[0].value;
-    _addFormData.outputPath = nodes[nodes.length - 1].config[0].value;
-    _addFormData.paramPath = _addFormData.outputPath;
-    const newNodes = nodes.map(i => {
-      return {
-        ...i,
-        id: i.id.split('-')[0]
+    addFormModalRef.current.form.validateFields().then(async (values) => {
+      const { nodes, edges } = flowChartData;
+      if (nodes.length !== treeData.length) {
+        message.warning('请完成剩余步骤！');
+        return;
       }
-    });
-    const newEdges = edges.map(i => {
-      const { source, target } = i;
-      return {
-        source: source,
-        target: target
+      setBtnLoading(true);
+      const _values = _.cloneDeep(values);
+      if (_values.deviceType === 'PSDistJob') {
+        _values.numPs = 1;
+        _values.deviceNum = _values.deviceTotal;
       }
-    });
-    const submitData = {
-      ..._addFormData,
-      nodes: newNodes,
-      edges: newEdges,
-    };
-    const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
-    if (code === 0) {
-      message.success(`${detailId ? '保存' : '创建'}成功！`);
-      dispatch({
-        type: 'avisualis/saveData',
-        payload: {
-          addFormData: {}
+      _values.datasetPath = nodes[0].config[0].value;
+      _values.outputPath = nodes[nodes.length - 1].config[0].value;
+      _values.paramPath = _values.outputPath;
+      const newNodes = nodes.map(i => {
+        return {
+          ...i,
+          id: i.id.split('-')[0]
         }
       });
-      history.push('/ModelManagement/avisualis');
-    }
-    setBtnLoading(false);
+      const newEdges = edges.map(i => {
+        const { source, target } = i;
+        return {
+          source: source,
+          target: target
+        }
+      });
+      const submitData = {
+        ...addFormData,
+        ..._values,
+        nodes: newNodes,
+        edges: newEdges,
+      };
+      const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
+      if (code === 0) {
+        message.success(`${detailId ? '保存' : '创建'}成功！`);
+        dispatch({
+          type: 'avisualis/saveData',
+          payload: {
+            addFormData: {}
+          }
+        });
+        history.push('/ModelManagement/avisualis');
+      }
+      setBtnLoading(false);
+    });
   }
 
   const getConfig = () => {
@@ -115,11 +118,6 @@ const ItemPanel = (props) => {
     })
   }
 
-  const getMODELSTYPESText = () => {
-    const data = MODELSTYPES.find(i => i.val === addFormData.use);
-    return data ? data.text : '--';
-  }
-
   const selectChangeNode = () => {
     if (!changeNodeKey) {
       message.warning('请选择更换节点');
@@ -139,7 +137,7 @@ const ItemPanel = (props) => {
         <Button type="primary" loading={btnLoading} onClick={onSubmit}>{detailId ? '保存模型' : '创建模型'}</Button>
       </div>
       <Descriptions title="模型详情"></Descriptions>
-      <AddFormModal />
+      <AddFormModal ref={addFormModalRef} />
       {hasSelectItem &&
         <>
           <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
