@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, message, PageHeader } from 'antd';
+import { Form, Input, Button, Divider, Select, message, PageHeader, Alert } from 'antd';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
@@ -20,17 +20,16 @@ const SubmitModelTraining = (props) => {
   const query = props.location.query;
   
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
-  const [frameWorks, setFrameWorks] = useState([]);
   const [deviceList, setDeviceList] = useState([]);
-  const [computedDeviceList, setComputedDeviceList] = useState([]);
-  const [currentGpuType, setCurrentGpuType] = useState('');
+  const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [availImage, setAvailImage] = useState([]);
-  const [allSupportInference, setAllSupportInference] = useState([]);
   //
   const [currentEngineName, setCurrentEngineName] = useState('');
   const [supportedInference, setSupportedInference] = useState({});
   const [currentVersion, setCurrentVersion] = useState('');
   const [selectModalPathModalVisible, setSelectModalPathVisible] = useState(false);
+  const [currentModelUsedEngine, setCurrentModelUsedEngine] = useState('');
+
   const [form] = useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
 
@@ -43,15 +42,16 @@ const SubmitModelTraining = (props) => {
     const values = await validateFields();
     const cancel = message.loading('正在提交');
     const submitData = {};
-    submitData.framework = values.frameWork;
+    submitData.framework = values.engineName;
     submitData.jobName = values.workName;
     submitData.model_base_path = values.modelName;
     submitData.device = getFieldValue('deviceType');
     submitData.desc = values.desc;
     submitData.params = {};
-    submitData.gpuType = values.gpuType;
-    submitData.resourcegpu = 1;
+    submitData.gpuType = values.deviceType;
+    submitData.resourcegpu = values.resourcegpu;
     values.runningParams && values.runningParams.forEach(p => {
+      if (!p.key) return;
       submitData.params[p.key] = p. value;
     });
     if (submitData.device === 'CPU') {
@@ -59,10 +59,6 @@ const SubmitModelTraining = (props) => {
     } else if (submitData.device === 'GPU') {
       submitData.image = availImage[1];
     }
-    const currentFramework = submitData.framework;
-    const currentInference = allSupportInference.find(val => val.framework === currentFramework);
-    submitData.image = availImage[currentInference?.device?.findIndex(val => val === submitData.device)];    
-    
     const res = await createInference(submitData);
     if (res.code === 0) {
       cancel();
@@ -87,13 +83,18 @@ const SubmitModelTraining = (props) => {
           engineName: firstEngineName,
           engineVersion: firstEngineVersion,
         })
-        setDeviceList(Object.keys(supportedInference[firstEngineName][firstEngineVersion]))
+        const deviceList = Object.keys(supportedInference[firstEngineName][firstEngineVersion]);
+        setDeviceList(deviceList)
+        setFieldsValue({
+          deviceType: deviceList[0],
+        })
       }
     }
   }
 
   useEffect(() => {
     if (currentEngineName) {
+      console.log('supportedInference[currentEngineName]', supportedInference[currentEngineName], supportedInference, currentEngineName)
       const currentEngineVersionList = Object.keys(supportedInference[currentEngineName])
       setEngineVersionList(currentEngineVersionList);
       setFieldsValue({
@@ -114,7 +115,6 @@ const SubmitModelTraining = (props) => {
           gpuType: computedDeviceList[0]
         })
       }
-      setComputedDeviceList(computedDeviceList)
     }
   }
   const initModelPath = () => {
@@ -183,6 +183,7 @@ const SubmitModelTraining = (props) => {
     setFieldsValue({
       modelName: row.outputPath,
     })
+    setCurrentModelUsedEngine(`当前模型使用的引擎是：${getNameFromDockerImage(row.engine)}`)
   }
 
   useEffect(() => {
@@ -224,6 +225,12 @@ const SubmitModelTraining = (props) => {
           <FormItem style={{ display: 'inline-block', width: '36px' }}>
             <Button icon={<FolderOpenOutlined />} onClick={() => setSelectModalPathVisible(true)}></Button>
           </FormItem>
+          {
+            currentModelUsedEngine && <FormItem>
+              <Alert message={currentModelUsedEngine} type="success" />
+            </FormItem>
+          }
+          
         </FormItem>
         <FormItem {...commonLayout} label="引擎" required>
           <FormItem
@@ -273,19 +280,19 @@ const SubmitModelTraining = (props) => {
           </div>
         </FormItem>
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: false }]}>
-          <Select placeholder="请选择" style={{ width: '260px' }} onChange={() => setCurrentGpuType(getFieldValue('deviceType'))}>
+          <Select placeholder="请选择" style={{ width: '260px' }} onChange={() => setCurrentDeviceType(getFieldValue('deviceType'))}>
             {
               deviceList.map(d => (
-                <Option value={d}>{d.toUpperCase()}</Option>
+                <Option value={d}>{d}</Option>
               ))
             }
           </Select>
         </FormItem>
-        <FormItem label="GPU 类型" name="gpuType" {...commonLayout} rules={[{ required: false }]}>
+        <FormItem label="设备数量" name="resourcegpu" {...commonLayout} initialValue={0}>
           <Select placeholder="请选择" style={{ width: '260px' }}>
             {
-              computedDeviceList.map(c => (
-                <Option value={c}>{c}</Option>
+              [0, 1].map(val => (
+                <Option value={val}>{val}</Option>
               ))
             }
           </Select>
