@@ -3,13 +3,14 @@ import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'rea
 import { NameReg, NameErrorText, MODELSTYPES } from '@/utils/const';
 import { fetchAvilableResource } from '../../../../../services/modelTraning';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
+import _ from 'lodash';
 
 const { Option } = Select
 
 const AddFormModal = (props, ref) => {
   const [form] = Form.useForm();
-  const { validateFields, getFieldValue, setFieldsValue } = form;
-  const [way, setWay] = useState(1);
+  const { getFieldValue, setFieldsValue } = form;
+  const { detailData } = props;
   const [jobTrainingType, setJobtrainingtype] = useState('RegularJob');
   const [nodeInfo, setNodeInfo] = useState([]);
   const [deviceTotal, setDeviceTotal] = useState(0);
@@ -37,6 +38,11 @@ const AddFormModal = (props, ref) => {
   }, [jobTrainingType, nodeInfo, deviceType]);
 
   const getData = async () => {
+    if (detailData) {
+      const { deviceType, jobTrainingType } = detailData;
+      setJobtrainingtype(jobTrainingType);
+      setDeviceType(deviceType);
+    }
     const { code, data } = await fetchAvilableResource();
     if (code === 0) {
       const { nodeInfo, deviceList } = data;
@@ -51,8 +57,10 @@ const AddFormModal = (props, ref) => {
     setDeviceTotal(deviceTotal);
   };
 
+
   return (
-    <Form form={form} preserve={false} initialValues={{ way: way, jobTrainingType: jobTrainingType, numPsWorker: 1 }}>
+    <Form form={form} preserve={false} 
+      initialValues={detailData || { jobTrainingType: jobTrainingType, numPsWorker: 1 }}>
       <Form.Item
         label="模型名称"
         name="name"

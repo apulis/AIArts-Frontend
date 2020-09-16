@@ -39,8 +39,7 @@ const AvisualisDetail = (props) => {
     setLoading(true);
     const { code, data } = await getAvisualisDetail(modelId || detailId);
     if (code === 0 && data) {
-      const { params, codePath, engine, startupFile } = data.model;
-      const { nodes, edges, panel } = params;
+      const { nodes, edges, panel } = data.model.params;
       const _panel = JSON.parse(panel);
       if (nodes && edges) {
         const transformNodes = JSON.parse(nodes).map(i => {
@@ -62,9 +61,7 @@ const AvisualisDetail = (props) => {
           payload: {
             addFormData: {
               ...addFormData,
-              codePath: codePath,
-              engine: engine,
-              startupFile: startupFile
+              ...data.model
             },
             panelApiData: _panel
           }

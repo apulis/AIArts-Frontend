@@ -13,6 +13,7 @@ const { Option } = Select;
 const ItemPanel = (props) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const addFormModalRef = useRef();
   const { avisualis, flowChartData, selectItem, setFlowChartData, detailId, onChangeNode } = props;
   const { addFormData, treeData } = avisualis;
   const [btnLoading, setBtnLoading] = useState(false);
@@ -20,7 +21,6 @@ const ItemPanel = (props) => {
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
   const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config.length > 0;
-  const addFormModalRef = useRef();
 
   useEffect(() => {
     if (selectItem) {
@@ -59,12 +59,13 @@ const ItemPanel = (props) => {
           target: target
         }
       });
-      const submitData = {
+      let submitData = {
         ...addFormData,
         ..._values,
         nodes: newNodes,
         edges: newEdges,
       };
+      if (!detailId) delete submitData.id;
       const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
       if (code === 0) {
         message.success(`${detailId ? '保存' : '创建'}成功！`);
@@ -137,7 +138,7 @@ const ItemPanel = (props) => {
         <Button type="primary" loading={btnLoading} onClick={onSubmit}>{detailId ? '保存模型' : '创建模型'}</Button>
       </div>
       <Descriptions title="模型详情"></Descriptions>
-      <AddFormModal ref={addFormModalRef} />
+      <AddFormModal ref={addFormModalRef} detailData={addFormData} />
       {hasSelectItem &&
         <>
           <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
