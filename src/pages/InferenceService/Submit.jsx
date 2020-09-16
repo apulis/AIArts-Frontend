@@ -54,11 +54,7 @@ const SubmitModelTraining = (props) => {
       if (!p.key) return;
       submitData.params[p.key] = p. value;
     });
-    if (submitData.device === 'CPU') {
-      submitData.image = availImage[0];
-    } else if (submitData.device === 'GPU') {
-      submitData.image = availImage[1];
-    }
+    submitData.image = values.engineName + ":" + values.engineVersion;
     const res = await createInference(submitData);
     if (res.code === 0) {
       cancel();
