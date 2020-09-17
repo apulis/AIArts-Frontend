@@ -130,7 +130,7 @@ const EvalMetricsMngt = () => {
           <>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
-            <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)} >导出</a>
+            <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)} >导出参数</a>
           </>
         );
       },
@@ -237,7 +237,7 @@ const EvalMetricsMngt = () => {
             padding: '24px 0 24px 24px'
           }}
         >
-          <Button type="primary" onClick={() => {setImportedParamsModalVisible(true)}}>导入</Button>
+          <Button type="primary" onClick={() => {setImportedParamsModalVisible(true)}}>导入参数</Button>
           <div
             className={styles.searchWrap}
           >
