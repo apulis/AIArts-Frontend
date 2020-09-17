@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Select, Input, Card, PageHeader, Button, Col, Row, message } from 'antd';
-import { PauseOutlined, DeleteOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { Form, Select, Input, Card, PageHeader, Button, message } from 'antd';
+import { PauseOutlined, DeleteOutlined, PlusSquareOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import { history } from 'umi';
 
 import { NameReg, NameErrorText } from '@/utils/const';
 import { getTypes, submit } from './service';
+import FormItem from 'antd/lib/form/FormItem';
+import SelectModelPath from '@/components/BizComponent/SelectModelPath';
 
 
 const initArg = {
@@ -28,16 +30,15 @@ const Submit = () => {
   const [typesData, setTypesData] = useState([]);
   const [argArr, setArgArr] = useState([{ ...initArg, time: new Date().getTime() }])
   const [btnLoading, setBtnLoading] = useState(false);
-
+  const [selectModelPathVisible, setSelectModelPathVisible] = useState(false);
   const [form] = Form.useForm();
-
 
   const getTypesData = async () => {
     const { code, data } = await getTypes();
     if (code === 0) {
       setTypesData(data.conversionTypes);
     }
-  }
+  } 
 
   const onArgsArrChange = (type, time, v) => {
     const newArr = _.cloneDeep(argArr);
@@ -52,6 +53,14 @@ const Submit = () => {
       newArr.splice(idx, 1);
     }
     setArgArr(newArr);
+  }
+
+  const handleSelectModelPath = (row) => {
+    setSelectModelPathVisible(false);
+    if (!row) return
+    form.setFieldsValue({
+      inputPath: row.outputPath,
+    })
   }
 
   useEffect(() => {
@@ -125,11 +134,20 @@ const Submit = () => {
           </Form.Item>
           <Form.Item
             label="输入路径"
-            name="inputPath"
-            rules={[{ required: true, message: '请填写输入路径！' }]}
-            {...commonLayout}
+            labelCol={commonLayout.labelCol}
+            wrapperCol={commonLayout.wrapperCol + 3}
+            required
           >
-            <Input placeholder="请填写输入路径" />
+            <FormItem
+              name="inputPath"
+              rules={[{ required: true, message: '请填写输入路径！' }]}
+              style={{ display: 'inline-block', width: '40%' }}
+            >
+              <Input placeholder="请填写输入路径" />
+            </FormItem>
+            <FormItem style={{ display: 'inline-block', width: '36px', marginLeft: '16px' }}>
+              <Button icon={<FolderOpenOutlined />} onClick={() => setSelectModelPathVisible(true)}></Button>
+            </FormItem>
           </Form.Item>
           <Form.Item
             label="输出路径"
@@ -191,6 +209,13 @@ const Submit = () => {
             loading={btnLoading}
           >提交</Button>
         </Form>
+        {
+          selectModelPathVisible && <SelectModelPath
+            visible={selectModelPathVisible}
+            onOk={handleSelectModelPath}
+            onCancel={() => setSelectModelPathVisible(false)}
+          />
+        }
       </Card>
     </PageHeader>
 
