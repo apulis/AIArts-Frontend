@@ -1,6 +1,6 @@
 import { message, Table, Modal, Form, Input, Button, Select, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'umi';
 import { getEdgeInferences, submit, getFD, submitFD, push, deleteEG } from './service';
 import styles from './index.less';
@@ -28,7 +28,6 @@ const EdgeInference = (props) => {
   const [jobs, setJobs] = useState([]);
   const [fdInfo, setFdInfo] = useState({ username: '', url: '', password: '' });
   const [pushId, setPushId] = useState('');
-  const [modalFlag1, setModalFlag1] = useState(false);
   const [modalFlag2, setModalFlag2] = useState(false);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [btnLoading, setBtnLoading] = useState(false);
