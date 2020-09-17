@@ -39,7 +39,8 @@ const AvisualisDetail = (props) => {
     setLoading(true);
     const { code, data } = await getAvisualisDetail(modelId || detailId);
     if (code === 0 && data) {
-      const { nodes, edges, panel } = data.model.params;
+      const { model, training } = data;
+      const { nodes, edges, panel } = model.params;
       const _panel = JSON.parse(panel);
       if (nodes && edges) {
         const transformNodes = JSON.parse(nodes).map(i => {
@@ -54,19 +55,18 @@ const AvisualisDetail = (props) => {
         };
         setDetailData(_detailData);
       }
-      if (_panel && _panel.length) {
-        transformData(_panel);
-        dispatch({
-          type: 'avisualis/saveData',
-          payload: {
-            addFormData: {
-              ...addFormData,
-              ...data.model
-            },
-            panelApiData: _panel
-          }
-        });
-      }
+      transformData(_panel);
+      dispatch({
+        type: 'avisualis/saveData',
+        payload: {
+          addFormData: {
+            ...addFormData,
+            ...training,
+            ...model
+          },
+          panelApiData: _panel
+        }
+      });
     }
     setLoading(false);
   };

@@ -64,6 +64,7 @@ const ItemPanel = (props) => {
         ..._values,
         nodes: newNodes,
         edges: newEdges,
+        isAdvance: false
       };
       if (!detailId) delete submitData.id;
       const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
@@ -130,7 +131,7 @@ const ItemPanel = (props) => {
       message.success('更换成功！');
     }
   }
-
+  
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>

@@ -1,6 +1,6 @@
 import { message, Form, Input, Button, Select, Radio, InputNumber } from 'antd';
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
-import { NameReg, NameErrorText, MODELSTYPES } from '@/utils/const';
+import { NameReg, NameErrorText } from '@/utils/const';
 import { fetchAvilableResource } from '../../../../../services/modelTraning';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 import _ from 'lodash';
@@ -57,7 +57,6 @@ const AddFormModal = (props, ref) => {
     setDeviceTotal(deviceTotal);
   };
 
-
   return (
     <Form form={form} preserve={false} 
       initialValues={detailData || { jobTrainingType: jobTrainingType, numPsWorker: 1 }}>
@@ -67,12 +66,12 @@ const AddFormModal = (props, ref) => {
         rules={[
           { required: true, message: '请输入推理名称！' }, 
           { pattern: NameReg, message: NameErrorText },
-          { max: 20 }
+          { max: 30 }
         ]}
       >
         <Input placeholder="请输入模型名称" />
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         label="模型用途"
         name="use"
         rules={[{ required: true, message: '请选择模型用途！' }]}
@@ -80,7 +79,7 @@ const AddFormModal = (props, ref) => {
         <Select placeholder="请选择类型">
           {MODELSTYPES.map(i => <Option value={i.val}>{i.text}</Option>)}
         </Select>
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item
         label="简介"
         name="description"
