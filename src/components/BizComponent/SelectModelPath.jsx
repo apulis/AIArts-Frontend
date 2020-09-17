@@ -103,6 +103,9 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
     handleSearch();
   }
 
+  if (!visible) {
+    return null;
+  }
   return (
     <Modal
       visible={visible}
