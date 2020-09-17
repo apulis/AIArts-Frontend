@@ -202,10 +202,16 @@ export default [
                 name: 'center',
                 component: './InferenceService/InferenceList',
                 authority: ['AI_ARTS_ALL'],
-              }, {
+              },
+              {
                 path: '/Inference/EdgeInference',
                 name: 'edgeInference',
                 component: './EdgeInference',
+                authority: ['AI_ARTS_ALL'],
+              },
+              {
+                path: '/Inference/EdgeInference/submit',
+                component: './EdgeInference/Submit',
                 authority: ['AI_ARTS_ALL'],
               },
               {
