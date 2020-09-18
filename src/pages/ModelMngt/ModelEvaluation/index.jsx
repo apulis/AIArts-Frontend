@@ -367,9 +367,9 @@ const ModelEvaluation = props => {
               {...layout} 
               label="输出路径"
               name="outputPath"
-              rules={[{ required: true, message: '需要填写输出路径' }]}
+              // rules={[{ required: true, message: '需要填写输出路径' }]}
             >
-              <Input addonBefore={codePathPrefix} />
+              <Input disabled addonBefore={codePathPrefix} />
             </Form.Item> 
             <Form.Item {...layout} label="模型权重文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型权重文件' }]}>
               <Input addonBefore={codePathPrefix} />
