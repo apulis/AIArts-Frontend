@@ -20,11 +20,11 @@ const { confirm } = Modal;
 
 const InferenceList = props => {
   const {
-    loading,
     dispatch,
     inferenceList: { data },
   } = props;
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
@@ -63,12 +63,16 @@ const InferenceList = props => {
 
   useInterval(() => {
     getJobStatusSumary();
-    handleSearch();
+    handleSearch(false);
   }, props.common.interval)
 
   useEffect(() => {
     handleSearch();
   }, [pageParams, formValues, sortedInfo]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [data])
 
   const pageParamsChange = (page, size) => {
     setPageParams({ pageNum: page, pageSize: size });
@@ -164,7 +168,10 @@ const InferenceList = props => {
     });
   };
 
-  const handleSearch = () => {
+  const handleSearch = (withLoading = true) => {
+    if (withLoading) {
+      setLoading(true);
+    }
     const params = {
       ...pageParams,
       orderBy: sortedInfo.columnKey,
@@ -307,6 +314,5 @@ const InferenceList = props => {
 
 export default connect(({ inferenceList, loading, common }) => ({
   inferenceList,
-  loading: loading.models.inferenceList,
   common,
 }))(InferenceList);

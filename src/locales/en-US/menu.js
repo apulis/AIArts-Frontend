@@ -51,6 +51,7 @@ export default {
   'menu.modelManagement.modelEvaluation': 'Model Evaluation',
   'menu.modelManagement.modelEvaluationList': 'Model Evaluation List',
   'menu.modelManagement.evaluationMetricsManage': 'Evaluation Metrics Manage',
+  'menu.image': 'Image Manage',
   'menu.inferenceService': 'Inference Service',
   'menu.inferenceService.list': 'Inference Service List',
   'menu.modelTraining': 'Model Training',
