@@ -285,3 +285,7 @@ export const downloadStringAsFile = function (content, filename) {
   // 然后移除
   document.body.removeChild(eleLink);
 };
+
+export const checkIfCanDelete = (status) => {
+  return !['pausing', 'running', 'killing'].includes(status)
+}
