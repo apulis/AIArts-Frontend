@@ -83,29 +83,30 @@ const ItemPanel = (props) => {
   }
 
   const getConfig = () => {
-    const { config } = selectItem._cfg.model;
+    const { config, id } = selectItem._cfg.model;
     return config.map(i => {
       const { type, value, key, options } = i;
       if (type === 'string' || type === 'disabled') {
         return (
-        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
-          <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} />
+        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+          <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
         </Form.Item>)
       } else if (type === 'number') {
         return (
-        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
-          <InputNumber style={{ width: '100%' }} />
+        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+          <InputNumber style={{ width: '100%' }} value={value} />
         </Form.Item>)
       } else if (type === 'select') {
         return (
-        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
-          <Select placeholder="请选择">
+        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
+          <Select placeholder="请选择" value={value}>
             {options.map(o => <Option key={o} value={o}>{o}</Option>)}
           </Select>
         </Form.Item>)
       }
     }) 
   }
+
 
   const onSaveConfig = () => {
     form.validateFields().then(async (values) => {

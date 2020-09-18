@@ -294,7 +294,8 @@ const FlowChart = forwardRef((props, ref) => {
     cloneData.nodes[fIdx] = {
       id: key,
       name: title,
-      config: config
+      config: config,
+      idx: fIdx
     };
     cloneData.edges[fIdx].source = id;
     if (fIdx !== 0) cloneData.edges[fIdx - 1].target = id;
