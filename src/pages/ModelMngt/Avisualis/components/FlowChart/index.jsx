@@ -79,6 +79,12 @@ const FlowChart = forwardRef((props, ref) => {
       getContent: () => {
         return `
           <ul>
+            <li code="zoomOut">
+              <span role="img" aria-label="plus" class="anticon anticon-plus"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true"><defs><style></style></defs><path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path></svg></span>
+            </li>
+            <li code="zoomIn">
+              <span role="img" aria-label="minus" class="anticon anticon-minus"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="minus" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M872 474H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h720c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8z"></path></svg></span>
+            </li>
             <li code="delete">
               <span role="img" aria-label="delete" class="anticon anticon-delete"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="delete" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z"></path></svg></span>
             </li>
@@ -92,13 +98,18 @@ const FlowChart = forwardRef((props, ref) => {
         `
       },
       handleClick: (code, graph) => {
-        if (code === 'realZoom') {
+        let zoom = graph.getZoom();
+        if (code === 'zoomOut') {
+          graph.zoomTo((zoom + 0.1).toFixed(1));
+        } else if (code === 'zoomIn') {
+          graph.zoomTo((zoom - 0.1).toFixed(1));
+        } else if (code === 'delete') {
+          deleteNode(graph);
+        } else if (code === 'realZoom') {
           graph.fitCenter();
         } else if (code === 'autoZoom') {
           graph.fitView();
-        }else if (code === 'delete') {
-          deleteNode(graph);
-        }
+        } 
       }
     });
     let _graph = new G6.Graph({
@@ -265,7 +276,7 @@ const FlowChart = forwardRef((props, ref) => {
           setFlowChartData(temp);
           graph.changeData(temp);
           graph.fitCenter();
-          transformData(panelApiData.panel, temp);
+          transformData(panelApiData, temp);
           setSelectItem(null);
           return;
         }
@@ -283,7 +294,8 @@ const FlowChart = forwardRef((props, ref) => {
     cloneData.nodes[fIdx] = {
       id: key,
       name: title,
-      config: config
+      config: config,
+      idx: fIdx
     };
     cloneData.edges[fIdx].source = id;
     if (fIdx !== 0) cloneData.edges[fIdx - 1].target = id;
