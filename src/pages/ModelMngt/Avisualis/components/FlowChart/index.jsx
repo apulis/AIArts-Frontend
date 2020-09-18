@@ -189,7 +189,7 @@ const FlowChart = forwardRef((props, ref) => {
 
     _graph.on('keydown', e => {
       const { keyCode } = e;
-      if (keyCode === 8 || keyCode === 46) deleteNode(_graph);
+      if (keyCode === 46) deleteNode(_graph);
     });
 
     _graph.fitCenter();
