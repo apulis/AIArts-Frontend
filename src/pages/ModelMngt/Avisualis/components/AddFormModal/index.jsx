@@ -1,16 +1,16 @@
 import { message, Form, Input, Button, Select, Radio, InputNumber } from 'antd';
 import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
-import { NameReg, NameErrorText, MODELSTYPES } from '@/utils/const';
+import { NameReg, NameErrorText } from '@/utils/const';
 import { fetchAvilableResource } from '../../../../../services/modelTraning';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
+import _ from 'lodash';
 
 const { Option } = Select
 
 const AddFormModal = (props, ref) => {
   const [form] = Form.useForm();
-  const { validateFields, getFieldValue, setFieldsValue } = form;
-  const { modelTypesData } = props;
-  const [way, setWay] = useState(1);
+  const { getFieldValue, setFieldsValue } = form;
+  const { detailData } = props;
   const [jobTrainingType, setJobtrainingtype] = useState('RegularJob');
   const [nodeInfo, setNodeInfo] = useState([]);
   const [deviceTotal, setDeviceTotal] = useState(0);
@@ -38,6 +38,11 @@ const AddFormModal = (props, ref) => {
   }, [jobTrainingType, nodeInfo, deviceType]);
 
   const getData = async () => {
+    if (detailData) {
+      const { deviceType, jobTrainingType } = detailData;
+      setJobtrainingtype(jobTrainingType);
+      setDeviceType(deviceType);
+    }
     const { code, data } = await fetchAvilableResource();
     if (code === 0) {
       const { nodeInfo, deviceList } = data;
@@ -53,19 +58,20 @@ const AddFormModal = (props, ref) => {
   };
 
   return (
-    <Form form={form} preserve={false} initialValues={{ way: way, jobTrainingType: jobTrainingType, numPsWorker: 1 }}>
+    <Form form={form} preserve={false} 
+      initialValues={detailData || { jobTrainingType: jobTrainingType, numPsWorker: 1 }}>
       <Form.Item
         label="模型名称"
         name="name"
         rules={[
           { required: true, message: '请输入推理名称！' }, 
           { pattern: NameReg, message: NameErrorText },
-          { max: 20 }
+          { max: 30 }
         ]}
       >
         <Input placeholder="请输入模型名称" />
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         label="模型用途"
         name="use"
         rules={[{ required: true, message: '请选择模型用途！' }]}
@@ -73,7 +79,7 @@ const AddFormModal = (props, ref) => {
         <Select placeholder="请选择类型">
           {MODELSTYPES.map(i => <Option value={i.val}>{i.text}</Option>)}
         </Select>
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item
         label="简介"
         name="description"
@@ -81,7 +87,7 @@ const AddFormModal = (props, ref) => {
       >
         <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
       </Form.Item>
-      <Form.Item label="是否分布式训练" rules={[{ required: true }]} name="jobTrainingType">
+      <Form.Item label="是否分布式训练" rules={[{ required: true }]} name="jobTrainingType" className='speItem'>
         <Radio.Group onChange={e => setJobtrainingtype(e.target.value)}>
           <Radio value='PSDistJob'>是</Radio>
           <Radio value='RegularJob'>否</Radio>
@@ -137,21 +143,6 @@ const AddFormModal = (props, ref) => {
         name="deviceTotal"
       >
         <Input value={deviceTotal} disabled />
-      </Form.Item>}
-      <Form.Item label="创建方式" rules={[{ required: true }]} name="way">
-        <Radio.Group onChange={e => setWay(e.target.value)}>
-          <Radio value={1}>自定义</Radio>
-          <Radio value={2}>使用内置模型</Radio>
-        </Radio.Group>
-      </Form.Item>
-      {way === 2 && <Form.Item
-        label="选择模型"
-        name="model"
-        rules={[{ required: true, message: '请选择模型！' }]}
-      >
-        <Select placeholder="请选择模型">
-          {modelTypesData.map(i => <Option value={i.id}>{i.name}</Option>)}
-        </Select>
       </Form.Item>}
     </Form>
   );
