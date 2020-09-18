@@ -110,6 +110,10 @@ const EditMetrics = (props) => {
       data.params.codePath = data.params.codePath;
       data.params.startupFile = data.params.startupFile;
       data.params.outputPath = data.params.outputPath;
+      if (data.params.params?.paramPath) {
+        data.params.paramPath = data.params.params.paramPath;
+        delete data.params.params.paramPath
+      }
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -145,7 +149,10 @@ const EditMetrics = (props) => {
   const handleSubmit = async () => {
     const values = await validateFields();
     let params = {};
+    params.paramPath = values.paramPath;
+    delete values.paramPath;
     values.params && values.params.forEach(p => {
+      if (!params[p.key]) return;
       params[p.key] = p.value;
     });
     // values.codePath = codePathPrefix + (values.codePath || '');
@@ -302,7 +309,10 @@ const EditMetrics = (props) => {
         <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, startUpFileReg]}>
           <Input style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
+        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径">
+          <Input disabled style={{ width: 420 }} />
+        </FormItem>
+        <FormItem name="paramPath" labelCol={{ span: 4 }} label="模型参数路径">
           <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
