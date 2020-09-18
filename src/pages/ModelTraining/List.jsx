@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
-import { getJobStatus } from '@/utils/utils';
+import { getJobStatus, checkIfCanStop, checkIfCanDelete } from '@/utils/utils';
 import { sortText } from '@/utils/const';
 import { fetchTrainingList, removeTrainings, fetchJobStatusSumary, deleteJob } from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
@@ -228,14 +228,14 @@ const List = (props) => {
         return (
           <>
             {
-              ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
-                ? <div style={{display: 'flex'}}>
-                    <a style={{marginRight: '16px', display: 'block'}} onClick={() => stopTraining(item.id)}>停止</a>
-                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
+              checkIfCanStop(item.status)
+                ? <div style={{display: 'flex', alignItems: 'center'}}>
+                    <a style={{marginRight: '16px', display: 'block' }} onClick={() => stopTraining(item.id)}>停止</a>
+                    <Button type="link" danger disabled={!checkIfCanDelete(item.status)} onClick={() => handleDeleteJob(item.id, item.status)}>删除</Button>
                   </div>
-                : <div style={{display: 'flex'}}>
+                : <div style={{display: 'flex', alignItems: 'center'}}>
                     <div style={{marginRight: '16px'}} className="disabled">已停止</div>
-                    <a style={{color: 'red'}} onClick={() => handleDeleteJob(item.id, item.status)}>删除</a>
+                    <Button danger type="link" disabled={!checkIfCanDelete(item.status)} onClick={() => handleDeleteJob(item.id, item.status)}>删除</Button>
                   </div>
             }
           </>

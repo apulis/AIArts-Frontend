@@ -289,3 +289,7 @@ export const downloadStringAsFile = function (content, filename) {
 export const checkIfCanDelete = (status) => {
   return !['pausing', 'running', 'killing'].includes(status)
 }
+
+export const checkIfCanStop = (status) => {
+  return ['unapproved', 'queued', 'scheduling', 'running'].includes(status);
+}
