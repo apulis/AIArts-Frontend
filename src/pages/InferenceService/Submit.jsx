@@ -179,7 +179,7 @@ const SubmitModelTraining = (props) => {
     setFieldsValue({
       modelPath: row.outputPath,
     })
-    setCurrentModelUsedEngine(`当前模型使用的引擎是：${getNameFromDockerImage(row.engine)}`)
+    setCurrentModelUsedEngine(`当前训练引擎：${getNameFromDockerImage(row.engine)}`)
   }
 
   useEffect(() => {
@@ -222,7 +222,7 @@ const SubmitModelTraining = (props) => {
             <Button icon={<FolderOpenOutlined />} onClick={() => setSelectModelPathVisible(true)}></Button>
           </FormItem>
           {
-            currentModelUsedEngine && <FormItem>
+            currentModelUsedEngine && <FormItem style={{ width: '290px' }}>
               <Alert message={currentModelUsedEngine} type="success" />
             </FormItem>
           }
