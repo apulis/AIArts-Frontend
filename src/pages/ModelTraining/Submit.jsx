@@ -490,7 +490,7 @@ const ModelTraining = (props) => {
             : <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
           }
         </FormItem>
-        <FormItem name="visualPath" labelCol={{ span: 4 }} label="可视化路径" style={{ marginTop: '50px' }} rules={[{required: isPretrainedModel}]}>
+        <FormItem name="visualPath" labelCol={{ span: 4 }} label="可视化路径" style={{ marginTop: '50px' }}>
           {
             <Input addonBefore={needOutputPathCodePrefix ? codePathPrefix : null} style={{ width: 420 }} />
           }
