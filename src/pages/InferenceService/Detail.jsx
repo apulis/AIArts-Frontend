@@ -22,6 +22,7 @@ const InferenceDetail = (props) => {
   const [imageUrl, setImageUrl] = useState('');
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
+
   const [jobDetail, setJobDetail] = useState({});
   const [recognizeResult, setRecognizeResult] = useState([]);
   const logEl = useRef(null);
@@ -133,6 +134,11 @@ const InferenceDetail = (props) => {
       <div className="ant-upload-text">{ loading ? '识别中' : '上传图片'}</div>
     </div>
   );
+
+  const reUpload = () => {
+    setRecognizeResult([]);
+    setImageUrl('');
+  }
   
   const jobEnded = ['finished', 'failed', 'killed', 'error'].includes(jobDetail.jobStatus)
   return (
@@ -168,7 +174,16 @@ const InferenceDetail = (props) => {
           />
         }
       </div>
-      
+      {
+        recognizeResult.length !== 0 && 
+          <Button
+            type="primary"
+            onClick={() => reUpload()}
+            style={{marginTop: '18px'}}
+          >
+            清除数据
+          </Button>
+      }
       
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={1}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
