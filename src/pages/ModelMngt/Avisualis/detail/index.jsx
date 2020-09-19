@@ -37,12 +37,12 @@ const AvisualisDetail = (props) => {
 
   const getData = async () => {
     setLoading(true);
-    if (!Object.keys(addFormData).length && !modelId && !Number(detailId)) history.push('/ModelManagement/avisualis');
-    let _addFormData = _.cloneDeep(addFormData);
-    if (Boolean(Number(modelId)) || Boolean(Number(detailId))) {
-      const { code, data } = await getAvisualisDetail(modelId || detailId);
-      if (code === 0 && data) {
-        const { nodes, edges } = data.model.params;
+    const { code, data } = await getAvisualisDetail(modelId || detailId);
+    if (code === 0 && data) {
+      const { model, training } = data;
+      const { nodes, edges, panel } = model.params;
+      const _panel = JSON.parse(panel);
+      if (nodes && edges) {
         const transformNodes = JSON.parse(nodes).map(i => {
           return {
             ...i,
@@ -54,35 +54,25 @@ const AvisualisDetail = (props) => {
           edges: JSON.parse(edges),
         };
         setDetailData(_detailData);
-        if (!(_addFormData.way && _addFormData.way === 2)) {
-          _addFormData = data.model;
+      }
+      transformData(_panel);
+      dispatch({
+        type: 'avisualis/saveData',
+        payload: {
+          addFormData: {
+            ...addFormData,
+            ...training,
+            ...model
+          },
+          panelApiData: _panel
         }
-      }
-    }
-    const { code, data } = await getPanel(type);
-    if (code === 0 && data) {
-      const { panel, codePath, engine, startupFile } = data;
-      if (panel && panel.length) {
-        transformData(panel);
-        dispatch({
-          type: 'avisualis/saveData',
-          payload: {
-            addFormData: {
-              ..._addFormData,
-              codePath: codePath,
-              engine: engine,
-              startupFile: startupFile
-            },
-            panelApiData: data
-          }
-        });
-      }
+      });
     }
     setLoading(false);
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || panelApiData.panel, 
+    let _treeData = [], _children = [], _data = data || panelApiData, 
     childrenDisabled = (Boolean(Number(modelId)) || Boolean(Number(detailId))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {

@@ -6,10 +6,6 @@ export async function getAvisualis(params) {
   });
 }
 
-export async function getPanel(type) {
-  return request(`/models/${type}/panel`);
-}
-
 export async function getAvisualisDetail(id) {
   return request(`/models/${id}`);
 }

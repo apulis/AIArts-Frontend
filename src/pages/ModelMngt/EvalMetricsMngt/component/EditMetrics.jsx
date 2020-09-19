@@ -35,7 +35,6 @@ const EditMetrics = (props) => {
   const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
-  const [codePathPrefix, setCodePathPrefix] = useState('');
   const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
   const [bootFileModalVisible, setBootFileModalVisible] = useState(false);
   const [outputPathModalVisible, setOutputPathModalVisible] = useState(false);
@@ -55,10 +54,10 @@ const EditMetrics = (props) => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
       let { data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo } } = res;
-      if (!/\/$/.test(codePathPrefix)) {
-        codePathPrefix = codePathPrefix + '/';
-      }
-      setCodePathPrefix(codePathPrefix);
+      // if (!/\/$/.test(codePathPrefix)) {
+      //   codePathPrefix = codePathPrefix + '/';
+      // }
+      // setCodePathPrefix(codePathPrefix);
       let aiFrameworkList = [];
       Object.keys(aiFrameworks).forEach(val => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
@@ -76,13 +75,13 @@ const EditMetrics = (props) => {
   }, [nodeInfo, currentDeviceType]);
 
   useEffect(() => {
-    if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
+    if (Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
       haveSetedParamsDetail = true;
       const newParams = {
         ...paramsDetailedData.params,
-        outputPath: paramsDetailedData.params.outputPath.replace(/\/.+?\/.+?\/.+?/, ''),
-        codePath: paramsDetailedData.params.codePath.replace(/\/.+?\/.+?\/.+?/, ''),
-        startupFile: paramsDetailedData.params.startupFile.replace(/\/.+?\/.+?\/.+?/, ''),
+        outputPath: paramsDetailedData.params.outputPath,
+        codePath: paramsDetailedData.params.codePath,
+        startupFile: paramsDetailedData.params.startupFile,
       };
       setParamsDetailedData({
         ...paramsDetailedData,
@@ -90,7 +89,7 @@ const EditMetrics = (props) => {
       });
       setFieldsValue(newParams);
     }
-  }, [codePathPrefix, paramsDetailedData]);
+  }, [paramsDetailedData]);
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 9999 });
@@ -108,9 +107,13 @@ const EditMetrics = (props) => {
       // check null 
       data.params.params = data.params.params || [];
       // replace path prefix
-      data.params.codePath = data.params.codePath.replace(codePathPrefix, '');
-      data.params.startupFile = data.params.startupFile.replace(codePathPrefix, '');
-      data.params.outputPath = data.params.outputPath.replace(codePathPrefix, '');
+      data.params.codePath = data.params.codePath;
+      data.params.startupFile = data.params.startupFile;
+      data.params.outputPath = data.params.outputPath;
+      if (data.params.params?.paramPath) {
+        data.params.paramPath = data.params.params.paramPath;
+        delete data.params.params.paramPath
+      }
       data.params.params = Object.entries(data.params.params).map(item => {
         var obj = {};
         obj['key'] = item[0];
@@ -126,7 +129,7 @@ const EditMetrics = (props) => {
     getAvailableResource();
     fetchDataSets();
     fetchParams();
-  }, [codePathPrefix]);
+  }, []);
 
   useEffect(() => {
     if (presetParamsVisible) {
@@ -146,12 +149,15 @@ const EditMetrics = (props) => {
   const handleSubmit = async () => {
     const values = await validateFields();
     let params = {};
+    params.paramPath = values.paramPath;
+    delete values.paramPath;
     values.params && values.params.forEach(p => {
+      if (!params[p.key]) return;
       params[p.key] = p.value;
     });
-    values.codePath = codePathPrefix + (values.codePath || '');
-    values.startupFile = codePathPrefix + values.startupFile;
-    values.outputPath = codePathPrefix + (values.outputPath || '');
+    // values.codePath = codePathPrefix + (values.codePath || '');
+    // values.startupFile = codePathPrefix + values.startupFile;
+    // values.outputPath = codePathPrefix + (values.outputPath || '');
     values.params = params;
 
     let editParams = {
@@ -298,13 +304,16 @@ const EditMetrics = (props) => {
           name="codePath"
           label="代码目录"
         >
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+          <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, startUpFileReg]}>
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+          <Input style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径" style={{ marginTop: '50px' }}>
-          <Input addonBefore={codePathPrefix} style={{ width: 420 }} />
+        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径">
+          <Input disabled style={{ width: 420 }} />
+        </FormItem>
+        <FormItem name="paramPath" labelCol={{ span: 4 }} label="模型参数路径">
+          <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
           <Select

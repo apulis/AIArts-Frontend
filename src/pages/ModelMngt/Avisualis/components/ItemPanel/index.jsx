@@ -6,18 +6,21 @@ import { submitAvisualis, patchAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
 import _ from 'lodash';
+import AddFormModal from '../AddFormModal';
 
 const { Option } = Select;
 
 const ItemPanel = (props) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const addFormModalRef = useRef();
   const { avisualis, flowChartData, selectItem, setFlowChartData, detailId, onChangeNode } = props;
   const { addFormData, treeData } = avisualis;
   const [btnLoading, setBtnLoading] = useState(false);
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
+  const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config.length > 0;
 
   useEffect(() => {
     if (selectItem) {
@@ -28,77 +31,82 @@ const ItemPanel = (props) => {
   }, [selectItem]);
 
   const onSubmit = async() => {
-    const { nodes, edges } = flowChartData;
-    if (nodes.length !== treeData.length) {
-      message.warning('请完成剩余步骤！');
-      return;
-    }
-    setBtnLoading(true);
-    const _addFormData = _.cloneDeep(addFormData);
-    const _flowChartData = _.cloneDeep(flowChartData);
-    if (_addFormData.deviceType === 'PSDistJob') {
-      _addFormData.numPs = 1;
-      _addFormData.deviceNum = _addFormData.deviceTotal;
-    }
-    _addFormData.datasetPath = nodes[0].config[0].value;
-    _addFormData.outputPath = nodes[nodes.length - 1].config[0].value;
-    _addFormData.paramPath = _addFormData.outputPath;
-    const newNodes = nodes.map(i => {
-      return {
-        ...i,
-        id: i.id.split('-')[0]
+    addFormModalRef.current.form.validateFields().then(async (values) => {
+      const { nodes, edges } = flowChartData;
+      if (nodes.length !== treeData.length) {
+        message.warning('请完成剩余步骤！');
+        return;
       }
-    });
-    const newEdges = edges.map(i => {
-      const { source, target } = i;
-      return {
-        source: source,
-        target: target
+      setBtnLoading(true);
+      const _values = _.cloneDeep(values);
+      if (_values.deviceType === 'PSDistJob') {
+        _values.numPs = 1;
+        _values.deviceNum = _values.deviceTotal;
       }
-    });
-    const submitData = {
-      ..._addFormData,
-      nodes: newNodes,
-      edges: newEdges,
-    };
-    const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
-    if (code === 0) {
-      message.success(`${detailId ? '保存' : '创建'}成功！`);
-      dispatch({
-        type: 'avisualis/saveData',
-        payload: {
-          addFormData: {}
+      _values.datasetPath = nodes[0].config[0].value;
+      _values.outputPath = nodes[nodes.length - 1].config[0].value;
+      _values.paramPath = _values.outputPath;
+      const newNodes = nodes.map(i => {
+        return {
+          ...i,
+          id: i.id.split('-')[0]
         }
       });
-      history.push('/ModelManagement/avisualis');
-    }
-    setBtnLoading(false);
+      const newEdges = edges.map(i => {
+        const { source, target } = i;
+        return {
+          source: source,
+          target: target
+        }
+      });
+      let submitData = {
+        ...addFormData,
+        ..._values,
+        nodes: newNodes,
+        edges: newEdges,
+        isAdvance: false
+      };
+      if (!detailId) delete submitData.id;
+      const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
+      if (code === 0) {
+        message.success(`${detailId ? '保存' : '创建'}成功！`);
+        dispatch({
+          type: 'avisualis/saveData',
+          payload: {
+            addFormData: {}
+          }
+        });
+        history.push('/ModelManagement/avisualis');
+      }
+      setBtnLoading(false);
+    });
   }
 
   const getConfig = () => {
-    const { config } = selectItem._cfg.model;
+    const { config, id } = selectItem._cfg.model;
     return config.map(i => {
       const { type, value, key, options } = i;
       if (type === 'string' || type === 'disabled') {
         return (
-        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
-          <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} />
+        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+          <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
         </Form.Item>)
       } else if (type === 'number') {
         return (
-        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
-          <InputNumber style={{ width: '100%' }} />
+        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+          <InputNumber style={{ width: '100%' }} value={value} />
         </Form.Item>)
       } else if (type === 'select') {
         return (
-        <Form.Item name={key} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
-          <Select placeholder="请选择">
+        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
+          <Select placeholder="请选择" value={value}>
             {options.map(o => <Option key={o} value={o}>{o}</Option>)}
           </Select>
         </Form.Item>)
       }
     }) 
   }
+
 
   const onSaveConfig = () => {
     form.validateFields().then(async (values) => {
@@ -113,11 +121,6 @@ const ItemPanel = (props) => {
     })
   }
 
-  const getMODELSTYPESText = () => {
-    const data = MODELSTYPES.find(i => i.val === addFormData.use);
-    return data ? data.text : '--';
-  }
-
   const selectChangeNode = () => {
     if (!changeNodeKey) {
       message.warning('请选择更换节点');
@@ -129,30 +132,26 @@ const ItemPanel = (props) => {
       message.success('更换成功！');
     }
   }
-
+  
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
         <Button type="primary" loading={btnLoading} onClick={onSubmit}>{detailId ? '保存模型' : '创建模型'}</Button>
       </div>
-      {selectItem && selectItem._cfg ?
+      <Descriptions title="模型详情"></Descriptions>
+      <AddFormModal ref={addFormModalRef} detailData={addFormData} />
+      {hasSelectItem &&
         <>
-          <div className="ant-descriptions-title">{`${selectItem._cfg.model.config.length > 0 ? '节点配置' : '该节点无配置项'}`}</div>
+          <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
           <Form form={form}>
             {getConfig()}
           </Form>
-          <div style={{ float: 'right', textAlign: 'right' }}>
-            {selectItem._cfg.model.config.length > 0 && 
-            <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
-            {/* {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
-          </div>
-        </> :
-        <Descriptions column={1} title="模型详情">
-        <Descriptions.Item label="模型名称">{addFormData.name || '--'}</Descriptions.Item>
-        <Descriptions.Item label="模型用途">{getMODELSTYPESText()}</Descriptions.Item>
-        <Descriptions.Item label="简介">{addFormData.description || '--'}</Descriptions.Item>
-      </Descriptions>}
+        </>}
+        <div style={{ float: 'right', textAlign: 'right' }}>
+          {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
+          {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>}
+        </div>
       {modalFlag && (
         <Modal
           title="更换节点"

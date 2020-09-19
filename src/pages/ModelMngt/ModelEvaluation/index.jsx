@@ -5,7 +5,7 @@ import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/i
 import { getModel } from '../ModelList/services';
 import { addEvaluation, fetchPresetTemplates, getAllLabeledDatasets } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
-import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
+import { getDeviceNumArrByNodeType, formatParams, formatParamsToFormValues } from '@/utils/utils';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 
@@ -112,7 +112,7 @@ const ModelEvaluation = props => {
   const getCurrentModel = async (modelId) => {
     const { code, data, msg } = await getModel(modelId);
     if (code === 0) {
-      const { model } = data;
+      const { model, training } = data;
 
       let paramPathSuffix = model.paramPath?.substr(codePathPrefix.length) || '';
       let codePathSuffix = model.codePath?.substr(codePathPrefix.length) || '';
@@ -121,7 +121,7 @@ const ModelEvaluation = props => {
 
       const dataPreffix = model.codePath ? model.codePath.startsWith('/data') : false;
       setIsPublic(dataPreffix);
-
+      setRunningParams(formatParams(model.params));
       form.setFieldsValue({
         name: model.name,
         argumentsFile: paramPathSuffix,
@@ -129,6 +129,7 @@ const ModelEvaluation = props => {
         outputPath: outputPathSuffix,
         startupFile: dataPreffix ? model.startupFile.replace('train', 'eval') : startupFileSuffix,
         engine: model.engine,
+        params: formatParamsToFormValues(model.params)
       });
 
     } else {
@@ -367,9 +368,9 @@ const ModelEvaluation = props => {
               {...layout} 
               label="输出路径"
               name="outputPath"
-              rules={[{ required: true, message: '需要填写输出路径' }]}
+              // rules={[{ required: true, message: '需要填写输出路径' }]}
             >
-              <Input addonBefore={codePathPrefix} />
+              <Input disabled addonBefore={codePathPrefix} />
             </Form.Item> 
             <Form.Item {...layout} label="模型权重文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型权重文件' }]}>
               <Input addonBefore={codePathPrefix} />

@@ -234,6 +234,16 @@ export const formatParams = (obj) => {
   }
   return result;
 };
+
+export const formatParamsToFormValues = (params) => {
+  return Object.entries(params).map(item => {
+    var obj = {};
+    obj['key'] = item[0];
+    obj['value'] = item[1];
+    return obj;
+  })
+}
+
 // 节流
 export const throttle = (fn, delay) => {
   let lastTime = 0;
@@ -275,3 +285,11 @@ export const downloadStringAsFile = function (content, filename) {
   // 然后移除
   document.body.removeChild(eleLink);
 };
+
+export const checkIfCanDelete = (status) => {
+  return !['pausing', 'running', 'killing'].includes(status)
+}
+
+export const checkIfCanStop = (status) => {
+  return ['unapproved', 'queued', 'scheduling', 'running'].includes(status);
+}

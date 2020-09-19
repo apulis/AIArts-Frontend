@@ -20,6 +20,7 @@ export default {
   'menu.account.logout': '退出登录',
   'menu.codeDevelopment': '代码开发',
   'menu.visualOperation': '可视化运维',
+  'menu.image': '镜像管理',
   'menu.modelManagement': '模型管理',
   'menu.modelManagement.myModels': '我的模型',
   'menu.modelTraining.pretraindedModels': '预置模型',

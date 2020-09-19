@@ -134,7 +134,7 @@ const ParamsManage = () => {
             <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
-            <a style={{marginLeft: '12px'}} onClick={() => saveTemplateAsFile(id, name)}>导出为文件</a>
+            <a style={{marginLeft: '12px'}} onClick={() => saveTemplateAsFile(id, name)}>导出参数</a>
           </>
         );
       },
@@ -226,7 +226,7 @@ const ParamsManage = () => {
             padding: '24px 0 24px 24px',
           }}
         >
-          <Button onClick={() => {setImportedParamsModalVisible(true)}} type="primary">导入训练参数文件</Button>
+          <Button onClick={() => {setImportedParamsModalVisible(true)}} type="primary">导入参数</Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {

@@ -11,6 +11,7 @@ import { getNameFromDockerImage } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 import FormItem from 'antd/lib/form/FormItem';
+import { checkIfCanDelete } from '@/utils/utils.js';
 
 
 const { Search } = Input;
@@ -298,7 +299,12 @@ const CodeList = (props) => {
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>打开</a>
             <a onClick={() => handleOpenModal(codeItem)} disabled={!canUploadStatus.has(codeItem.status)}>上传代码</a>
             <a onClick={() => handleStop(codeItem)} disabled={!canStopStatus.has(codeItem.status)} style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}>停止</a>
-            <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
+            {
+              checkIfCanDelete(codeItem.status)
+                ? <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>删除</a>
+                : <span style={{ color: '#333' }}>删除</span>
+            }
+            
             {
               codeItem.status === 'running' && 
                 <a onClick={() => toSaveImage(codeItem.id)}>保存镜像</a>
