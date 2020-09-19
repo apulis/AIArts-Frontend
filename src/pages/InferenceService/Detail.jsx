@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Descriptions, message, Upload, Button } from 'antd';
+import { Descriptions, message, Upload, Button, Table } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { useParams } from 'umi';
 import moment from 'moment';
@@ -23,6 +23,7 @@ const InferenceDetail = (props) => {
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [jobDetail, setJobDetail] = useState({});
+  const [recognizeResult, setRecognizeResult] = useState([]);
   const logEl = useRef(null);
   const [beginAnalizeLoading, setBeginAnalizeLoading] = useState(false);
   const params = useParams()
@@ -40,6 +41,18 @@ const InferenceDetail = (props) => {
     }
     return res;
   }
+
+  const columns = [
+    {
+      title: '识别结果',
+      dataIndex: 'key',
+    },
+    {
+      title: '识别准确率',
+      dataIndex: 'value',
+    }
+  ]
+
   const getInferenceDetail = async () => {
     const res = await fetchInferenceDetail(id)
     if (res.code === 0) {
@@ -64,23 +77,22 @@ const InferenceDetail = (props) => {
       setLoading(true);
       return;
     }
-    console.log('info', info.file.status)
     if (info.file.status === 'done') {
       getBase64(info.file.originFileObj, imageUrl => {
         setImageUrl(imageUrl);
         setLoading(false);
       });
-      // Get this url from response in real world.
-      let imageBase64 = info.file.response.data
-      if (typeof imageBase64 !== 'string') {
-        getBase64(info.file.originFileObj, imageUrl => {
-          setTempImageUrl(imageUrl);
-          setLoading(false);
-        });
-      } else {
-        setTempImageUrl(imageBase64);
-        setLoading(false);
-      } 
+      const res = info.file.response
+      if (res.code === 0) {
+        const recognizeResult = [];
+        res.data.forEach(val => {
+          const o = {};
+          o.key = val[0];
+          o.value = val[1]
+          recognizeResult.push(o)
+        })
+        setRecognizeResult(recognizeResult);
+      }
     }
 
     if (info.file.status === 'error') {
@@ -93,9 +105,9 @@ const InferenceDetail = (props) => {
     if (!isJpgOrPng) {
       message.error('只能上传 JPG 或 PNG 格式的文件');
     }
-    const isLt5M = file.size / 1024 / 1024 < 5;
+    const isLt5M = file.size / 1024 / 1024 < 10;
     if (!isLt5M) {
-      message.error('图片不能大于5M');
+      message.error('图片不能大于 10M');
     }
     return isJpgOrPng && isLt5M;
   }
@@ -118,33 +130,45 @@ const InferenceDetail = (props) => {
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">上传图片</div>
+      <div className="ant-upload-text">{ loading ? '识别中' : '上传图片'}</div>
     </div>
   );
   
   const jobEnded = ['finished', 'failed', 'killed', 'error'].includes(jobDetail.jobStatus)
   return (
     <PageHeaderWrapper>
-      {
-        jobRunning && <Upload
-          headers={{
-            Authorization: `Bearer ${localStorage.token}`
-          }}
-          name="image"
-          listType="picture-card"
-          className="avatar-uploader"
-          showUploadList={false}
-          action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
-          beforeUpload={beforeUpload}
-          style={{position: 'relative'}}
-          onChange={handleChange}
-        >
-          {(imageUrl) ? <img src={imageUrl} alt="avatar" style={{ width: '620px' }} /> : uploadButton}
-        </Upload>
-      }
-      {
-        jobRunning && <Button type="primary" disabled={tempImageUrl.length === 0} loading={beginAnalizeLoading} onClick={beginAnalyze}>开始识别</Button>
-      }
+      <div className={styles.topContainer}>
+        <div>
+          {
+            jobRunning && <Upload
+              headers={{
+                Authorization: `Bearer ${localStorage.token}`
+              }}
+              name="image"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              action={`/ai_arts/api/inferences/Infer?jobId=${id}`}
+              beforeUpload={beforeUpload}
+              style={{position: 'relative'}}
+              onChange={handleChange}
+            >
+              {(imageUrl) ? <img src={imageUrl} alt="avatar" style={{ width: '620px' }} /> : uploadButton}
+            </Upload>
+          }
+        </div>
+        
+        {  recognizeResult.length > 0 &&
+          <Table
+            style={{ width: '320px' }}
+            dataSource={recognizeResult}
+            columns={columns}
+            pagination={false}
+            size="small"
+          />
+        }
+      </div>
+      
       
       <Descriptions style={{marginTop: '20px'}} bordered={true} column={1}>
         <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
