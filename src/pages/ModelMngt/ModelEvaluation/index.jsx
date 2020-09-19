@@ -121,7 +121,11 @@ const ModelEvaluation = props => {
 
       const dataPreffix = model.codePath ? model.codePath.startsWith('/data') : false;
       setIsPublic(dataPreffix);
-      setRunningParams(formatParams(model.params));
+      let params = [];
+      if (/^Avisualis/.test(model.use)) {
+        setRunningParams(formatParams(model.params));
+        params = formatParamsToFormValues(model.params)
+      }
       form.setFieldsValue({
         name: model.name,
         argumentsFile: paramPathSuffix,
@@ -129,7 +133,7 @@ const ModelEvaluation = props => {
         outputPath: outputPathSuffix,
         startupFile: dataPreffix ? model.startupFile.replace('train', 'eval') : startupFileSuffix,
         engine: model.engine,
-        params: formatParamsToFormValues(model.params)
+        params: params,
       });
 
     } else {
