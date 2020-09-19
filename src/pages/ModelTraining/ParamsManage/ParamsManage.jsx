@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Select, Card, message, Upload } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Modal, Table, Input, Button, Select, Card, message, Upload, Tooltip } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -22,6 +22,7 @@ const ParamsManage = () => {
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
+  const uploadRef = useRef(null);
   const [importedParamsModalVisible, setImportedParamsModalVisible] = useState(false);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
@@ -192,8 +193,7 @@ const ParamsManage = () => {
         const newTemplate = {}
         newTemplate.scope = result.metaData?.scope;
         newTemplate.jobType = result.metaData?.jobType;
-        newTemplate.templateData = Object.assign({}, result.params)
-
+        newTemplate.templateData = Object.assign({}, result.params, { name: result.metaData.name || file.name })
         setUploadParamsObj(newTemplate);
       } catch (err) {
         message.error(err);
@@ -262,15 +262,20 @@ const ParamsManage = () => {
           loading={tableLoading}
         />
       </Card>
-      <Modal
-        visible={importedParamsModalVisible}
-        onCancel={() => {setImportedParamsModalVisible(false)}}
-        onOk={saveFileAsTemplate}
-      >
-        <Upload beforeUpload={beforeUpload}>
-          <Button icon={<UploadOutlined />}>上传 json 文件</Button>
-        </Upload>
-      </Modal>
+      {
+        importedParamsModalVisible && <Modal
+          visible={importedParamsModalVisible}
+          onCancel={() => {setImportedParamsModalVisible(false)}}
+          onOk={saveFileAsTemplate}
+        >
+          <Upload ref={uploadRef}beforeUpload={beforeUpload} action="/">
+            <Tooltip title={uploadRef.current?.state.fileList.length >= 1 ? '每次只能上传一个文件' : ''}>
+              <Button disabled={uploadRef.current?.state.fileList.length >= 1} icon={<UploadOutlined />}>上传 json 文件</Button>
+            </Tooltip>
+          </Upload>
+        </Modal>
+      }
+      
     </PageHeaderWrapper >
   );
 };
