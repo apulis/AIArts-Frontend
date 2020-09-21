@@ -123,7 +123,7 @@ const ModelEvaluation = props => {
       setIsPublic(dataPreffix);
       let params = [];
       if (/^Avisualis/.test(model.use)) {
-        setRunningParams(formatParams(model.params));
+        setRunningParams(formatParamsToFormValues(model.params));
         params = formatParamsToFormValues(model.params)
       }
       form.setFieldsValue({
@@ -376,7 +376,7 @@ const ModelEvaluation = props => {
             >
               <Input disabled addonBefore={codePathPrefix} />
             </Form.Item> 
-            <Form.Item {...layout} label="模型权重文件1" name="argumentsFile" rules={[{ required: true, message: '需要填写模型权重文件' }]}>
+            <Form.Item {...layout} label="模型权重文件" name="argumentsFile" rules={[{ required: true, message: '需要填写模型权重文件' }]}>
               <Input addonBefore={codePathPrefix} />
             </Form.Item>                                             
             <Form.Item {...layout}  label="测试数据集" name="datasetPath" rules={[{ required: true, message: '请选择测试数据集' }]}>
