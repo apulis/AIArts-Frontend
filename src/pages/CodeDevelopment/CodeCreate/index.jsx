@@ -120,8 +120,8 @@ const CodeCreate = (props) => {
     setEngineNameArr(arr);
   }
 
-  const handleDeviceTypeChange = (index) => {
-    const type = resource['nodeInfo'][index]['gpuType'];
+  const handleDeviceTypeChange = (type) => {
+    console.log('type', type)
     let arr = [];
     if (jobTrainingType == 'RegularJob') {
       arr = utilGetDeviceNumArr(resource['nodeInfo'], type);
@@ -288,7 +288,7 @@ const CodeCreate = (props) => {
             name="deviceType"
             rules={[{ required: true }]}
           >
-            <Select style={{ width: "50%" }} onChange={(item, option) => handleDeviceTypeChange(option.index)}>
+            <Select style={{ width: "50%" }} onChange={(type) => handleDeviceTypeChange(type)}>
               {
                 deviceTypeArr.map((item, index) => (<Option key={index} value={item} index={index}>{item}</Option>))
               }
