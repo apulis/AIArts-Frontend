@@ -7,6 +7,10 @@ const history = require('connect-history-api-fallback')
 
 const app = express()
 
+app.post('*', (req, res) => {
+  res.send('ok')
+})
+
 app.use(history())
 
 app.use(ecstatic({ root: path.join(__dirname, '../dist') }))
