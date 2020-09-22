@@ -5,7 +5,7 @@ let devices = {}
 export function beforeSubmitJob(isDistributed, deviceType, deviceNum, distributedJobOptions) {
   const detail = devices[deviceType].detail;
   const allocatables = detail.map(val => val.allocatable);
-  const maxAllocatables = Math.max(allocatables);
+  const maxAllocatables = Math.max.apply(undefined, allocatables);
   allocatables.sort((x, y) => y - x);
   if (isDistributed) {
     const { nodeNum } = distributedJobOptions;
