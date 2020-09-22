@@ -9,6 +9,8 @@ import { useDispatch, history } from 'umi';
 import { DownOutlined, FolderOutlined, FolderOpenOutlined, FolderOpenTwoTone } from '@ant-design/icons'
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
+import Test from '../components/test2';
+
 import _ from 'lodash';
 
 const { confirm } = Modal;
@@ -123,7 +125,7 @@ const AvisualisDetail = (props) => {
 
   return (
     <PageHeaderWrapper title={false}>
-      <div className={styles.avisualisWrap}>
+      <div className={styles.avisualisDetailWrap}>
         <Card className="treeCard">
           {panelData.length ? <Tree
             showIcon
@@ -135,7 +137,7 @@ const AvisualisDetail = (props) => {
             onDragStart={({event, node}) => event.dataTransfer.effectAllowed = 'move'}
           /> : null}
         </Card>
-        <FlowChart 
+        <Test
           ref={flowChartRef} 
           transformData={transformData} 
           detailId={detailId}

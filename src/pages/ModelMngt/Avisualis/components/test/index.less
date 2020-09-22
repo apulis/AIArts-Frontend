@@ -1,0 +1,45 @@
+.G6Content {
+  height: 100%;
+  display: inline-block;
+  width: 350px !important;
+  background: #fff !important;
+  position: relative;
+  canvas {
+    margin: 0 auto;
+  }
+}
+
+.G6Content2 {
+  height: 100%;
+  display: inline-block;
+  width: 600px !important;
+  background: #fff !important;
+  position: relative;
+  :global {
+    .g6-minimap {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+    .g6-component-toolbar {
+      height: 36px;
+      svg {
+        width: 24px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+:global {
+  .antd-pro-pages-model-mngt-avisualis-components-test-index-G6Content2 .g6-minimap {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    left: unset !important;
+  }
+  .g6-component-toolbar {
+    left: unset !important;
+    right: 0;
+  }
+}
