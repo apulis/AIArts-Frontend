@@ -243,14 +243,14 @@ const ModelTraining = (props) => {
       values.codePath = values.codePath;
       values.startupFile =  values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath;
-      values.visualPath = codePathPrefix + values.visualPath;
+      values.visualPath = values.visualPath ? (codePathPrefix + values.visualPath) : undefined;
     } else if (importedTrainingParams) {
       //
     } else {
       values.codePath = codePathPrefix + values.codePath;
       values.startupFile = codePathPrefix + values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath;
-      values.visualPath = codePathPrefix + values.visualPath;
+      values.visualPath = values.visualPath ? (codePathPrefix + values.visualPath) : undefined;
     }
     values.params = params;
     if (distributedJob) {
