@@ -33,8 +33,7 @@ const EvaluationDetail = props => {
     if (code === 0) {
       // message.success('成功获取结果');
       const { data: { evaluation, log, indicator, confusion } } = res;
-      debugger
-      if('visualPath' in evaluation.params){
+      if ('visualPath' in evaluation.params) {
         evaluation.visualPath = evaluation.params.visualPath;
         delete evaluation.params['visualPath'];
       }
