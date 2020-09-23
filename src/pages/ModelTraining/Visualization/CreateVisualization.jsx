@@ -76,7 +76,7 @@ export default function CreateVisualization() {
   },[]);
 
   useEffect(() => {
-    if(curModel){
+    if (curModel) {
       setFieldsValue({'tensorboardLogDir' : curModel.path});
     }
   },[curModel]);
