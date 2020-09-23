@@ -126,8 +126,11 @@ const Detail = (props) => {
         <Descriptions.Item label="计算节点规格">{jobDetail.deviceType}</Descriptions.Item>
         <Descriptions.Item label="训练数据集">{jobDetail.datasetPath}</Descriptions.Item>
         <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
-        <Descriptions.Item label="可视化路径">{jobDetail.outputPath}</Descriptions.Item>
-        <Descriptions.Item label="输出路径">{jobDetail.visualPath}</Descriptions.Item>
+        {
+          jobDetail.params?.visualPath && 
+            <Descriptions.Item label="可视化路径">{jobDetail.params.visualPath}</Descriptions.Item>
+        }
+        <Descriptions.Item label="输出路径">{jobDetail.outputPath}</Descriptions.Item>
         {
           jobDetail.checkpoint && <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
         }
