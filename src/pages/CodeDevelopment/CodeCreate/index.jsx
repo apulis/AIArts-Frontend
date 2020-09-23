@@ -99,7 +99,7 @@ const CodeCreate = (props) => {
     const values = await validateFields();
     delete values["engineType"];
     values.codePath = codePathPrefix + values.codePath;
-    if(!beforeSubmitJob(values.jobTrainingType === 'PSDistJob', values.deviceType, values.deviceNum, { nodeNum: values.numPsWorker })){
+    if (!beforeSubmitJob(values.jobTrainingType === 'PSDistJob', values.deviceType, values.numPsWorker, { nodeNum: values.numPs })) {
       Modal.confirm({
         title: '当前暂无可用训练设备，继续提交将会进入等待队列',
         content: '是否继续',
