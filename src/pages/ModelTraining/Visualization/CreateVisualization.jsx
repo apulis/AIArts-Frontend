@@ -41,10 +41,14 @@ export default function CreateVisualization() {
   const renderInitForm = async ()=> {
     const modelList = await apiGetModelList();
     const resource = await apiGetResource();
-    if(modelList && resource){
+    if (modelList && resource) {
       const codePathPrefix = resource.codePathPrefix;
-      const models = modelList.models.map((item,index) => {
-        return {id: item.id, name: item.name, path: item.visualPath ? item.visualPath.replace(codePathPrefix,'') : ''}
+      const models = modelList.models.map((item, index) => {
+        return {
+          id: item.id,
+          name: item.name,
+          path: item.visualPath ? item.visualPath.replace(codePathPrefix,'') : '' 
+        }
       });
       setModelArr(models);
       setCodePathPrefix(codePathPrefix);
