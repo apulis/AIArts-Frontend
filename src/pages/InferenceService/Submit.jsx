@@ -213,7 +213,7 @@ const SubmitModelTraining = (props) => {
         <FormItem labelCol={commonLayout.labelCol} label="推理模型路径" required>
           <FormItem
             name="modelPath"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: '请输入推理模型路径' }]}
             style={{ display: 'inline-block', width: '250px' }}
           >
             <Input placeholder="请输入推理模型路径" style={{ width: '230px' }} />
