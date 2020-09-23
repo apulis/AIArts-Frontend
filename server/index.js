@@ -1,18 +1,18 @@
-const http = require('http')
-const path = require('path')
+const http = require('http');
+const path = require('path');
 
-const express = require('express')
-const ecstatic = require('ecstatic')
-const history = require('connect-history-api-fallback')
+const express = require('express');
+const ecstatic = require('ecstatic');
+const history = require('connect-history-api-fallback');
 
-const app = express()
+const app = express();
 
 app.post('*', (req, res) => {
-  res.send('ok')
-})
+  res.send('ok');
+});
 
-app.use(history())
+app.use(history());
 
-app.use(ecstatic({ root: path.join(__dirname, '../dist') }))
+app.use(ecstatic({ root: path.join(__dirname, '../dist') }));
 
-http.createServer(app).listen(process.argv[2] || 3084)
+http.createServer(app).listen(process.argv[2] || 3084);

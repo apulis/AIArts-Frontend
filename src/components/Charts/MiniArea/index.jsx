@@ -3,7 +3,7 @@ import React from 'react';
 import autoHeight from '../autoHeight';
 import styles from '../index.less';
 
-const MiniArea = props => {
+const MiniArea = (props) => {
   const {
     height = 1,
     data = [],

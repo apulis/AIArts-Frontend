@@ -65,15 +65,15 @@ export const getRouteAuthority = (path, routeData) => {
  * 规范化返回的列表数据
  * @param {Object} data 列表数据
  */
-export const normalizeTableResult = data => {
+export const normalizeTableResult = (data) => {
   if (Array.isArray(data)) {
     return {
       list: data || [],
       pagination: {
         current: 1,
         pageSize: 10,
-        total: 0
-      }
+        total: 0,
+      },
     };
   }
   if (isObject(data)) {
@@ -82,15 +82,15 @@ export const normalizeTableResult = data => {
       pagination: {
         current: data.pageNum || 1,
         pageSize: data.pageSize || 10,
-        total: data.total
-      }
+        total: data.total,
+      },
     };
   }
   return data;
 };
 
 // 文件大小显示转换
-export const bytesToSize = bytes => {
+export const bytesToSize = (bytes) => {
   if (bytes === 0) return '0 B';
   const k = 1024; // or 1024
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -100,27 +100,26 @@ export const bytesToSize = bytes => {
   return `${(bytes / Math.pow(k, i)).toFixed(0)} ${sizes[i]}`;
 };
 
-
 export const getJobStatus = (status) => {
   const statusList = {
-    'unapproved': '未批准',
-    'queued': '队列中',
-    'scheduling': '调度中',
-    'running': '运行中',
-    'finished': '已完成',
-    'failed': '已失败',
-    'pausing': '暂停中',
-    'paused': '已暂停',
-    'killing': '关闭中',
-    'killed': '已关闭',
-    'error': '错误',
+    unapproved: '未批准',
+    queued: '队列中',
+    scheduling: '调度中',
+    running: '运行中',
+    finished: '已完成',
+    failed: '已失败',
+    pausing: '暂停中',
+    paused: '已暂停',
+    killing: '关闭中',
+    killed: '已关闭',
+    error: '错误',
     'started at ': '开始于： ',
     'error at ': '发生错误于： ',
     'paused at ': '停止于：',
     'failed at ': '失败于： ',
     'finished at ': '完成于： ',
     'killed at ': '终止于： ',
-    'toUse': '可用',
+    toUse: '可用',
     'waiting for available resource. requested: ': '等待可用资源，已请求资源：',
     '. available: ': '可用资源： ',
   };
@@ -129,33 +128,33 @@ export const getJobStatus = (status) => {
 
 export const getStatusColor = (status) => {
   const colorList = {
-    'error': '#CC0000',
-    'failed': '#d48265',
-    'finished': '#2f4554',
-    'running': '#61a0a8',
-    'killed': '#DDDDDD',
+    error: '#CC0000',
+    failed: '#d48265',
+    finished: '#2f4554',
+    running: '#61a0a8',
+    killed: '#DDDDDD',
 
-    'unapproved': '#91c7ae',
-    'queued': '#749f83',
-    'scheduling': '#9ACD32',
-    'pausing': '#ca8622',
-    'paused': '#bda29a',
-    'killing': '#C0C0C0',
+    unapproved: '#91c7ae',
+    queued: '#749f83',
+    scheduling: '#9ACD32',
+    pausing: '#ca8622',
+    paused: '#bda29a',
+    killing: '#C0C0C0',
   };
   return colorList[status] || '#1890ff';
 };
 
 export const getModelStatus = (status) => {
   const statusList = {
-    'normal': '正常',
-    'deleting': '删除中',
+    normal: '正常',
+    deleting: '删除中',
   };
   return statusList[status] || '';
 };
 // Regular任务类型，根据nodeType返回可选设备数量数组
 export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
   if (nodeInfo == undefined || !type) {
-    return []
+    return [];
   }
   if (checkIfGpuOrNpu(type) === 'GPU') {
     let arr = [];
@@ -179,7 +178,7 @@ export const getDeviceNumArrByNodeType = (nodeInfo, type) => {
 // PSDistJob任务类型，根据nodeType返回每个节点的可选设备数组
 export const getDeviceNumPerNodeArrByNodeType = (nodeInfo, type) => {
   if (nodeInfo == undefined || !type) {
-    return []
+    return [];
   }
   // gpu
   if (checkIfGpuOrNpu(type) === 'GPU') {
@@ -219,11 +218,11 @@ export const omitText = function (str, len = 20) {
   if (!str) {
     return '';
   }
-  var reg = /[\u4e00-\u9fa5]/g,    //专业匹配中文
+  var reg = /[\u4e00-\u9fa5]/g, //专业匹配中文
     slice = str.substring(0, len),
-    chineseCharNum = (~~(slice.match(reg) && slice.match(reg).length)),
+    chineseCharNum = ~~(slice.match(reg) && slice.match(reg).length),
     realen = slice.length * 2 - chineseCharNum;
-  return str.substr(0, realen) + (realen < str.length ? "..." : "");
+  return str.substr(0, realen) + (realen < str.length ? '...' : '');
 };
 
 export const formatParams = (obj) => {
@@ -236,13 +235,13 @@ export const formatParams = (obj) => {
 };
 
 export const formatParamsToFormValues = (params) => {
-  return Object.entries(params).map(item => {
+  return Object.entries(params).map((item) => {
     var obj = {};
     obj['key'] = item[0];
     obj['value'] = item[1];
     return obj;
-  })
-}
+  });
+};
 
 // 节流
 export const throttle = (fn, delay) => {
@@ -253,8 +252,8 @@ export const throttle = (fn, delay) => {
       fn.call(this);
       lastTime = nowTime;
     }
-  }
-}
+  };
+};
 // 防抖
 export const debounce = (fn, delay) => {
   let timer = null;
@@ -262,14 +261,11 @@ export const debounce = (fn, delay) => {
     clearTimeout(timer);
     timer = setTimeout(function () {
       fn.call(this);
-    }, delay)
-  }
-}
+    }, delay);
+  };
+};
 
-export const getDeviceType = () => {
-  
-}
-
+export const getDeviceType = () => {};
 
 export const downloadStringAsFile = function (content, filename) {
   // 创建隐藏的可下载链接
@@ -287,9 +283,9 @@ export const downloadStringAsFile = function (content, filename) {
 };
 
 export const checkIfCanDelete = (status) => {
-  return !['pausing', 'running', 'killing'].includes(status)
-}
+  return !['pausing', 'running', 'killing'].includes(status);
+};
 
 export const checkIfCanStop = (status) => {
   return ['unapproved', 'queued', 'scheduling', 'running'].includes(status);
-}
+};

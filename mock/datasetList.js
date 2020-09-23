@@ -15,7 +15,7 @@ const genList = (current, pageSize) => {
       version: `Version ${index}`,
       desc: '这是一段实验数据集描述',
       creator: Mock.mock('@cname'),
-      latestTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+      latestTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
     });
   }
 
@@ -58,9 +58,9 @@ function getDatasets(req, res, u) {
         total: tableListDataSource.length,
         pageSize: parseInt(`${params.pageSize}`, 10) || 10,
         current: parseInt(`${params.current}`, 10) || 1,
-      }
+      },
     },
-    msg: 'success'
+    msg: 'success',
   };
   return res.json(result);
 }
@@ -89,7 +89,7 @@ function postDataset(req, res, u, b) {
           name: `Project ${tableListDataSource.length}`,
           desc: '这是一段描述',
           creator: Mock.mock('@cname'),
-          latestTime: new Date()
+          latestTime: new Date(),
         };
         tableListDataSource.unshift(newRule);
         return res.json(newRule);
@@ -128,5 +128,5 @@ function postDataset(req, res, u, b) {
 
 export default {
   'GET /api/project/experiment/dataset/list': getDatasets,
-  'POST /api/projct/experiment/dataset/update': postDataset
+  'POST /api/projct/experiment/dataset/update': postDataset,
 };

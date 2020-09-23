@@ -1,11 +1,10 @@
-import request from '../utils/request'
-
+import request from '../utils/request';
 
 export const deleteImages = async (id) => {
   return await request('/saved_imgs/' + id, {
     method: 'DELETE',
   });
-}
+};
 
 export const getImages = async (params) => {
   return await request('/saved_imgs', {
@@ -13,6 +12,6 @@ export const getImages = async (params) => {
       pageNum: params.pageNum,
       pageSize: params.pageSize,
       searchWord: params.search,
-    }
+    },
   });
-}
+};

@@ -17,7 +17,7 @@ const genList = (current, pageSize) => {
       codePath: `storePath`,
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       desc: 'Handwritten digit classification',
-      JupyterUrl:'https://www.baidu.com/'
+      JupyterUrl: 'https://www.baidu.com/',
     });
     // tableListDataSource.push({
     //   id: index,
@@ -43,7 +43,7 @@ function getCodes(req, res, u) {
     realUrl = req.url;
   }
 
-  const { pageNum = 1, pageSize = 10 } = req.query;// 请求参数
+  const { pageNum = 1, pageSize = 10 } = req.query; // 请求参数
   const params = parse(realUrl, true).query;
   let dataSource = [...tableListDataSource].slice((pageNum - 1) * pageSize, pageNum * pageSize);
 
@@ -68,23 +68,20 @@ function getCodes(req, res, u) {
       CodeEnvs: dataSource,
       total: tableListDataSource.length,
     },
-    msg: 'success'
+    msg: 'success',
   };
   return res.json(result);
 }
 
 function postCode(req, res) {
   const result = {
-    code:0,
-    data:{
-      id:'1'
+    code: 0,
+    data: {
+      id: '1',
     },
-    msg:"success"
+    msg: 'success',
   };
   res.json(result);
 }
 
-function deleteCode(req, res, u, b){
-
-}
-
+function deleteCode(req, res, u, b) {}

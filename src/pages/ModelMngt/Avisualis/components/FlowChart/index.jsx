@@ -26,16 +26,17 @@ const FlowChart = forwardRef((props, ref) => {
   const { panelApiData, treeData } = avisualis;
 
   useImperativeHandle(ref, () => ({
-    handleDragEnd: handleDragEnd
+    handleDragEnd: handleDragEnd,
   }));
-  
+
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
     setLoading(true);
-    G6.registerNode('flowChart',
+    G6.registerNode(
+      'flowChart',
       {
         drawShape(cfg, group) {
           const rect = group.addShape('rect', {
@@ -95,7 +96,7 @@ const FlowChart = forwardRef((props, ref) => {
               <span role="img" aria-label="compress" class="anticon anticon-compress"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="compress" width="1em" height="1em" fill="currentColor" aria-hidden="true"><defs><style></style></defs><path d="M326 664H104c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h174v176c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V696c0-17.7-14.3-32-32-32zm16-576h-48c-8.8 0-16 7.2-16 16v176H104c-8.8 0-16 7.2-16 16v48c0 8.8 7.2 16 16 16h222c17.7 0 32-14.3 32-32V104c0-8.8-7.2-16-16-16zm578 576H698c-17.7 0-32 14.3-32 32v224c0 8.8 7.2 16 16 16h48c8.8 0 16-7.2 16-16V744h174c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16zm0-384H746V104c0-8.8-7.2-16-16-16h-48c-8.8 0-16 7.2-16 16v224c0 17.7 14.3 32 32 32h222c8.8 0 16-7.2 16-16v-48c0-8.8-7.2-16-16-16z"></path></svg></span>
             </li>
           </ul>
-        `
+        `;
       },
       handleClick: (code, graph) => {
         let zoom = graph.getZoom();
@@ -109,21 +110,21 @@ const FlowChart = forwardRef((props, ref) => {
           graph.fitCenter();
         } else if (code === 'autoZoom') {
           graph.fitView();
-        } 
-      }
+        }
+      },
     });
     let _graph = new G6.Graph({
       container: 'container',
       width: 800,
       height,
-      
+
       layout: {
         type: 'dagre',
         ranksep: 30,
         controlPoints: true,
       },
       defaultNode: {
-        type: 'flowChart'
+        type: 'flowChart',
       },
       defaultEdge: {
         type: 'cubic-vertical',
@@ -144,7 +145,7 @@ const FlowChart = forwardRef((props, ref) => {
         hover: {
           cursor: 'move',
           fill: 'lightsteelblue',
-        }
+        },
       },
       modes: {
         default: [
@@ -152,30 +153,30 @@ const FlowChart = forwardRef((props, ref) => {
           'zoom-canvas',
           {
             type: 'click-select',
-            multiple: false
+            multiple: false,
           },
           'drag-node',
-          "customer-events",
-        ]
+          'customer-events',
+        ],
       },
       plugins: [minimap, toolbar],
     });
     _graph.data(flowChartData);
     _graph.render();
 
-    _graph.on('node:mouseenter', e => {
+    _graph.on('node:mouseenter', (e) => {
       _graph.setItemState(e.item, 'hover', true); // 设置当前节点的 hover 状态为 true
     });
-    
+
     // 鼠标离开节点
-    _graph.on('node:mouseleave', e => {
+    _graph.on('node:mouseleave', (e) => {
       _graph.setItemState(e.item, 'hover', false); // 设置当前节点的 hover 状态为 false
     });
 
     // Click a node
-    _graph.on('node:click', e => {
+    _graph.on('node:click', (e) => {
       const clickNodes = _graph.findAllByState('node', 'click');
-      clickNodes.forEach(cn => {
+      clickNodes.forEach((cn) => {
         _graph.setItemState(cn, 'click', false);
       });
       const nodeItem = e.item;
@@ -183,11 +184,11 @@ const FlowChart = forwardRef((props, ref) => {
       setSelectItem(nodeItem);
     });
 
-    _graph.on('canvas:click', e => {
+    _graph.on('canvas:click', (e) => {
       setSelectItem(null);
     });
 
-    _graph.on('keydown', e => {
+    _graph.on('keydown', (e) => {
       const { keyCode } = e;
       if (keyCode === 8 || keyCode === 46) deleteNode(_graph);
     });
@@ -197,16 +198,17 @@ const FlowChart = forwardRef((props, ref) => {
     setLoading(false);
   };
 
-  const handleDragEnd = node => {
+  const handleDragEnd = (node) => {
     const { title, key, config, idx } = node;
-    const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
-    let newData = {}, 
-        newNodes = {
-          id: key,
-          name: title,
-          config: config,
-          idx: idx
-        };
+    const hasNodes =
+      Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
+    let newData = {},
+      newNodes = {
+        id: key,
+        name: title,
+        config: config,
+        idx: idx,
+      };
     if ((hasNodes && idx > flowChartData.nodes.length) || (!hasNodes && idx > 0)) {
       message.warning('只能按照步骤顺序依次拖拽！');
       return;
@@ -218,10 +220,10 @@ const FlowChart = forwardRef((props, ref) => {
       const nodesLen = nodes.length;
       const temp = {
         source: nodes[nodesLen - 1].id,
-        target: key
+        target: key,
       };
       if (edgesLen) {
-        edges.push(temp)
+        edges.push(temp);
       } else {
         edges[0] = temp;
       }
@@ -229,49 +231,49 @@ const FlowChart = forwardRef((props, ref) => {
     } else {
       newData = {
         nodes: [newNodes],
-        edges: []
-      }
+        edges: [],
+      };
     }
     setFlowChartData(newData);
     graph.changeData(newData);
     graph.fitCenter();
     transformData(null, newData);
     setSelectItem(null);
-  }
+  };
 
   const deleteNode = (graph) => {
     const allNodes = graph.get('nodes');
-    const selectedItem = graph.findAllByState("node", "selected");
+    const selectedItem = graph.findAllByState('node', 'selected');
     if (selectedItem && selectedItem.length) {
       const _id = selectedItem[0]._cfg.id;
       if (_id !== allNodes[allNodes.length - 1]._cfg.id) {
         message.warning('只能按照模型顺序依次删除！');
         return;
       }
-      allNodes.forEach(i => {
+      allNodes.forEach((i) => {
         if (i._cfg.id === _id) {
           let newData = _.cloneDeep(graph);
           const { nodes, edges } = newData.cfg;
           nodes && nodes.length && nodes.pop();
           edges && edges.length && edges.pop();
-          const newNodes = nodes.map(i => {
+          const newNodes = nodes.map((i) => {
             const { id, name, config } = i._cfg.model;
             return {
               id: id,
               name: name,
-              config: config
-            }
-          })
-          const newEdges = edges.map(i => {
+              config: config,
+            };
+          });
+          const newEdges = edges.map((i) => {
             const { source, target } = i._cfg.model;
             return {
               source: source,
-              target: target
-            }
-          })
+              target: target,
+            };
+          });
           const temp = {
             nodes: newNodes,
-            edges: newEdges
+            edges: newEdges,
           };
           setFlowChartData(temp);
           graph.changeData(temp);
@@ -280,22 +282,22 @@ const FlowChart = forwardRef((props, ref) => {
           setSelectItem(null);
           return;
         }
-      })
+      });
     }
-  }
+  };
 
   const onChangeNode = (id) => {
     const fId = id.split('-')[0];
-    const fIdx = treeData.findIndex(i => fId === i.key);
+    const fIdx = treeData.findIndex((i) => fId === i.key);
     const changeChildTemp = treeData[fIdx].children;
-    const changeNode = changeChildTemp.find(i => i.key === id);
+    const changeNode = changeChildTemp.find((i) => i.key === id);
     const cloneData = _.cloneDeep(flowChartData);
     const { title, key, config } = changeNode;
     cloneData.nodes[fIdx] = {
       id: key,
       name: title,
       config: config,
-      idx: fIdx
+      idx: fIdx,
     };
     cloneData.edges[fIdx].source = id;
     if (fIdx !== 0) cloneData.edges[fIdx - 1].target = id;
@@ -304,7 +306,7 @@ const FlowChart = forwardRef((props, ref) => {
     graph.changeData(cloneData);
     graph.fitCenter();
     return true;
-  }
+  };
 
   return (
     <>
@@ -326,7 +328,7 @@ const FlowChart = forwardRef((props, ref) => {
 
 const mapStateToProps = (state) => {
   return {
-    avisualis: state.avisualis
-  }
-}
+    avisualis: state.avisualis,
+  };
+};
 export default connect(mapStateToProps, null, null, { forwardRef: true })(FlowChart);

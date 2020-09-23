@@ -76,7 +76,7 @@ class Pie extends Component {
     }
   }
 
-  getG2Instance = chart => {
+  getG2Instance = (chart) => {
     this.chart = chart;
     requestAnimationFrame(() => {
       this.getLegendData();
@@ -91,7 +91,7 @@ class Pie extends Component {
     if (!geom) return;
     const items = geom.get('dataArray') || []; // 获取图形对应的
 
-    const legendData = items.map(item => {
+    const legendData = items.map((item) => {
       /* eslint no-underscore-dangle:0 */
       const origin = item[0]._origin;
       origin.color = item[0].color;
@@ -103,7 +103,7 @@ class Pie extends Component {
     });
   };
 
-  handleRoot = n => {
+  handleRoot = (n) => {
     this.root = n;
   };
 
@@ -112,10 +112,10 @@ class Pie extends Component {
     newItem.checked = !newItem.checked;
     const { legendData } = this.state;
     legendData[i] = newItem;
-    const filteredLegendData = legendData.filter(l => l.checked).map(l => l.x);
+    const filteredLegendData = legendData.filter((l) => l.checked).map((l) => l.x);
 
     if (this.chart) {
-      this.chart.filter('x', val => filteredLegendData.indexOf(`${val}`) > -1);
+      this.chart.filter('x', (val) => filteredLegendData.indexOf(`${val}`) > -1);
     }
 
     this.setState({
@@ -172,7 +172,7 @@ class Pie extends Component {
       selected = false;
       tooltip = false;
 
-      formatColor = value => {
+      formatColor = (value) => {
         if (value === '占比') {
           return color || 'rgba(24, 144, 255, 0.85)';
         }

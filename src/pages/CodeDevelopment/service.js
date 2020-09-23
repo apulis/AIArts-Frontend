@@ -1,16 +1,16 @@
 import Request from 'umi-request';
 import request from '@/utils/request';
-import { statusMap } from './serviceController'
-import { deleteJob } from '@/services/modelTraning'
+import { statusMap } from './serviceController';
+import { deleteJob } from '@/services/modelTraning';
 
 const CancelToken = Request.CancelToken;
 
 export async function getCodes(params) {
   return request('/codes', {
     params,
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       getCodes.cancel = c;
-    })
+    }),
   });
 }
 
@@ -21,54 +21,53 @@ export async function searchData(params) {
 }
 
 export async function stopCode(id) {
-  return request(`/codes/${id}`, { method: 'DELETE' })
+  return request(`/codes/${id}`, { method: 'DELETE' });
 }
 
 export async function deleteCode(id) {
-  return deleteJob(id)
+  return deleteJob(id);
 }
 
 export async function getJupyterUrl(id) {
-  return request(`/codes/${id}/jupyter`)
+  return request(`/codes/${id}/jupyter`);
 }
 
 export async function getResource() {
-  return await request(`/common/resource`, {
-  });
+  return await request(`/common/resource`, {});
 }
 
 export async function postCode1(data) {
   return request(`/codes`, {
     method: 'POST',
-    data
+    data,
   });
 }
 
 export async function getCodeCount() {
   const response = await request('/common/job/summary', {
     params: { jobType: 'codeEnv' },
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       getCodeCount.cancel = c;
-    })
+    }),
   });
-  const { code, data, msg } = response
-  const myRes = { code, msg }
+  const { code, data, msg } = response;
+  const myRes = { code, msg };
   if (data) {
-    const keys = Object.keys(data)
-    let allCounts = 0
+    const keys = Object.keys(data);
+    let allCounts = 0;
     const myData = keys.map((key) => {
-      allCounts += data[key]
-      return { status: key, desc: `${statusMap[key].local} (${data[key]})` }
-    })
-    myData.unshift({ status: 'all', desc: `全部 (${allCounts})` })
-    myRes['data'] = myData
+      allCounts += data[key];
+      return { status: key, desc: `${statusMap[key].local} (${data[key]})` };
+    });
+    myData.unshift({ status: 'all', desc: `全部 (${allCounts})` });
+    myRes['data'] = myData;
   }
-  return myRes
+  return myRes;
 }
 
 export async function createSaveImage(data) {
   return await request('/saved_imgs', {
     method: 'POST',
-    data
-  })
+    data,
+  });
 }

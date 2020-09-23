@@ -4,28 +4,33 @@ import { Link } from 'umi';
 import moment from 'moment';
 import { getJobStatus, checkIfCanStop, checkIfCanDelete } from '@/utils/utils';
 import { sortText } from '@/utils/const';
-import { fetchTrainingList, removeTrainings, fetchJobStatusSumary, deleteJob } from '@/services/modelTraning';
+import {
+  fetchTrainingList,
+  removeTrainings,
+  fetchJobStatusSumary,
+  deleteJob,
+} from '@/services/modelTraning';
 import { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import style from './index.less'
+import style from './index.less';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 
 export const statusList = [
   { value: 'all', label: '全部' },
-  { value: 'unapproved', label: '未批准'},
-  { value: 'queued', label: '队列中'},
-  { value: 'scheduling', label: '调度中'},
-  { value: 'running', label: '运行中'},
-  { value: 'finished', label: '已完成'},
-  { value: 'failed', label: '已失败'},
-  { value: 'pausing', label: '暂停中'},
-  { value: 'paused', label: '已暂停'},
-  { value: 'killing', label: '关闭中'},
-  { value: 'killed', label: '已关闭'},
-  { value: 'error', label: '错误'},
-]
+  { value: 'unapproved', label: '未批准' },
+  { value: 'queued', label: '队列中' },
+  { value: 'scheduling', label: '调度中' },
+  { value: 'running', label: '运行中' },
+  { value: 'finished', label: '已完成' },
+  { value: 'failed', label: '已失败' },
+  { value: 'pausing', label: '暂停中' },
+  { value: 'paused', label: '已暂停' },
+  { value: 'killing', label: '关闭中' },
+  { value: 'killed', label: '已关闭' },
+  { value: 'error', label: '错误' },
+];
 
 const { Search } = Input;
 const { Option } = Select;
@@ -48,61 +53,67 @@ const List = (props) => {
   useInterval(() => {
     getTrainingList(undefined, undefined, false);
     getJobStatusSumary();
-  }, props.common.interval)
+  }, props.common.interval);
 
   const getTrainingList = async (reloadPage, options = {}, withLoading = true) => {
-    const { pageSize: size, status, pageNo } = options
+    const { pageSize: size, status, pageNo } = options;
     let page = pageNo || pageNum;
     if (reloadPage) {
-      page = 1
+      page = 1;
     }
-    if (withLoading) setTableLoading(true)
-    const res = await fetchTrainingList({pageNum: page, pageSize: size || pageSize, search, sortedInfo, status: status || currentStatus});
+    if (withLoading) setTableLoading(true);
+    const res = await fetchTrainingList({
+      pageNum: page,
+      pageSize: size || pageSize,
+      search,
+      sortedInfo,
+      status: status || currentStatus,
+    });
     if (res.code === 0) {
       setPageNum(page);
       const trainings = (res.data && res.data.Trainings) || [];
       const total = res.data?.total;
       setTotal(total);
-      setTrainingWorkList(trainings)
+      setTrainingWorkList(trainings);
     }
-    setTableLoading(false)
-  }
+    setTableLoading(false);
+  };
   const handleChangeStatus = async (status) => {
     getTrainingList(true, { status: status });
     setCurrentStatus(status);
-  }
+  };
 
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
       const jobSumary = [{ value: 'all', label: '全部' }];
       let total = 0;
-      Object.keys(res.data).forEach(k => {
-        let count = res.data[k]
+      Object.keys(res.data).forEach((k) => {
+        let count = res.data[k];
         total += count;
         jobSumary.push({
-          label: statusList.find(status => status.value === k)?.label + `（${count}）`,
-          value: k
-        })
-      })
-      jobSumary[0].label = jobSumary[0].label  + `（${total}）`
-      setJobSumary(jobSumary)
+          label: statusList.find((status) => status.value === k)?.label + `（${count}）`,
+          value: k,
+        });
+      });
+      jobSumary[0].label = jobSumary[0].label + `（${total}）`;
+      setJobSumary(jobSumary);
     }
-  }
+  };
 
   useEffect(() => {
     getTrainingList(true);
     getJobStatusSumary();
     return () => {
       fetchTrainingList.cancel && fetchTrainingList.cancel();
-    }
-  }, [])
+    };
+  }, []);
   const onTableChange = async (pagination, filters, sorter) => {
-    console.log('setSortedInfo', sorter)
+    console.log('setSortedInfo', sorter);
     if (sorter.order !== false) {
       setSortedInfo(sorter);
     }
-    console.log('sorter', sortText[sorter.order])
+    console.log('sorter', sortText[sorter.order]);
     const { current } = pagination;
     setPageNum(current);
     const searchSorterInfo = {
@@ -110,7 +121,7 @@ const List = (props) => {
       // 正序，倒序，取消排序
       orderBy: sortText[sorter.order] && sorter.columnKey,
       order: sortText[sorter.order],
-    }
+    };
     setTableLoading(true);
     const res = await fetchTrainingList({
       pageNum: current,
@@ -118,19 +129,19 @@ const List = (props) => {
       search,
       status: currentStatus,
       sortedInfo: searchSorterInfo,
-    })
+    });
     if (res.code === 0) {
       setTableLoading(false);
       setTrainingWorkList(res.data.Trainings);
     }
-  }
+  };
   const stopTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
       message.success('已成功操作');
       getTrainingList();
     }
-  }
+  };
   const searchList = async (s) => {
     setSearch(s);
     setTableLoading(true);
@@ -140,7 +151,7 @@ const List = (props) => {
       setTableLoading(false);
       setTotal(res.data.total);
     }
-  }
+  };
 
   const handleDeleteJob = async (jobId, status) => {
     const handleDelete = async () => {
@@ -155,40 +166,33 @@ const List = (props) => {
         }
         getJobStatusSumary();
       }
-    }
+    };
     if (['unapproved', 'queued', 'scheduling', 'running'].includes(status)) {
       Modal.confirm({
         title: '当前任务尚未停止',
         content: '请先停止该任务',
         cancelButtonProps: { hidden: true },
-        onCancel() {
-
-        },
-        onOk() {
-          
-        }
-      })
+        onCancel() {},
+        onOk() {},
+      });
     } else {
-      handleDelete()
+      handleDelete();
     }
-    
-  }
+  };
 
   const onSearchInput = (e) => {
     setSearch(e.target.value);
-  }
+  };
   const columns = [
     {
       dataIndex: 'name',
       title: '作业名称',
       key: 'jobName',
       render(_text, item) {
-        return (
-          <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>
-        )
+        return <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
@@ -199,97 +203,135 @@ const List = (props) => {
       dataIndex: 'engine',
       title: '引擎类型',
       render(value) {
-        return <div>{getNameFromDockerImage(value)}</div>
-      }
+        return <div>{getNameFromDockerImage(value)}</div>;
+      },
     },
     {
       dataIndex: 'createTime',
       title: '创建时间',
       key: 'jobTime',
       render(_text, item) {
-        return (
-          <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
-        )
+        return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
       dataIndex: 'desc',
       title: '描述',
       width: '100px',
       render(_text) {
-        return <div title={_text} className={style.overflow}>{_text}</div>
-      }
+        return (
+          <div title={_text} className={style.overflow}>
+            {_text}
+          </div>
+        );
+      },
     },
     {
       title: '操作',
       render(_text, item) {
         return (
           <>
-            {
-              checkIfCanStop(item.status)
-                ? <div style={{display: 'flex', alignItems: 'center'}}>
-                    <a style={{marginRight: '16px', display: 'block' }} onClick={() => stopTraining(item.id)}>停止</a>
-                    <Button type="link" danger disabled={!checkIfCanDelete(item.status)} onClick={() => handleDeleteJob(item.id, item.status)}>删除</Button>
-                  </div>
-                : <div style={{display: 'flex', alignItems: 'center'}}>
-                    <div style={{marginRight: '16px'}} className="disabled">已停止</div>
-                    <Button danger type="link" disabled={!checkIfCanDelete(item.status)} onClick={() => handleDeleteJob(item.id, item.status)}>删除</Button>
-                  </div>
-            }
+            {checkIfCanStop(item.status) ? (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <a
+                  style={{ marginRight: '16px', display: 'block' }}
+                  onClick={() => stopTraining(item.id)}
+                >
+                  停止
+                </a>
+                <Button
+                  type="link"
+                  danger
+                  disabled={!checkIfCanDelete(item.status)}
+                  onClick={() => handleDeleteJob(item.id, item.status)}
+                >
+                  删除
+                </Button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ marginRight: '16px' }} className="disabled">
+                  已停止
+                </div>
+                <Button
+                  danger
+                  type="link"
+                  disabled={!checkIfCanDelete(item.status)}
+                  onClick={() => handleDeleteJob(item.id, item.status)}
+                >
+                  删除
+                </Button>
+              </div>
+            )}
           </>
-        )
-      }
-    }
-  ]
+        );
+      },
+    },
+  ];
 
   const onShowSizeChange = (current, size) => {
     setPageSize(size);
     getTrainingList(true, { pageSize: size });
-  }
+  };
 
   return (
     <PageHeaderWrapper>
-      <Card bordered={false}
+      <Card
+        bordered={false}
         bodyStyle={{
-          padding: '8'
+          padding: '8',
         }}
       >
-      <Link to="/model-training/submit">
-        <Button type="primary" href="">创建训练作业</Button>
-      </Link>
-      <div style={{ float: 'right', paddingRight: '20px' }}>
-        <Select style={{width: 120, marginRight: '20px'}} defaultValue={currentStatus} onChange={handleChangeStatus}>
-          {
-            jobSumary.map(status => (
+        <Link to="/model-training/submit">
+          <Button type="primary" href="">
+            创建训练作业
+          </Button>
+        </Link>
+        <div style={{ float: 'right', paddingRight: '20px' }}>
+          <Select
+            style={{ width: 120, marginRight: '20px' }}
+            defaultValue={currentStatus}
+            onChange={handleChangeStatus}
+          >
+            {jobSumary.map((status) => (
               <Option value={status.value}>{status.label}</Option>
-            ))
-          }
-        </Select>
-        <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onChange={onSearchInput} onSearch={searchList} enterButton />
-        <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getTrainingList()}></Button>
-      </div>
-      <Table
-        loading={tableLoading}
-        style={{ marginTop: '30px' }}
-        columns={columns}
-        dataSource={trainingWorkList}
-        onChange={onTableChange}
-        pagination={{
-          defaultCurrent: 1,
-          defaultPageSize: 10,
-          showQuickJumper: true,
-          showSizeChanger: true,
-          total: total,
-          current: pageNum,
-          pageSize: pageSize,
-          onShowSizeChange: onShowSizeChange
-        }}
-      />
+            ))}
+          </Select>
+          <Search
+            style={{ width: '200px' }}
+            placeholder="输入作业名称查询"
+            onChange={onSearchInput}
+            onSearch={searchList}
+            enterButton
+          />
+          <Button
+            style={{ left: '20px' }}
+            icon={<SyncOutlined />}
+            onClick={() => getTrainingList()}
+          ></Button>
+        </div>
+        <Table
+          loading={tableLoading}
+          style={{ marginTop: '30px' }}
+          columns={columns}
+          dataSource={trainingWorkList}
+          onChange={onTableChange}
+          pagination={{
+            defaultCurrent: 1,
+            defaultPageSize: 10,
+            showQuickJumper: true,
+            showSizeChanger: true,
+            total: total,
+            current: pageNum,
+            pageSize: pageSize,
+            onShowSizeChange: onShowSizeChange,
+          }}
+        />
       </Card>
-    </PageHeaderWrapper >
-  )
-}
+    </PageHeaderWrapper>
+  );
+};
 
 export default connect(({ common }) => ({ common }))(List);

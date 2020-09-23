@@ -43,7 +43,7 @@ class SecurityLayout extends React.Component {
         history && history.push(location.pathname);
       }
     }
-  }
+  };
 
   componentDidMount() {
     if (!localStorage.token) {
@@ -51,9 +51,8 @@ class SecurityLayout extends React.Component {
         redirect: window.location.href,
       });
       if (process.env.NODE_ENV !== 'development') {
-        window.location.href = USER_LOGIN_URL + '?' + queryString
+        window.location.href = USER_LOGIN_URL + '?' + queryString;
       }
-      
     }
     if (this.props.dispatch) {
       this.props.dispatch({
@@ -70,7 +69,7 @@ class SecurityLayout extends React.Component {
     const { isReady } = this.state;
     const { children, loading } = this.props;
     const token = localStorage.token;
-    if ((loading) || !isReady) {
+    if (loading || !isReady) {
       return <PageLoading />;
     }
 
@@ -78,14 +77,10 @@ class SecurityLayout extends React.Component {
       return (
         // <LoginPage />
         <PageLoading />
-      )
+      );
     }
 
-    return (
-      <ConfigProvider locale={zhCN}>
-        {children}
-      </ConfigProvider>
-    )
+    return <ConfigProvider locale={zhCN}>{children}</ConfigProvider>;
   }
 }
 

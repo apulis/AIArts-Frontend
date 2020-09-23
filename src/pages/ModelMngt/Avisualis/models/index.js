@@ -3,7 +3,7 @@ export default {
   state: {
     addFormData: {},
     panelApiData: [],
-    treeData: []
+    treeData: [],
   },
   reducers: {
     // 更新 state
@@ -14,7 +14,5 @@ export default {
       };
     },
   },
-  effects: {
-    
-  },
+  effects: {},
 };

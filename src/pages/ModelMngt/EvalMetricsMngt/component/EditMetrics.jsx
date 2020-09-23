@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Divider, Select, Radio, message, PageHeader, Modal, Tabs, Col, Row } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Divider,
+  Select,
+  Radio,
+  message,
+  PageHeader,
+  Modal,
+  Tabs,
+  Col,
+  Row,
+} from 'antd';
 import { history } from 'umi';
 import { PauseOutlined, PlusSquareOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { fetchAvilableResource, fetchTemplateById, fetchPresetTemplates, updateParams } from '@/services/modelTraning';
+import {
+  fetchAvilableResource,
+  fetchTemplateById,
+  fetchPresetTemplates,
+  updateParams,
+} from '@/services/modelTraning';
 
 import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
@@ -26,13 +44,14 @@ export const generateKey = () => {
 
 let haveSetedParamsDetail = false;
 
-
 const EditMetrics = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const paramsId = props.match.params.id;
   const goBackPath = '/ModelManagement/EvaluationMetricsManage/';
 
-  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  const [runningParams, setRunningParams] = useState([
+    { key: '', value: '', createTime: generateKey() },
+  ]);
   const [form] = useForm();
   const [frameWorks, setFrameWorks] = useState([]);
   const [codeDirModalVisible, setCodeDirModalVisible] = useState(false);
@@ -53,13 +72,15 @@ const EditMetrics = (props) => {
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo } } = res;
+      let {
+        data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo },
+      } = res;
       // if (!/\/$/.test(codePathPrefix)) {
       //   codePathPrefix = codePathPrefix + '/';
       // }
       // setCodePathPrefix(codePathPrefix);
       let aiFrameworkList = [];
-      Object.keys(aiFrameworks).forEach(val => {
+      Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
       });
       setFrameWorks(aiFrameworkList);
@@ -70,7 +91,7 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    const list = getDeviceNumArrByNodeType(nodeInfo,currentDeviceType);
+    const list = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
     setAvailableDeviceNumList(list);
   }, [nodeInfo, currentDeviceType]);
 
@@ -85,7 +106,7 @@ const EditMetrics = (props) => {
       };
       setParamsDetailedData({
         ...paramsDetailedData,
-        params: newParams
+        params: newParams,
       });
       setFieldsValue(newParams);
     }
@@ -104,7 +125,7 @@ const EditMetrics = (props) => {
     if (res.code === 0) {
       const data = res.data;
       setParamsDetailedData(data);
-      // check null 
+      // check null
       data.params.params = data.params.params || [];
       // replace path prefix
       data.params.codePath = data.params.codePath;
@@ -112,9 +133,9 @@ const EditMetrics = (props) => {
       data.params.outputPath = data.params.outputPath;
       if (data.params.params?.paramPath) {
         data.params.paramPath = data.params.params.paramPath;
-        delete data.params.params.paramPath
+        delete data.params.params.paramPath;
       }
-      data.params.params = Object.entries(data.params.params).map(item => {
+      data.params.params = Object.entries(data.params.params).map((item) => {
         var obj = {};
         obj['key'] = item[0];
         obj['value'] = item[1];
@@ -133,7 +154,7 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (presetParamsVisible) {
-      fetchPresetTemplates().then(res => {
+      fetchPresetTemplates().then((res) => {
         if (res.code === 0) {
           const template = res.data.Templates;
           setPresetRunningParams(template);
@@ -145,16 +166,16 @@ const EditMetrics = (props) => {
     }
   }, [presetParamsVisible]);
 
-
   const handleSubmit = async () => {
     const values = await validateFields();
     let params = {};
     params.paramPath = values.paramPath;
     delete values.paramPath;
-    values.params && values.params.forEach(p => {
-      if (!params[p.key]) return;
-      params[p.key] = p.value;
-    });
+    values.params &&
+      values.params.forEach((p) => {
+        if (!params[p.key]) return;
+        params[p.key] = p.value;
+      });
     // values.codePath = codePathPrefix + (values.codePath || '');
     // values.startupFile = codePathPrefix + values.startupFile;
     // values.outputPath = codePathPrefix + (values.outputPath || '');
@@ -162,7 +183,7 @@ const EditMetrics = (props) => {
 
     let editParams = {
       ...paramsDetailedData.metaData,
-      templateData: values
+      templateData: values,
     };
     const res = await updateParams(editParams);
     if (res.code === 0) {
@@ -170,7 +191,6 @@ const EditMetrics = (props) => {
       history.push(goBackPath);
     }
   };
-
 
   const addParams = () => {
     const newRunningParams = runningParams.concat({
@@ -202,8 +222,8 @@ const EditMetrics = (props) => {
     const values = await getFieldValue('params');
     if (values.length === 1) {
       setFieldsValue({
-        params: [{ key: '', value: ''}]
-      })
+        params: [{ key: '', value: '' }],
+      });
     } else {
       [...runningParams].forEach((param, index) => {
         param.key = values[index].key;
@@ -218,14 +238,14 @@ const EditMetrics = (props) => {
       });
       setRunningParams(newRunningParams);
       setFieldsValue({
-        params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+        params: newRunningParams.map((params) => ({ key: params.key, value: params.value })),
       });
-    };
-  }
+    }
+  };
 
   const commonLayout = {
     labelCol: { span: 4 },
-    wrapperCol: { span: 8 }
+    wrapperCol: { span: 8 },
   };
 
   const onDeviceTypeChange = (value) => {
@@ -234,13 +254,15 @@ const EditMetrics = (props) => {
   };
 
   const handleConfirmPresetParams = () => {
-    const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
+    const currentSelected = presetRunningParams.find(
+      (p) => p.metaData.id == currentSelectedPresetParamsId,
+    );
     if (currentSelected) {
       setFieldsValue({
         ...currentSelected.params,
       });
       console.log('currentSelected.params.params', currentSelected.params.params);
-      const params = Object.entries(currentSelected.params.params || {}).map(item => {
+      const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
         console.log('item', item);
         obj['key'] = item[0];
@@ -249,7 +271,7 @@ const EditMetrics = (props) => {
       });
       setRunningParams(params);
       setFieldsValue({
-        params: params
+        params: params,
       });
     }
     setPresetParamsVisible(false);
@@ -271,18 +293,35 @@ const EditMetrics = (props) => {
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title='编辑评估参数'
+        title="编辑评估参数"
       />
       <Form form={form}>
-        <FormItem {...commonLayout} style={{ marginTop: '30px' }} name="name" label="评估参数名称" rules={[{ required: true }, { ...jobNameReg }]}>
+        <FormItem
+          {...commonLayout}
+          style={{ marginTop: '30px' }}
+          name="name"
+          label="评估参数名称"
+          rules={[{ required: true }, { ...jobNameReg }]}
+        >
           <Input style={{ width: 300 }} placeholder="请输入评估参数名称" />
         </FormItem>
-        <FormItem labelCol={{ span: 4 }} wrapperCol={{ span: 14 }} name="desc" label="描述" rules={[{ max: 191 }]}>
+        <FormItem
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
+          name="desc"
+          label="描述"
+          rules={[{ max: 191 }]}
+        >
           <TextArea placeholder="请输入描述信息" />
         </FormItem>
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
-      <div className="ant-page-header-heading-title" style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</div>
+      <div
+        className="ant-page-header-heading-title"
+        style={{ marginLeft: '38px', marginBottom: '20px' }}
+      >
+        参数配置
+      </div>
       {/* <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
           <Radio.Button value={1}>手动参数配置</Radio.Button>
@@ -291,22 +330,23 @@ const EditMetrics = (props) => {
       </FormItem> */}
       <Form form={form}>
         <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
-          <Select style={{ width: 300 }} >
-            {
-              frameWorks.map(f => (
-                <Option value={f} key={f}>{getNameFromDockerImage(f)}</Option>
-              ))
-            }
+          <Select style={{ width: 300 }}>
+            {frameWorks.map((f) => (
+              <Option value={f} key={f}>
+                {getNameFromDockerImage(f)}
+              </Option>
+            ))}
           </Select>
+        </FormItem>
+        <FormItem labelCol={{ span: 4 }} name="codePath" label="代码目录">
+          <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
-          name="codePath"
-          label="代码目录"
+          label="启动文件"
+          name="startupFile"
+          rules={[{ required: true }, startUpFileReg]}
         >
-          <Input style={{ width: 420 }} />
-        </FormItem>
-        <FormItem labelCol={{ span: 4 }} label="启动文件" name="startupFile" rules={[{ required: true }, startUpFileReg]}>
           <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径">
@@ -316,33 +356,56 @@ const EditMetrics = (props) => {
           <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
-          <Select
-            style={{ width: '300px' }}
-          >
-            {
-              datasets.map(d => (
-                <Option value={d.path} key={d.id}>{d.name}</Option>
-              ))
-            }
+          <Select style={{ width: '300px' }}>
+            {datasets.map((d) => (
+              <Option value={d.path} key={d.id}>
+                {d.name}
+              </Option>
+            ))}
           </Select>
         </FormItem>
-        <FormItem label="运行参数" labelCol={{ span: 4 }} >
-          {
-            runningParams.map((param, index) => {
-              return (
-                <div>
-                  <FormItem initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args); } }]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input style={{ width: 200 }} />
-                  </FormItem>
-                  <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
-                  <FormItem initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args); } }]} name={['params', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                    <Input style={{ width: 200 }} />
-                  </FormItem>
-                  <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
-                </div>
-              );
-            })
-          }
+        <FormItem label="运行参数" labelCol={{ span: 4 }}>
+          {runningParams.map((param, index) => {
+            return (
+              <div>
+                <FormItem
+                  initialValue={runningParams[index].key}
+                  rules={[
+                    {
+                      validator(...args) {
+                        validateRunningParams(index, 'key', ...args);
+                      },
+                    },
+                  ]}
+                  name={['params', index, 'key']}
+                  wrapperCol={{ span: 24 }}
+                  style={{ display: 'inline-block' }}
+                >
+                  <Input style={{ width: 200 }} />
+                </FormItem>
+                <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                <FormItem
+                  initialValue={runningParams[index].value}
+                  rules={[
+                    {
+                      validator(...args) {
+                        validateRunningParams(index, 'value', ...args);
+                      },
+                    },
+                  ]}
+                  name={['params', index, 'value']}
+                  wrapperCol={{ span: 24 }}
+                  style={{ display: 'inline-block' }}
+                >
+                  <Input style={{ width: 200 }} />
+                </FormItem>
+                <DeleteOutlined
+                  style={{ marginLeft: '10px', cursor: 'pointer' }}
+                  onClick={() => removeRuningParams(param.createTime || param.key)}
+                />
+              </div>
+            );
+          })}
           <div className={styles.addParams} onClick={addParams}>
             <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
             <a>点击增加参数</a>
@@ -350,26 +413,16 @@ const EditMetrics = (props) => {
         </FormItem>
         <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
-            {
-              deviceList.map(d => (
-                <Option value={d.deviceType}>{d.deviceType}</Option>
-              ))
-            }
+            {deviceList.map((d) => (
+              <Option value={d.deviceType}>{d.deviceType}</Option>
+            ))}
           </Select>
         </FormItem>
-        <FormItem
-          label="设备数量"
-          name="deviceNum"
-          {...commonLayout}
-          rules={[{ required: true }]}
-        >
-          <Select style={{ width: '300px' }}
-            onClick={handleClickDeviceNum} >
-            {
-              availableDeviceNumList.map(avail => (
-                <Option value={avail}>{avail}</Option>
-              ))
-            }
+        <FormItem label="设备数量" name="deviceNum" {...commonLayout} rules={[{ required: true }]}>
+          <Select style={{ width: '300px' }} onClick={handleClickDeviceNum}>
+            {availableDeviceNumList.map((avail) => (
+              <Option value={avail}>{avail}</Option>
+            ))}
           </Select>
         </FormItem>
       </Form>
@@ -377,30 +430,22 @@ const EditMetrics = (props) => {
         visible={bootFileModalVisible}
         forceRender
         onCancel={() => setBootFileModalVisible(false)}
-      >
-
-      </Modal>
+      ></Modal>
       <Modal
         visible={codeDirModalVisible}
         forceRender
         onCancel={() => setCodeDirModalVisible(false)}
-      >
-
-      </Modal>
+      ></Modal>
       <Modal
         visible={outputPathModalVisible}
         forceRender
         onCancel={() => setOutputPathModalVisible(false)}
-      >
-
-      </Modal>
+      ></Modal>
       <Modal
         visible={trainingDataSetModalVisible}
         forceRender
         onCancel={() => setTrainingDataSetModalVisible(false)}
-      >
-
-      </Modal>
+      ></Modal>
       <Modal
         visible={presetParamsVisible}
         onCancel={() => setPresetParamsVisible(false)}
@@ -409,91 +454,65 @@ const EditMetrics = (props) => {
         forceRender
         width="80%"
       >
-        <Form
-          form={form}
-        >
-          {
-            presetRunningParams.length > 0 ? <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+        <Form form={form}>
+          {presetRunningParams.length > 0 ? (
+            <Tabs
+              defaultActiveKey={presetRunningParams[0].metaData?.id}
+              tabPosition="left"
+              onChange={handleSelectPresetParams}
+              style={{ height: 220 }}
+            >
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>
-                    <Col span={5}>
-                      计算节点个数
-                  </Col>
-                    <Col span={19}>
-                      {p.params.deviceNum}
-                    </Col>
+                    <Col span={5}>计算节点个数</Col>
+                    <Col span={19}>{p.params.deviceNum}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      启动文件
-                  </Col>
-                    <Col span={19}>
-                      {p.params.startupFile}
-                    </Col>
+                    <Col span={5}>启动文件</Col>
+                    <Col span={19}>{p.params.startupFile}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      代码目录
-                  </Col>
-                    <Col span={19}>
-                      {p.params.codePath}
-                    </Col>
+                    <Col span={5}>代码目录</Col>
+                    <Col span={19}>{p.params.codePath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      训练数据集
-                  </Col>
-                    <Col span={19}>
-                      {p.params.datasetPath}
-                    </Col>
+                    <Col span={5}>训练数据集</Col>
+                    <Col span={19}>{p.params.datasetPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      输出路径
-                  </Col>
-                    <Col span={19}>
-                      {p.params.outputPath}
-                    </Col>
+                    <Col span={5}>输出路径</Col>
+                    <Col span={19}>{p.params.outputPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      运行参数
-                  </Col>
-                    <Col span={19}>
-                      {p.params.params && formatParams(p.params.params)}
-                    </Col>
+                    <Col span={5}>运行参数</Col>
+                    <Col span={19}>{p.params.params && formatParams(p.params.params)}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      计算节点规格
-                  </Col>
-                    <Col span={19}>
-                      {p.params.deviceType}
-                    </Col>
+                    <Col span={5}>计算节点规格</Col>
+                    <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      引擎类型
-                  </Col>
-                    <Col span={19}>
-                      {getNameFromDockerImage(p.params.engine)}
-                    </Col>
+                    <Col span={5}>引擎类型</Col>
+                    <Col span={19}>{getNameFromDockerImage(p.params.engine)}</Col>
                   </Row>
                 </TabPane>
               ))}
             </Tabs>
-              : <div>暂无</div>
-          }
-
+          ) : (
+            <div>暂无</div>
+          )}
         </Form>
-
       </Modal>
-      <Button type="primary" style={{ float: 'right', marginBottom: '16px' }} onClick={handleSubmit}>保存</Button>
+      <Button
+        type="primary"
+        style={{ float: 'right', marginBottom: '16px' }}
+        onClick={handleSubmit}
+      >
+        保存
+      </Button>
     </div>
-
   );
 };
-
 
 export default EditMetrics;

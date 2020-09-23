@@ -24,7 +24,7 @@ const Avisualis = () => {
   const [modelTypesData, setModelTypeData] = useState('');
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
   const addFormModalRef = useRef();
 
@@ -34,12 +34,12 @@ const Avisualis = () => {
 
   const getData = async (text) => {
     setLoading(true);
-    const params = { 
-      ...pageParams, 
-      name: name, 
+    const params = {
+      ...pageParams,
+      name: name,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
-      use: 'Avisualis'
+      use: 'Avisualis',
     };
     const { code, data } = await getAvisualis(params);
     if (code === 0 && data) {
@@ -61,7 +61,7 @@ const Avisualis = () => {
     if (sorter.order !== false) {
       setSortedInfo(sorter);
     }
-  }
+  };
 
   const columns = [
     {
@@ -69,16 +69,20 @@ const Avisualis = () => {
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => <Link to={{ pathname: `/ModelManagement/avisualis/detail/${item.id}` }}>{item.name}</Link>,
+      render: (item) => (
+        <Link to={{ pathname: `/ModelManagement/avisualis/detail/${item.id}` }}>{item.name}</Link>
+      ),
     },
     {
       dataIndex: 'status',
       title: '状态',
-      render: (text, item) => <Link to={`/model-training/${item.jobId}/detail`}>{getJobStatus(text)}</Link>,
+      render: (text, item) => (
+        <Link to={`/model-training/${item.jobId}/detail`}>{getJobStatus(text)}</Link>
+      ),
     },
     {
       title: '模型用途',
-      dataIndex: 'use'
+      dataIndex: 'use',
     },
     {
       title: '简介',
@@ -90,23 +94,30 @@ const Avisualis = () => {
       dataIndex: 'createdAt',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '操作',
-      render: item => {
+      render: (item) => {
         const { id, status } = item;
         return (
           <Space size="middle">
-            <a onClick={() => history.push(`/ModelManagement/CreateEvaluation?modelId=${id}`)} disabled={status !== 'finished'}>模型评估</a>
-            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>
+            <a
+              onClick={() => history.push(`/ModelManagement/CreateEvaluation?modelId=${id}`)}
+              disabled={status !== 'finished'}
+            >
+              模型评估
+            </a>
+            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
+              删除
+            </a>
           </Space>
-        )
+        );
       },
     },
   ];
 
-  const onDelete = id => {
+  const onDelete = (id) => {
     confirm({
       title: '确定要删除该模型吗？',
       icon: <ExclamationCircleOutlined />,
@@ -125,33 +136,44 @@ const Avisualis = () => {
           message.success('删除成功！');
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
-  }
+  };
 
   return (
     <PageHeaderWrapper>
       <Card>
         <div className={styles.avisualisWrap}>
-          <Button type="primary" style={{ marginBottom: 16 }} onClick={() => history.push(`/ModelManagement/avisualis/templateList`)}>新建模型</Button>
+          <Button
+            type="primary"
+            style={{ marginBottom: 16 }}
+            onClick={() => history.push(`/ModelManagement/avisualis/templateList`)}
+          >
+            新建模型
+          </Button>
           <div className={styles.searchWrap}>
-            <Search placeholder="请输入模型名称查询" enterButton onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })} onChange={e => setName(e.target.value)} />
+            <Search
+              placeholder="请输入模型名称查询"
+              enterButton
+              onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
+              onChange={(e) => setName(e.target.value)}
+            />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
             columns={columns}
             dataSource={avisualisData.data}
-            rowKey={r => r.id}
+            rowKey={(r) => r.id}
             onChange={onSortChange}
             pagination={{
               total: avisualisData.total,
               showQuickJumper: true,
-              showTotal: total => `总共 ${total} 条`,
+              showTotal: (total) => `总共 ${total} 条`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
               current: pageParams.pageNum,
-              pageSize: pageParams.pageSize
+              pageSize: pageParams.pageSize,
             }}
             loading={loading}
           />

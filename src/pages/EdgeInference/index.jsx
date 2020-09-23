@@ -15,13 +15,11 @@ const { Option } = Select;
 const { Search } = Input;
 const { confirm } = Modal;
 const typeText = {
-  'converting': '转换中',
-  'pushing': '推送中',
+  converting: '转换中',
+  pushing: '推送中',
   'push success': '推送成功',
-  'push failed': '推送失败'
-}
-
-
+  'push failed': '推送失败',
+};
 
 const EdgeInference = (props) => {
   const [form] = Form.useForm();
@@ -37,14 +35,14 @@ const EdgeInference = (props) => {
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
 
   useEffect(() => {
     getData();
     return () => {
       getEdgeInferences.cancel && getEdgeInferences.cancel();
-    }
+    };
   }, [pageParams, sortedInfo]);
 
   useInterval(() => {
@@ -58,13 +56,13 @@ const EdgeInference = (props) => {
   const getData = async (text, isInterval) => {
     !isInterval && setLoading(true);
     const searchType = statusType && statusType.split('-') ? statusType.split('-') : [];
-    const params = { 
-      ...pageParams, 
-      jobName: name, 
+    const params = {
+      ...pageParams,
+      jobName: name,
       jobStatus: searchType ? searchType[0] : '',
       modelconversionStatus: searchType ? searchType[1] : '',
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]
+      order: sortText[sortedInfo.order],
     };
     const { code, data } = await getEdgeInferences(params);
     if (code === 0 && data) {
@@ -80,9 +78,7 @@ const EdgeInference = (props) => {
     setPageParams({ pageNum: page, pageSize: count });
   };
 
-  
-
-  const onDelete = id => {
+  const onDelete = (id) => {
     confirm({
       title: '确定要删除该推理吗？',
       icon: <ExclamationCircleOutlined />,
@@ -101,22 +97,22 @@ const EdgeInference = (props) => {
           message.success('删除成功！');
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
-  }
+  };
 
   const columns = [
     {
       title: 'ID',
       dataIndex: 'jobId',
-      render: id => <span style={{fontFamily: 'Consolas'}}>{id}</span>
+      render: (id) => <span style={{ fontFamily: 'Consolas' }}>{id}</span>,
     },
     {
       title: '推理名称',
       dataIndex: 'jobName',
       key: 'jobName',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
       title: '类型',
@@ -127,29 +123,40 @@ const EdgeInference = (props) => {
       dataIndex: 'jobTime',
       key: 'jobTime',
       sorter: true,
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
-      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
       title: '状态',
-      render: item => {
+      render: (item) => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
-        if (modelconversionStatus === 'converting') status = jobStatus === 'finished' ? '转换成功' : jobStatus === 'failed' || jobStatus === 'error' ? '转换失败' : status;
-        return (<span>{status}</span>)
-      }
+        if (modelconversionStatus === 'converting')
+          status =
+            jobStatus === 'finished'
+              ? '转换成功'
+              : jobStatus === 'failed' || jobStatus === 'error'
+              ? '转换失败'
+              : status;
+        return <span>{status}</span>;
+      },
     },
     {
       title: '操作',
-      render: item => {
+      render: (item) => {
         const { jobStatus, modelconversionStatus, jobId } = item;
-        const disabled = (!(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId);
+        const disabled =
+          !(modelconversionStatus === 'converting' && jobStatus === 'finished') || pushId === jobId;
         return (
           <>
-            <a onClick={() => onPush(jobId)} disabled={disabled}>推送</a>
-            <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>删除</a>
+            <a onClick={() => onPush(jobId)} disabled={disabled}>
+              推送
+            </a>
+            <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>
+              删除
+            </a>
           </>
-        )
+        );
       },
     },
   ];
@@ -162,7 +169,7 @@ const EdgeInference = (props) => {
       setFdInfo(data.fdinfo);
     }
     return info;
-  }
+  };
 
   const onPush = async (id) => {
     const info = await getFdInfo();
@@ -179,13 +186,12 @@ const EdgeInference = (props) => {
       message.warning('请先填写设置！');
       setModalFlag2(true);
     }
-  }
+  };
 
   const openSettings = async () => {
     await getFdInfo();
     setModalFlag2(true);
-  }
-
+  };
 
   const onSubmitFD = () => {
     setBtnLoading(true);
@@ -196,55 +202,54 @@ const EdgeInference = (props) => {
         getFdInfo();
         setModalFlag2(false);
       }
-    })
+    });
     setBtnLoading(false);
-  }
+  };
 
   const onSortChange = (pagination, filters, sorter) => {
     if (sorter.order !== false) {
       setSortedInfo(sorter);
     }
-  }
+  };
 
   const getOptions = () => {
     const statusMap = [
       {
         text: '全部',
-        status: ''
+        status: '',
       },
       {
         text: '推送中',
-        status: 'finished-pushing'
+        status: 'finished-pushing',
       },
       {
         text: '推送成功',
-        status: 'finished-push success'
+        status: 'finished-push success',
       },
       {
         text: '推送失败',
-        status: 'finished-push failed'
+        status: 'finished-push failed',
       },
       {
         text: '转换中',
-        status: 'running,scheduling,queued,unapproved-converting'
+        status: 'running,scheduling,queued,unapproved-converting',
       },
       {
         text: '转换成功',
-        status: 'finished-converting'
+        status: 'finished-converting',
       },
       {
         text: '转换失败',
-        status: 'error,failed-converting'
-      }
+        status: 'error,failed-converting',
+      },
     ];
-    return statusMap.map(i => <Option value={i.status}>{i.text}</Option>);
-  }
+    return statusMap.map((i) => <Option value={i.status}>{i.text}</Option>);
+  };
 
   const onSearchChange = (v, type) => {
-    type === 1 ? setStatusType(v) : setName(v)
+    type === 1 ? setStatusType(v) : setName(v);
     setPageParams({ ...pageParams, pageNum: 1 });
-  }
-
+  };
 
   return (
     <PageHeaderWrapper>
@@ -253,27 +258,40 @@ const EdgeInference = (props) => {
           <Link to="/Inference/EdgeInference/submit">
             <Button type="primary">新建推理</Button>
           </Link>
-          <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>设置</Button>
-          {fdInfo.url && <Button type="primary" onClick={() => window.open(fdInfo.url)}>FD服务器</Button>}
+          <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>
+            设置
+          </Button>
+          {fdInfo.url && (
+            <Button type="primary" onClick={() => window.open(fdInfo.url)}>
+              FD服务器
+            </Button>
+          )}
           <div className={styles.searchWrap}>
-            <Select onChange={v => onSearchChange(v, 1)} defaultValue={statusType}>{getOptions()}</Select>
-            <Search placeholder="请输入推理名称查询" enterButton onChange={e => setName(e.target.value)} onSearch={v => onSearchChange(v, 2)} />
+            <Select onChange={(v) => onSearchChange(v, 1)} defaultValue={statusType}>
+              {getOptions()}
+            </Select>
+            <Search
+              placeholder="请输入推理名称查询"
+              enterButton
+              onChange={(e) => setName(e.target.value)}
+              onSearch={(v) => onSearchChange(v, 2)}
+            />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
             columns={columns}
             dataSource={jobs}
-            rowKey={r => r.jobId}
+            rowKey={(r) => r.jobId}
             onChange={onSortChange}
             pagination={{
               total: total,
               showQuickJumper: true,
-              showTotal: total => `总共 ${total} 条`,
+              showTotal: (total) => `总共 ${total} 条`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
               current: pageParams.pageNum,
-              pageSize: pageParams.pageSize
+              pageSize: pageParams.pageSize,
             }}
             loading={loading}
           />
@@ -289,15 +307,13 @@ const EdgeInference = (props) => {
           className="settingModal"
           footer={[
             <Button onClick={() => setModalFlag2(false)}>取消</Button>,
-            <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>保存</Button>,
+            <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>
+              保存
+            </Button>,
           ]}
         >
           <Form form={form} initialValues={fdInfo}>
-            <Form.Item
-              label="URL"
-              name="url"
-              rules={[{ required: true, message: '请输入URL！' }]}
-            >
+            <Form.Item label="URL" name="url" rules={[{ required: true, message: '请输入URL！' }]}>
               <Input placeholder="请输入推理名称" />
             </Form.Item>
             <Form.Item

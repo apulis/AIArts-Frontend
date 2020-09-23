@@ -5,7 +5,7 @@ import Slider from 'bizcharts-plugin-slider';
 import autoHeight from '../autoHeight';
 import styles from './index.less';
 
-const TimelineChart = props => {
+const TimelineChart = (props) => {
   const {
     title,
     height = 400,
@@ -46,7 +46,7 @@ const TimelineChart = props => {
   dv.source(data)
     .transform({
       type: 'filter',
-      callback: obj => {
+      callback: (obj) => {
         const date = obj.x;
         return date <= ds.state.end && date >= ds.state.start;
       },

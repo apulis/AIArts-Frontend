@@ -1,5 +1,20 @@
 import { Link, history } from 'umi';
-import { message, Modal, Form, Input, Button, Card, PageHeader, Radio, Select, Upload, Divider, Tabs, Col, Row } from 'antd';
+import {
+  message,
+  Modal,
+  Form,
+  Input,
+  Button,
+  Card,
+  PageHeader,
+  Radio,
+  Select,
+  Upload,
+  Divider,
+  Tabs,
+  Col,
+  Row,
+} from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'umi';
@@ -21,7 +36,7 @@ const { Dragger } = Upload;
 const { Option } = Select;
 const { TabPane } = Tabs;
 
-const CreatePretrained = props => {
+const CreatePretrained = (props) => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -30,20 +45,22 @@ const CreatePretrained = props => {
   // const [sourceType, setSourceType] = useState(1);
   const [btnDisabled, setBtnDisabled] = useState(false);
   const [fileList, setFileList] = useState([]);
-  const [runningParams, setRunningParams] = useState([{ key: '', value: '', createTime: generateKey() }]);
+  const [runningParams, setRunningParams] = useState([
+    { key: '', value: '', createTime: generateKey() },
+  ]);
   const [presetParamsVisible, setPresetParamsVisible] = useState(false);
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
   const [datasets, setDatasets] = useState([]);
 
   const usages = [
-    { key: 'ImageClassification',label: '图像分类' }, 
-    { key: 'ObjectDetection',label: '物体检测' }, 
+    { key: 'ImageClassification', label: '图像分类' },
+    { key: 'ObjectDetection', label: '物体检测' },
   ];
 
   const engineTypes = [
-    { key: '1',label: 'tensorflow , tf-1.8.0-py2.7' }, 
-    { key: '2',label: 'tensorflow , tf-1.8.0-py2.7' }, 
+    { key: '1', label: 'tensorflow , tf-1.8.0-py2.7' },
+    { key: '2', label: 'tensorflow , tf-1.8.0-py2.7' },
   ];
 
   useEffect(() => {
@@ -53,7 +70,7 @@ const CreatePretrained = props => {
 
   useEffect(() => {
     if (presetParamsVisible) {
-      fetchPresetTemplates().then(res => {
+      fetchPresetTemplates().then((res) => {
         if (res.code === 0) {
           const template = res.data.Templates;
           setPresetRunningParams(template);
@@ -73,23 +90,23 @@ const CreatePretrained = props => {
     } else {
       message.error(msg);
     }
-  }
+  };
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { codePathPrefix } } = res;
+      let {
+        data: { codePathPrefix },
+      } = res;
       if (!/\/$/.test(codePathPrefix)) {
-        codePathPrefix = codePathPrefix + '/' 
+        codePathPrefix = codePathPrefix + '/';
       }
-      
+
       setCodePathPrefix(codePathPrefix);
     }
-  }
-
-  const selectTrainingJob = () => {
-
   };
+
+  const selectTrainingJob = () => {};
 
   const addParams = () => {
     const newRunningParams = runningParams.concat({
@@ -135,24 +152,26 @@ const CreatePretrained = props => {
     });
     setRunningParams(newRunningParams);
     setFieldsValue({
-      params: newRunningParams.map(params => ({ key: params.key, value: params.value }))
+      params: newRunningParams.map((params) => ({ key: params.key, value: params.value })),
     });
   };
 
   const handleConfirmPresetParams = () => {
-    const currentSelected = presetRunningParams.find(p => p.metaData.id == currentSelectedPresetParamsId);
-    
+    const currentSelected = presetRunningParams.find(
+      (p) => p.metaData.id == currentSelectedPresetParamsId,
+    );
+
     if (currentSelected) {
       // 防止name被覆盖
       if (currentSelected.params.name) {
-        delete currentSelected.params.name
+        delete currentSelected.params.name;
       }
 
       setFieldsValue({
-        ...currentSelected.params, 
+        ...currentSelected.params,
       });
       // console.log('currentSelected.params.params', currentSelected.params.params)
-      const params = Object.entries(currentSelected.params.params|| {}).map(item => {
+      const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
         // console.log('item', item);
         obj['key'] = item[0];
@@ -161,7 +180,7 @@ const CreatePretrained = props => {
       });
       setRunningParams(params);
       setFieldsValue({
-        params: params
+        params: params,
       });
     }
     setPresetParamsVisible(false);
@@ -170,20 +189,34 @@ const CreatePretrained = props => {
   const handleSelectPresetParams = (current) => {
     // console.log(current);
     setCurrentSelectedPresetParamsId(current);
-  };  
+  };
 
   const handleDatasetChange = (value, option) => {
     // setDatasetName(option.children);
-    setFieldsValue({datasetPath: option.key})
+    setFieldsValue({ datasetPath: option.key });
   };
 
   const onFinish = async (values) => {
     // console.log(values);
     let params = {};
-    values.params && values.params.forEach(p => {
-      params[p.key] = p.value;
-    });    
-    const { name, use, engine, precision, size, datasetName, datasetPath, dataFormat, codePath, startupFile, outputPath, paramPath } = values;
+    values.params &&
+      values.params.forEach((p) => {
+        params[p.key] = p.value;
+      });
+    const {
+      name,
+      use,
+      engine,
+      precision,
+      size,
+      datasetName,
+      datasetPath,
+      dataFormat,
+      codePath,
+      startupFile,
+      outputPath,
+      paramPath,
+    } = values;
     const data = {
       name,
       use,
@@ -199,8 +232,8 @@ const CreatePretrained = props => {
       outputPath,
       paramPath,
       isAdvance: true,
-    }
-    
+    };
+
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
@@ -224,9 +257,9 @@ const CreatePretrained = props => {
     setVisible(false);
   };
 
-  const handleSubmit = item => {
+  const handleSubmit = (item) => {
     // console.log(item)
-    form.setFieldsValue({job: item.name});
+    form.setFieldsValue({ job: item.name });
     setVisible(false);
   };
 
@@ -254,13 +287,21 @@ const CreatePretrained = props => {
     },
     beforeUpload(file) {
       const { type, size } = file;
-      const isOverSize = size / 1024 / 1024 / 1024 > 2; 
+      const isOverSize = size / 1024 / 1024 / 1024 > 2;
       return new Promise((resolve, reject) => {
-        if (!fileList.length && (type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip') && !isOverSize) {
+        if (
+          !fileList.length &&
+          (type === 'application/x-zip-compressed' ||
+            type === 'application/x-tar' ||
+            type === 'application/x-gzip') &&
+          !isOverSize
+        ) {
           resolve(file);
         } else {
           let text = '';
-          text = isOverSize ? '2GB以内的文件' : `${fileList.length ?  '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
+          text = isOverSize
+            ? '2GB以内的文件'
+            : `${fileList.length ? '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
           message.warning(`只支持上传 ${text}！`);
           reject(file);
         }
@@ -268,7 +309,7 @@ const CreatePretrained = props => {
     },
     onRemove(file) {
       if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
-    }
+    },
   };
 
   const layout = {
@@ -285,21 +326,21 @@ const CreatePretrained = props => {
       >
         <div
           style={{
-            padding: '24px'
+            padding: '24px',
           }}
         >
           <Form
             form={form}
             onFinish={onFinish}
             // autoComplete="off"
-            initialValues={{ 
+            initialValues={{
               dataFormat: 'tfrecord',
               engine: 'apulistech/tensorflow:1.14.0-gpu-py3',
               precision: '0.99',
               size: '',
               use: '图像分类',
-              size: 80*1024*1024,
-           }}
+              size: 80 * 1024 * 1024,
+            }}
           >
             <Form.Item
               {...layout}
@@ -328,15 +369,22 @@ const CreatePretrained = props => {
             <Form.Item {...layout} label="参数来源">
               <Radio.Group defaultValue={1} buttonStyle="solid">
                 <Radio.Button value={1}>手动配置</Radio.Button>
-                <Radio.Button value={2} onClick={() => { setPresetParamsVisible(true); }}>导入参数</Radio.Button>
+                <Radio.Button
+                  value={2}
+                  onClick={() => {
+                    setPresetParamsVisible(true);
+                  }}
+                >
+                  导入参数
+                </Radio.Button>
               </Radio.Group>
-            </Form.Item>            
+            </Form.Item>
             <Form.Item
-              {...layout} 
+              {...layout}
               label="引擎类型"
-              name="engine" 
+              name="engine"
               // rules={[{ required: true, message: '请选择引擎类型' }]}
-              rules={[{ required: true, message: '请输入引擎类型' }]} 
+              rules={[{ required: true, message: '请输入引擎类型' }]}
             >
               {/* <Select>
                 {
@@ -354,7 +402,7 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '模型精度为空!' }]}
             >
               <Input placeholder="请输入模型精度" />
-            </Form.Item>                     
+            </Form.Item>
             <Form.Item
               {...layout}
               name="size"
@@ -362,7 +410,7 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '模型大小不能为空!' }]}
             >
               <Input placeholder="请输入模型大小" />
-            </Form.Item>                     
+            </Form.Item>
             <Form.Item
               {...layout}
               name="datasetName"
@@ -370,16 +418,14 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '数据集名称不能为空!' }]}
             >
               {/* <Input placeholder="请输入数据集名称" /> */}
-              <Select
-                onChange={handleDatasetChange}
-              >
-                {
-                  datasets.map(d => (
-                    <Option key={d.path} value={d.name}>{d.name}</Option>
-                  ))
-                }
-              </Select>              
-            </Form.Item>                     
+              <Select onChange={handleDatasetChange}>
+                {datasets.map((d) => (
+                  <Option key={d.path} value={d.name}>
+                    {d.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Form.Item
               {...layout}
               name="datasetPath"
@@ -387,7 +433,7 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '数据集路径不能为空!' }]}
             >
               <Input placeholder="请输入数据集路径" />
-            </Form.Item>                     
+            </Form.Item>
             <Form.Item
               {...layout}
               name="dataFormat"
@@ -395,7 +441,7 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '数据格式不能为空!' }]}
             >
               <Input placeholder="请输入数据格式" />
-            </Form.Item>                     
+            </Form.Item>
             {/* <Form.Item
               {...layout}
               name="modelPath"
@@ -419,7 +465,7 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '代码目录不能为空!' }]}
             >
               <Input placeholder="请输入代码目录" />
-            </Form.Item>                     
+            </Form.Item>
             <Form.Item
               {...layout}
               name="startupFile"
@@ -427,7 +473,7 @@ const CreatePretrained = props => {
               rules={[{ required: true, message: '启动文件不能为空!' }]}
             >
               <Input placeholder="请输入启动文件" />
-            </Form.Item> 
+            </Form.Item>
             <Form.Item
               {...layout}
               name="outputPath"
@@ -444,36 +490,64 @@ const CreatePretrained = props => {
             >
               <Input placeholder="请输入参数路径" />
             </Form.Item>
-            <Form.Item 
+            <Form.Item
               // {...layout}
               label="运行参数"
               labelCol={{ span: 3 }}
             >
-              {
-                runningParams.map((param, index) => {
-                  return (
-                    <div>
-                      <Form.Item initialValue={runningParams[index].key} rules={[{ validator(...args) { validateRunningParams(index, 'key', ...args); } }]} name={['params', index, 'key']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                        <Input style={{ width: 200 }} />
-                      </Form.Item>
-                      <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
-                      <Form.Item initialValue={runningParams[index].value} rules={[{ validator(...args) { validateRunningParams(index, 'value', ...args); } }]} name={['params', index, 'value']} wrapperCol={{ span: 24 }} style={{ display: 'inline-block' }}>
-                        <Input style={{ width: 200 }} />
-                      </Form.Item>
-                      <DeleteOutlined style={{ marginLeft: '10px', cursor: 'pointer' }} onClick={() => removeRuningParams(param.createTime || param.key)} />
-                    </div>
-                  );
-                })
-              }
+              {runningParams.map((param, index) => {
+                return (
+                  <div>
+                    <Form.Item
+                      initialValue={runningParams[index].key}
+                      rules={[
+                        {
+                          validator(...args) {
+                            validateRunningParams(index, 'key', ...args);
+                          },
+                        },
+                      ]}
+                      name={['params', index, 'key']}
+                      wrapperCol={{ span: 24 }}
+                      style={{ display: 'inline-block' }}
+                    >
+                      <Input style={{ width: 200 }} />
+                    </Form.Item>
+                    <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                    <Form.Item
+                      initialValue={runningParams[index].value}
+                      rules={[
+                        {
+                          validator(...args) {
+                            validateRunningParams(index, 'value', ...args);
+                          },
+                        },
+                      ]}
+                      name={['params', index, 'value']}
+                      wrapperCol={{ span: 24 }}
+                      style={{ display: 'inline-block' }}
+                    >
+                      <Input style={{ width: 200 }} />
+                    </Form.Item>
+                    <DeleteOutlined
+                      style={{ marginLeft: '10px', cursor: 'pointer' }}
+                      onClick={() => removeRuningParams(param.createTime || param.key)}
+                    />
+                  </div>
+                );
+              })}
               <div className={styles.addParams} onClick={addParams}>
-                <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
+                <PlusSquareOutlined
+                  fill="#1890ff"
+                  style={{ color: '#1890ff', marginRight: '10px' }}
+                />
                 <a>点击增加参数</a>
               </div>
-            </Form.Item>              
-            <Form.Item
-              style={{ float: 'right' }}
-            >
-              <Button type="primary" htmlType="submit" disabled={btnDisabled}>立即创建</Button>
+            </Form.Item>
+            <Form.Item style={{ float: 'right' }}>
+              <Button type="primary" htmlType="submit" disabled={btnDisabled}>
+                立即创建
+              </Button>
             </Form.Item>
           </Form>
         </div>
@@ -486,12 +560,14 @@ const CreatePretrained = props => {
         forceRender
         width="80%"
       >
-        <Form
-          form={form2}
-        >
-          {
-            presetRunningParams.length > 0 ? 
-            <Tabs defaultActiveKey={presetRunningParams[0].metaData?.id} tabPosition="left" onChange={handleSelectPresetParams} style={{ height: 220 }}>
+        <Form form={form2}>
+          {presetRunningParams.length > 0 ? (
+            <Tabs
+              defaultActiveKey={presetRunningParams[0].metaData?.id}
+              tabPosition="left"
+              onChange={handleSelectPresetParams}
+              style={{ height: 220 }}
+            >
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   {/* <Row>
@@ -503,69 +579,44 @@ const CreatePretrained = props => {
                     </Col>
                   </Row> */}
                   <Row>
-                    <Col span={5}>
-                      启动文件
-                  </Col>
+                    <Col span={5}>启动文件</Col>
+                    <Col span={19}>{p.params.startupFile}</Col>
+                  </Row>
+                  <Row>
+                    <Col span={5}>代码目录</Col>
+                    <Col span={19}>{p.params.codePath}</Col>
+                  </Row>
+                  <Row>
+                    <Col span={5}>训练数据集</Col>
+                    <Col span={19}>{p.params.datasetPath}</Col>
+                  </Row>
+                  <Row>
+                    <Col span={5}>输出路径</Col>
+                    <Col span={19}>{p.params.outputPath}</Col>
+                  </Row>
+                  <Row>
+                    <Col span={5}>运行参数</Col>
                     <Col span={19}>
-                      {p.params.startupFile}
+                      {p.params.params && formatParams(p.params.params).map((p) => <div>{p}</div>)}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      代码目录
-                  </Col>
-                    <Col span={19}>
-                      {p.params.codePath}
-                    </Col>
+                    <Col span={5}>计算节点规格</Col>
+                    <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>
-                      训练数据集
-                  </Col>
-                    <Col span={19}>
-                      {p.params.datasetPath}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={5}>
-                      输出路径
-                  </Col>
-                    <Col span={19}>
-                      {p.params.outputPath}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={5}>
-                      运行参数
-                  </Col>
-                    <Col span={19}>
-                      {p.params.params && formatParams(p.params.params).map(p => <div>{p}</div>)}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={5}>
-                      计算节点规格
-                  </Col>
-                    <Col span={19}>
-                      {p.params.deviceType}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col span={5}>
-                      引擎类型
-                  </Col>
-                    <Col span={19}>
-                      {getNameFromDockerImage(p.params.engine)}
-                    </Col>
+                    <Col span={5}>引擎类型</Col>
+                    <Col span={19}>{getNameFromDockerImage(p.params.engine)}</Col>
                   </Row>
                 </TabPane>
               ))}
             </Tabs>
-              : <div>暂无</div>
-          }
+          ) : (
+            <div>暂无</div>
+          )}
         </Form>
-    </Modal>
-    </>  
+      </Modal>
+    </>
   );
 };
 

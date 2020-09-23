@@ -1,38 +1,40 @@
-import { pagination as defaultPagination } from '@/config'
-import { normalizeTableResult } from '@/utils/utils'
-import { getTrainingJobs } from '../services'
+import { pagination as defaultPagination } from '@/config';
+import { normalizeTableResult } from '@/utils/utils';
+import { getTrainingJobs } from '../services';
 
 export default {
   namespace: 'trainingDatasets',
   state: {
     data: {
       list: [],
-      pagination: defaultPagination
-    }
+      pagination: defaultPagination,
+    },
   },
   reducers: {
-    save (state, { payload }) {
+    save(state, { payload }) {
       return {
         ...state,
-        data: payload
-      }
-    }
+        data: payload,
+      };
+    },
   },
   effects: {
-    *fetch ({ payload = {} }, { call, put, select }) {
+    *fetch({ payload = {} }, { call, put, select }) {
       try {
-        const pagination = yield select(state => state.trainingDatasets.data.pagination)
-        const { pageNum = pagination.current, pageSize = pagination.pageSize, ...restParams } = payload
+        const pagination = yield select((state) => state.trainingDatasets.data.pagination);
+        const {
+          pageNum = pagination.current,
+          pageSize = pagination.pageSize,
+          ...restParams
+        } = payload;
         const params = {
           ...restParams,
           pageNum,
-          pageSize
-        }
-        const {
-          code, data, msg
-        } = yield call(getTrainingJobs, params)
+          pageSize,
+        };
+        const { code, data, msg } = yield call(getTrainingJobs, params);
         // console.log(code, data, msg)
-        let error = null
+        let error = null;
         if (code === 0) {
           // const result = normalizeTableResult(data)
           const result = {
@@ -40,20 +42,20 @@ export default {
             pagination: {
               current: data.pageNum || 1,
               pageSize: data.pageSize || 10,
-              total: data.total
-            }
-          }          
+              total: data.total,
+            },
+          };
           yield put({
             type: 'save',
-            payload: result
-          })
+            payload: result,
+          });
         } else {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
-        return { error, data: null }
+        return { error, data: null };
       }
-    }
-  }
-}
+    },
+  },
+};

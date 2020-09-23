@@ -29,22 +29,22 @@ const TemplateList = () => {
   }, [aPageParams]);
 
   const getModelTplData = () => {
-    const params = { 
-      ...mPageParams, 
+    const params = {
+      ...mPageParams,
       isAdvance: true,
-      use: 'Avisualis_Model'
+      use: 'Avisualis_Model',
     };
     getData(1, params);
-  }
+  };
 
   const getAppTplData = () => {
-    const params = { 
-      ...aPageParams, 
+    const params = {
+      ...aPageParams,
       isAdvance: true,
-      use: 'Avisualis_App'
+      use: 'Avisualis_App',
     };
     getData(2, params);
-  }
+  };
 
   const getData = async (type, params) => {
     setLoading(true);
@@ -77,23 +77,31 @@ const TemplateList = () => {
   const getCardList = (type) => {
     const data = type === 1 ? modelTplData.data : appTplData.data;
     if (data.length) {
-      return data.map(i => {
+      return data.map((i) => {
         const { name, id, description, use } = i;
         return (
           <Card
             style={{ width: 240 }}
             cover={
-              <div className={styles.coverWrap}><img src={type === 1 ? modelIconImg : appIconImg} /></div>
+              <div className={styles.coverWrap}>
+                <img src={type === 1 ? modelIconImg : appIconImg} />
+              </div>
             }
             actions={[
-              <div onClick={() => history.push(`/ModelManagement/avisualis/detail/${`add`}?modelId=${id}`)}>从模板创建</div>,
+              <div
+                onClick={() =>
+                  history.push(`/ModelManagement/avisualis/detail/${`add`}?modelId=${id}`)
+                }
+              >
+                从模板创建
+              </div>,
               <EllipsisOutlined key="ellipsis" />,
             ]}
           >
             <Meta title={name} description={description} />
           </Card>
-        )
-      })
+        );
+      });
     }
     return (
       <div className={styles.noData}>
@@ -101,7 +109,7 @@ const TemplateList = () => {
         <p>暂无数据</p>
       </div>
     );
-  }
+  };
 
   if (loading) return <PageLoading />;
 

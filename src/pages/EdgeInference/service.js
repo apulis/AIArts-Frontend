@@ -7,9 +7,9 @@ const CancelToken = Request.CancelToken;
 export async function getEdgeInferences(params) {
   return request(`/${prefix}`, {
     params: params,
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       getEdgeInferences.cancel = c;
-    })
+    }),
   });
 }
 
@@ -28,7 +28,6 @@ export async function getFD() {
   return request(`/${prefix}/fdinfo`);
 }
 
-
 export async function submitFD(data) {
   return await request(`/${prefix}/fdinfo`, {
     method: 'POST',
@@ -45,6 +44,6 @@ export async function push(data) {
 
 export async function deleteEG(id) {
   return await request(`/${prefix}/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
 }

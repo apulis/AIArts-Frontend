@@ -6,7 +6,7 @@ import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
 import { getNameFromDockerImage } from '@/utils/reg';
 
-const TrainingJobModal = props => {
+const TrainingJobModal = (props) => {
   const {
     loading,
     dispatch,
@@ -14,19 +14,18 @@ const TrainingJobModal = props => {
     onCancel,
     onSubmit,
     visible = true,
-
   } = props;
 
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [current, setCurrent] = useState(undefined);
-  console.log(123, props)
+  console.log(123, props);
   useEffect(() => {
     dispatch({
       type: 'jobList/fetch',
       payload: {
         pageNum: pageParams.pageNum,
         pageSize: 5,
-        status: 'finished'
+        status: 'finished',
       },
     });
   }, [pageParams]);
@@ -47,13 +46,12 @@ const TrainingJobModal = props => {
     // }),
   };
 
-  const modalFooter = 
-    {
-      okText: '确定',
-      onOk: handleSubmit,
-      cancelText: '取消',
-      onCancel,
-    };
+  const modalFooter = {
+    okText: '确定',
+    onOk: handleSubmit,
+    cancelText: '取消',
+    onCancel,
+  };
 
   const jobColumns = [
     {
@@ -68,15 +66,15 @@ const TrainingJobModal = props => {
       ellipsis: true,
       width: 100,
       render(value) {
-        return <div>{getNameFromDockerImage(value)}</div>
-      }
+        return <div>{getNameFromDockerImage(value)}</div>;
+      },
     },
     {
       title: '描述',
       dataIndex: 'desc',
       ellipsis: true,
-      width: 150
-    }
+      width: 150,
+    },
   ];
 
   const getModalContent = () => {
@@ -87,7 +85,7 @@ const TrainingJobModal = props => {
         }}
         pagination={{
           style: {
-            marginBottom: 0
+            marginBottom: 0,
           },
           pageSize: 5,
           total: data.pagination.total,
@@ -97,10 +95,10 @@ const TrainingJobModal = props => {
               payload: {
                 pageNum: page,
                 pageSize: 5,
-                status: 'finished'
+                status: 'finished',
               },
             });
-          }
+          },
         }}
         loading={loading}
         dataSource={data.list}
@@ -108,7 +106,7 @@ const TrainingJobModal = props => {
         rowKey="id"
         rowSelection={{
           type: 'radio',
-          ...rowSelection,          
+          ...rowSelection,
         }}
       />
     );
@@ -116,14 +114,12 @@ const TrainingJobModal = props => {
 
   return (
     <Modal
-      title='请选择训练作业'
+      title="请选择训练作业"
       className={styles.standardListForm}
       width={640}
-      bodyStyle={
-        {
-          padding: '28px 0 0',
-        }
-      }
+      bodyStyle={{
+        padding: '28px 0 0',
+      }}
       destroyOnClose
       centered
       visible={visible}
