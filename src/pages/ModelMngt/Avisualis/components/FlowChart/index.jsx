@@ -17,6 +17,30 @@ insertCss(`
   }
 `);
 
+const collapseIcon = (x, y, r) => {
+  return [
+    ['M', x - r, y],
+    ['a', r, r, 0, 1, 0, r * 2, 0],
+    ['a', r, r, 0, 1, 0, -r * 2, 0],
+    ['M', x - r + 4, y],
+    ['L', x - r + 2 * r - 4, y],
+  ];
+};
+
+const expandIcon = (x, y, r) => {
+  return [
+    ['M', x - r, y],
+    ['a', r, r, 0, 1, 0, r * 2, 0],
+    ['a', r, r, 0, 1, 0, -r * 2, 0],
+    ['M', x - r + 4, y],
+    ['L', x - r + 2 * r - 4, y],
+    ['M', x - r + r, y - r + 4],
+    ['L', x, y + r - 4],
+  ];
+};
+
+const anchorPoints = [ [0.5, 1], [0.5, 0] ];
+
 const FlowChart = forwardRef((props, ref) => {
   const { transformData, detailData, avisualis, detailId } = props;
   const [graph, setGraph] = useState(null);
@@ -24,7 +48,24 @@ const FlowChart = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
   const { panelApiData, treeData } = avisualis;
-
+  const data = {
+    nodes: [
+      { id: 'node1',comboId: 'combo1', anchorPoints: anchorPoints },
+      { id: 'node2', comboId: 'combo1', anchorPoints: anchorPoints },
+      { id: 'node3', comboId: 'combo3', anchorPoints: anchorPoints },
+      { id: 'node4', comboId: 'combo4', anchorPoints: anchorPoints },
+      { id: 'node5', comboId: 'combo1', anchorPoints: anchorPoints },
+    ],
+    edges: [
+      { source: 'node1', target: 'node3' },
+      { source: 'node3', target: 'node4' },
+    ],
+    combos: [
+      { id: 'combo1', label: 'Combo 1', parentId: 'combo2', anchorPoints: anchorPoints },
+      { id: 'combo2', label: 'Combo 2', anchorPoints: anchorPoints },
+      { id: 'combo3', label: 'Combo 3', anchorPoints: anchorPoints },
+    ],
+  };
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd
   }));
@@ -35,6 +76,52 @@ const FlowChart = forwardRef((props, ref) => {
 
   const getData = async () => {
     setLoading(true);
+    G6.registerCombo(
+      'cRect',
+      {
+        drawShape: function drawShape(cfg, group) {
+          const self = this;
+          cfg.padding = cfg.padding || [50, 20, 20, 20];
+          const style = self.getShapeStyle(cfg);
+          const rect = group.addShape('rect', {
+            attrs: {
+              ...style,
+              x: -style.width / 2 - (cfg.padding[3] - cfg.padding[1]) / 2,
+              y: -style.height / 2 - (cfg.padding[0] - cfg.padding[2]) / 2,
+              width: style.width,
+              height: style.height,
+            },
+            draggable: true,
+            name: 'combo-keyShape',
+          });
+          group.addShape('marker', {
+            attrs: {
+              ...style,
+              fill: '#fff',
+              opacity: 1,
+              x: cfg.style.width / 2 + cfg.padding[1],
+              y: (cfg.padding[2] - cfg.padding[0]) / 2,
+              r: 10,
+              symbol: collapseIcon,
+            },
+            draggable: true,
+            name: 'combo-marker-shape',
+          });
+          return rect;
+        },
+        afterUpdate: function afterUpdate(cfg, combo) {
+          const group = combo.get('group');
+          const marker = group.find((ele) => ele.get('name') === 'combo-marker-shape');
+          marker.attr({
+            x: cfg.style.width / 2 + cfg.padding[1],
+            y: (cfg.padding[2] - cfg.padding[0]) / 2,
+            symbol: cfg.collapsed ? expandIcon : collapseIcon,
+          });
+        },
+      },
+      'rect',
+    );
+
     G6.registerNode('flowChart',
       {
         drawShape(cfg, group) {
@@ -42,7 +129,7 @@ const FlowChart = forwardRef((props, ref) => {
             attrs: {
               x: -140,
               y: -25,
-              width: 280,
+              width: 80,
               height: 50,
               radius: 10,
               stroke: '#1890ff',
@@ -71,6 +158,7 @@ const FlowChart = forwardRef((props, ref) => {
       },
       'single-node',
     );
+
     const height = document.getElementById('container').scrollHeight || 500;
     const minimap = new G6.Minimap({
       size: [150, 100],
@@ -116,25 +204,32 @@ const FlowChart = forwardRef((props, ref) => {
       container: 'container',
       width: 800,
       height,
-      
       layout: {
         type: 'dagre',
-        ranksep: 30,
+        ranksep: 80,
+        align: 'UR',
         controlPoints: true,
       },
       defaultNode: {
         type: 'flowChart'
       },
       defaultEdge: {
-        type: 'cubic-vertical',
         style: {
           radius: 20,
-          offset: 45,
           endArrow: true,
           lineAppendWidth: 10,
           lineWidth: 2,
           stroke: '#C2C8D5',
         },
+      },
+      groupByTypes: false,
+      defaultCombo: {
+        type: 'cRect',
+      },
+      comboStateStyles: {
+        hover: {
+          cursor: 'pointer',
+        }
       },
       nodeStateStyles: {
         selected: {
@@ -142,37 +237,33 @@ const FlowChart = forwardRef((props, ref) => {
           fill: '#5394ef',
         },
         hover: {
-          cursor: 'move',
+          cursor: 'pointer',
           fill: 'lightsteelblue',
         }
       },
       modes: {
         default: [
-          'drag-canvas',
           'zoom-canvas',
           {
             type: 'click-select',
             multiple: false
           },
-          'drag-node',
           "customer-events",
         ]
       },
       plugins: [minimap, toolbar],
     });
-    _graph.data(flowChartData);
+    _graph.data(data);
     _graph.render();
 
     _graph.on('node:mouseenter', e => {
       _graph.setItemState(e.item, 'hover', true); // 设置当前节点的 hover 状态为 true
     });
     
-    // 鼠标离开节点
     _graph.on('node:mouseleave', e => {
       _graph.setItemState(e.item, 'hover', false); // 设置当前节点的 hover 状态为 false
     });
 
-    // Click a node
     _graph.on('node:click', e => {
       const clickNodes = _graph.findAllByState('node', 'click');
       clickNodes.forEach(cn => {
@@ -190,6 +281,22 @@ const FlowChart = forwardRef((props, ref) => {
     _graph.on('keydown', e => {
       const { keyCode } = e;
       if (keyCode === 46) deleteNode(_graph);
+    });
+
+    _graph.on('combo:click', (e) => {
+      if (e.target.get('name') === 'combo-marker-shape') {
+        _graph.collapseExpandCombo(e.item);
+        _graph.refreshPositions();
+      }
+      console.log('-------e.item', e.item)
+    });
+
+    _graph.on('combo:mouseenter', e => {
+      _graph.setItemState(e.item, 'hover', true);
+    });
+    
+    _graph.on('combo:mouseleave', e => {
+      _graph.setItemState(e.item, 'hover', false);
     });
 
     _graph.fitCenter();
