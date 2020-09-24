@@ -45,14 +45,8 @@ const AvisualisDetail = (props) => {
       const { nodes, edges, panel } = model.params;
       const _panel = JSON.parse(panel);
       if (nodes && edges) {
-        const transformNodes = JSON.parse(nodes).map(i => {
-          return {
-            ...i,
-            id: `${i.id}-${i.name}`
-          }
-        })
         const _detailData = {
-          nodes: transformNodes,
+          nodes: JSON.parse(nodes),
           edges: JSON.parse(edges),
         };
         setDetailData(_detailData);
@@ -69,13 +63,15 @@ const AvisualisDetail = (props) => {
           panelApiData: _panel
         }
       });
+      console.log('------_panel',_panel)
     }
     setLoading(false);
   };
 
   const transformData = (data, newData) => {
     let _treeData = [], _children = [], _data = data || panelApiData, 
-    childrenDisabled = (Boolean(Number(modelId)) || Boolean(Number(detailId))) ? true : false;
+    // childrenDisabled = (Boolean(Number(modelId)) || Boolean(Number(detailId))) ? true : false;
+    childrenDisabled = (Boolean(Number(detailId))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.nodes ? newData.nodes.length : 0;
@@ -84,20 +80,23 @@ const AvisualisDetail = (props) => {
       let _children = [];
       const { children, name } = i;
       if (children &&  children.length) {
-        children.forEach((c, cdx) => {
-          const key = Object.keys(c)[0];
+        children.forEach(c => {
+          const { children, config } = c;
+          const childName = c.name;
           _children.push({
-            title: key,
-            key: `${name}-${key}`,
-            config: c[key],
+            title: childName,
+            key: childName,
+            config: config,
             disabled: childrenDisabled,
-            idx: idx
+            treeIdx: idx,
+            child: children || [],
+            fName: name
           })
         })
       }
       _treeData.push({
         title: `步骤${idx + 1}：${name}`,
-        key: `${name}`,
+        key: name,
         children: _children,
         disabled: true,
         icon: <FolderOpenTwoTone />,
@@ -137,7 +136,7 @@ const AvisualisDetail = (props) => {
             onDragStart={({event, node}) => event.dataTransfer.effectAllowed = 'move'}
           /> : null}
         </Card>
-        <Test
+        <FlowChart
           ref={flowChartRef} 
           transformData={transformData} 
           detailId={detailId}
