@@ -117,7 +117,8 @@ const InferenceList = (props) => {
     },
     {
       title: '运行时长',
-      render: (text, item) => formatDuration(moment.duration(item.duration)),
+      align: 'center',
+      render: (text, item) => item.duration ? formatDuration(moment.duration(item.duration)) : '-',
     },
     {
       title: '服务地址',
