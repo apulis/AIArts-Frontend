@@ -1,37 +1,39 @@
-import { pagination as defaultPagination } from '@/config'
-import { normalizeTableResult } from '@/utils/utils'
-import { getModels, addModel, updateModel, deleteModel } from '../services'
+import { pagination as defaultPagination } from '@/config';
+import { normalizeTableResult } from '@/utils/utils';
+import { getModels, addModel, updateModel, deleteModel } from '../services';
 
 export default {
   namespace: 'pretrainedModelList',
   state: {
     data: {
       list: [],
-      pagination: defaultPagination
-    }
+      pagination: defaultPagination,
+    },
   },
   reducers: {
-    save (state, { payload }) {
+    save(state, { payload }) {
       return {
         ...state,
-        data: payload
-      }
-    }
+        data: payload,
+      };
+    },
   },
   effects: {
-    *fetch ({ payload = {} }, { call, put, select }) {
+    *fetch({ payload = {} }, { call, put, select }) {
       try {
-        const pagination = yield select(state => state.pretrainedModelList.data.pagination)
-        const { pageNum = pagination.current, pageSize = pagination.pageSize, ...restParams } = payload
+        const pagination = yield select((state) => state.pretrainedModelList.data.pagination);
+        const {
+          pageNum = pagination.current,
+          pageSize = pagination.pageSize,
+          ...restParams
+        } = payload;
         const params = {
           ...restParams,
           pageNum,
-          pageSize
-        }
-        const {
-          code, data, msg
-        } = yield call(getModels, params)
-        let error = null
+          pageSize,
+        };
+        const { code, data, msg } = yield call(getModels, params);
+        let error = null;
         if (code === 0) {
           // const result = normalizeTableResult(data)
           const result = {
@@ -39,84 +41,76 @@ export default {
             pagination: {
               current: data.pageNum || 1,
               pageSize: data.pageSize || 10,
-              total: data.total
-            }
-          }
+              total: data.total,
+            },
+          };
           yield put({
             type: 'save',
-            payload: result
-          })
+            payload: result,
+          });
         } else {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
-        return { error, data: null }
+        return { error, data: null };
       }
     },
-    *add ({ payload }, { call }) {
+    *add({ payload }, { call }) {
       try {
-        const {
-          code, data, msg
-        } = yield call(addModel, payload)
+        const { code, data, msg } = yield call(addModel, payload);
 
-        let error = null
+        let error = null;
         if (code !== 0) {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
         return {
           error,
-          data: null
-        }
+          data: null,
+        };
       }
     },
-    *update ({ payload }, { call }) {
+    *update({ payload }, { call }) {
       try {
-        const {
-          code, data, msg
-        } = yield call(updateModel, payload)
-        let error = null
+        const { code, data, msg } = yield call(updateModel, payload);
+        let error = null;
         if (code !== 0) {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
         return {
           error,
-          data: null
-        }
+          data: null,
+        };
       }
     },
-    *delete ({ payload }, { call }) {
+    *delete({ payload }, { call }) {
       try {
-        const {
-          code, data, msg
-        } = yield call(deleteModel, payload.id)
-        let error = null
+        const { code, data, msg } = yield call(deleteModel, payload.id);
+        let error = null;
         if (code !== 0) {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
-        return { error, data: null }
+        return { error, data: null };
       }
     },
-    *download ({ payload }, { call }) {
+    *download({ payload }, { call }) {
       try {
-        const {
-          code, data, msg
-        } = yield call(downloadModel, payload.id)
+        const { code, data, msg } = yield call(downloadModel, payload.id);
         // console.log(code, data, msg)
-        let error = null
+        let error = null;
         if (code !== 0) {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
-        return { error, data: null }
+        return { error, data: null };
       }
-    }        
-  }
-}
+    },
+  },
+};

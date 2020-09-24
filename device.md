@@ -1,9 +1,9 @@
-## 平台调策略的方案完善文档20200820：
+## 平台调策略的方案完善文档 20200820：
 
-1.	资源采集方面，
-改进为采集每个node的capacity（总设备数量）和allocatable（当前可用数量），存入mysql，然后提供接口给前端请求，这样前端就知道每个node的具体设备数量情况
+1. 资源采集方面，改进为采集每个 node 的 capacity（总设备数量）和 allocatable（当前可用数量），存入 mysql，然后提供接口给前端请求，这样前端就知道每个 node 的具体设备数量情况
 
 示例数据：
+
 ```
         {
 "huawei_npu_arm64": {"capacity":16,"detail":[{"allocatable":6,"capacity":8,"nodeName":"atlas02"},{"allocatable":3,"capacity":8,"nodeName":"atlas01"}],"deviceStr":"npu.huawei.com/NPU"},
@@ -11,21 +11,12 @@
 }
 ```
 
-2.	前端方面，对于GPU
-a)	提交regular Job时，拿到全部节点中的最高capacity值，用于限制用户可以选择设备num的最大值；拿到所有节点的最高allocatable值，用于提示用户填写了超出allocatable的设备num时，Job将会处于排队。
-对于示例数据，最高capacity值为8，最高allocatable值为5
+2. 前端方面，对于 GPU a) 提交 regular Job 时，拿到全部节点中的最高 capacity 值，用于限制用户可以选择设备 num 的最大值；拿到所有节点的最高 allocatable 值，用于提示用户填写了超出 allocatable 的设备 num 时，Job 将会处于排队。对于示例数据，最高 capacity 值为 8，最高 allocatable 值为 5
 
-b)	提交distribute Job时，
-i.	可以手动输入node数量（num of node），node数量n最高限制为节点的数量和。
-对于示例数据，node数量n为2。
+b) 提交 distribute Job 时， i. 可以手动输入 node 数量（num of node），node 数量 n 最高限制为节点的数量和。对于示例数据，node 数量 n 为 2。
 
-ii.	选择每个node的设备数量（num of per device）。假定选择了node数量为n，那么每个node的设备数量m可选择项为1，2，4…2^N，其中N值满足表达式2^N<=所有节点的前n大capacity值。
-对于示例数据，假定node数量n=1，那么每个node的设备数量m值可选为1、2、4、8。
-node数量n=2，那么每个node的设备数量m值可选为1、2、4。
+ii. 选择每个 node 的设备数量（num of per device）。假定选择了 node 数量为 n，那么每个 node 的设备数量 m 可选择项为 1，2，4…2^N，其中 N 值满足表达式 2^N<=所有节点的前 n 大 capacity 值。对于示例数据，假定 node 数量 n=1，那么每个 node 的设备数量 m 值可选为 1、2、4、8。 node 数量 n=2，那么每个 node 的设备数量 m 值可选为 1、2、4。
 
-iii.	提交时，针对用户填的node数量n和每个node的设备数量m，当不满足条件：m>所有节点的前n大allocatable值时，提示用户本次提交的job将进入排队状态。
-对于示例数据，当node数量n=1时，那么每个node的设备数量m>5时，需要提示。
-当node数量n=2时，那么每个node的设备数量m>3时，需要提示。
+iii. 提交时，针对用户填的 node 数量 n 和每个 node 的设备数量 m，当不满足条件：m>所有节点的前 n 大 allocatable 值时，提示用户本次提交的 job 将进入排队状态。对于示例数据，当 node 数量 n=1 时，那么每个 node 的设备数量 m>5 时，需要提示。当 node 数量 n=2 时，那么每个 node 的设备数量 m>3 时，需要提示。
 
-NPU的regular Job类型，设备num限制还是0，1，2，4，8。
-NPU的distribute Job类型，每个node的设备数量（num of per device）还是默认8卡。Node数量最高要限制为节点的总和。
+NPU 的 regular Job 类型，设备 num 限制还是 0，1，2，4，8。 NPU 的 distribute Job 类型，每个 node 的设备数量（num of per device）还是默认 8 卡。Node 数量最高要限制为节点的总和。

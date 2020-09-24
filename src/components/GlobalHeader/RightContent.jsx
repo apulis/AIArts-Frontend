@@ -21,13 +21,18 @@ const GlobalHeaderRight = (props) => {
   }
 
   return (
-    <div className={className} style={{display: 'flex', alignItems: 'center', marginRight: '20px'}}>
+    <div
+      className={className}
+      style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}
+    >
       {/* <Dropdown overlay={menu}>
         <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
           当前虚拟集群 <DownOutlined />
         </a>
       </Dropdown> */}
-      <Button href="/custom-user-dashboard" style={{marginLeft: '20px'}}>用户管理系统</Button>
+      <Button href="/custom-user-dashboard" style={{ marginLeft: '20px' }}>
+        用户管理系统
+      </Button>
       <Avatar menu />
       {REACT_APP_ENV && (
         <span>

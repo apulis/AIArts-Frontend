@@ -1,13 +1,13 @@
 import request from '@/utils/request';
 
 export async function getDatasets(params) {
-  return request('/datasets', {
+  return await request('/datasets', {
     params: params,
   });
 }
 
 export async function getDatasetDetail(id) {
-  return request(`/datasets/${id}`);
+  return await request(`/datasets/${id}`);
 }
 
 export async function edit(id, data) {
@@ -18,7 +18,7 @@ export async function edit(id, data) {
 }
 
 export async function deleteDataSet(id) {
-  return request(`/datasets/${id}`, { method: 'DELETE' })
+  return await request(`/datasets/${id}`, { method: 'DELETE' })
 }
 
 export async function upload(data) {
@@ -36,5 +36,5 @@ export async function add(data) {
 }
 
 export async function download(id) {
-  return request(`/files/download/dataset/${id}`);
+  return await request(`/files/download/dataset/${id}`);
 }

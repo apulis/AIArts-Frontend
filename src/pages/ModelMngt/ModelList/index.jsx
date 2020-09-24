@@ -12,13 +12,13 @@ import moment from 'moment';
 const { confirm } = Modal;
 const { Search } = Input;
 
-const ModelList = props => {
+const ModelList = (props) => {
   const {
     loading,
     dispatch,
     modelList: { data },
   } = props;
-  
+
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState(undefined);
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
@@ -26,7 +26,7 @@ const ModelList = props => {
   const [form] = Form.useForm();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
   const searchEl = useRef(null);
 
@@ -70,17 +70,17 @@ const ModelList = props => {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 150,
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,      
+      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
       title: '描述',
       dataIndex: 'description',
       ellipsis: true,
-      width: 150
+      width: 150,
     },
     {
       title: '操作',
@@ -92,7 +92,9 @@ const ModelList = props => {
             {/* <a onClick={() => createInference(item)}>创建推理</a> */}
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
             <a onClick={() => evaluateModel(item)}>模型评估</a>
-            <a style={{ color: 'red' }} onClick={() => deleteModel(item)}>删除</a>
+            <a style={{ color: 'red' }} onClick={() => deleteModel(item)}>
+              删除
+            </a>
           </Space>
         );
       },
@@ -111,7 +113,7 @@ const ModelList = props => {
   const handleSubmit = async (values) => {
     const id = current ? current.id : '';
 
-    if(id){
+    if (id) {
       const { description } = values;
 
       const { error, msg } = await dispatch({
@@ -119,11 +121,11 @@ const ModelList = props => {
         payload: { id, description },
       });
 
-      if(error === null){
+      if (error === null) {
         message.success(`编辑成功`);
         handleSearch();
-      }else{
-        msg && message.error(`编辑失败:${msg}`);        
+      } else {
+        msg && message.error(`编辑失败:${msg}`);
       }
       setVisible(false);
     }
@@ -134,7 +136,7 @@ const ModelList = props => {
       ...pageParams,
       isAdvance: false,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]      
+      order: sortText[sortedInfo.order],
     };
 
     if (formValues.name) {
@@ -148,21 +150,21 @@ const ModelList = props => {
   };
 
   const handleDownload = async (item) => {
-    window.open(`/ai_arts/api/files/download/model/${item.id}`, '_blank')
+    window.open(`/ai_arts/api/files/download/model/${item.id}`, '_blank');
   };
 
   const createInference = (item) => {
     const queryString = stringify({
-      modelPath: encodeURIComponent(item.modelPath)
+      modelPath: encodeURIComponent(item.modelPath),
     });
-    history.push((`/Inference/submit/?${queryString}`))
+    history.push(`/Inference/submit/?${queryString}`);
   };
 
   const evaluateModel = (item) => {
     const queryString = stringify({
       modelId: encodeURIComponent(item.id),
     });
-    history.push((`/ModelManagement/CreateEvaluation/?${queryString}`))
+    history.push(`/ModelManagement/CreateEvaluation/?${queryString}`);
   };
 
   const deleteModel = (item) => {
@@ -177,8 +179,8 @@ const ModelList = props => {
         dispatch({
           type: 'modelList/delete',
           payload: {
-            id: item.id
-          }
+            id: item.id,
+          },
         }).then(({ error }) => {
           if (error === null) {
             // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
@@ -186,12 +188,12 @@ const ModelList = props => {
               setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
             } else {
               handleSearch();
-            }            
+            }
             message.success(`删除成功`);
           } else {
             message.error(`删除失败${error.msg}` || `删除失败`);
           }
-        })
+        });
       },
       onCancel() {
         // console.log('Cancel');
@@ -200,41 +202,48 @@ const ModelList = props => {
   };
 
   const createModel = (item) => {
-    history.push('/ModelMngt/CreateModel')
+    history.push('/ModelMngt/CreateModel');
   };
 
   const onSearchName = (name) => {
-    setPageParams({...pageParams, ...{pageNum: 1}});
-    setFormValues({name});
+    setPageParams({ ...pageParams, ...{ pageNum: 1 } });
+    setFormValues({ name });
   };
 
   const onRefresh = () => {
-    setPageParams({...pageParams, ...{pageNum: 1}});
+    setPageParams({ ...pageParams, ...{ pageNum: 1 } });
     const name = searchEl.current.value;
-    setFormValues({name});
+    setFormValues({ name });
   };
 
   return (
     <>
       <PageHeaderWrapper>
-        <Card bordered={false}
+        <Card
+          bordered={false}
           bodyStyle={{
-            padding: '0'
+            padding: '0',
           }}
         >
           <div
             style={{
-              padding: '24px 0 24px 24px'
+              padding: '24px 0 24px 24px',
             }}
           >
-            <Button type="primary" onClick={createModel}>创建模型</Button>
+            <Button type="primary" onClick={createModel}>
+              创建模型
+            </Button>
             <div
               style={{
-                float: "right",
+                float: 'right',
                 paddingRight: '20px',
-              }}          
+              }}
             >
-              <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={onSearchName} enterButton 
+              <Search
+                style={{ width: '200px', marginRight: '20px' }}
+                placeholder="请输入模型名称"
+                onSearch={onSearchName}
+                enterButton
                 ref={searchEl}
               />
               <Button icon={<SyncOutlined />} onClick={onRefresh}></Button>
@@ -243,7 +252,7 @@ const ModelList = props => {
           <Table
             columns={columns}
             dataSource={data.list}
-            rowKey='id'
+            rowKey="id"
             onChange={onSortChange}
             pagination={{
               total: data.pagination.total,
@@ -253,19 +262,21 @@ const ModelList = props => {
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
               current: pageParams.pageNum,
-              pageSize: pageParams.pageSize,              
+              pageSize: pageParams.pageSize,
             }}
             loading={loading}
           />
         </Card>
       </PageHeaderWrapper>
 
-      {visible && <ModalForm
-        current={current}
-        visible={visible}
-        onCancel={handleCancel}
-        onSubmit={handleSubmit}
-      />}
+      {visible && (
+        <ModalForm
+          current={current}
+          visible={visible}
+          onCancel={handleCancel}
+          onSubmit={handleSubmit}
+        />
+      )}
     </>
   );
 };

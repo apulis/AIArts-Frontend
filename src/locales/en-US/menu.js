@@ -56,5 +56,5 @@ export default {
   'menu.inferenceService.list': 'Inference Service List',
   'menu.modelTraining': 'Model Training',
   'menu.modelTraining.visualization': 'Visualization',
-  'menu.warningLog': 'Warning Log'
+  'menu.warningLog': 'Warning Log',
 };

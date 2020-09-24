@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from 'antd';
-import Iframe from "react-iframe";
+import Iframe from 'react-iframe';
 
 const WarningLog = () => {
   let grafana;

@@ -1,7 +1,7 @@
 import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React from 'react';
-import Iframe from "react-iframe";
+import Iframe from 'react-iframe';
 
 const ResourceMonitoring = () => {
   let grafana;

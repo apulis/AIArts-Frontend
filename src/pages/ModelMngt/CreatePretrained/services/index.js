@@ -3,7 +3,7 @@ import { modelTrainingType } from '@/utils/const';
 
 export async function getTrainingJobs(params) {
   return request(`/trainings`, {
-    params
+    params,
   });
 }
 
@@ -14,6 +14,6 @@ export async function fetchPresetTemplates() {
       pageSize: 10000,
       jobType: modelTrainingType,
       scope: 2,
-    }
-  })
+    },
+  });
 }

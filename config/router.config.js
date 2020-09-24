@@ -62,18 +62,18 @@ export default [
                 path: '/dataManage/dataSet',
                 name: 'dataSet',
                 component: './DataSet',
-                authority: ['AI_ARTS_ALL']
+                authority: ['AI_ARTS_ALL'],
               },
               {
                 path: '/dataManage/dataSet/detail',
                 component: './DataSet/detail',
-                authority: ['AI_ARTS_ALL']
+                authority: ['AI_ARTS_ALL'],
               },
               {
                 path: '/image_label/project',
                 target: '_blank',
                 name: 'imageLabel',
-                authority: ['AI_ARTS_ALL', 'LABELING_IMAGE']
+                authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
               },
             ],
           },
@@ -91,12 +91,12 @@ export default [
               {
                 path: '/model-training/visualization',
                 name: 'visualization',
-                component: './ModelTraining/Visualization/Visualization'
+                component: './ModelTraining/Visualization/Visualization',
               },
               {
                 path: '/model-training/paramsManage',
                 name: 'paramsManage',
-                component: './ModelTraining/ParamsManage/ParamsManage'
+                component: './ModelTraining/ParamsManage/ParamsManage',
               },
               {
                 path: '/model-training/PretrainedModels',
@@ -122,8 +122,8 @@ export default [
               {
                 path: '/model-training/:id/detail',
                 component: './ModelTraining/Detail',
-              }
-            ]
+              },
+            ],
           },
           {
             path: '/ModelList',
@@ -146,36 +146,36 @@ export default [
               {
                 path: '/ModelManagement/CreateEvaluation',
                 // name: 'modelEvaluation',
-                // icon: 'CodepenOutlined',           
-                component: './ModelMngt/ModelEvaluation'
+                // icon: 'CodepenOutlined',
+                component: './ModelMngt/ModelEvaluation',
               },
               {
                 path: '/ModelManagement/CreatePretrained',
-                component: './ModelMngt/CreatePretrained'
+                component: './ModelMngt/CreatePretrained',
               },
               {
                 path: '/ModelManagement/ModelEvaluation/:id/detail',
-                component: './ModelMngt/ModelEvaluation/detail'
+                component: './ModelMngt/ModelEvaluation/detail',
               },
               {
                 path: '/ModelManagement/ModelEvaluation/List',
                 name: 'modelEvaluationList',
-                component: './ModelMngt/ModelEvaluation/List'
+                component: './ModelMngt/ModelEvaluation/List',
               },
               {
                 path: '/ModelManagement/EvaluationMetricsManage/',
                 name: 'evaluationMetricsManage',
-                component: './ModelMngt/EvalMetricsMngt/EvalMetricsMngt'
+                component: './ModelMngt/EvalMetricsMngt/EvalMetricsMngt',
               },
               {
                 path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
-                component: './ModelMngt/EvalMetricsMngt/component/EditMetrics'
+                component: './ModelMngt/EvalMetricsMngt/component/EditMetrics',
               },
-              {
-                path: '/ModelManagement/avisualis',
-                component: './ModelMngt/Avisualis',
-                name: 'avisualis',
-              },
+              // {
+              //   path: '/ModelManagement/avisualis',
+              //   component: './ModelMngt/Avisualis',
+              //   name: 'avisualis',
+              // },
               {
                 path: '/ModelManagement/avisualis/templateList',
                 component: './ModelMngt/Avisualis/templateList',
@@ -228,10 +228,9 @@ export default [
                 component: './InferenceService/Detail',
                 authority: ['AI_ARTS_ALL'],
               },
-            ]
+            ],
           },
 
-          
           {
             path: '/ResourceMonitoring',
             name: 'resourceMonitoring',
@@ -254,7 +253,7 @@ export default [
             component: './VisualOperation',
             authority: ['AI_ARTS_ALL'],
           },
-          
+
           {
             path: '/Image',
             name: 'image',

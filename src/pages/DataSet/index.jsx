@@ -26,7 +26,7 @@ const DataSetList = () => {
   const addModalFormRef = useRef();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
 
   useEffect(() => {
@@ -35,11 +35,11 @@ const DataSetList = () => {
 
   const getData = async (text) => {
     setLoading(true);
-    const params = { 
-      ...pageParams, 
-      name: name, 
+    const params = {
+      ...pageParams,
+      name: name,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]
+      order: sortText[sortedInfo.order],
     };
     const { code, data } = await getDatasets(params);
     if (code === 0 && data) {
@@ -61,11 +61,12 @@ const DataSetList = () => {
     if (sorter.order !== false) {
       setSortedInfo(sorter);
     }
-  }
+  };
 
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
-      let res = null, text = '';
+      let res = null,
+        text = '';
       const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
@@ -94,7 +95,11 @@ const DataSetList = () => {
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
-      render: item => <Link to={{ pathname: '/dataManage/dataSet/detail', query: { id: item.id } }}>{item.name}</Link>,
+      render: (item) => (
+        <Link to={{ pathname: '/dataManage/dataSet/detail', query: { id: item.id } }}>
+          {item.name}
+        </Link>
+      ),
     },
     {
       title: '简介',
@@ -112,7 +117,7 @@ const DataSetList = () => {
       dataIndex: 'updatedAt',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'updatedAt' && sortedInfo.order,
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '更新版本',
@@ -121,29 +126,36 @@ const DataSetList = () => {
     {
       title: '是否已标注',
       dataIndex: 'isTranslated',
-      render: i => <span>{i === true ? '是' : '否'}</span>
+      render: (i) => <span>{i === true ? '是' : '否'}</span>,
     },
     {
       title: '操作',
-      render: item => {
+      render: (item) => {
         const { id } = item;
         return (
           <>
             <a onClick={() => onEditClick(item)}>编辑</a>
-            <a style={{ margin: '0 16px' }} onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}>下载</a>
-            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>删除</a>
+            <a
+              style={{ margin: '0 16px' }}
+              onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}
+            >
+              下载
+            </a>
+            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
+              删除
+            </a>
           </>
-        )
+        );
       },
     },
   ];
 
-  const onEditClick = item => {
-    setEditData(item); 
+  const onEditClick = (item) => {
+    setEditData(item);
     showModal(1);
   };
 
-  const onDelete = id => {
+  const onDelete = (id) => {
     confirm({
       title: '确定要删除该数据集吗？',
       icon: <ExclamationCircleOutlined />,
@@ -162,39 +174,46 @@ const DataSetList = () => {
           message.success('删除成功！');
         }
       },
-      onCancel() {}
+      onCancel() {},
     });
-  }
+  };
 
-  const showModal = type => {
+  const showModal = (type) => {
     setModalType(type);
     !type && setPathId(new Date().valueOf());
     setModalFlag(true);
-  }
+  };
 
   return (
     <PageHeaderWrapper>
       <Card>
         <div className={styles.datasetWrap}>
-          <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>新增数据集</Button>
+          <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>
+            新增数据集
+          </Button>
           <div className={styles.searchWrap}>
-            <Search placeholder="请输入数据集名称查询" enterButton onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })} onChange={e => setName(e.target.value)} />
+            <Search
+              placeholder="请输入数据集名称查询"
+              enterButton
+              onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
+              onChange={(e) => setName(e.target.value)}
+            />
             <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
           </div>
           <Table
             columns={columns}
             dataSource={dataSets.data}
-            rowKey={r => r.id}
+            rowKey={(r) => r.id}
             onChange={onSortChange}
             pagination={{
               total: dataSets.total,
               showQuickJumper: true,
-              showTotal: total => `总共 ${total} 条`,
+              showTotal: (total) => `总共 ${total} 条`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
               current: pageParams.pageNum,
-              pageSize: pageParams.pageSize
+              pageSize: pageParams.pageSize,
             }}
             loading={loading}
           />
@@ -216,10 +235,10 @@ const DataSetList = () => {
             </Button>,
           ]}
         >
-          <AddModalForm 
-            ref={addModalFormRef} 
-            setBtn={setBtnDisabled} 
-            modalType={modalType} 
+          <AddModalForm
+            ref={addModalFormRef}
+            setBtn={setBtnDisabled}
+            modalType={modalType}
             editData={editData}
             pathId={pathId}
           />

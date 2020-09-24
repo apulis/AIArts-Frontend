@@ -16,7 +16,7 @@ const DataSetDetail = (props) => {
 
   useEffect(() => {
     getData();
-  }, [id])
+  }, [id]);
 
   const getData = async () => {
     const { code, data, total } = await getDatasetDetail(id);
@@ -25,17 +25,17 @@ const DataSetDetail = (props) => {
     }
     setLoading(false);
   };
-  
+
   const getPanelHeader = (i, version) => {
     return (
       <div className={styles.panelHeader}>
         <h3>版本号: {version}</h3>
         {i === 0 && <Tag color="#1890ff">当前版本</Tag>}
       </div>
-    )
+    );
   };
 
-  if (loading) return (<PageLoading />)
+  if (loading) return <PageLoading />;
 
   return (
     <PageHeaderWrapper title={false}>
@@ -52,17 +52,21 @@ const DataSetDetail = (props) => {
                 <Descriptions size="small" column={2}>
                   <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
                   <Descriptions.Item label="存储路径">{path}</Descriptions.Item>
-                  <Descriptions.Item label="创建时间">{moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-                  <Descriptions.Item label="更新时间">{moment(updatedAt).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+                  <Descriptions.Item label="创建时间">
+                    {moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="更新时间">
+                    {moment(updatedAt).format('YYYY-MM-DD HH:mm:ss')}
+                  </Descriptions.Item>
                   <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
-            )
+            );
           })}
         </Collapse>
       </PageHeader>
     </PageHeaderWrapper>
-  )
-}
+  );
+};
 
 export default DataSetDetail;

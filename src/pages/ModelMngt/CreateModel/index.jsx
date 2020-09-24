@@ -1,5 +1,16 @@
 import { Link, history } from 'umi';
-import { message, Modal, Form, Input, Button, Card, PageHeader, Tooltip, Radio, Upload } from 'antd';
+import {
+  message,
+  Modal,
+  Form,
+  Input,
+  Button,
+  Card,
+  PageHeader,
+  Tooltip,
+  Radio,
+  Upload,
+} from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { FolderOpenOutlined, InboxOutlined } from '@ant-design/icons';
 import ModalForm from './components/ModalForm';
@@ -10,7 +21,7 @@ import { modelNameReg, jobNameReg } from '@/utils/reg';
 const { TextArea } = Input;
 const { Dragger } = Upload;
 
-const CreateModel = props => {
+const CreateModel = (props) => {
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -25,14 +36,16 @@ const CreateModel = props => {
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource();
     if (res.code === 0) {
-      let { data: { codePathPrefix } } = res;
+      let {
+        data: { codePathPrefix },
+      } = res;
       if (!/\/$/.test(codePathPrefix)) {
-        codePathPrefix = codePathPrefix + '/' 
+        codePathPrefix = codePathPrefix + '/';
       }
-      
+
       setCodePathPrefix(codePathPrefix);
     }
-  }
+  };
 
   const onFinish = async (values) => {
     // console.log(values);
@@ -40,11 +53,11 @@ const CreateModel = props => {
     const data = {
       name,
       description,
-      paramPath: argumentPath ? (codePathPrefix + argumentPath) : undefined,
+      paramPath: argumentPath ? codePathPrefix + argumentPath : undefined,
       jobId: jobId || '',
       codePath: modelPath || '',
       isAdvance: false,
-    }
+    };
 
     const { code, msg } = await addModel(data);
 
@@ -69,11 +82,11 @@ const CreateModel = props => {
     setVisible(false);
   };
 
-  const handleSubmit = item => {
+  const handleSubmit = (item) => {
     // console.log(item)
     if (!!item) {
       const outPath = item.outputPath.substr(codePathPrefix.length);
-      form.setFieldsValue({job: item.name, jobId: item.id, argumentPath: outPath});
+      form.setFieldsValue({ job: item.name, jobId: item.id, argumentPath: outPath });
     }
     setVisible(false);
   };
@@ -81,7 +94,7 @@ const CreateModel = props => {
   const uploadProps = {
     name: 'data',
     data: {
-      dir: new Date().valueOf()
+      dir: new Date().valueOf(),
     },
     multiple: false,
     action: '/ai_arts/api/files/upload/model',
@@ -95,15 +108,16 @@ const CreateModel = props => {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        console.log(111, info.fileList)
+        console.log(111, info.fileList);
         setFileList(info.fileList);
         setBtnDisabled(false);
         message.success(`${info.file.name}文件上传成功！`);
 
         // 获取上传路径
-        const { data: { path }} = info.fileList[0].response;
-        form.setFieldsValue({modelPath: path});
-
+        const {
+          data: { path },
+        } = info.fileList[0].response;
+        form.setFieldsValue({ modelPath: path });
       } else if (status === 'error') {
         message.error(`${info.file.name} 文件上传失败！`);
         setBtnDisabled(false);
@@ -112,20 +126,28 @@ const CreateModel = props => {
     beforeUpload(file) {
       const { type, size } = file;
       return new Promise((resolve, reject) => {
-        if (fileList.length && fileList.findIndex(i => i.name === name && i.type === type) > -1) {
+        if (fileList.length && fileList.findIndex((i) => i.name === name && i.type === type) > -1) {
           message.warning(`不能上传相同的文件！`);
           reject(file);
         }
-        if (!(type === 'application/x-zip-compressed' || type === 'application/x-tar' || type === 'application/x-gzip' || type === 'application/zip' || type === 'application/gzip')) {
+        if (
+          !(
+            type === 'application/x-zip-compressed' ||
+            type === 'application/x-tar' ||
+            type === 'application/x-gzip' ||
+            type === 'application/zip' ||
+            type === 'application/gzip'
+          )
+        ) {
           message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
           reject(file);
         }
         resolve(file);
-      });      
+      });
     },
     onRemove(file) {
       if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
-    }
+    },
   };
 
   const layout = {
@@ -142,7 +164,7 @@ const CreateModel = props => {
       >
         <div
           style={{
-            padding: '24px'
+            padding: '24px',
           }}
         >
           <Form
@@ -155,100 +177,91 @@ const CreateModel = props => {
               {...layout}
               name="name"
               label="名称"
-              rules={[{ required: true, message: '名称不能为空!' }, { ...modelNameReg }, { ...jobNameReg }]}
+              rules={[
+                { required: true, message: '名称不能为空!' },
+                { ...modelNameReg },
+                { ...jobNameReg },
+              ]}
             >
               <Input placeholder="请输入模型名称" />
             </Form.Item>
-            <Form.Item
-              {...layout}     
-              name="description"
-              label="描述"
-              rules={[{ max: 256 }]}
-            >
+            <Form.Item {...layout} name="description" label="描述" rules={[{ max: 256 }]}>
               <TextArea rows={4} placeholder="请输入描述信息" />
-            </Form.Item>          
+            </Form.Item>
             <Form.Item
               {...layout}
               label="模型文件"
               name="modelFileType"
-              rules={[{ required: true }]} 
+              rules={[{ required: true }]}
             >
-              <Radio.Group onChange={e => setModelFileType(e.target.value)}>
+              <Radio.Group onChange={(e) => setModelFileType(e.target.value)}>
                 <Radio value={'1'}>选择模型文件</Radio>
                 <Radio value={'2'}>上传模型文件</Radio>
               </Radio.Group>
             </Form.Item>
-            {modelFileType == '1' && <Form.Item
-                {...layout}
-                label="训练作业"
-                required
-              >
+            {modelFileType == '1' && (
+              <Form.Item {...layout} label="训练作业" required>
                 <Form.Item
                   name="job"
                   rules={[{ required: true, message: '训练作业不能为空!' }]}
-                  style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}              
+                  style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}
                 >
-                  <Input placeholder="请选择训练作业名称" disabled/>
+                  <Input placeholder="请选择训练作业名称" disabled />
                 </Form.Item>
                 <Form.Item
                   style={{ display: 'inline-block', width: 'calc(10% - 4px)', margin: '0 0 0 8px' }}
                 >
                   <Button icon={<FolderOpenOutlined />} onClick={showJobModal}></Button>
                 </Form.Item>
-            </Form.Item>}       
-            {modelFileType == '2' && <Form.Item
-              labelCol={{ span: 3 }}
-              wrapperCol={{ span: 14 }}
-              label="上传文件"
-              name="file"
-              rules={[{ required: true, message: '请上传文件！' }]}
-              valuePropName="file"
-            >
-              <Dragger {...uploadProps}>
-                <p className="ant-upload-drag-icon">
-                  <InboxOutlined />
-                </p>
-                <p className="ant-upload-text">请点击或拖入文件上传</p>
-                <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）</p>
-              </Dragger>
-            </Form.Item>}
-            {modelFileType === '1' && <Form.Item
-              {...layout}
-              name="argumentPath"
-              label="模型权重文件"
-              rules={[{ required: true, message: '模型权重文件不能为空!' }]}
-            >
-              <Input addonBefore={codePathPrefix} placeholder="请输入模型权重文件" />
-            </Form.Item>             }
-            <Form.Item
-                name="jobId"
-                hidden            
+              </Form.Item>
+            )}
+            {modelFileType == '2' && (
+              <Form.Item
+                labelCol={{ span: 3 }}
+                wrapperCol={{ span: 14 }}
+                label="上传文件"
+                name="file"
+                rules={[{ required: true, message: '请上传文件！' }]}
+                valuePropName="file"
               >
-                <Input type="hidden"/>
-            </Form.Item>          
-            <Form.Item
-                name="modelPath"
-                hidden            
+                <Dragger {...uploadProps}>
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">请点击或拖入文件上传</p>
+                  <p className="ant-upload-hint">
+                    （只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）
+                  </p>
+                </Dragger>
+              </Form.Item>
+            )}
+            {modelFileType === '1' && (
+              <Form.Item
+                {...layout}
+                name="argumentPath"
+                label="模型权重文件"
+                rules={[{ required: true, message: '模型权重文件不能为空!' }]}
               >
-                <Input type="hidden"/>
-            </Form.Item>         
-            <Form.Item
-              style={{ float: 'right' }}
-            >
-              <Button type="primary" htmlType="submit" disabled={btnDisabled}>立即创建</Button>
+                <Input addonBefore={codePathPrefix} placeholder="请输入模型权重文件" />
+              </Form.Item>
+            )}
+            <Form.Item name="jobId" hidden>
+              <Input type="hidden" />
+            </Form.Item>
+            <Form.Item name="modelPath" hidden>
+              <Input type="hidden" />
+            </Form.Item>
+            <Form.Item style={{ float: 'right' }}>
+              <Button type="primary" htmlType="submit" disabled={btnDisabled}>
+                立即创建
+              </Button>
             </Form.Item>
           </Form>
         </div>
       </PageHeader>
       {/* 选择训练作业弹框 */}
-      {
-        visible && <ModalForm
-        visible={visible}
-        onCancel={handleCancel}
-        onSubmit={handleSubmit}
-      />
-      }
-    </>  
+      {visible && <ModalForm visible={visible} onCancel={handleCancel} onSubmit={handleSubmit} />}
+    </>
   );
 };
 

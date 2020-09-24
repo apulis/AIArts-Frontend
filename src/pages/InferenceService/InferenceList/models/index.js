@@ -1,94 +1,96 @@
-import { pagination as defaultPagination } from '@/config'
-import { normalizeTableResult } from '@/utils/utils'
-import { getInferences, addInference, updateInference } from '../services'
+import { pagination as defaultPagination } from '@/config';
+import { normalizeTableResult } from '@/utils/utils';
+import { getInferences, addInference, updateInference } from '../services';
 
 export default {
   namespace: 'inferenceList',
   state: {
     data: {
       list: [],
-      pagination: defaultPagination
-    }
+      pagination: defaultPagination,
+    },
   },
   reducers: {
-    save (state, { payload }) {
+    save(state, { payload }) {
       return {
         ...state,
-        data: payload
-      }
-    }
+        data: payload,
+      };
+    },
   },
   effects: {
-    *fetch ({ payload = {} }, { call, put, select }) {
+    *fetch({ payload = {} }, { call, put, select }) {
       try {
-        const pagination = yield select(state => state.inferenceList.data.pagination)
-        const { pageNum = pagination.pageNum, pageSize = pagination.pageSize, ...restParams } = payload
+        const pagination = yield select((state) => state.inferenceList.data.pagination);
+        const {
+          pageNum = pagination.pageNum,
+          pageSize = pagination.pageSize,
+          ...restParams
+        } = payload;
         const params = {
           ...restParams,
           pageNum,
-          pageSize
-        }
-        const {
-          code, data, msg
-        } = yield call(getInferences, params)
-        let error = null
+          pageSize,
+        };
+        const { code, data, msg } = yield call(getInferences, params);
+        let error = null;
         if (code === 0) {
           const result = {
             list: data.inferences || [],
             pagination: {
               current: data.pageNum || 1,
               pageSize: data.pageSize || 10,
-              total: data.total
-            }
-          }          
+              total: data.total,
+            },
+          };
           yield put({
             type: 'save',
-            payload: result
-          })
+            payload: result,
+          });
         } else {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
-        return { error, data: null }
+        return { error, data: null };
       }
     },
-    *add ({ payload }, { call }) {
+    *add({ payload }, { call }) {
       try {
         const {
-          data: { code, data, msg }
-        } = yield call(addInference, payload)
+          data: { code, data, msg },
+        } = yield call(addInference, payload);
 
         // console.log('======', code, data, msg)
 
-        let error = null
+        let error = null;
         if (code !== 0) {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
         return {
           error,
-          data: null
-        }
+          data: null,
+        };
       }
     },
-    *update ({ payload }, { call }) {
+    *update({ payload }, { call }) {
       try {
         const {
-          data: { code, data, msg }
-        } = yield call(updateInference, payload)
-        let error = null
+          data: { code, data, msg },
+        } = yield call(updateInference, payload);
+        let error = null;
         if (code !== 0) {
-          error = { code, msg }
+          error = { code, msg };
         }
-        return { error, data }
+        return { error, data };
       } catch (error) {
         return {
           error,
-          data: null
-        }
+          data: null,
+        };
       }
-    }
-  }
-}
+    },
+  },
+};

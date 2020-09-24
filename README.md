@@ -1,9 +1,9 @@
 # AIArts Platform
 
-
 ## Docker 部署方式
 
 在当前目录，确定为最新代码后
+
 ```
 // 编译镜像
 docker build -t apulistech/ai-arts-frontend .

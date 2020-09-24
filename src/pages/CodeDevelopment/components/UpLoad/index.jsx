@@ -28,12 +28,12 @@ const CodeUpload = (props) => {
     },
     beforeUpload(file) {
       const { type, size } = file;
-      return true
+      return true;
     },
     onRemove(file) {
       if (fileList.length && file.uid === fileList[0].uid) setFileList([]);
-    }
-  }
+    },
+  };
   return (
     <>
       <Dragger {...uploadProps}>
@@ -43,6 +43,6 @@ const CodeUpload = (props) => {
         <p className="ant-upload-text">请点击或拖入文件上传（支持多文件）</p>
       </Dragger>
     </>
-  )
-}
-export default CodeUpload
+  );
+};
+export default CodeUpload;

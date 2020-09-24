@@ -7,7 +7,7 @@ import { notification, message } from 'antd';
 import { stringify } from 'querystring';
 import { USER_LOGIN_URL } from '@/utils/const';
 
-const prefix = '/ai_arts/api'
+const prefix = '/ai_arts/api';
 
 export const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -32,8 +32,8 @@ export const bizCodeMessage = {
   30007: '该数据集路径不符合规则！',
   20001: '请求参数错误！',
   30010: '该数据集正在使用，不能删除！',
-  30603: '推送失败！'
-}
+  30603: '推送失败！',
+};
 
 /**
  * 异常处理程序
@@ -63,7 +63,7 @@ export const errorHandler = async (error) => {
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
-    
+
     if (status === 401) {
       const href = window.location.href;
       if (!/localhost/.test(href)) {
@@ -73,10 +73,11 @@ export const errorHandler = async (error) => {
         window.location.href = `${USER_LOGIN_URL}?` + queryString;
       }
     }
-    !hasMessage && notification.error({
-      message: `请求错误 ${status}: ${url}`,
-      description: errorText,
-    });
+    !hasMessage &&
+      notification.error({
+        message: `请求错误 ${status}: ${url}`,
+        description: errorText,
+      });
   }
   return response;
 };
@@ -88,7 +89,7 @@ const request = extend({
   errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
-  prefix: prefix
+  prefix: prefix,
 });
 
 request.interceptors.request.use(async (url, options) => {

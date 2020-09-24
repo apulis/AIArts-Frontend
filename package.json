@@ -30,7 +30,8 @@
     "test": "umi test",
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",

@@ -2,13 +2,13 @@ import request from '@/utils/request';
 
 export async function getModels(params) {
   return await request(`/models`, {
-    params
+    params,
   });
 }
 
 export async function getModel(modelId) {
   return await request(`/models/${modelId}`, {
-    method: 'GET'
+    method: 'GET',
   });
 }
 
@@ -28,12 +28,12 @@ export async function addModel(data) {
 export async function updateModel(params = {}) {
   return await request(`/models/${params.id}`, {
     method: 'POST',
-    data: {description: params.description}
+    data: { description: params.description },
   });
 }
 
 export async function downloadModel(modelId) {
   return await request(`/files/download/model/${modelId}`, {
-    method: 'GET'
+    method: 'GET',
   });
 }

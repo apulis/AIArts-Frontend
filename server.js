@@ -1,14 +1,14 @@
-const http = require('http')
-const path = require('path')
-const { exec } = require('child_process')
+const http = require('http');
+const path = require('path');
+const { exec } = require('child_process');
 
-const bodyParser = require('body-parser')
-const express = require('express')
-const ecstatic = require('ecstatic')
-const history = require('connect-history-api-fallback')
+const bodyParser = require('body-parser');
+const express = require('express');
+const ecstatic = require('ecstatic');
+const history = require('connect-history-api-fallback');
 
-const app = express()
-app.use(bodyParser.json())
+const app = express();
+app.use(bodyParser.json());
 
 // app.post('//update', (req, res) => {
 //   console.log('pull start')
@@ -28,8 +28,8 @@ app.use(bodyParser.json())
 //     }
 //   })
 // })
-app.use(history())
+app.use(history());
 
-app.use(ecstatic({ root: path.join(__dirname, './dist') }))
+app.use(ecstatic({ root: path.join(__dirname, './dist') }));
 
-http.createServer(app).listen(process.argv[2] || 3084)
+http.createServer(app).listen(process.argv[2] || 3084);

@@ -4,7 +4,12 @@ import { Link, history } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { sortText, PAGEPARAMS } from '@/utils/const';
-import { fetchVisualizations, deleteVisualization, switchVisualizationJobStatus, getTensorboardUrl } from '@/services/modelTraning';
+import {
+  fetchVisualizations,
+  deleteVisualization,
+  switchVisualizationJobStatus,
+  getTensorboardUrl,
+} from '@/services/modelTraning';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 
@@ -36,7 +41,7 @@ const Visualization = () => {
   const [total, setTotal] = useState(0);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
 
   const getVisualizations = async () => {
@@ -99,7 +104,7 @@ const Visualization = () => {
       Modal.warning({
         title: '当前任务尚未停止',
         content: '请先停止该任务',
-        okText: '确定'
+        okText: '确定',
       });
       return;
     }
@@ -124,8 +129,7 @@ const Visualization = () => {
           message.error(`删除失败${error.msg}` || `删除失败`);
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
 
@@ -135,7 +139,7 @@ const Visualization = () => {
       title: '作业名称',
       key: 'name',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
@@ -151,61 +155,94 @@ const Visualization = () => {
       title: '创建时间',
       key: 'createTime',
       render(_text, item) {
-        return (
-          <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>
-        );
+        return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order
+      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order,
     },
     {
       dataIndex: 'description',
-      title: '描述'
+      title: '描述',
     },
     {
       title: '操作',
       render(_text, item) {
         return (
           <>
-            <Button type='link' onClick={() => { openTensorboard(item.id); }} disabled={!['running'].includes(item.status)}>打开</Button>
-            {
-              ['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)
-                ? <Button type="link" onClick={() => changeJobStatus(item.id, 'pause')} disabled={!['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)}>停止</Button>
-                : <Button type="link" onClick={() => changeJobStatus(item.id, 'running')} disabled={!['paused', 'killed'].includes(item.status)} >运行</Button>
-            }
             <Button
               type="link"
-              onClick={() => handleDelete(item)}
-              style={{ color: 'red' }}
+              onClick={() => {
+                openTensorboard(item.id);
+              }}
+              disabled={!['running'].includes(item.status)}
             >
+              打开
+            </Button>
+            {['unapproved', 'queued', 'scheduling', 'running'].includes(item.status) ? (
+              <Button
+                type="link"
+                onClick={() => changeJobStatus(item.id, 'pause')}
+                disabled={!['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)}
+              >
+                停止
+              </Button>
+            ) : (
+              <Button
+                type="link"
+                onClick={() => changeJobStatus(item.id, 'running')}
+                disabled={!['paused', 'killed'].includes(item.status)}
+              >
+                运行
+              </Button>
+            )}
+            <Button type="link" onClick={() => handleDelete(item)} style={{ color: 'red' }}>
               删除
             </Button>
           </>
         );
-      }
-    }
+      },
+    },
   ];
 
   return (
     <PageHeaderWrapper>
-      <Card bordered={false}
+      <Card
+        bordered={false}
         bodyStyle={{
-          padding: '8'
+          padding: '8',
         }}
       >
         <Link to="/model-training/createVisualization">
-          <Button type="primary" href="">创建可视化作业</Button>
+          <Button type="primary" href="">
+            创建可视化作业
+          </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
-          <Select style={{ width: 120, marginRight: '20px' }} defaultValue={formValues.status} onChange={handleChangeStatus}>
-            {
-              statusList.map(status => (
-                <Option key={status.value} value={status.value}>{status.label}</Option>
-              ))
-            }
+          <Select
+            style={{ width: 120, marginRight: '20px' }}
+            defaultValue={formValues.status}
+            onChange={handleChangeStatus}
+          >
+            {statusList.map((status) => (
+              <Option key={status.value} value={status.value}>
+                {status.label}
+              </Option>
+            ))}
           </Select>
-          <Search style={{ width: '200px' }} placeholder="输入作业名称查询" onSearch={() => { setPageParams({ ...pageParams, ...{ pageNum: 1 } }); getVisualizations(); }} onChange={e => onJobNameChange(e.target.value)} />
-          <Button style={{ left: '20px' }} icon={<SyncOutlined />} onClick={() => getVisualizations()}></Button>
+          <Search
+            style={{ width: '200px' }}
+            placeholder="输入作业名称查询"
+            onSearch={() => {
+              setPageParams({ ...pageParams, ...{ pageNum: 1 } });
+              getVisualizations();
+            }}
+            onChange={(e) => onJobNameChange(e.target.value)}
+          />
+          <Button
+            style={{ left: '20px' }}
+            icon={<SyncOutlined />}
+            onClick={() => getVisualizations()}
+          ></Button>
         </div>
         <Table
           loading={tableLoading}
@@ -227,7 +264,7 @@ const Visualization = () => {
           }}
         />
       </Card>
-    </PageHeaderWrapper >
+    </PageHeaderWrapper>
   );
 };
 

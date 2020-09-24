@@ -1,13 +1,13 @@
 import request from '@/utils/request';
 
 export async function getModels(params) {
-  return request(`/models`, {
+  return await request(`/models`, {
     params
   });
 }
 
 export async function deleteModel(modelId) {
-  return request(`/pretrainedModels/${modelId}`, {
+  return await request(`/pretrainedModels/${modelId}`, {
     method: 'DELETE',
   });
 }
@@ -22,6 +22,6 @@ export async function addModel(data) {
 export async function updateModel(params = {}) {
   return await request(`/pretrainedModels/${params.id}`, {
     method: 'POST',
-    data: {description: params.description}
+    data: { description: params.description },
   });
 }

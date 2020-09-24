@@ -26,7 +26,7 @@ export default {
   'menu.modelTraining.pretraindedModels': '预置模型',
   'menu.modelManagement.modelEvaluation': '模型评估',
   'menu.modelManagement.modelEvaluationList': '评估列表',
-  'menu.modelManagement.evaluationMetricsManage':'评估参数管理',
+  'menu.modelManagement.evaluationMetricsManage': '评估参数管理',
   'menu.modelManagement.avisualis': '可视化建模',
   'menu.inferenceService': '推理服务',
   'menu.inferenceService.center': '中心推理',

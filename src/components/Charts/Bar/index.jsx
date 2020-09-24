@@ -51,11 +51,11 @@ class Bar extends Component {
     window.removeEventListener('resize', this.resize);
   }
 
-  handleRoot = n => {
+  handleRoot = (n) => {
     this.root = n;
   };
 
-  handleRef = n => {
+  handleRef = (n) => {
     this.node = n;
   };
 
