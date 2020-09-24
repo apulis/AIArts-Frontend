@@ -5,7 +5,7 @@ const prefix = 'edge_inferences';
 const CancelToken = Request.CancelToken;
 
 export async function getEdgeInferences(params) {
-  return request(`/${prefix}`, {
+  return await request(`/${prefix}`, {
     params: params,
     cancelToken: new CancelToken(function(c) {
       getEdgeInferences.cancel = c;
@@ -21,11 +21,11 @@ export async function submit(data) {
 }
 
 export async function getTypes() {
-  return request(`/${prefix}/conversion_types`);
+  return await request(`/${prefix}/conversion_types`);
 }
 
 export async function getFD() {
-  return request(`/${prefix}/fdinfo`);
+  return await request(`/${prefix}/fdinfo`);
 }
 
 

@@ -6,7 +6,7 @@ import { deleteJob } from '@/services/modelTraning'
 const CancelToken = Request.CancelToken;
 
 export async function getCodes(params) {
-  return request('/codes', {
+  return await request('/codes', {
     params,
     cancelToken: new CancelToken(function(c) {
       getCodes.cancel = c;
@@ -15,21 +15,21 @@ export async function getCodes(params) {
 }
 
 export async function searchData(params) {
-  return request('/codes', {
+  return await request('/codes', {
     params,
   });
 }
 
 export async function stopCode(id) {
-  return request(`/codes/${id}`, { method: 'DELETE' })
+  return await request(`/codes/${id}`, { method: 'DELETE' })
 }
 
 export async function deleteCode(id) {
-  return deleteJob(id)
+  return await deleteJob(id)
 }
 
 export async function getJupyterUrl(id) {
-  return request(`/codes/${id}/jupyter`)
+  return await request(`/codes/${id}/jupyter`)
 }
 
 export async function getResource() {
@@ -38,7 +38,7 @@ export async function getResource() {
 }
 
 export async function postCode1(data) {
-  return request(`/codes`, {
+  return await request(`/codes`, {
     method: 'POST',
     data
   });
