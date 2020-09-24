@@ -293,9 +293,6 @@ const ModelTraining = (props) => {
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     }
     values.params = params;
-    if (distributedJob) {
-      values.deviceNum = values.deviceTotal;
-    }
     if (typeEdit) {
       console.log('params:', paramsDetailedData);
       let editParams = {
