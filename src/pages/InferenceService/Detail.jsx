@@ -79,20 +79,28 @@ const InferenceDetail = (props) => {
       return;
     }
     if (info.file.status === 'done') {
+      const res = info.file.response;
       getBase64(info.file.originFileObj, (imageUrl) => {
-        setImageUrl(imageUrl);
+        if (Array.isArray(res.data)) {
+          setImageUrl(imageUrl);
+        }
         setLoading(false);
       });
-      const res = info.file.response;
       if (res.code === 0) {
-        const recognizeResult = [];
-        res.data.forEach((val) => {
-          const o = {};
-          o.key = val[0];
-          o.value = val[1];
-          recognizeResult.push(o);
-        });
-        setRecognizeResult(recognizeResult);
+        if (Array.isArray(res.data)) {
+          const recognizeResult = [];
+          res.data.forEach((val) => {
+            const o = {};
+            o.key = val[0];
+            o.value = val[1];
+            recognizeResult.push(o);
+          });
+          setRecognizeResult(recognizeResult);
+        } else if (typeof res.data === 'string') {
+          setImageUrl('data:image/jpg;base64,' + res.data);
+        }
+        setLoading(false);
+        
       }
     }
 
@@ -160,7 +168,7 @@ const InferenceDetail = (props) => {
               onChange={handleChange}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="avatar" style={{ width: '620px' }} />
+                <img src={imageUrl} alt="avatar" title="重新上传" style={{ width: '620px' }} />
               ) : (
                 uploadButton
               )}
