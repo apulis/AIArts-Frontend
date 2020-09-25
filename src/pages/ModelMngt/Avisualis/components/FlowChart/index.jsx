@@ -279,12 +279,12 @@ const FlowChart = forwardRef((props, ref) => {
         y: -200
       });
       _graph.updateItem(_graph.findById('MaxNet'), {
-        x: 0,
+        x: 200,
         y: 0
       });
 
       _graph.updateItem(_graph.findById('DevResNet'), {
-        x: 200,
+        x: 0,
         y: 0
       });
       
