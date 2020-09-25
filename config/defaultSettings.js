@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '依瞳人工智能平台',
+  title: '华为深度学习系统',
   pwa: false,
   iconfontUrl: '',
 };
