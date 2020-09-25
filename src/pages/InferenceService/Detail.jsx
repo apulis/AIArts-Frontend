@@ -110,15 +110,15 @@ const InferenceDetail = (props) => {
     }
   };
   const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    const isImage = ['image/jpeg', 'image/png', 'image/png', 'image/bmg', 'image/tif', 'image/gif'].includes(filel.type);
     if (!isJpgOrPng) {
-      message.error('只能上传 JPG 或 PNG 格式的文件');
+      message.error('只能上传图片');
     }
-    const isLt5M = file.size / 1024 / 1024 < 10;
-    if (!isLt5M) {
-      message.error('图片不能大于 10M');
+    const isLt100M = file.size / 1024 / 1024 < 100;
+    if (!isLt100M) {
+      message.error('图片不能大于 100M');
     }
-    return isJpgOrPng && isLt5M;
+    return isImage && isLt100M;
   };
   const beginAnalyze = () => {
     setBeginAnalizeLoading(true);
