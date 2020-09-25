@@ -27,6 +27,7 @@ import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 import FormItem from 'antd/lib/form/FormItem';
 import { checkIfCanDelete } from '@/utils/utils.js';
+import { jobNameReg } from '@/utils/reg';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -401,6 +402,7 @@ const CodeList = (props) => {
       const res = await createSaveImage(values);
       if (res.code === 0) {
         renderTable();
+        message.success('成功保存该镜像');
         setSaveImageModalVisible(false);
       }
     }
@@ -493,10 +495,10 @@ const CodeList = (props) => {
         }}
       >
         <Form form={form}>
-          <Form.Item {...commonLayout} label="名称" name="name" rules={[{ required: true }]}>
+          <Form.Item {...commonLayout} label="名称" name="name" rules={[{ required: true }, jobNameReg]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
-          <Form.Item {...commonLayout} label="版本" name="version" rules={[{ required: true }]}>
+          <Form.Item {...commonLayout} label="版本" name="version" rules={[{ required: true }, jobNameReg]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
           <Form.Item {...commonLayout} label="描述" name="description" rules={[{ required: true }]}>
