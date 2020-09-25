@@ -88,7 +88,7 @@ const AvisualisDetail = (props) => {
             key: childName,
             config: config,
             disabled: childrenDisabled,
-            treeIdx: idx,
+            treedx: idx,
             child: children || [],
             fName: name
           })

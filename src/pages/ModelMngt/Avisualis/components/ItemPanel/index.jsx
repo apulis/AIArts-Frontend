@@ -20,13 +20,13 @@ const ItemPanel = (props) => {
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
-  const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config.length > 0;
+  const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config && selectItem._cfg.model.config.length > 0;
 
   useEffect(() => {
     if (selectItem) {
-      const selectId = selectItem._cfg.model.id;
-      const child = treeData.find(i => selectId.split('-')[0] === i.key).children;
-      setChangeNodeOptions(child.filter(i => i.key !== selectId));
+      const { id, treeIdx } = selectItem._cfg.model;
+      const child = treeData[treeIdx].children;
+      setChangeNodeOptions(child.filter(i => i.key !== id));
     }
   }, [selectItem]);
 
@@ -46,12 +46,6 @@ const ItemPanel = (props) => {
       _values.datasetPath = nodes[0].config[0].value;
       _values.outputPath = nodes[nodes.length - 1].config[0].value;
       _values.paramPath = _values.outputPath;
-      const newNodes = nodes.map(i => {
-        return {
-          ...i,
-          id: i.id.split('-')[0]
-        }
-      });
       const newEdges = edges.map(i => {
         const { source, target } = i;
         return {
@@ -62,7 +56,7 @@ const ItemPanel = (props) => {
       let submitData = {
         ...addFormData,
         ..._values,
-        nodes: newNodes,
+        nodes: nodes,
         edges: newEdges,
         isAdvance: false
       };
@@ -88,17 +82,17 @@ const ItemPanel = (props) => {
       const { type, value, key, options } = i;
       if (type === 'string' || type === 'disabled') {
         return (
-        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+        <Form.Item key={key} name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
           <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
         </Form.Item>)
       } else if (type === 'number') {
         return (
-        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
+        <Form.Item key={key} name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
           <InputNumber style={{ width: '100%' }} value={value} />
         </Form.Item>)
       } else if (type === 'select') {
         return (
-        <Form.Item key={id} name={`${id}-${key}`} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
+        <Form.Item key={key} name={key} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
           <Select placeholder="请选择" value={value}>
             {options.map(o => <Option key={o} value={o}>{o}</Option>)}
           </Select>
@@ -112,8 +106,8 @@ const ItemPanel = (props) => {
     form.validateFields().then(async (values) => {
       const newValues = Object.keys(values).map(i => values[i]);
       const cloneData = _.cloneDeep(flowChartData);
-      const selectIdx = selectItem._cfg.model.idx;
-      cloneData.nodes[selectIdx].config.forEach((m, n) => {
+      const selectId = selectItem._cfg.model.id;
+      cloneData.nodes[cloneData.nodes.findIndex(i => i.id === selectId)].config.forEach((m, n) => {
         m.value = newValues[n];
       });
       setFlowChartData(cloneData);
@@ -141,17 +135,12 @@ const ItemPanel = (props) => {
       </div>
       <Descriptions title="模型详情"></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
-      {hasSelectItem &&
-        <>
-          <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
-          <Form form={form}>
-            {getConfig()}
-          </Form>
-        </>}
-        <div style={{ float: 'right', textAlign: 'right' }}>
-          {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
-          {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>}
-        </div>
+      <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
+      {hasSelectItem && <Form form={form}>{getConfig()}</Form>}
+      <div style={{ float: 'right', textAlign: 'right' }}>
+        {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
+        {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>}
+      </div>
       {modalFlag && (
         <Modal
           title="更换节点"

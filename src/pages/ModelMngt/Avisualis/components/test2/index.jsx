@@ -50,20 +50,18 @@ const FlowChart = forwardRef((props, ref) => {
   const { panelApiData, treeData } = avisualis;
   const data = {
     nodes: [
-      { id: 'node1',comboId: 'combo1', anchorPoints: anchorPoints },
-      { id: 'node2', comboId: 'combo1', anchorPoints: anchorPoints },
-      { id: 'node3', comboId: 'combo3', anchorPoints: anchorPoints },
-      { id: 'node4', comboId: 'combo4', anchorPoints: anchorPoints },
-      { id: 'node5', comboId: 'combo1', anchorPoints: anchorPoints },
-    ],
-    edges: [
-      { source: 'node1', target: 'node3' },
-      { source: 'node3', target: 'node4' },
+      { id: 'node1', x: 250, y: 200, comboId: 'combo1' },
+      { id: 'node2', x: 300, y: 200, comboId: 'combo1' },
+      { id: 'node3', x: 100, y: 200, comboId: 'combo3' },
     ],
     combos: [
-      { id: 'combo1', label: 'Combo 1', parentId: 'combo2', anchorPoints: anchorPoints },
-      { id: 'combo2', label: 'Combo 2', anchorPoints: anchorPoints },
-      { id: 'combo3', label: 'Combo 3', anchorPoints: anchorPoints },
+      { id: 'combo1', label: 'Combo 1', parentId: 'combo2', collapsed: true },
+      { id: 'combo2', label: 'Combo 2', collapsed: true },
+      { id: 'combo3', label: 'Combo 3', collapsed: true},
+    ],
+    edges: [
+      // { source: 'node1', target: 'node3' }, 
+      { source: 'node3', target: 'node1' },
     ],
   };
   useImperativeHandle(ref, () => ({
@@ -206,8 +204,8 @@ const FlowChart = forwardRef((props, ref) => {
       height,
       layout: {
         type: 'dagre',
-        ranksep: 80,
-        align: 'UR',
+        // ranksep: 80,
+        // align: 'UR',
         controlPoints: true,
       },
       defaultNode: {
@@ -244,6 +242,7 @@ const FlowChart = forwardRef((props, ref) => {
       modes: {
         default: [
           'zoom-canvas',
+          'drag-combo',
           {
             type: 'click-select',
             multiple: false
