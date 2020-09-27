@@ -137,7 +137,7 @@ const InferenceDetail = (props) => {
   };
   const jobRunning = jobDetail.jobStatus === 'running';
   const uploadButton = (
-    <div>
+    <div style={{height: '104px', width: '104px', paddingTop: '30px'}}>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div className="ant-upload-text">{loading ? '识别中' : '上传图片'}</div>
     </div>
