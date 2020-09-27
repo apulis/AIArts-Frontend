@@ -498,7 +498,7 @@ const CodeList = (props) => {
           <Form.Item {...commonLayout} label="名称" name="name" rules={[{ required: true }, jobNameReg]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
-          <Form.Item {...commonLayout} label="版本" name="version" rules={[{ required: true }, jobNameReg]}>
+          <Form.Item {...commonLayout} label="版本" name="version" rules={[{ required: true },{ pattern: /^[A-Za-z0-9|\.]+$/, message: '只允许数字，英文字母和小数点' }]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
           <Form.Item {...commonLayout} label="描述" name="description" rules={[{ required: true }]}>
