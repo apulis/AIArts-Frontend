@@ -123,7 +123,7 @@ const CodeCreate = (props) => {
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
         values.deviceType,
-        values.numPsWorker,
+        values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum,
         { nodeNum: values.numPs },
       )
     ) {
