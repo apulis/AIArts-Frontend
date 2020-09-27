@@ -110,8 +110,8 @@ const InferenceDetail = (props) => {
     }
   };
   const beforeUpload = (file) => {
-    const isImage = ['image/jpeg', 'image/png', 'image/png', 'image/bmg', 'image/tif', 'image/gif'].includes(filel.type);
-    if (!isJpgOrPng) {
+    const isImage = ['image/jpeg', 'image/png', 'image/png', 'image/bmg', 'image/tif', 'image/gif'].includes(file.type);
+    if (!isImage) {
       message.error('只能上传图片');
     }
     const isLt100M = file.size / 1024 / 1024 < 100;
