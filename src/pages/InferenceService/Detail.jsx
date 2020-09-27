@@ -81,23 +81,25 @@ const InferenceDetail = (props) => {
     if (info.file.status === 'done') {
       const res = info.file.response;
       getBase64(info.file.originFileObj, (imageUrl) => {
-        if (Array.isArray(res.data)) {
+        if (Array.isArray(res.data.data)) {
           setImageUrl(imageUrl);
         }
         setLoading(false);
       });
       if (res.code === 0) {
-        if (Array.isArray(res.data)) {
+        const data = res.data?.data;
+        const type = res.data?.type;
+        if (type === 'classify') {
           const recognizeResult = [];
-          res.data.forEach((val) => {
+          data.forEach((val) => {
             const o = {};
             o.key = val[0];
             o.value = val[1];
             recognizeResult.push(o);
           });
           setRecognizeResult(recognizeResult);
-        } else if (typeof res.data === 'string') {
-          setImageUrl('data:image/jpg;base64,' + res.data);
+        } else if (type === 'detection') {
+          setImageUrl('data:image/jpg;base64,' + data);
         }
         setLoading(false);
         
@@ -151,8 +153,8 @@ const InferenceDetail = (props) => {
   const jobEnded = ['finished', 'failed', 'killed', 'error'].includes(jobDetail.jobStatus);
   return (
     <PageHeaderWrapper>
-      <div className={styles.topContainer}>
-        <div>
+      <main className={styles.topContainer}>
+        <div className={styles.imageContainer}>
           {jobRunning && (
             <Upload
               headers={{
@@ -185,7 +187,7 @@ const InferenceDetail = (props) => {
             size="small"
           />
         )}
-      </div>
+      </main>
       {recognizeResult.length !== 0 && (
         <Button type="primary" onClick={() => reUpload()} style={{ marginTop: '18px' }}>
           清除数据
