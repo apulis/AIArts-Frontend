@@ -39,7 +39,7 @@ const expandIcon = (x, y, r) => {
   ];
 };
 
-const anchorPoints = [ [0.5, 1], [0.5, 0] ];
+const anchorPoints = [ [0.5, 0], [0.5, 1] ];
 
 const FlowChart = forwardRef((props, ref) => {
   const { transformData, detailData, avisualis, detailId } = props;
@@ -50,27 +50,21 @@ const FlowChart = forwardRef((props, ref) => {
   const [combosTempArr, setCombosTempArr] = useState([]);
   const [nodesTempArr, setNodesTempArr] = useState([]);
   const { panelApiData, treeData } = avisualis;
-  const data = {
-    nodes: [
-      { id: "mnist", name: "mnist", treeIdx: 0, anchorPoints: anchorPoints },
-      { id: 'DevResNet', name: 'DevResNet',treeIdx: 1, comboId: 'SEResNet', anchorPoints: anchorPoints },
-      { id: 'MaxNet',name: 'MaxNet', comboId: "SEResNet", treeIdx: 1, anchorPoints: anchorPoints },
-      // { id: 'MineNet',name: 'MineNet', comboId: "MainNet", treeIdx: 1, anchorPoints: anchorPoints }
-    ],
+  // const data = {
+  //   nodes: [
+  //     { id: "mnist", name: "mnist", treeIdx: 0, anchorPoints: anchorPoints },
+  //     { id: 'DevResNet', name: 'DevResNet',treeIdx: 1, comboId: 'SEResNet', anchorPoints: anchorPoints },
+  //     { id: 'MaxNet',name: 'MaxNet', comboId: "SEResNet", treeIdx: 1, anchorPoints: anchorPoints },
+  //   ],
     
-    combos: [
-      // { id: 'aa', label: 'aa', anchorPoints: anchorPoints },
-      { id: 'Backbone', label: 'Backbone', anchorPoints: anchorPoints },
-      { id: 'SEResNet', label: 'SEResNet', parentId: "Backbone", anchorPoints: anchorPoints },
-      // { id: 'MiniResNet', label: 'MiniResNet', parentId: "SEResNet", anchorPoints: anchorPoints },
-      // { id: 'MainNet', label: 'MainNet', parentId: "SEResNet", anchorPoints: anchorPoints },
-    ],
-    edges: [
-      { source: 'mnist', target: 'DevResNet' },
-      // { source: 'mnist', target: 'MineNet', style: { strokeOpacity: 0 } },
-      // { source: 'ResNeXt', target: 'AdaptiveAvgMaxPool2d' },
-    ],
-  };
+  //   combos: [
+  //     { id: 'Backbone', label: 'Backbone', anchorPoints: anchorPoints },
+  //     { id: 'SEResNet', label: 'SEResNet', parentId: "Backbone", anchorPoints: anchorPoints, },
+  //   ],
+  //   edges: [
+  //     { source: 'mnist', target: 'DevResNet' },
+  //   ],
+  // };
   
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd
@@ -134,9 +128,9 @@ const FlowChart = forwardRef((props, ref) => {
           const { name } = cfg;
           const rect = group.addShape('rect', {
             attrs: {
-              x: -(name.length * 8),
+              x: -(name.length * 6),
               y: -20,
-              width: 16 * name.length,
+              width: 12 * name.length,
               height: 40,
               radius: 10,
               stroke: '#1890ff',
@@ -217,10 +211,9 @@ const FlowChart = forwardRef((props, ref) => {
         //   if (d.comboId) return 10;
         //   return 10
         // },
-        ranksep: 150,
-        // align: 'UL',
+        ranksep: 300,
         controlPoints: true,
-        // sortByCombo: true,
+        sortByCombo: true,
       },
       defaultNode: {
         type: 'flowChart'
@@ -232,7 +225,7 @@ const FlowChart = forwardRef((props, ref) => {
           lineAppendWidth: 10,
           lineWidth: 2,
           stroke: '#C2C8D5',
-        },
+        }
       },
       groupByTypes: false,
       defaultCombo: {
@@ -271,25 +264,36 @@ const FlowChart = forwardRef((props, ref) => {
       },
       plugins: [minimap, toolbar],
     });
-    _graph.data(data);
 
     _graph.on('afterlayout', e => {
-      _graph.updateItem(_graph.findById('mnist'), {
-        x: 0,
-        y: -200
-      });
-      _graph.updateItem(_graph.findById('MaxNet'), {
-        x: 200,
-        y: 0
-      });
-
-      _graph.updateItem(_graph.findById('DevResNet'), {
-        x: 0,
-        y: 0
-      });
-      
+      const allNodes = _graph.findAll('node', n => { return n });
+      let comboIdObj = {};
+      allNodes && allNodes.length && allNodes.forEach((i, idx) => {
+        const { id, comboId, treeIdx, edges } = i._cfg.model;
+        const thisNode = _graph.findById(id);
+        const key = comboId ? comboId : id;
+        let broNum = 0;
+        if (idx === 0) {
+          _graph.updateItem(thisNode, { x: 0, y: 0 });
+          return;
+        }
+        Object.keys(comboIdObj).forEach(b => {
+          if (comboIdObj[b].treeIdx === treeIdx && b !== comboId) broNum++;
+        });
+        if (comboIdObj[key]) {
+          comboIdObj[key] = { num: comboIdObj[key].num + 1, treeIdx:treeIdx };
+        } else {
+          comboIdObj[key] = { num: 0, treeIdx: treeIdx };
+        }
+        _graph.updateItem(thisNode, {
+          x: 200 * broNum, 
+          y: (230 * treeIdx) + (50 * comboIdObj[key].num),
+          anchorPoints: [[0.5, 0], [0.5, 1]]
+        });
+      })
     });
 
+    _graph.data(flowChartData);
     _graph.render();
 
     _graph.on('node:mouseenter', e => {
@@ -329,11 +333,7 @@ const FlowChart = forwardRef((props, ref) => {
         _graph.collapseExpandCombo(nodeItem);
         _graph.refreshPositions();
       }
-      if (nodeItem._cfg.type === "combo") {
-        setSelectItem(null);
-      } else {
-        setSelectItem(nodeItem);
-      }
+      setSelectItem(nodeItem);
     });
 
     _graph.on('combo:mouseenter', e => {
@@ -351,8 +351,10 @@ const FlowChart = forwardRef((props, ref) => {
 
   const handleDragEnd = node => {
     const { title, key, config, treeIdx, child, fName } = node;
+    console.log('-------node', node)
+
     const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
-    if ((hasNodes && treeIdx > flowChartData.nodes.length) || (!hasNodes && treeIdx > 0)) {
+    if ((hasNodes && treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) || (!hasNodes && treeIdx > 0)) {
       message.warning('只能按照步骤顺序依次拖拽！');
       return;
     }
@@ -378,13 +380,8 @@ const FlowChart = forwardRef((props, ref) => {
           treeIdx: treeIdx
         }
       ]);
-      // child.forEach(i => getChilds(i.children, nodeArr, combosArr, i.name, treeIdx));
       getChilds(child, nodeArr, combosArr, key, treeIdx)
     }
-    
-
-    // getChilds(child, nodeArr, combosArr, key, treeIdx)
-
 
     if (hasNodes) {
       newData = _.cloneDeep(flowChartData);
@@ -401,13 +398,12 @@ const FlowChart = forwardRef((props, ref) => {
       } else {
         newData.nodes.push(newNodes);
       }
-
       const edgesTemp = {
         source: newData.nodes.find(o => o.treeIdx === (treeIdx - 1)).id,
         target: newData.nodes.find(o => o.treeIdx === treeIdx).id
       };
       if (edges && edgesLen) {
-        newData.edges.push(edgesTemp)
+        newData.edges.push(edgesTemp);
       } else {
         newData.edges[0] = edgesTemp;
       }
@@ -420,9 +416,15 @@ const FlowChart = forwardRef((props, ref) => {
       newData.edges = [];
     }
     Object.keys(newData).forEach(i => {
-      if (i !== 'edges') newData[i].forEach(m => m.anchorPoints = anchorPoints);
+      if (i === 'edges') {
+        newData[i].forEach(m => {
+          m.sourceAnchor = 1;
+          m.targetAnchor = 0;
+        });
+      } else {
+        newData[i].forEach(m => m.anchorPoints = anchorPoints);
+      }
     })
-    console.log('-------newData', newData)
     setFlowChartData(newData);
     graph.read(newData);
     graph.fitCenter();
@@ -441,9 +443,6 @@ const FlowChart = forwardRef((props, ref) => {
           config: config,
           treeIdx: treeIdx
         });
-        console.log('-------combosArr', combosArr)
-
-        // children.forEach(x => getChilds(x.children, nodeArr, combosArr, x.name, treeIdx))
         getChilds(children, nodeArr, combosArr, name, treeIdx)
       } else {
         nodeArr.push({

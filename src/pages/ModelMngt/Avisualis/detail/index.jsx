@@ -9,9 +9,6 @@ import { useDispatch, history } from 'umi';
 import { DownOutlined, FolderOutlined, FolderOpenOutlined, FolderOpenTwoTone } from '@ant-design/icons'
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
-import Test from '../components/test2';
-
-import _ from 'lodash';
 
 const { confirm } = Modal;
 const { Search } = Input;
@@ -42,12 +39,13 @@ const AvisualisDetail = (props) => {
     const { code, data } = await getAvisualisDetail(modelId || detailId);
     if (code === 0 && data) {
       const { model, training } = data;
-      const { nodes, edges, panel } = model.params;
+      const { nodes, edges, panel, combos } = model.params;
       const _panel = JSON.parse(panel);
       if (nodes && edges) {
         const _detailData = {
           nodes: JSON.parse(nodes),
           edges: JSON.parse(edges),
+          combos: JSON.parse(combos),
         };
         setDetailData(_detailData);
       }
@@ -74,7 +72,7 @@ const AvisualisDetail = (props) => {
     childrenDisabled = (Boolean(Number(detailId))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
-        const len = newData && newData.nodes ? newData.nodes.length : 0;
+        const len = newData && newData.edges ? (newData.edges.length + 1) : 1;
         childrenDisabled = len > 0 && !(len < (idx + 1));
       }
       let _children = [];
@@ -88,7 +86,7 @@ const AvisualisDetail = (props) => {
             key: childName,
             config: config,
             disabled: childrenDisabled,
-            treedx: idx,
+            treeIdx: idx,
             child: children || [],
             fName: name
           })
@@ -141,7 +139,6 @@ const AvisualisDetail = (props) => {
           transformData={transformData} 
           detailId={detailId}
           detailData={detailData || {}}
-          detailId={detailId}
         />
       </div>
     </PageHeaderWrapper>

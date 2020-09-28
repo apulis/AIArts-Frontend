@@ -25,15 +25,17 @@ const ItemPanel = (props) => {
   useEffect(() => {
     if (selectItem) {
       const { id, treeIdx } = selectItem._cfg.model;
-      const child = treeData[treeIdx].children;
-      setChangeNodeOptions(child.filter(i => i.key !== id));
+      if (treeIdx === 0 || treeIdx > 0) {
+        const child = treeData[treeIdx].children;
+        setChangeNodeOptions(child.filter(i => i.key !== id));
+      }
     }
   }, [selectItem]);
 
   const onSubmit = async() => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
-      const { nodes, edges } = flowChartData;
-      if (nodes.length !== treeData.length) {
+      const { nodes, edges, combos } = flowChartData;
+      if (nodes[nodes.length - 1].treeIdx + 1 !== treeData.length) {
         message.warning('请完成剩余步骤！');
         return;
       }
@@ -47,18 +49,24 @@ const ItemPanel = (props) => {
       _values.outputPath = nodes[nodes.length - 1].config[0].value;
       _values.paramPath = _values.outputPath;
       const newEdges = edges.map(i => {
-        const { source, target } = i;
+        const { source, target, sourceAnchor, targetAnchor } = i;
         return {
           source: source,
-          target: target
+          target: target,
+          sourceAnchor: sourceAnchor || 1,
+          targetAnchor: targetAnchor || 0
         }
       });
       let submitData = {
         ...addFormData,
         ..._values,
-        nodes: nodes,
-        edges: newEdges,
-        isAdvance: false
+        isAdvance: false,
+        params: {
+          ...addFormData.params,
+          nodes: JSON.stringify(nodes),
+          edges: JSON.stringify(newEdges),
+          combos: JSON.stringify(combos),
+        }
       };
       if (!detailId) delete submitData.id;
       const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
@@ -106,8 +114,11 @@ const ItemPanel = (props) => {
     form.validateFields().then(async (values) => {
       const newValues = Object.keys(values).map(i => values[i]);
       const cloneData = _.cloneDeep(flowChartData);
-      const selectId = selectItem._cfg.model.id;
-      cloneData.nodes[cloneData.nodes.findIndex(i => i.id === selectId)].config.forEach((m, n) => {
+      const { type, model } = selectItem._cfg;
+      const selectId = model.id;
+      let findData = [];
+      type === 'combo' ? findData = cloneData.combos : findData = cloneData.nodes;
+      findData[findData.findIndex(i => i.id === selectId)].config.forEach((m, n) => {
         m.value = newValues[n];
       });
       setFlowChartData(cloneData);
@@ -135,7 +146,7 @@ const ItemPanel = (props) => {
       </div>
       <Descriptions title="模型详情"></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
-      <div className="ant-descriptions-title">{`${hasSelectItem ? '节点配置' : '该节点无配置项'}`}</div>
+      <div className="ant-descriptions-title">{`${hasSelectItem ? `节点配置(${selectItem._cfg.id})` : '该节点无配置项'}`}</div>
       {hasSelectItem && <Form form={form}>{getConfig()}</Form>}
       <div style={{ float: 'right', textAlign: 'right' }}>
         {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
