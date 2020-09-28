@@ -1,4 +1,5 @@
 import { fetchCommonResource } from '@/services/common';
+import { message } from 'antd';
 
 let devices = {};
 
@@ -46,6 +47,9 @@ const ResourceModole = {
           type: 'updateState',
           payload: { devices: resources },
         });
+        if (Object.keys(resources).length === 0) {
+          message.error('平台 worker 节点未初始化成功，请联系管理员');
+        }
         devices = resources;
       }
     },
