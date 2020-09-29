@@ -8,15 +8,15 @@ const CancelToken = Request.CancelToken;
 export async function getInferences(params) {
   return request(`/inferences/ListInferenceJob`, {
     params,
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       getInferences.cancel = c;
-    })
+    }),
   });
 }
 
 export async function stopInference(params) {
   return request(`/inferences/KillJob`, {
-    params
+    params,
   });
 }
 
@@ -48,8 +48,8 @@ export async function updateInference(data = {}) {
 
 export async function fetchJobStatusSumary() {
   return await request(`/common/job/summary?jobType=${inferenceJobType}`, {
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       fetchJobStatusSumary.cancel = c;
-    })
+    }),
   });
 }

@@ -1,22 +1,22 @@
 import request from '@/utils/request';
 import { modelEvaluationType } from '@/utils/const';
-import {deleteJob} from '@/services/modelTraning'
+import { deleteJob } from '@/services/modelTraning';
 import Request from 'umi-request';
 
 const CancelToken = Request.CancelToken;
 
 export async function getTrainingJobs(params) {
   return await request(`/trainings`, {
-    params
+    params,
   });
 }
 
 export async function getEvaluations(params) {
   return await request(`/evaluations`, {
     params,
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       getEvaluations.cancel = c;
-    })
+    }),
   });
 }
 
@@ -40,7 +40,7 @@ export async function fetchEvaluationLog(id) {
   return await request(`/inferences/GetEvaluationLog`, {
     params: {
       evaluationId: id,
-    }
+    },
   });
 }
 
@@ -51,17 +51,17 @@ export async function fetchEvaluationDetail(id) {
 
 export async function fetchJobStatusSumary() {
   return await request(`/common/job/summary?jobType=${modelEvaluationType}`, {
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       fetchJobStatusSumary.cancel = c;
-    })
+    }),
   });
 }
 
 export async function saveEvaluationParams(data) {
   return await request('/templates', {
     method: 'POST',
-    data
-  })
+    data,
+  });
 }
 
 export async function fetchPresetTemplates() {
@@ -71,8 +71,8 @@ export async function fetchPresetTemplates() {
       pageSize: 10000,
       jobType: modelEvaluationType,
       scope: 3,
-    }
-  })
+    },
+  });
 }
 
 export async function getAllLabeledDatasets() {
@@ -81,9 +81,8 @@ export async function getAllLabeledDatasets() {
       orderBy: 'created_at',
       order: 'desc',
       isTranslated: true,
-      pageNum: 1, 
+      pageNum: 1,
       pageSize: 10000,
-    }
-  })
+    },
+  });
 }
-

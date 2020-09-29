@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Table, Input, Button, Select, Card, message, Upload } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Modal, Table, Input, Button, Select, Card, message, Upload, Tooltip } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { history } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { fetchTemplates, removeTemplate } from '../../../services/modelTraning';
-import { saveEvaluationParams } from '../ModelEvaluation/services/index'
+import { saveEvaluationParams } from '../ModelEvaluation/services/index';
 import { PAGEPARAMS, sortText, modelEvaluationType } from '@/utils/const';
 import moment from 'moment';
 import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail';
@@ -17,15 +17,15 @@ const { Option } = Select;
 const { Search } = Input;
 
 const EvalMetricsMngt = () => {
-
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
   const [total, setTotal] = useState(0);
+  const uploadRef = useRef(null);
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
   const [currentScope, setCurrentScope] = useState(3);
   const [importedParamsModalVisible, setImportedParamsModalVisible] = useState(false);
@@ -66,8 +66,7 @@ const EvalMetricsMngt = () => {
           message.error(`删除失败${error.msg}` || `删除失败`);
         }
       },
-      onCancel() {
-      },
+      onCancel() {},
     });
   };
 
@@ -79,8 +78,8 @@ const EvalMetricsMngt = () => {
     delete item.metaData.createAt;
     delete item.metaData.updateAt;
     delete item.metaData.id;
-    downloadStringAsFile(JSON.stringify(item, null, 2), `${item.metaData.name}.json`)
-  }
+    downloadStringAsFile(JSON.stringify(item, null, 2), `${item.metaData.name}.json`);
+  };
 
   const columns = [
     {
@@ -104,8 +103,8 @@ const EvalMetricsMngt = () => {
       width: '16%',
       key: 'engine',
       render(value) {
-        return <div>{getNameFromDockerImage(value)}</div>
-      }
+        return <div>{getNameFromDockerImage(value)}</div>;
+      },
     },
     {
       title: '创建时间',
@@ -113,24 +112,30 @@ const EvalMetricsMngt = () => {
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
       key: 'created_at',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '描述',
       ellipsis: true,
       width: '16%',
-      dataIndex: ['params', 'desc']
+      dataIndex: ['params', 'desc'],
     },
     {
       title: '操作',
       align: 'center',
-      render: item => {
+      render: (item) => {
         const id = item.metaData.id;
         return (
           <>
-            <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>编辑</a>
-            <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>删除</a>
-            <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)} >导出</a>
+            <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
+              编辑
+            </a>
+            <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
+              删除
+            </a>
+            <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)}>
+              导出参数
+            </a>
           </>
         );
       },
@@ -184,7 +189,7 @@ const EvalMetricsMngt = () => {
 
   const saveFileAsTemplate = async () => {
     if (!uploadParamsObj) {
-      message.error('没有可用的内容'); 
+      message.error('没有可用的内容');
       return;
     }
     const submitData = {};
@@ -201,46 +206,55 @@ const EvalMetricsMngt = () => {
       setImportedParamsModalVisible(false);
       handleSearch();
     }
-  }
+  };
 
   const beforeUpload = (file) => {
+    console.log('file.name', file);
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (e) => {
       try {
-        const result = JSON.parse(e.target.result)
-        const newTemplate = {}
+        const result = JSON.parse(e.target.result);
+        const newTemplate = {};
         newTemplate.scope = result.metaData?.scope;
         newTemplate.jobType = result.metaData?.jobType;
-        newTemplate.templateData = Object.assign({}, result.params)
+        newTemplate.templateData = Object.assign({}, result.params, {
+          name: result.metaData.name || file.name,
+        });
 
         setUploadParamsObj(newTemplate);
       } catch (err) {
-        message.error(err);
+        console.log('err', err);
+        message.error(err.message);
       }
     };
     reader.readAsText(file);
-  }
+  };
 
   useEffect(() => {
     handleSearch();
   }, [pageParams, sortedInfo]);
-
   return (
     <PageHeaderWrapper>
-      <Card bordered={false}
+      <Card
+        bordered={false}
         bodyStyle={{
-          padding: '0'
+          padding: '0',
         }}
       >
         <div
           style={{
-            padding: '24px 0 24px 24px'
+            padding: '24px 0 24px 24px',
           }}
         >
-          <Button type="primary" onClick={() => {setImportedParamsModalVisible(true)}}>导入</Button>
-          <div
-            className={styles.searchWrap}
+          <Button
+            type="primary"
+            onClick={() => {
+              setImportedParamsModalVisible(true);
+            }}
           >
+            导入参数
+          </Button>
+          <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
               {
                 scopeList.map((item) => (
@@ -255,14 +269,21 @@ const EvalMetricsMngt = () => {
                 handleSearch();
               }}
               enterButton
-              onChange={e => { onSearchName(e.target.value); }}
+              onChange={(e) => {
+                onSearchName(e.target.value);
+              }}
             />
-            <Button icon={<SyncOutlined />} onClick={() => { handleSearch(); }}></Button>
+            <Button
+              icon={<SyncOutlined />}
+              onClick={() => {
+                handleSearch();
+              }}
+            ></Button>
           </div>
         </div>
         <Table
           columns={columns}
-          rowKey={record => record.metaData.id}
+          rowKey={(record) => record.metaData.id}
           onChange={onSortChange}
           pagination={{
             total: total,
@@ -275,21 +296,34 @@ const EvalMetricsMngt = () => {
             pageSize: pageParams.pageSize,
           }}
           expandable={{
-            expandedRowRender: record => <ExpandDetail record={record} />
+            expandedRowRender: (record) => <ExpandDetail record={record} />,
           }}
           dataSource={paramList}
           loading={tableLoading}
         />
       </Card>
-      <Modal
-        visible={importedParamsModalVisible}
-        onCancel={() => {setImportedParamsModalVisible(false)}}
-        onOk={saveFileAsTemplate}
-      >
-        <Upload beforeUpload={beforeUpload}>
-          <Button icon={<UploadOutlined />}>上传 json 文件</Button>
-        </Upload>
-      </Modal>
+      {importedParamsModalVisible && (
+        <Modal
+          visible={importedParamsModalVisible}
+          onCancel={() => {
+            setImportedParamsModalVisible(false);
+          }}
+          onOk={saveFileAsTemplate}
+        >
+          <Upload beforeUpload={beforeUpload} action="/" ref={uploadRef}>
+            <Tooltip
+              title={uploadRef.current?.state.fileList.length >= 1 ? '每次只能上传一个文件' : ''}
+            >
+              <Button
+                disabled={uploadRef.current?.state.fileList.length >= 1}
+                icon={<UploadOutlined />}
+              >
+                上传 json 文件
+              </Button>
+            </Tooltip>
+          </Upload>
+        </Modal>
+      )}
     </PageHeaderWrapper>
   );
 };

@@ -3,7 +3,7 @@ import React from 'react';
 import autoHeight from '../autoHeight';
 import styles from '../index.less';
 
-const MiniBar = props => {
+const MiniBar = (props) => {
   const { height = 0, forceFit = true, color = '#1890FF', data = [] } = props;
   const scale = {
     x: {

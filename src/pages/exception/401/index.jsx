@@ -5,19 +5,19 @@ import { stringify } from 'querystring';
 
 import { USER_LOGIN_URL } from '@/utils/const';
 
-
 const queryString = stringify({
   redirect: window.location.href,
 });
 export default () => {
-  
   return (
-    <div style={{height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+    <div
+      style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+    >
       <Result
         status="403"
         style={{
           background: 'none',
-          marginTop: '-200px'
+          marginTop: '-200px',
         }}
         subTitle="尚未登录"
         extra={
@@ -27,5 +27,5 @@ export default () => {
         }
       />
     </div>
-    
-)};
+  );
+};

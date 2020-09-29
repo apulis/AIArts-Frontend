@@ -1,6 +1,6 @@
 import { message, Form, Input, Button, Select, Descriptions, InputNumber, Modal } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
-import styles from './index.less'; 
+import styles from './index.less';
 import { history, useDispatch } from 'umi';
 import { submitAvisualis, patchAvisualis } from '../../service';
 import { connect } from 'dva';
@@ -32,7 +32,7 @@ const ItemPanel = (props) => {
     }
   }, [selectItem]);
 
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
       const { nodes, edges, combos } = flowChartData;
       if (nodes[nodes.length - 1].treeIdx + 1 !== treeData.length) {
@@ -69,24 +69,26 @@ const ItemPanel = (props) => {
         }
       };
       if (!detailId) delete submitData.id;
-      const { code, data } = detailId ? await patchAvisualis(detailId, submitData) : await submitAvisualis(submitData);
+      const { code, data } = detailId
+        ? await patchAvisualis(detailId, submitData)
+        : await submitAvisualis(submitData);
       if (code === 0) {
         message.success(`${detailId ? '保存' : '创建'}成功！`);
         dispatch({
           type: 'avisualis/saveData',
           payload: {
-            addFormData: {}
-          }
+            addFormData: {},
+          },
         });
         history.push('/ModelManagement/avisualis');
       }
       setBtnLoading(false);
     });
-  }
+  };
 
   const getConfig = () => {
     const { config, id } = selectItem._cfg.model;
-    return config.map(i => {
+    return config.map((i) => {
       const { type, value, key, options } = i;
       if (type === 'string' || type === 'disabled') {
         return (
@@ -106,13 +108,12 @@ const ItemPanel = (props) => {
           </Select>
         </Form.Item>)
       }
-    }) 
-  }
-
+    });
+  };
 
   const onSaveConfig = () => {
     form.validateFields().then(async (values) => {
-      const newValues = Object.keys(values).map(i => values[i]);
+      const newValues = Object.keys(values).map((i) => values[i]);
       const cloneData = _.cloneDeep(flowChartData);
       const { type, model } = selectItem._cfg;
       const selectId = model.id;
@@ -123,8 +124,8 @@ const ItemPanel = (props) => {
       });
       setFlowChartData(cloneData);
       message.success('保存成功！');
-    })
-  }
+    });
+  };
 
   const selectChangeNode = () => {
     if (!changeNodeKey) {
@@ -136,13 +137,15 @@ const ItemPanel = (props) => {
       setModalFlag(false);
       message.success('更换成功！');
     }
-  }
-  
+  };
+
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        <Button type="primary" loading={btnLoading} onClick={onSubmit}>{detailId ? '保存模型' : '创建模型'}</Button>
+        <Button type="primary" loading={btnLoading} onClick={onSubmit}>
+          {detailId ? '保存模型' : '创建模型'}
+        </Button>
       </div>
       <Descriptions title="模型详情"></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
@@ -161,11 +164,19 @@ const ItemPanel = (props) => {
           maskClosable={false}
           footer={[
             <Button onClick={() => setModalFlag(false)}>取消</Button>,
-            <Button type="primary" onClick={selectChangeNode}>更换</Button>
+            <Button type="primary" onClick={selectChangeNode}>
+              更换
+            </Button>,
           ]}
         >
-          <Select placeholder="请选择节点" style={{ width: '100%' }} onChange={v => setChangeNodeKey(v)}>
-            {changeNodeOptions.map(i => <Option value={i.key}>{i.title}</Option>)}
+          <Select
+            placeholder="请选择节点"
+            style={{ width: '100%' }}
+            onChange={(v) => setChangeNodeKey(v)}
+          >
+            {changeNodeOptions.map((i) => (
+              <Option value={i.key}>{i.title}</Option>
+            ))}
           </Select>
         </Modal>
       )}

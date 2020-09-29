@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Tabs } from 'antd';
-import WarningLog from './components/WarningLog'
-import VersionMngt from './components/VersionMngt'
+import WarningLog from './components/WarningLog';
+import VersionMngt from './components/VersionMngt';
 const { TabPane } = Tabs;
 
 const VisualOperation = (props) => {
@@ -17,7 +17,7 @@ const VisualOperation = (props) => {
         </TabPane>
       </Tabs>
     </PageHeaderWrapper>
-  )
-}
+  );
+};
 
-export default VisualOperation
+export default VisualOperation;

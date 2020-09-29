@@ -19,7 +19,7 @@ export async function submitAvisualis(data) {
 
 export async function deleteAvisualis(id) {
   return await request(`/models/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
 }
 

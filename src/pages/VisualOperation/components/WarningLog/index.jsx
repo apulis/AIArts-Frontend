@@ -1,15 +1,15 @@
 import React from 'react';
 import { Card } from 'antd';
-import Iframe from "react-iframe";
+import Iframe from 'react-iframe';
 
 const WarningLog = () => {
   let grafana;
   if (process.env.NODE_ENV === 'development') {
-    grafana = 'http://219.133.167.42:52009/endpoints/grafana/';
+    grafana = 'http://219.133.167.42:52009/endpoints/grafana_zh/';
   } else {
     const protocol = window.location.protocol;
     const host = window.location.host;
-    grafana = protocol + '//' + host + '/endpoints/grafana/';
+    grafana = protocol + '//' + host + '/endpoints/grafana_zh/';
   }
   const url = `${grafana}alerting/list?kiosk=tv`;
   return (

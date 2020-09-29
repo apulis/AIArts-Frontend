@@ -1,14 +1,14 @@
-export const USER_DASHBOARD_PATH = '/custom-user-dashboard'
-export const USER_DASHBOARD_BACKEND = '/custom-user-dashboard-backend'
+export const USER_DASHBOARD_PATH = '/custom-user-dashboard';
+export const USER_DASHBOARD_BACKEND = '/custom-user-dashboard-backend';
 
-export const USER_LOGIN_URL = USER_DASHBOARD_PATH + '/user/login'
+export const USER_LOGIN_URL = USER_DASHBOARD_PATH + '/user/login';
 
 export const PAGEPARAMS = {
   pageNum: 1,
   pageSize: 10,
 };
 
-export const REFRESH_INTERVAL = 3*1000;
+export const REFRESH_INTERVAL = 3 * 1000;
 
 export const avatar =
   'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
@@ -27,8 +27,8 @@ export const inferenceJobType = 'InferenceJob';
 
 export const sortText = {
   ascend: 'asc',
-  descend: 'desc'
-}
+  descend: 'desc',
+};
 
 export const FilePathReg = /^(.*)\/$/;
 
@@ -37,10 +37,10 @@ export const FilePathErrorText = '路径必须以 / 结尾！';
 export const DEVICE_TYPES = {
   'npu.huawei.com/NPU': 'npu',
   'nvidia.com/gpu': 'gpu',
-}
+};
 
 export const MODELSTYPES = [
-  { text: '图像分类', val: 'Avisualis_Classfication'},
-  { text: '语义分割', val: 'Avisualis_SemanticSegmentation'},
-  { text: '目标检测', val: 'Avisualis_ObjectDetection'}
+  { text: '图像分类', val: 'Avisualis_Classfication' },
+  { text: '语义分割', val: 'Avisualis_SemanticSegmentation' },
+  { text: '目标检测', val: 'Avisualis_ObjectDetection' },
 ];

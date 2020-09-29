@@ -13,7 +13,7 @@ const formLayout = {
   },
 };
 
-const ModalForm = props => {
+const ModalForm = (props) => {
   const [form] = Form.useForm();
   const { visible = true, current, onCancel, onSubmit } = props;
   useEffect(() => {
@@ -35,18 +35,17 @@ const ModalForm = props => {
     form.submit();
   };
 
-  const handleFinish = values => {
+  const handleFinish = (values) => {
     if (onSubmit) {
       onSubmit(values);
     }
   };
 
-  const modalFooter = 
-    {
-      okText: '提交',
-      onOk: handleSubmit,
-      onCancel,
-    };
+  const modalFooter = {
+    okText: '提交',
+    onOk: handleSubmit,
+    onCancel,
+  };
 
   const getModalContent = () => {
     return (
@@ -61,7 +60,7 @@ const ModalForm = props => {
           //   },
           // ]}
         >
-          <Input placeholder="请输入模型名称" disabled/>
+          <Input placeholder="请输入模型名称" disabled />
         </Form.Item>
         {/* <Form.Item
           name="latestTime"
@@ -114,14 +113,12 @@ const ModalForm = props => {
 
   return (
     <Modal
-      title='修改模型'
+      title="修改模型"
       className={styles.standardListForm}
       width={640}
-      bodyStyle={
-        {
-          padding: '28px 0 0',
-        }
-      }
+      bodyStyle={{
+        padding: '28px 0 0',
+      }}
       destroyOnClose
       visible={visible}
       {...modalFooter}

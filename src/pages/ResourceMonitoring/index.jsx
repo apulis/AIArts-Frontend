@@ -1,16 +1,16 @@
 import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React from 'react';
-import Iframe from "react-iframe";
+import Iframe from 'react-iframe';
 
 const ResourceMonitoring = () => {
   let grafana;
   if (process.env.NODE_ENV === 'development') {
-    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
+    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana_zh/';
   } else {
     const protocol = window.location.protocol;
     const host = window.location.host;
-    grafana = protocol + '//' + host + '/endpoints/grafana/';
+    grafana = protocol + '//' + host + '/endpoints/grafana_zh/';
   }
   const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}&kiosk=tv`;
   const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;

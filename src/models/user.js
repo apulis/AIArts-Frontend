@@ -18,7 +18,7 @@ const UserModel = {
       const res = yield call(getUserInfo);
       const { code } = res;
       if (code === 0) {
-        setAuthority(res.permissionList)
+        setAuthority(res.permissionList);
         yield put({
           type: 'updateState',
           payload: {
@@ -28,10 +28,10 @@ const UserModel = {
               permissionList: res.permissionList,
               nickName: res.nickName,
               phone: res.phone,
-              email: res.email
-            }
-          }
-        })
+              email: res.email,
+            },
+          },
+        });
       } else {
         setAuthority([]);
         yield put({
@@ -43,10 +43,10 @@ const UserModel = {
               permissionList: [],
               nickName: '',
               phone: '',
-              email: ''
-            }
-          }
-        })
+              email: '',
+            },
+          },
+        });
       }
     },
   },

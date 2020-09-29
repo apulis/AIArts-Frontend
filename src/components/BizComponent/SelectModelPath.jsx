@@ -10,7 +10,7 @@ const { Search } = Input;
 const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [formValues, setFormValues] = useState({});
@@ -26,7 +26,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
 
   const handleSelectModalPath = () => {
     onOk && onOk(selectedRows[0]);
-  }
+  };
 
   useEffect(() => {
     handleSearch();
@@ -42,7 +42,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       ...pageParams,
       isAdvance: false,
       orderBy: sortedInfo.columnKey,
-      order: sortText[sortedInfo.order]      
+      order: sortText[sortedInfo.order],
     };
 
     if (formValues.name) {
@@ -53,12 +53,10 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       setModelPaths({
         total: res.data.total,
         list: res.data.models,
-      })
+      });
       setLoading(false);
     }
-
   };
-
 
   const columns = [
     {
@@ -79,17 +77,17 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 150,
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,      
+      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
       title: '描述',
       dataIndex: 'description',
       ellipsis: true,
-      width: 150
+      width: 150,
     },
   ];
 
@@ -101,7 +99,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
 
   const onSearch = (s) => {
     handleSearch();
-  }
+  };
 
   if (!visible) {
     return null;
@@ -115,7 +113,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
     >
       <div style={{ marginTop: '20px', paddingBottom: '10px', overflow: 'hidden' }}>
         <Search
-          style={{ width: '200px', marginRight:'20px', float: 'right' }}
+          style={{ width: '200px', marginRight: '20px', float: 'right' }}
           placeholder="请输入模型名称"
           onSearch={onSearch}
           onChange={(e) => setFormValues({ name: e.target.value })}
@@ -140,13 +138,12 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
           current: pageParams.pageNum,
-          pageSize: pageParams.pageSize,              
+          pageSize: pageParams.pageSize,
         }}
         loading={loading}
       />
     </Modal>
-  )
-}
-
+  );
+};
 
 export default SelectModelPath;

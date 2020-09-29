@@ -4,11 +4,10 @@ import { modelTrainingType } from '@/utils/const';
 
 const CancelToken = Request.CancelToken;
 
-
 export async function submitModelTraining(data) {
   return await request('/trainings', {
     method: 'POST',
-    data
+    data,
   });
 }
 
@@ -27,38 +26,38 @@ export async function fetchTrainingList({ pageNum, pageSize, status, search, sor
       orderBy: sortedInfo?.orderBy || undefined,
       order: sortedInfo?.order || undefined,
     },
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       fetchTrainingList.cancel = c;
-    })
+    }),
   });
 }
 
 export async function fetchTrainingDetail(id) {
   return await request(`/trainings/${id}`, {
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       fetchTrainingDetail.cancel = c;
-    })
+    }),
   });
 }
 
 export async function fetchTrainingLog(id, page) {
   return await request(`/trainings/${id}/log`, {
     params: { pageNum: page },
-    cancelToken: new CancelToken(function(c) {
+    cancelToken: new CancelToken(function (c) {
       fetchTrainingLog.cancel = c;
-    })
+    }),
   });
 }
 
 export async function stopTraining(id) {
   return await request(`/trainings/${id}/stop`, {
-    method: 'POST'
+    method: 'POST',
   });
 }
 
 export async function removeTrainings(id) {
   return await request(`/trainings/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
 }
 
@@ -72,21 +71,21 @@ export async function fetchTemplateById(id) {
 
 export async function removeTemplate(id) {
   return await request(`/templates/${id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
 }
 
 export async function saveTrainingParams(data) {
   return await request('/templates', {
     method: 'POST',
-    data
+    data,
   });
 }
 
 export async function updateParams(data) {
   return await request('/templates', {
     method: 'PUT',
-    data
+    data,
   });
 }
 
@@ -101,7 +100,7 @@ export async function fetchPresetTemplates() {
       pageSize: 10000,
       jobType: modelTrainingType,
       scope: 3,
-    }
+    },
   });
 }
 
@@ -114,7 +113,7 @@ export async function deleteJob(jobId) {
     method: 'DELETE',
     params: {
       jobId,
-    }
+    },
   });
 }
 
@@ -125,7 +124,7 @@ export async function fetchVisualizations(params) {
 export async function createVisualization(params) {
   return await request('/visual', {
     method: 'POST',
-    params
+    params,
   });
 }
 
@@ -133,8 +132,8 @@ export async function deleteVisualization(id) {
   return await request(`/visual/`, {
     method: 'DELETE',
     params: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
@@ -143,8 +142,8 @@ export async function switchVisualizationJobStatus(id, action) {
     method: 'PUT',
     params: {
       id: id,
-      status: action
-    }
+      status: action,
+    },
   });
 }
 
@@ -152,8 +151,8 @@ export async function getTensorboardUrl(id) {
   return await request(`/visual/endpoints`, {
     method: 'GET',
     params: {
-      id: id
-    }
+      id: id,
+    },
   });
 }
 
@@ -163,6 +162,6 @@ export async function getUserDockerImages() {
     params: {
       pageNum: 1,
       pageSize: 9999,
-    }
+    },
   });
 }

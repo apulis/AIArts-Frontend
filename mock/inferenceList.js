@@ -17,7 +17,7 @@ const genList = (current, pageSize) => {
       engineType: `engineType`,
       createTime: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
       serverAddr: `atlas800.huawei.com/dls`,
-      desc: 'this is inference job'
+      desc: 'this is inference job',
     });
   }
 
@@ -58,12 +58,12 @@ function getInferences(req, res, u) {
     data: {
       list: dataSource,
       // pagination: {
-        total: tableListDataSource.length,
-        pageSize: parseInt(`${params.pageSize}`, 10) || 10,
-        current: parseInt(`${params.current}`, 10) || 1,
+      total: tableListDataSource.length,
+      pageSize: parseInt(`${params.pageSize}`, 10) || 10,
+      current: parseInt(`${params.current}`, 10) || 1,
       // }
     },
-    msg: 'success'
+    msg: 'success',
   };
   return res.json(result);
 }
@@ -92,7 +92,7 @@ function postInference(req, res, u, b) {
           name: `Project ${tableListDataSource.length}`,
           desc: '这是一段描述',
           creator: Mock.mock('@cname'),
-          latestTime: new Date()
+          latestTime: new Date(),
         };
         tableListDataSource.unshift(newRule);
         return res.json(newRule);

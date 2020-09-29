@@ -18,9 +18,7 @@ const noMatch = (
     status={403}
     title="403"
     subTitle="抱歉，您无权限访问此页面."
-    extra={
-        <p>请联系管理员添加权限</p>
-    }
+    extra={<p>请联系管理员添加权限</p>}
   />
 );
 
@@ -76,8 +74,12 @@ const BasicLayout = (props) => {
           if (menuItemProps.isUrl || menuItemProps.children || !menuItemProps.path) {
             return defaultDom;
           }
-          if (menuItemProps.target === "_blank") {
-            return <a href={menuItemProps.path} target="_blank">{defaultDom}</a>
+          if (menuItemProps.target === '_blank') {
+            return (
+              <a href={menuItemProps.path} target="_blank">
+                {defaultDom}
+              </a>
+            );
           }
           return <Link to={menuItemProps.path}>{defaultDom}</Link>;
         }}
@@ -105,9 +107,7 @@ const BasicLayout = (props) => {
         {...settings}
       >
         <Authorized authority={authorized} noMatch={noMatch}>
-          <CommonLayout>
-            {children}
-          </CommonLayout>
+          <CommonLayout>{children}</CommonLayout>
         </Authorized>
       </ProLayout>
       {/* <SettingDrawer

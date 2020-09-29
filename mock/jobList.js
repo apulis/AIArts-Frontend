@@ -11,7 +11,7 @@ const genList = (current, pageSize) => {
       id: index,
       name: `train_job_00${index}`,
       engineType: `mxnet,mx-1.5.0-py2.7`,
-      desc: 'this is train job'
+      desc: 'this is train job',
     });
   }
 
@@ -52,16 +52,16 @@ function getTrainingJobs(req, res, u) {
     data: {
       list: dataSource,
       // pagination: {
-        total: tableListDataSource.length,
-        pageSize: parseInt(`${params.pageSize}`, 10) || 10,
-        current: parseInt(`${params.current}`, 10) || 1,
+      total: tableListDataSource.length,
+      pageSize: parseInt(`${params.pageSize}`, 10) || 10,
+      current: parseInt(`${params.current}`, 10) || 1,
       // }
     },
-    msg: 'success'
+    msg: 'success',
   };
   return res.json(result);
 }
 
 export default {
-  'GET /ai_arts/api/jobs': getTrainingJobs
+  'GET /ai_arts/api/jobs': getTrainingJobs,
 };

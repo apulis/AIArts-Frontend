@@ -1,12 +1,15 @@
-
-
 import { Modal, Form, Input, Card, Tree } from 'antd';
 import { PageHeaderWrapper, PageLoading } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
 import { getPanel, getAvisualisDetail } from '../service';
 import styles from './index.less';
 import { useDispatch, history } from 'umi';
-import { DownOutlined, FolderOutlined, FolderOpenOutlined, FolderOpenTwoTone } from '@ant-design/icons'
+import {
+  DownOutlined,
+  FolderOutlined,
+  FolderOpenOutlined,
+  FolderOpenTwoTone,
+} from '@ant-design/icons';
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
 
@@ -28,8 +31,8 @@ const AvisualisDetail = (props) => {
     dispatch({
       type: 'global/changeLayoutCollapsed',
       payload: {
-        collapsed: false
-      }
+        collapsed: false,
+      },
     });
     getData();
   }, []);
@@ -56,10 +59,10 @@ const AvisualisDetail = (props) => {
           addFormData: {
             ...addFormData,
             ...training,
-            ...model
+            ...model,
           },
-          panelApiData: _panel
-        }
+          panelApiData: _panel,
+        },
       });
       console.log('------_panel',_panel)
     }
@@ -105,18 +108,18 @@ const AvisualisDetail = (props) => {
     dispatch({
       type: 'avisualis/saveData',
       payload: {
-        treeData: _treeData
-      }
+        treeData: _treeData,
+      },
     });
-  }
+  };
 
-  const onDragEnd = ({event, node}) => {
+  const onDragEnd = ({ event, node }) => {
     const { dataTransfer, pageX } = event;
     if (dataTransfer.dropEffect !== 'none' && pageX > 384) {
       const { handleDragEnd } = flowChartRef.current;
       handleDragEnd && handleDragEnd(node);
     }
-  }
+  };
 
   if (loading) return <PageLoading />;
 
@@ -124,15 +127,17 @@ const AvisualisDetail = (props) => {
     <PageHeaderWrapper title={false}>
       <div className={styles.avisualisDetailWrap}>
         <Card className="treeCard">
-          {panelData.length ? <Tree
-            showIcon
-            defaultExpandAll
-            draggable
-            switcherIcon={<DownOutlined />}
-            treeData={panelData}
-            onDragEnd={onDragEnd}
-            onDragStart={({event, node}) => event.dataTransfer.effectAllowed = 'move'}
-          /> : null}
+          {panelData.length ? (
+            <Tree
+              showIcon
+              defaultExpandAll
+              draggable
+              switcherIcon={<DownOutlined />}
+              treeData={panelData}
+              onDragEnd={onDragEnd}
+              onDragStart={({ event, node }) => (event.dataTransfer.effectAllowed = 'move')}
+            />
+          ) : null}
         </Card>
         <FlowChart
           ref={flowChartRef} 

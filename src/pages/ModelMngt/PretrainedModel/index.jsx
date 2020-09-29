@@ -1,4 +1,4 @@
-import { history } from 'umi'
+import { history } from 'umi';
 import { Table, Form, Input, Button, Card, Descriptions, Popover } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -16,20 +16,21 @@ const ExpandDetails = (item) => {
   // 转换运行参数格式
   let runArguments = [];
 
-  if(item.params){
-    Object.keys(item.params).forEach(key => {
+  if (item.params) {
+    Object.keys(item.params).forEach((key) => {
       runArguments.push({
         key: key,
-        value: item.params[key]
-      })
+        value: item.params[key],
+      });
     });
   }
 
   const argumentsContent = (
     <div>
-      {runArguments && runArguments.map(a => {
-        return <div>{a.key + '=' + a.value}</div>;
-      })}
+      {runArguments &&
+        runArguments.map((a) => {
+          return <div>{a.key + '=' + a.value}</div>;
+        })}
     </div>
   );
 
@@ -41,18 +42,18 @@ const ExpandDetails = (item) => {
       <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
       <Descriptions.Item label="运行参数">
         <Popover content={argumentsContent}>
-          {runArguments && runArguments.length > 0 && 
+          {runArguments && runArguments.length > 0 && (
             <div>{runArguments[0].key + '=' + runArguments[0].value + argsSuffix}</div>
-          }
+          )}
         </Popover>
       </Descriptions.Item>
       <Descriptions.Item label="引擎类型">{getNameFromDockerImage(item.engine)}</Descriptions.Item>
       <Descriptions.Item label="模型输出">{item.outputPath}</Descriptions.Item>
     </Descriptions>
   );
-}
+};
 
-const PretrainedModelList = props => {
+const PretrainedModelList = (props) => {
   const {
     loading,
     dispatch,
@@ -63,7 +64,7 @@ const PretrainedModelList = props => {
   const [form] = Form.useForm();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
-    order: ''
+    order: '',
   });
   const searchEl = useRef(null);
 
@@ -89,7 +90,7 @@ const PretrainedModelList = props => {
       ellipsis: true,
       width: 150,
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,     
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       title: '模型用途',
@@ -114,33 +115,31 @@ const PretrainedModelList = props => {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
       width: 200,
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,       
+      sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
       title: '操作',
       width: 220,
       render: (item) => {
-        return (
-          <a onClick={() => createInference(item)}>创建训练作业</a>
-        );
+        return <a onClick={() => createInference(item)}>创建训练作业</a>;
       },
     },
   ];
 
-  const handleNameSearch = name => {
-    setPageParams({...pageParams, ...{pageNum: 1}});
-    setFormValues({name});
+  const handleNameSearch = (name) => {
+    setPageParams({ ...pageParams, ...{ pageNum: 1 } });
+    setFormValues({ name });
   };
 
   const onRefresh = () => {
-    setPageParams({...pageParams, ...{pageNum: 1}});
+    setPageParams({ ...pageParams, ...{ pageNum: 1 } });
     const name = searchEl.current.value;
-    setFormValues({name});
-  };  
+    setFormValues({ name });
+  };
 
   const handleSearch = () => {
     const params = {
@@ -157,12 +156,12 @@ const PretrainedModelList = props => {
     dispatch({
       type: 'pretrainedModelList/fetch',
       payload: params,
-    });       
+    });
   };
 
   const createInference = (item) => {
     const modelId = item.id;
-    history.push((`/model-training/ModelManage/${modelId}/PretrainedModel`));
+    history.push(`/model-training/ModelManage/${modelId}/PretrainedModel`);
   };
 
   const addPretrainedModel = (item) => {
@@ -171,33 +170,38 @@ const PretrainedModelList = props => {
 
   return (
     <PageHeaderWrapper>
-      <Card bordered={false}
+      <Card
+        bordered={false}
         bodyStyle={{
-          padding: '0'
+          padding: '0',
         }}
       >
         <div
           style={{
-            padding: '24px 0 24px 24px'
+            padding: '24px 0 24px 24px',
           }}
         >
           {/* <Button type="default" onClick={addPretrainedModel}>录入模型</Button> */}
           <div
             style={{
-              float: "right",
+              float: 'right',
               paddingRight: '20px',
             }}
           >
-            <Search style={{ width: '200px', marginRight:'20px' }} placeholder="请输入模型名称" onSearch={handleNameSearch} enterButton 
+            <Search
+              style={{ width: '200px', marginRight: '20px' }}
+              placeholder="请输入模型名称"
+              onSearch={handleNameSearch}
+              enterButton
               ref={searchEl}
             />
             <Button icon={<SyncOutlined />} onClick={onRefresh}></Button>
-          </div>            
+          </div>
         </div>
         <Table
           columns={columns}
           dataSource={data.list}
-          rowKey={record => record.id}
+          rowKey={(record) => record.id}
           onChange={onSortChange}
           pagination={{
             total: data.pagination.total,
@@ -207,11 +211,11 @@ const PretrainedModelList = props => {
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
             current: pageParams.pageNum,
-            pageSize: pageParams.pageSize,            
+            pageSize: pageParams.pageSize,
           }}
           loading={loading}
           expandable={{
-            expandedRowRender: record => ExpandDetails(record)
+            expandedRowRender: (record) => ExpandDetails(record),
           }}
         />
       </Card>
