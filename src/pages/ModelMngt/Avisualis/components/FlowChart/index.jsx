@@ -128,9 +128,9 @@ const FlowChart = forwardRef((props, ref) => {
           const { name } = cfg;
           const rect = group.addShape('rect', {
             attrs: {
-              x: -(name.length * 6),
+              x: -(name.length * 6 + 10),
               y: -20,
-              width: 12 * name.length,
+              width: 12 * name.length + 20,
               height: 40,
               radius: 10,
               stroke: '#1890ff',
@@ -287,8 +287,8 @@ const FlowChart = forwardRef((props, ref) => {
           comboIdObj[key] = { num: 0, treeIdx: treeIdx };
         }
         _graph.updateItem(thisNode, {
-          x: 200 * broNum, 
-          y: (230 * treeIdx) + (50 * comboIdObj[key].num),
+          x: 220 * broNum, 
+          y: (220 * treeIdx) + (50 * comboIdObj[key].num),
           anchorPoints: [[0.5, 0], [0.5, 1]]
         });
       })
@@ -366,20 +366,12 @@ const FlowChart = forwardRef((props, ref) => {
           treeIdx: treeIdx
         };
     if (child && child.length) {
-      combosArr.push(...[
-        {
-          id: fName,
-          label: fName,
-          treeIdx: treeIdx
-        },
-        {
-          id: key,
-          label: title,
-          config: config,
-          parentId: fName,
-          treeIdx: treeIdx
-        }
-      ]);
+      combosArr.push({
+        id: key,
+        label: title,
+        config: config,
+        treeIdx: treeIdx
+      });
       getChilds(child, nodeArr, combosArr, key, treeIdx)
     }
     if (hasNodes) {
