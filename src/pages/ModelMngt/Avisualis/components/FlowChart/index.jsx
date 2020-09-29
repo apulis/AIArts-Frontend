@@ -201,6 +201,7 @@ const FlowChart = forwardRef((props, ref) => {
         } 
       }
     });
+
     let _graph = new G6.Graph({
       container: 'container',
       width: 800,
@@ -352,13 +353,11 @@ const FlowChart = forwardRef((props, ref) => {
   const handleDragEnd = node => {
     const { title, key, config, treeIdx, child, fName } = node;
     console.log('-------node', node)
-
     const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
     if ((hasNodes && treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) || (!hasNodes && treeIdx > 0)) {
       message.warning('只能按照步骤顺序依次拖拽！');
       return;
     }
-
     let newData = {}, nodeArr = [], combosArr = [], 
         newNodes = {
           id: key,
@@ -371,6 +370,7 @@ const FlowChart = forwardRef((props, ref) => {
         {
           id: fName,
           label: fName,
+          treeIdx: treeIdx
         },
         {
           id: key,
@@ -382,7 +382,6 @@ const FlowChart = forwardRef((props, ref) => {
       ]);
       getChilds(child, nodeArr, combosArr, key, treeIdx)
     }
-
     if (hasNodes) {
       newData = _.cloneDeep(flowChartData);
       const { edges, nodes, combos } = newData;
@@ -460,44 +459,33 @@ const FlowChart = forwardRef((props, ref) => {
     const allNodes = graph.get('nodes');
     const selectedItem = graph.findAllByState("node", "selected");
     if (selectedItem && selectedItem.length) {
-      const _id = selectedItem[0]._cfg.id;
-      if (_id !== allNodes[allNodes.length - 1]._cfg.id) {
+      const { treeIdx } = selectedItem[0]._cfg.model;
+      if (treeIdx !== allNodes[allNodes.length - 1]._cfg.model.treeIdx) {
         message.warning('只能按照模型顺序依次删除！');
         return;
       }
-      allNodes.forEach(i => {
-        if (i._cfg.id === _id) {
-          let newData = _.cloneDeep(graph);
-          const { nodes, edges } = newData.cfg;
-          nodes && nodes.length && nodes.pop();
-          edges && edges.length && edges.pop();
-          const newNodes = nodes.map(i => {
-            const { id, name, config } = i._cfg.model;
-            return {
-              id: id,
-              name: name,
-              config: config
-            }
-          })
-          const newEdges = edges.map(i => {
-            const { source, target } = i._cfg.model;
-            return {
-              source: source,
-              target: target
-            }
-          })
-          const temp = {
-            nodes: newNodes,
-            edges: newEdges
-          };
-          setFlowChartData(temp);
-          graph.changeData(temp);
-          graph.fitCenter();
-          transformData(panelApiData, temp);
-          setSelectItem(null);
-          return;
+      let newData = _.cloneDeep(graph);
+      const { nodes, edges, combos } = newData.cfg;
+      edges && edges.length && edges.pop();
+      const newEdges = edges.map(i => {
+        const { source, target } = i._cfg.model;
+        return {
+          source: source,
+          target: target,
+          sourceAnchor: 1,
+          targetAnchor: 0
         }
-      })
+      });
+      const temp = {
+        nodes: nodes.filter(n => n._cfg.model.treeIdx !== treeIdx).map(i => { return {...i._cfg.model} }),
+        edges: newEdges,
+        combos: combos.filter(c => c._cfg.model.treeIdx !== treeIdx).map(i => { return {...i._cfg.model} })
+      };
+      setFlowChartData(temp);
+      graph.read(temp);
+      graph.fitCenter();
+      transformData(panelApiData, temp);
+      setSelectItem(null);
     }
   }
 

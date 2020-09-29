@@ -150,7 +150,7 @@ const ItemPanel = (props) => {
       {hasSelectItem && <Form form={form}>{getConfig()}</Form>}
       <div style={{ float: 'right', textAlign: 'right' }}>
         {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
-        {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>}
+        {/* {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
       </div>
       {modalFlag && (
         <Modal
