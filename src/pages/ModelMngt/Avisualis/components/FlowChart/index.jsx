@@ -65,7 +65,7 @@ const FlowChart = forwardRef((props, ref) => {
   //     { source: 'mnist', target: 'DevResNet' },
   //   ],
   // };
-  
+
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd,
   }));
@@ -212,7 +212,7 @@ const FlowChart = forwardRef((props, ref) => {
         //   if (d.comboId) return 10;
         //   return 10
         // },
-        ranksep: 300,
+        // ranksep: 300,
         controlPoints: true,
         sortByCombo: true,
       },
@@ -255,7 +255,8 @@ const FlowChart = forwardRef((props, ref) => {
       modes: {
         default: [
           'zoom-canvas',
-          'drag-combo',
+          // 'drag-combo',
+          'drag-canvas',
           {
             type: 'click-select',
             multiple: false,
@@ -268,12 +269,12 @@ const FlowChart = forwardRef((props, ref) => {
 
     _graph.on('afterlayout', e => {
       const allNodes = _graph.findAll('node', n => { return n });
-      let comboIdObj = {};
+      let comboIdObj = { one: { num: 0, treeIdx: 0 }};
       allNodes && allNodes.length && allNodes.forEach((i, idx) => {
         const { id, comboId, treeIdx, edges } = i._cfg.model;
         const thisNode = _graph.findById(id);
         const key = comboId ? comboId : id;
-        let broNum = 0;
+        let broNum = 0, Y = 0;
         if (idx === 0) {
           _graph.updateItem(thisNode, { x: 0, y: 0 });
           return;
@@ -287,13 +288,12 @@ const FlowChart = forwardRef((props, ref) => {
           comboIdObj[key] = { num: 0, treeIdx: treeIdx };
         }
         _graph.updateItem(thisNode, {
-          x: 220 * broNum, 
-          y: (220 * treeIdx) + (50 * comboIdObj[key].num),
+          x: 250 * broNum, 
+          y: (280 * treeIdx) + (50 * comboIdObj[key].num),
           anchorPoints: [[0.5, 0], [0.5, 1]]
         });
       })
     });
-
     _graph.data(flowChartData);
     _graph.render();
 
@@ -419,6 +419,8 @@ const FlowChart = forwardRef((props, ref) => {
     setFlowChartData(newData);
     graph.read(newData);
     graph.fitCenter();
+    // graph.fitView();
+    graph.zoomTo(0.7);
     transformData(null, newData);
     setSelectItem(null);
   };

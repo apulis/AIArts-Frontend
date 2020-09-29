@@ -72,7 +72,6 @@ const AvisualisDetail = (props) => {
   const transformData = (data, newData) => {
     let _treeData = [], _children = [], _data = data || panelApiData, 
     childrenDisabled = (Boolean(Number(detailId)) || (Boolean(Number(modelId) && Object.keys(detailData).length))) ? true : false;
-
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
         const len = newData && newData.edges ? (newData.edges.length + 1) : 1;
