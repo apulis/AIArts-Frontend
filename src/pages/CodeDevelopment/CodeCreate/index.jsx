@@ -20,6 +20,7 @@ import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceContr
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
 import { beforeSubmitJob } from '@/models/resource';
 import { getUserDockerImages } from '@/services/modelTraning.js';
+import { useIntl } from 'umi';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -30,6 +31,7 @@ const CodeCreate = (props) => {
       type: 'resource/fetchResource',
     });
   }, []);
+  const intl = useIntl();
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
   const [resource, setResource] = useState(null);
@@ -100,7 +102,7 @@ const CodeCreate = (props) => {
     const obj = await postCode1(values);
     const { code, data, msg } = obj;
     if (code === 0) {
-      message.success('创建成功');
+      message.success(intl.formatMessage({id: 'codeCreate.tips.submit.success'}));
       history.push('/codeDevelopment');
     }
   };
@@ -128,8 +130,8 @@ const CodeCreate = (props) => {
       )
     ) {
       Modal.confirm({
-        title: '当前暂无可用训练设备，继续提交将会进入等待队列',
-        content: '是否继续',
+        title: intl.formatMessage({id: 'codeCreate.modal.noDevice.title'}),
+        content: intl.formatMessage({id: 'codeCreate.modal.noDevice.content'}),
         onOk() {
           apiPostCode(values);
         },
@@ -167,7 +169,7 @@ const CodeCreate = (props) => {
   };
 
   const validateMessages = {
-    required: '${label} 是必填项!',
+    required: '${label} '+ intl.formatMessage({id: 'codeCreate.tips.needInput'}),
     types: {},
   };
 
@@ -220,7 +222,7 @@ const CodeCreate = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/codeDevelopment')}
-        title="返回代码开发"
+        title={intl.formatMessage({id: 'codeCreate.pageHeader.backCodeCreate'})}
       ></PageHeader>
       <Card>
         <Form
@@ -231,20 +233,20 @@ const CodeCreate = (props) => {
           initialValues={{ jobTrainingType: 'RegularJob' }}
           form={form}
         >
-          <Form.Item label="开发环境名称" name="name" rules={[{ required: true }, jobNameReg]}>
-            <Input placeholder="请输入开发环境名称" />
+          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.devEnvName'})} name="name" rules={[{ required: true }, jobNameReg]}>
+            <Input placeholder={intl.formatMessage({id: 'codeCreate.placeholder.devEnvName'})} />
           </Form.Item>
-          <Form.Item label="描述" name="desc">
+          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.description'})}  name="desc">
             <TextArea
-              placeholder="请输入描述信息"
+              placeholder={intl.formatMessage({id: 'codeCreate.placeholder.description'})}
               autoSize={{ minRows: 2, maxRows: 6 }}
               maxLength={256}
             />
           </Form.Item>
-          <Form.Item label="代码存储路径" name="codePath" rules={[{ required: true }]}>
-            <Input addonBefore={codePathPrefix} placeholder="代码存储路径" />
+          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.storePath'})}  name="codePath" rules={[{ required: true }]}>
+            <Input addonBefore={codePathPrefix} placeholder={intl.formatMessage({id: 'codeCreate.placeholder.storePath'})}/>
           </Form.Item>
-          <Form.Item label="选择引擎来源">
+          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.engineSource'})}>
             <Radio.Group
               value={engineSource}
               onChange={(e) => {
@@ -252,15 +254,15 @@ const CodeCreate = (props) => {
               }}
               style={{ width: '300px' }}
             >
-              <Radio value={1}>预置引擎</Radio>
-              <Radio value={2}>已保存引擎</Radio>
+              <Radio value={1}>{intl.formatMessage({id: 'codeCreate.value.presetEngine'})}</Radio>
+              <Radio value={2}>{intl.formatMessage({id: 'codeCreate.value.savedEngine'})}</Radio>
             </Radio.Group>
           </Form.Item>
           {engineSource === 1 && (
-            <Form.Item label="引擎类型" required>
+            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.engineType'})}  required>
               <Form.Item
                 name="engineType"
-                rules={[{ required: true, message: '请选择 引擎类型' }]}
+                rules={[{ required: true, message: intl.formatMessage({id: 'codeCreate.tips.selectEngineType'})}]}
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
               >
                 <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
@@ -274,7 +276,7 @@ const CodeCreate = (props) => {
               </Form.Item>
               <Form.Item
                 name="engine"
-                rules={[{ required: true, message: '请选择 引擎名称' }]}
+                rules={[{ required: true, message: intl.formatMessage({id: 'codeCreate.tips.selectEngineName'})}]}
                 style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
               >
                 <Select>
@@ -290,8 +292,8 @@ const CodeCreate = (props) => {
           {engineSource === 2 && (
             <Form.Item
               name="engine"
-              label="引擎类型"
-              rules={[{ required: true, message: '请选择 引擎名称' }]}
+              label={intl.formatMessage({id: 'codeCreate.label.engineType'})} 
+              rules={[{ required: true, message: intl.formatMessage({id: 'codeCreate.tips.selectEngineName'})}]}
             >
               <Select showSearch>
                 {userFrameWorks.map((item, key) => (
@@ -303,13 +305,13 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
 
-          <Form.Item label="任务类型" name="jobTrainingType" rules={[{ required: true }]}>
+          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.jobType'})} name="jobTrainingType" rules={[{ required: true }]}>
             <Radio.Group onChange={(e) => setJobTrainingType(e.target.value)}>
-              <Radio value="RegularJob">常规任务</Radio>
-              <Radio value="PSDistJob">分布式任务</Radio>
+              <Radio value="RegularJob">{intl.formatMessage({id: 'codeCreate.value.regularJob'})}</Radio>
+              <Radio value="PSDistJob">{intl.formatMessage({id: 'codeCreate.value.PSDistJob'})}</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="设备类型" name="deviceType" rules={[{ required: true }]}>
+          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.deviceType'})}  name="deviceType" rules={[{ required: true }]}>
             <Select style={{ width: '50%' }} onChange={(type) => handleDeviceTypeChange(type)}>
               {deviceTypeArr.map((item, index) => (
                 <Option key={index} value={item} index={index}>
@@ -319,7 +321,7 @@ const CodeCreate = (props) => {
             </Select>
           </Form.Item>
           {jobTrainingType == 'RegularJob' && (
-            <Form.Item label="设备数量" name="deviceNum" rules={[{ required: true }]}>
+            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.deviceNum'})}  name="deviceNum" rules={[{ required: true }]}>
               <Select style={{ width: '50%' }}>
                 {deviceNumArr.map((item, key) => (
                   <Option key={key} value={item}>
@@ -330,12 +332,12 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           {jobTrainingType == 'PSDistJob' && (
-            <Form.Item label="节点数量" name="numPs" rules={[{ required: true }]}>
+            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.nodeNum'})}  name="numPs" rules={[{ required: true }]}>
               <InputNumber
                 style={{ width: '50%' }}
                 min={1}
                 max={maxNodeNum}
-                placeholder="请输入节点数量"
+                placeholder={intl.formatMessage({id: 'codeCreate.placeholder.nodeNum'})}
                 onChange={() =>
                   handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
                 }
@@ -343,7 +345,7 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           {jobTrainingType == 'PSDistJob' && (
-            <Form.Item label="单节点设备数量" name="numPsWorker" rules={[{ required: true }]}>
+            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.perNodeNum'})}  name="numPsWorker" rules={[{ required: true }]}>
               <Select
                 style={{ width: '50%' }}
                 onChange={() =>
@@ -359,13 +361,13 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           {jobTrainingType == 'PSDistJob' && (
-            <Form.Item label="全部设备数量" name="deviceNum">
+            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.totalDeviceNum'})}  name="deviceNum">
               <Input style={{ width: '50%' }} disabled></Input>
             </Form.Item>
           )}
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit">
-              立即创建
+            {intl.formatMessage({id: 'codeCreate.submit'})}
             </Button>
           </Form.Item>
         </Form>

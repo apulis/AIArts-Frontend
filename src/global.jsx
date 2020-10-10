@@ -100,3 +100,10 @@ if (pwa) {
     });
   }
 }
+
+
+
+
+// import { setLocale } from 'umi';
+// // setLocale('zh-CN')
+// setLocale('en-US')

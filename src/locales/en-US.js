@@ -4,6 +4,9 @@ import menu from './en-US/menu';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
+import codeCreate from './en-US/pages/codeDevelopment/codeCreate'
+import codeList from './en-US/pages/codeDevelopment/codeList'
+import codeUpload from './en-US/pages/codeDevelopment/codeUpload'
 
 export default {
   'navBar.lang': 'Languages',
@@ -19,4 +22,7 @@ export default {
   ...settings,
   ...pwa,
   ...component,
+  ...codeCreate,
+  ...codeList,
+  ...codeUpload,
 };
