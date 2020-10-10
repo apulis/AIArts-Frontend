@@ -274,7 +274,7 @@ const FlowChart = forwardRef((props, ref) => {
         const { id, comboId, treeIdx, edges } = i._cfg.model;
         const thisNode = _graph.findById(id);
         const key = comboId ? comboId : id;
-        let broNum = 0, Y = 0;
+        let broNum = 0;
         if (idx === 0) {
           _graph.updateItem(thisNode, { x: 0, y: 0 });
           return;
@@ -287,12 +287,42 @@ const FlowChart = forwardRef((props, ref) => {
         } else {
           comboIdObj[key] = { num: 0, treeIdx: treeIdx };
         }
+        let Y = (280 * treeIdx) + (50 * comboIdObj[key].num);
+        // let Y = 0;
+        // if (idx > 0) {
+        //   const preNode = _graph.findById(allNodes[idx - 1]._cfg.model.id);
+        //   const preY = preNode._cfg.model.y;
+        //   if (preNode._cfg.model.treeIdx !== treeIdx) {
+        //     const allCombos = _graph.getCombos();
+        //     let preHeight = 0;
+        //     console.log('-----preY',preY)
+
+        //     console.log('-----getCombos',allCombos)
+
+        //     if (allCombos && allCombos.length) {
+        //       allCombos.forEach(p => {
+        //         if (p._cfg.model.treeIdx === treeIdx && p._cfg.sizeCache.height > preHeight) {
+        //           preHeight = p._cfg.sizeCache.height;
+        //           console.log('-----p._cfg.sizeCache.height',p._cfg.sizeCache.height)
+
+        //         }
+        //       });
+        //     }
+        //     console.log('-----preHeight',preHeight)
+        //     preY ? preHeight ? Y = (50 * comboIdObj[key].num) + preY + preHeight : Y = preY + 100 : Y = Y + 100;
+        //   } else {
+        //     comboIdObj[key].num ? Y = preY + 50 : Y = preY;
+        //   }
+        // }
+
         _graph.updateItem(thisNode, {
           x: 250 * broNum, 
-          y: (280 * treeIdx) + (50 * comboIdObj[key].num),
-          anchorPoints: [[0.5, 0], [0.5, 1]]
+          y: Y,
+          anchorPoints: anchorPoints
         });
       })
+
+      console.log('-----------comboIdObj', comboIdObj)
     });
     _graph.data(flowChartData);
     _graph.render();
@@ -352,7 +382,7 @@ const FlowChart = forwardRef((props, ref) => {
 
   const handleDragEnd = node => {
     const { title, key, config, treeIdx, child, fName } = node;
-    console.log('-------node', node)
+    // console.log('-------graph', graph)
     const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
     if ((hasNodes && treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) || (!hasNodes && treeIdx > 0)) {
       message.warning('只能按照步骤顺序依次拖拽！');
@@ -417,11 +447,16 @@ const FlowChart = forwardRef((props, ref) => {
       }
     })
     setFlowChartData(newData);
-    graph.read(newData);
-    graph.fitCenter();
-    // graph.fitView();
-    graph.zoomTo(0.7);
     transformData(null, newData);
+    graph.read(newData);
+    // graph.fitCenter();
+
+    if (treeIdx > 2) {
+      graph.fitView();
+      graph.zoomTo(0.6);
+    } else {
+      graph.fitCenter();
+    }
     setSelectItem(null);
   };
 
@@ -443,7 +478,7 @@ const FlowChart = forwardRef((props, ref) => {
           config: config,
           name: name,
           comboId: fName,
-          treeIdx: treeIdx
+          treeIdx: treeIdx,
         });
       }
     })
