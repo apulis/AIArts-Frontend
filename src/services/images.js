@@ -11,7 +11,7 @@ export const getImages = async (params) => {
     params: {
       pageNum: params.pageNum,
       pageSize: params.pageSize,
-      searchWord: params.search,
+      name: params.search,
     },
   });
 };
