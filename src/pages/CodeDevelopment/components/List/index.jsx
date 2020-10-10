@@ -28,11 +28,13 @@ import useInterval from '@/hooks/useInterval';
 import FormItem from 'antd/lib/form/FormItem';
 import { checkIfCanDelete } from '@/utils/utils.js';
 import { jobNameReg } from '@/utils/reg';
+import { useIntl } from 'umi';
 
 const { Search } = Input;
 const { Option } = Select;
 
 const CodeList = (props) => {
+  const intl = useIntl();
   const searchRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [form] = Form.useForm();
@@ -264,21 +266,21 @@ const CodeList = (props) => {
 
   const columns = [
     {
-      title: '开发环境名称',
+      title: intl.formatMessage({id: 'codeList.table.column.name'}),
       dataIndex: 'name',
       ellipsis: true,
       sorter: true,
       sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'], // name与createTime非复合排序，各自独立排序
     },
     {
-      title: '状态',
+      title: intl.formatMessage({id: 'codeList.table.column.status'}),
       dataIndex: 'status',
       ellipsis: true,
       width: '80px',
       render: (status) => statusMap[status]?.local,
     },
     {
-      title: '引擎类型',
+      title: intl.formatMessage({id: 'codeList.table.column.engineType'}),
       dataIndex: 'engine',
       ellipsis: true,
       render(value) {
@@ -286,7 +288,7 @@ const CodeList = (props) => {
       },
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({id: 'codeList.table.column.createTime'}),
       dataIndex: 'createTime',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
@@ -294,48 +296,48 @@ const CodeList = (props) => {
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
     {
-      title: '代码存储目录',
+      title: intl.formatMessage({id: 'codeList.table.column.storePath'}),
       dataIndex: 'codePath',
       ellipsis: true,
       width: '120px',
     },
     {
-      title: '描述',
+      title: intl.formatMessage({id: 'codeList.table.column.description'}),
       dataIndex: 'desc',
       ellipsis: true,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({id: 'codeList.table.column.action'}),
       align: 'center',
       render: (codeItem) => {
         return (
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
-              打开
+              {intl.formatMessage({id: 'codeList.table.column.action.open'})}
             </a>
             <a
               onClick={() => handleOpenModal(codeItem)}
               disabled={!canUploadStatus.has(codeItem.status)}
             >
-              上传代码
+              {intl.formatMessage({id: 'codeList.table.column.action.upload'})}
             </a>
             <a
               onClick={() => handleStop(codeItem)}
               disabled={!canStopStatus.has(codeItem.status)}
               style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
             >
-              停止
+              {intl.formatMessage({id: 'codeList.table.column.action.stop'})}
             </a>
             {checkIfCanDelete(codeItem.status) ? (
               <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
-                删除
+                {intl.formatMessage({id: 'codeList.table.column.action.delete'})}
               </a>
             ) : (
-              <span style={{ color: '#333' }}>删除</span>
+              <span style={{ color: '#333' }}>{intl.formatMessage({id: 'codeList.table.column.action.delete'})}</span>
             )}
 
             {codeItem.status === 'running' && (
-              <a onClick={() => toSaveImage(codeItem.id)}>保存镜像</a>
+              <a onClick={() => toSaveImage(codeItem.id)}>{intl.formatMessage({id: 'codeList.table.column.action.save'})}</a>
             )}
           </Space>
         );
@@ -419,7 +421,7 @@ const CodeList = (props) => {
                 handleCreateCodeDev();
               }}
             >
-              创建开发环境
+              {intl.formatMessage({id: 'codeList.add.codeDevelopment'})}
             </Button>
           </div>
         </Col>
@@ -439,7 +441,7 @@ const CodeList = (props) => {
               </Select>
             </div>
             <Search
-              placeholder="输入开发环境名称查询"
+              placeholder={intl.formatMessage({id: 'codeList.placeholder.search'})}
               ref={searchRef}
               onSearch={(value) => handleSearch(value)}
               // onChange
