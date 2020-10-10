@@ -66,7 +66,7 @@ const BasicLayout = (props) => {
         menuHeaderRender={(logoDom, titleDom) => (
           <Link to="/">
             {logoDom}
-            {titleDom}
+            <h1>{props.common.platformName}</h1>
           </Link>
         )}
         onCollapse={handleMenuCollapse}
@@ -123,7 +123,8 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global, settings }) => ({
+export default connect(({ global, settings, common }) => ({
   collapsed: global.collapsed,
   settings,
+  common
 }))(BasicLayout);
