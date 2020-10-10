@@ -1,48 +1,49 @@
 import { getDeviceNumArrByNodeType, getDeviceNumPerNodeArrByNodeType } from '../../utils/utils.js';
 import { PAGEPARAMS, sortText } from '@/utils/const';
+import { formatMessage } from 'umi';
 export const statusMap = {
   unapproved: {
-    local: '未批准',
+    local: formatMessage({id: 'service.status.unapproved'}),
     priority: 1,
   },
   queued: {
-    local: '队列中',
+    local: formatMessage({id: 'service.status.queued'}),
     priority: 2,
   },
   scheduling: {
-    local: '调度中',
+    local: formatMessage({id: 'service.status.scheduling'}),
     priority: 3,
   },
   running: {
-    local: '运行中',
+    local: formatMessage({id: 'service.status.running'}),
     priority: 4,
   },
   finished: {
-    local: '已完成',
+    local: formatMessage({id: 'service.status.finished'}),
     priority: 5,
   },
   failed: {
-    local: '已失败',
+    local: formatMessage({id: 'service.status.failed'}),
     priority: 6,
   },
   pausing: {
-    local: '暂停中',
+    local: formatMessage({id: 'service.status.pausing'}),
     priority: 7,
   },
   paused: {
-    local: '已暂停',
+    local: formatMessage({id: 'service.status.paused'}),
     priority: 8,
   },
   killing: {
-    local: '关闭中',
+    local: formatMessage({id: 'service.status.killing'}),
     priority: 9,
   },
   killed: {
-    local: '已关闭',
+    local: formatMessage({id: 'service.status.killed'}),
     priority: 10,
   },
   error: {
-    local: '错误',
+    local: formatMessage({id: 'service.status.error'}),
     priority: 11,
   },
 };

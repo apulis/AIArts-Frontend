@@ -463,7 +463,7 @@ const CodeList = (props) => {
         rowKey={(r) => r.id}
         pagination={{
           total: codes.total,
-          showTotal: (total) => `总共 ${total} 条`,
+          showTotal: (total) => `${intl.formatMessage({id: 'codeList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'codeList.table.pagination.showTotal.suffix'})}`,
           showQuickJumper: true,
           showSizeChanger: true,
           onChange: handlePageParamsChange,
@@ -474,20 +474,22 @@ const CodeList = (props) => {
       />
       {modalFlag && (
         <Modal
-          title="上传代码"
+          title={intl.formatMessage({id: 'codeList.modal.upload.title.uploadCode'})}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
           maskClosable={false}
           width={480}
-          footer={[<Button onClick={() => setModalFlag(false)}>关闭</Button>]}
+          footer={[<Button onClick={() => setModalFlag(false)}>{intl.formatMessage({id: 'codeList.modal.upload.footer.close'})}</Button>]}
         >
           <CodeUpload modalData={modalData}></CodeUpload>
         </Modal>
       )}
       <Modal
-        title="保存镜像"
+        title={intl.formatMessage({id: 'codeList.modal.saveImage.title.saveImage'})}
         visible={saveImageModalVisible}
+        okText={intl.formatMessage({id: 'codeList.modal.saveImage.footer.ok'})}
+        cancelText={intl.formatMessage({id: 'codeList.modal.saveImage.footer.cancel'})}
         onCancel={() => {
           setSaveImageModalVisible(false);
           setCurrentHandledJobId('');
@@ -497,13 +499,13 @@ const CodeList = (props) => {
         }}
       >
         <Form form={form}>
-          <Form.Item {...commonLayout} label="名称" name="name" rules={[{ required: true }, jobNameReg]}>
+          <Form.Item {...commonLayout} label={intl.formatMessage({id: 'codeList.modal.saveImage.label.name'})} name="name" rules={[{ required: true }, jobNameReg]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
-          <Form.Item {...commonLayout} label="版本" name="version" rules={[{ required: true },{ pattern: /^[A-Za-z0-9|\.]+$/, message: '只允许数字，英文字母和小数点' }]}>
+          <Form.Item {...commonLayout} label={intl.formatMessage({id: 'codeList.modal.saveImage.label.version'})} name="version" rules={[{ required: true },{ pattern: /^[A-Za-z0-9|\.]+$/, message: '只允许数字，英文字母和小数点' }]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
-          <Form.Item {...commonLayout} label="描述" name="description" rules={[{ required: true }]}>
+          <Form.Item {...commonLayout} label={intl.formatMessage({id: 'codeList.modal.saveImage.label.description'})} name="description" rules={[{ required: true }]}>
             <Input style={{ width: '280px' }} />
           </Form.Item>
         </Form>

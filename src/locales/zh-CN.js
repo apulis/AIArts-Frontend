@@ -3,10 +3,10 @@ import globalHeader from './zh-CN/globalHeader';
 import menu from './zh-CN/menu';
 import pwa from './zh-CN/pwa';
 import settingDrawer from './zh-CN/settingDrawer';
+import service from './zh-CN/service';
 import settings from './zh-CN/settings';
-import codeCreate from './zh-CN/pages/codeDevelopment/codeCreate'
-import codeList from './zh-CN/pages/codeDevelopment/codeList'
-import codeUpload from './zh-CN/pages/codeDevelopment/codeUpload'
+import codeCreate from './zh-CN/pages/codeDevelopment/codeCreate';
+import codeList from './zh-CN/pages/codeDevelopment/codeList';
 
 export default {
   'navBar.lang': '语言',
@@ -19,10 +19,10 @@ export default {
   ...globalHeader,
   ...menu,
   ...settingDrawer,
+  ...service,
   ...settings,
   ...pwa,
   ...component,
   ...codeCreate,
   ...codeList,
-  ...codeUpload,
 };
