@@ -1,5 +1,7 @@
+import React from 'react';
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
+import { formatMessage } from 'umi';
 import { isObject } from './types';
 import { checkIfGpuOrNpu } from '@/models/resource';
 
@@ -102,27 +104,18 @@ export const bytesToSize = (bytes) => {
 
 export const getJobStatus = (status) => {
   const statusList = {
-    unapproved: '未批准',
-    queued: '队列中',
-    scheduling: '调度中',
-    running: '运行中',
-    finished: '已完成',
-    failed: '已失败',
-    pausing: '暂停中',
-    paused: '已暂停',
-    killing: '关闭中',
-    killed: '已关闭',
-    error: '错误',
-    'started at ': '开始于： ',
-    'error at ': '发生错误于： ',
-    'paused at ': '停止于：',
-    'failed at ': '失败于： ',
-    'finished at ': '完成于： ',
-    'killed at ': '终止于： ',
-    toUse: '可用',
-    'waiting for available resource. requested: ': '等待可用资源，已请求资源：',
-    '. available: ': '可用资源： ',
-  };
+    unapproved: formatMessage({ id: "service.status.unapproved" }),
+    queued: formatMessage({ id: "service.status.queued"}),
+    scheduling: formatMessage({ id: "service.status.scheduling" }),
+    running: formatMessage({ id: "service.status.running"}),
+    finished: formatMessage({ id: "service.status.finished"}) ,
+    failed: formatMessage({ id: "service.status.failed" }),
+    pausing: formatMessage({ id: "service.status.pausing"}) ,
+    paused: formatMessage({ id: "service.status.paused"} ),
+    killing: formatMessage({ id: "service.status.killing"}) ,
+    killed: formatMessage({ id: "service.status.killed"} ),
+    error: formatMessage({ id: "service.status.error"}),
+   };
   return statusList[status] || '';
 };
 
