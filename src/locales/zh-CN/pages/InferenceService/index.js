@@ -3,5 +3,5 @@ import edgeInferenceList from './edgeInferenceList';
 
 export default {
   ...centerInferenceList,
-  ...edgeInferenceList
+  ...edgeInferenceList,
 };

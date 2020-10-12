@@ -105,23 +105,23 @@ const EdgeInference = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'edgeInferenceList.table.column.id'}),
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.id' }),
       dataIndex: 'jobId',
       render: (id) => <span style={{ fontFamily: 'Consolas' }}>{id}</span>,
     },
     {
-      title: intl.formatMessage({id: 'edgeInferenceList.table.column.name'}),
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.name' }),
       dataIndex: 'jobName',
       key: 'jobName',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'edgeInferenceList.table.column.type'}),
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.type' }),
       dataIndex: 'modelconversionType',
     },
     {
-      title: intl.formatMessage({id: 'edgeInferenceList.table.column.time'}),
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.time' }),
       dataIndex: 'jobTime',
       key: 'jobTime',
       sorter: true,
@@ -129,7 +129,7 @@ const EdgeInference = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'edgeInferenceList.table.column.status'}),
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.status' }),
       render: (item) => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
@@ -144,7 +144,7 @@ const EdgeInference = (props) => {
       },
     },
     {
-      title: intl.formatMessage({id: 'edgeInferenceList.table.column.action'}),
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.action' }),
       render: (item) => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled =
@@ -152,10 +152,10 @@ const EdgeInference = (props) => {
         return (
           <>
             <a onClick={() => onPush(jobId)} disabled={disabled}>
-              {intl.formatMessage({id: 'edgeInferenceList.table.column.action.push'})}
+              {intl.formatMessage({ id: 'edgeInferenceList.table.column.action.push' })}
             </a>
             <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>
-              {intl.formatMessage({id: 'edgeInferenceList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'edgeInferenceList.table.column.action.delete' })}
             </a>
           </>
         );
@@ -258,10 +258,12 @@ const EdgeInference = (props) => {
       <Card>
         <div className={styles.edgeInferences}>
           <Link to="/Inference/EdgeInference/submit">
-            <Button type="primary">{intl.formatMessage({id: 'edgeInferenceList.add.inference'})}</Button>
+            <Button type="primary">
+              {intl.formatMessage({ id: 'edgeInferenceList.add.inference' })}
+            </Button>
           </Link>
           <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>
-            {intl.formatMessage({id: 'edgeInferenceList.setting'})}
+            {intl.formatMessage({ id: 'edgeInferenceList.setting' })}
           </Button>
           {fdInfo.url && (
             <Button type="primary" onClick={() => window.open(fdInfo.url)}>
@@ -273,7 +275,7 @@ const EdgeInference = (props) => {
               {getOptions()}
             </Select>
             <Search
-              placeholder={intl.formatMessage({id: 'edgeInferenceList.placeholder.search'})}
+              placeholder={intl.formatMessage({ id: 'edgeInferenceList.placeholder.search' })}
               enterButton
               onChange={(e) => setName(e.target.value)}
               onSearch={(v) => onSearchChange(v, 2)}
@@ -288,7 +290,12 @@ const EdgeInference = (props) => {
             pagination={{
               total: total,
               showQuickJumper: true,
-              showTotal: (total) => `${intl.formatMessage({id: 'edgeInferenceList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'edgeInferenceList.table.pagination.showTotal.suffix'})}`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'edgeInferenceList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'edgeInferenceList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,

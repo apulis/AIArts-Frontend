@@ -16,4 +16,4 @@ export default {
   'centerInferenceList.table.column.action.delete': 'Delete',
   'centerInferenceList.table.pagination.showTotal.prefix': 'Total',
   'centerInferenceList.table.pagination.showTotal.suffix': 'items',
-}
+};

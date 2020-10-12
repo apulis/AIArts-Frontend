@@ -8,4 +8,4 @@ export default {
   'imageList.table.column.action.delete': 'Delete',
   'imageList.table.pagination.showTotal.prefix': 'Total',
   'imageList.table.pagination.showTotal.suffix': 'items',
-}
+};

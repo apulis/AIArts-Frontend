@@ -13,4 +13,4 @@ export default {
   'modelEvaluationMetricsList.table.column.action.exportParams': '导出参数',
   'modelEvaluationMetricsList.table.pagination.showTotal.prefix': '总共',
   'modelEvaluationMetricsList.table.pagination.showTotal.suffix': '条',
-}
+};

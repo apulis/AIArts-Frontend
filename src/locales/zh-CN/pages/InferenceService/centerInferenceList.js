@@ -16,4 +16,4 @@ export default {
   'centerInferenceList.table.column.action.delete': '删除',
   'centerInferenceList.table.pagination.showTotal.prefix': '总共',
   'centerInferenceList.table.pagination.showTotal.suffix': '条',
-}
+};

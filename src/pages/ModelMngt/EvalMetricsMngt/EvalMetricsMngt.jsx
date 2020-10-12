@@ -85,7 +85,7 @@ const EvalMetricsMngt = () => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.name'}),
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.name' }),
       sorter: true,
       width: '16%',
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -100,7 +100,7 @@ const EvalMetricsMngt = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.engineType'}),
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.engineType' }),
       dataIndex: ['params', 'engine'],
       width: '16%',
       key: 'engine',
@@ -109,7 +109,7 @@ const EvalMetricsMngt = () => {
       },
     },
     {
-      title: intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.createTime' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -117,26 +117,28 @@ const EvalMetricsMngt = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.description'}),
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.description' }),
       ellipsis: true,
       width: '16%',
       dataIndex: ['params', 'desc'],
     },
     {
-      title: intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.action'}),
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action' }),
       align: 'center',
       render: (item) => {
         const id = item.metaData.id;
         return (
           <>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              {intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.action.edit'})}
+              {intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action.edit' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              {intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action.delete' })}
             </a>
             <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)}>
-              {intl.formatMessage({id: 'modelEvaluationMetricsList.table.column.action.exportParams'})}
+              {intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.column.action.exportParams',
+              })}
             </a>
           </>
         );
@@ -254,7 +256,7 @@ const EvalMetricsMngt = () => {
               setImportedParamsModalVisible(true);
             }}
           >
-            {intl.formatMessage({id: 'modelEvaluationMetricsList.add.importParams'})}
+            {intl.formatMessage({ id: 'modelEvaluationMetricsList.add.importParams' })}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -265,7 +267,9 @@ const EvalMetricsMngt = () => {
               }
             </Select>             */}
             <Search
-              placeholder={intl.formatMessage({id: 'modelEvaluationMetricsList.placeholder.search'})}
+              placeholder={intl.formatMessage({
+                id: 'modelEvaluationMetricsList.placeholder.search',
+              })}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -290,7 +294,12 @@ const EvalMetricsMngt = () => {
           pagination={{
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `${intl.formatMessage({id: 'modelEvaluationMetricsList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'modelEvaluationMetricsList.table.pagination.showTotal.suffix'})}`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

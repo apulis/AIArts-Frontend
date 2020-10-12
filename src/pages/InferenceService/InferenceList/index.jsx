@@ -88,7 +88,7 @@ const InferenceList = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.jobName'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.jobName' }),
       dataIndex: 'jobName',
       key: 'jobName',
       render(_text, item) {
@@ -98,19 +98,19 @@ const InferenceList = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.useModel'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.useModel' }),
       render: (text, item) => item.jobParams?.model_base_path,
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.status'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.status' }),
       render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.engineType'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.engineType' }),
       render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework),
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.createTime' }),
       dataIndex: 'jobTime',
       key: 'jobTime',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -118,29 +118,29 @@ const InferenceList = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.runningTime'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.runningTime' }),
       align: 'center',
       render: (text, item) =>
         item.duration ? formatDuration(moment.duration(item.duration)) : '-',
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.serviceAddr'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.serviceAddr' }),
       ellipsis: true,
       render: (text, item) => (item['inference-url'] ? item['inference-url'] : ''),
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.description'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.description' }),
       dataIndex: 'desc',
       render: (text, item) => item.jobParams?.desc,
     },
     {
-      title: intl.formatMessage({id: 'centerInferenceList.table.column.action'}),
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.action' }),
       align: 'center',
       render: (item) => {
         return (
           <>
             <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled(item)}>
-              {intl.formatMessage({id: 'centerInferenceList.table.column.action.stop'})}
+              {intl.formatMessage({ id: 'centerInferenceList.table.column.action.stop' })}
             </Button>
             <Button
               type="link"
@@ -148,7 +148,7 @@ const InferenceList = (props) => {
               onClick={() => deleteJob(item)}
               disabled={isDeleteDisabled(item)}
             >
-              {intl.formatMessage({id: 'centerInferenceList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'centerInferenceList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -296,7 +296,7 @@ const InferenceList = (props) => {
           }}
         >
           <Button type="primary" onClick={CreateJob}>
-            {intl.formatMessage({id: 'centerInferenceList.add.inferenceJob'})}
+            {intl.formatMessage({ id: 'centerInferenceList.add.inferenceJob' })}
           </Button>
           <div
             style={{
@@ -317,7 +317,7 @@ const InferenceList = (props) => {
             </Select>
             <Search
               style={{ width: '200px', marginRight: '20px' }}
-              placeholder={intl.formatMessage({id: 'centerInferenceList.placeholder.search'})}
+              placeholder={intl.formatMessage({ id: 'centerInferenceList.placeholder.search' })}
               onSearch={onSearchName}
               enterButton
             />
@@ -332,7 +332,12 @@ const InferenceList = (props) => {
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,
-            showTotal: (total) => `${intl.formatMessage({id: 'centerInferenceList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'centerInferenceList.table.pagination.showTotal.suffix'})}`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'centerInferenceList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'centerInferenceList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

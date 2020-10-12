@@ -10,4 +10,4 @@ export default {
   'modelEvaluationList.table.column.action.delete': '删除',
   'modelEvaluationList.table.pagination.showTotal.prefix': '总共',
   'modelEvaluationList.table.pagination.showTotal.suffix': '条',
-}
+};

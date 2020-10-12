@@ -48,7 +48,7 @@ const ModelList = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'myModelsList.table.column.name'}),
+      title: intl.formatMessage({ id: 'myModelsList.table.column.name' }),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -63,13 +63,13 @@ const ModelList = (props) => {
     //   width: 100,
     // },
     {
-      title: intl.formatMessage({id: 'myModelsList.table.column.codePath'}),
+      title: intl.formatMessage({ id: 'myModelsList.table.column.codePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
       width: 100,
     },
     {
-      title: intl.formatMessage({id: 'myModelsList.table.column.createAt'}),
+      title: intl.formatMessage({ id: 'myModelsList.table.column.createAt' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -79,23 +79,27 @@ const ModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'myModelsList.table.column.description'}),
+      title: intl.formatMessage({ id: 'myModelsList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
       width: 150,
     },
     {
-      title: intl.formatMessage({id: 'myModelsList.table.column.action'}),
+      title: intl.formatMessage({ id: 'myModelsList.table.column.action' }),
       width: 220,
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => handleDownload(item)}>{intl.formatMessage({id: 'myModelsList.table.column.action.download'})}</a>
+            <a onClick={() => handleDownload(item)}>
+              {intl.formatMessage({ id: 'myModelsList.table.column.action.download' })}
+            </a>
             {/* <a onClick={() => createInference(item)}>创建推理</a> */}
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
-            <a onClick={() => evaluateModel(item)}>{intl.formatMessage({id: 'myModelsList.table.column.action.evaluate'})}</a>
+            <a onClick={() => evaluateModel(item)}>
+              {intl.formatMessage({ id: 'myModelsList.table.column.action.evaluate' })}
+            </a>
             <a style={{ color: 'red' }} onClick={() => deleteModel(item)}>
-              {intl.formatMessage({id: 'myModelsList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'myModelsList.table.column.action.delete' })}
             </a>
           </Space>
         );
@@ -233,7 +237,7 @@ const ModelList = (props) => {
             }}
           >
             <Button type="primary" onClick={createModel}>
-              {intl.formatMessage({id: 'myModelsList.add.createModel'})}
+              {intl.formatMessage({ id: 'myModelsList.add.createModel' })}
             </Button>
             <div
               style={{
@@ -243,7 +247,7 @@ const ModelList = (props) => {
             >
               <Search
                 style={{ width: '200px', marginRight: '20px' }}
-                placeholder={intl.formatMessage({id: 'myModelsList.placeholder.search'})}
+                placeholder={intl.formatMessage({ id: 'myModelsList.placeholder.search' })}
                 onSearch={onSearchName}
                 enterButton
                 ref={searchEl}
@@ -259,7 +263,12 @@ const ModelList = (props) => {
             pagination={{
               total: data.pagination.total,
               showQuickJumper: true,
-              showTotal: (total) => `${intl.formatMessage({id: 'myModelsList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'myModelsList.table.pagination.showTotal.suffix'})}`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'myModelsList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'myModelsList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,

@@ -5,5 +5,5 @@ import modelEvaluationMetricsList from './modelEvaluationMetricsList';
 export default {
   ...myModels,
   ...modelEvaluationList,
-  ...modelEvaluationMetricsList
+  ...modelEvaluationMetricsList,
 };

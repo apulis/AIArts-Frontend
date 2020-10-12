@@ -10,4 +10,4 @@ export default {
   'modelEvaluationList.table.column.action.delete': 'Delete',
   'modelEvaluationList.table.pagination.showTotal.prefix': 'Total',
   'modelEvaluationList.table.pagination.showTotal.suffix': 'items',
-}
+};

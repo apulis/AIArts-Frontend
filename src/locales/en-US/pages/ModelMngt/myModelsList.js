@@ -13,4 +13,4 @@ export default {
   'myModelsList.table.column.action.delete': 'Delete',
   'myModelsList.table.pagination.showTotal.prefix': 'Total',
   'myModelsList.table.pagination.showTotal.suffix': 'items',
-}
+};

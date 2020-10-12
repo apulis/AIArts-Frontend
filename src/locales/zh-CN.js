@@ -42,5 +42,5 @@ export default {
   ...resourceMonitoring,
   ...setting,
   ...visualOperation,
-  ...modelMngt
+  ...modelMngt,
 };

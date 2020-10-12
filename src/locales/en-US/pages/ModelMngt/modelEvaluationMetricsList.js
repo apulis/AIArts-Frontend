@@ -13,4 +13,4 @@ export default {
   'modelEvaluationMetricsList.table.column.action.exportParams': 'Export Params',
   'modelEvaluationMetricsList.table.pagination.showTotal.prefix': 'Total',
   'modelEvaluationMetricsList.table.pagination.showTotal.suffix': 'items',
-}
+};

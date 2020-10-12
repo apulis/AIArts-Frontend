@@ -13,4 +13,4 @@ export default {
   'myModelsList.table.column.action.delete': '删除',
   'myModelsList.table.pagination.showTotal.prefix': '总共',
   'myModelsList.table.pagination.showTotal.suffix': '条',
-}
+};

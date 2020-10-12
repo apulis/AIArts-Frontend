@@ -177,7 +177,7 @@ const List = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: intl.formatMessage({id: 'modelEvaluationList.table.column.name'}),
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.name' }),
       key: 'jobName',
       render(_text, item) {
         return (
@@ -191,19 +191,19 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({id: 'modelEvaluationList.table.column.status'}),
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
-      title: intl.formatMessage({id: 'modelEvaluationList.table.column.engineType'}),
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.engineType' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
     },
     {
       dataIndex: 'createTime',
-      title: intl.formatMessage({id: 'modelEvaluationList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -216,7 +216,7 @@ const List = (props) => {
     //   title: '描述'
     // },
     {
-      title: intl.formatMessage({id: 'modelEvaluationList.table.column.action'}),
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -225,10 +225,10 @@ const List = (props) => {
               onClick={() => stopEvaluationJob(item.id)}
               disabled={!canStop(item)}
             >
-              {intl.formatMessage({id: 'modelEvaluationList.table.column.action.stop'})}
+              {intl.formatMessage({ id: 'modelEvaluationList.table.column.action.stop' })}
             </Button>
             <Button type="link" danger onClick={() => deleteEvaluationJob(item)}>
-              {intl.formatMessage({id: 'modelEvaluationList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'modelEvaluationList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -259,7 +259,7 @@ const List = (props) => {
           <Search
             ref={searchEl}
             style={{ width: '200px' }}
-            placeholder={intl.formatMessage({id: 'modelEvaluationList.placeholder.search'})}
+            placeholder={intl.formatMessage({ id: 'modelEvaluationList.placeholder.search' })}
             onSearch={onSearchName}
             enterButton
           />
@@ -275,7 +275,12 @@ const List = (props) => {
           pagination={{
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `${intl.formatMessage({id: 'modelEvaluationList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'modelEvaluationList.table.pagination.showTotal.suffix'})}`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'modelEvaluationList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'modelEvaluationList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

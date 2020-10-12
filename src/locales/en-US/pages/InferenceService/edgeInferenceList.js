@@ -14,4 +14,4 @@ export default {
   'edgeInferenceList.table.column.action.delete': 'Delete',
   'edgeInferenceList.table.pagination.showTotal.prefix': 'Total',
   'edgeInferenceList.table.pagination.showTotal.suffix': 'items',
-}
+};

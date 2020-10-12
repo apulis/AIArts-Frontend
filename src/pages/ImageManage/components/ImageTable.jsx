@@ -35,26 +35,26 @@ const ImageTable = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'imageList.table.column.imageId'}),
+      title: intl.formatMessage({ id: 'imageList.table.column.imageId' }),
       dataIndex: 'imageId',
     },
     {
-      title: intl.formatMessage({id: 'imageList.table.column.name'}),
+      title: intl.formatMessage({ id: 'imageList.table.column.name' }),
       dataIndex: 'name',
     },
     {
-      title: intl.formatMessage({id: 'imageList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'imageList.table.column.createTime' }),
       render(_text, item) {
         return <div>{moment(item.createdAt).format('YYYY-MM-DD HH:mm')}</div>;
       },
     },
     {
-      title: intl.formatMessage({id: 'imageList.table.column.action'}),
+      title: intl.formatMessage({ id: 'imageList.table.column.action' }),
       render(_text, item) {
         return (
           <div>
             <a style={{ color: 'red' }} onClick={() => handleDeleteImage(item.id)}>
-              {intl.formatMessage({id: 'imageList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'imageList.table.column.action.delete' })}
             </a>
           </div>
         );
@@ -98,7 +98,12 @@ const ImageTable = (props) => {
         loading={loading}
         pagination={{
           total: total,
-          showTotal: (total) => `${intl.formatMessage({id: 'imageList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'imageList.table.pagination.showTotal.suffix'})}`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'imageList.table.pagination.showTotal.prefix',
+            })} ${total} ${intl.formatMessage({
+              id: 'imageList.table.pagination.showTotal.suffix',
+            })}`,
           showQuickJumper: true,
           showSizeChanger: true,
           onChange: (pageNum, pageSize) => setPageParams({ pageNum, pageSize }),

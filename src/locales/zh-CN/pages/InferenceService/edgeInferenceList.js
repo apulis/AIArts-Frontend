@@ -14,4 +14,4 @@ export default {
   'edgeInferenceList.table.column.action.delete': '删除',
   'edgeInferenceList.table.pagination.showTotal.prefix': '总共',
   'edgeInferenceList.table.pagination.showTotal.suffix': '条',
-}
+};
