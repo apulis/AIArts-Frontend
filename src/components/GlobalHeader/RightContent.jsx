@@ -1,11 +1,12 @@
 import { Button, Tag, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'umi';
 import Avatar from './AvatarDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
-
+import { setLocale, getLocale } from 'umi';
+import { useIntl } from 'umi';
 const ENVTagColor = {
   dev: 'orange',
   test: 'green',
@@ -13,6 +14,7 @@ const ENVTagColor = {
 };
 
 const GlobalHeaderRight = (props) => {
+  const intl = useIntl();
   const { theme, layout } = props;
   let className = styles.right;
 
@@ -31,7 +33,9 @@ const GlobalHeaderRight = (props) => {
         </a>
       </Dropdown> */}
       <Button href="/custom-user-dashboard" style={{ marginLeft: '20px' }}>
-        用户管理系统
+        {intl.formatMessage({
+          id: 'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem',
+        })}
       </Button>
       <Avatar menu />
       {REACT_APP_ENV && (
@@ -39,7 +43,7 @@ const GlobalHeaderRight = (props) => {
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
         </span>
       )}
-      {/* <SelectLang className={styles.action} /> */}
+      <SelectLang className={styles.action} />
     </div>
   );
 };

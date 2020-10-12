@@ -8,11 +8,13 @@ import { Link } from 'umi';
 import AddModalForm from './components/AddModalForm';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const DataSetList = () => {
+  const intl = useIntl();
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
   const [editData, setEditData] = useState({});
   const [modalFlag, setModalFlag] = useState(false);
@@ -91,7 +93,7 @@ const DataSetList = () => {
 
   const columns = [
     {
-      title: '数据集名称',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.name' }),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -102,17 +104,17 @@ const DataSetList = () => {
       ),
     },
     {
-      title: '简介',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
       width: 350,
     },
     {
-      title: '创建者',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.creator' }),
       dataIndex: 'creator',
     },
     {
-      title: '更新时间',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.updatedAt' }),
       key: 'updatedAt',
       dataIndex: 'updatedAt',
       sorter: true,
@@ -120,29 +122,31 @@ const DataSetList = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '更新版本',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.version' }),
       dataIndex: 'version',
     },
     {
-      title: '是否已标注',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.isTranslated' }),
       dataIndex: 'isTranslated',
       render: (i) => <span>{i === true ? '是' : '否'}</span>,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.action' }),
       render: (item) => {
         const { id } = item;
         return (
           <>
-            <a onClick={() => onEditClick(item)}>编辑</a>
+            <a onClick={() => onEditClick(item)}>
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.edit' })}
+            </a>
             <a
               style={{ margin: '0 16px' }}
               onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}
             >
-              下载
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.download' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
-              删除
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.delete' })}
             </a>
           </>
         );
@@ -189,11 +193,11 @@ const DataSetList = () => {
       <Card>
         <div className={styles.datasetWrap}>
           <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>
-            新增数据集
+            {intl.formatMessage({ id: 'dataSetList.add.dataSet' })}
           </Button>
           <div className={styles.searchWrap}>
             <Search
-              placeholder="请输入数据集名称查询"
+              placeholder={intl.formatMessage({ id: 'dataSetList.placeholder.search' })}
               enterButton
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
@@ -208,7 +212,12 @@ const DataSetList = () => {
             pagination={{
               total: dataSets.total,
               showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'dataSetList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'dataSetList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,

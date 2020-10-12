@@ -4,9 +4,17 @@ import menu from './en-US/menu';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
-import codeCreate from './en-US/pages/codeDevelopment/codeCreate'
-import codeList from './en-US/pages/codeDevelopment/codeList'
-import codeUpload from './en-US/pages/codeDevelopment/codeUpload'
+import service from './en-US/service';
+import codeDevelopment from './en-US/pages/codeDevelopment';
+import dataSet from './en-US/pages/DataSet';
+import edgeInference from './en-US/pages/EdgeInference';
+import imageManage from './en-US/pages/ImageManage';
+import inferenceService from './en-US/pages/InferenceService';
+import modelTraining from './en-US/pages/ModelTraining';
+import overView from './en-US/pages/OverView';
+import resourceMonitoring from './en-US/pages/ResourceMonitoring';
+import setting from './en-US/pages/Setting';
+import visualOperation from './en-US/pages/VisualOperation';
 
 export default {
   'navBar.lang': 'Languages',
@@ -19,10 +27,18 @@ export default {
   ...globalHeader,
   ...menu,
   ...settingDrawer,
+  ...service,
   ...settings,
   ...pwa,
   ...component,
-  ...codeCreate,
-  ...codeList,
-  ...codeUpload,
+  ...codeDevelopment,
+  ...dataSet,
+  ...edgeInference,
+  ...imageManage,
+  ...inferenceService,
+  ...modelTraining,
+  ...overView,
+  ...resourceMonitoring,
+  ...setting,
+  ...visualOperation,
 };
