@@ -6,6 +6,15 @@ import settingDrawer from './zh-CN/settingDrawer';
 import service from './zh-CN/service';
 import settings from './zh-CN/settings';
 import codeDevelopment from './zh-CN/pages/codeDevelopment';
+import dataSet from './zh-CN/pages/DataSet';
+import edgeInference from './zh-CN/pages/EdgeInference';
+import imageManage from './zh-CN/pages/ImageManage';
+import inferenceService from './zh-CN/pages/InferenceService';
+import modelTraining from './zh-CN/pages/ModelTraining';
+import overView from './zh-CN/pages/OverView';
+import resourceMonitoring from './zh-CN/pages/ResourceMonitoring';
+import setting from './zh-CN/pages/Setting';
+import visualOperation from './zh-CN/pages/VisualOperation';
 
 export default {
   'navBar.lang': '语言',
@@ -22,5 +31,14 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...codeDevelopment
+  ...codeDevelopment,
+  ...dataSet,
+  ...edgeInference,
+  ...imageManage,
+  ...inferenceService,
+  ...modelTraining,
+  ...overView,
+  ...resourceMonitoring,
+  ...setting,
+  ...visualOperation
 };

@@ -17,7 +17,6 @@ export default {
   'codeList.table.column.action.save': 'Save Image',
   'codeList.table.pagination.showTotal.prefix': 'Total',
   'codeList.table.pagination.showTotal.suffix': 'items',
-  'codeList.table.pagination.showSizeChanger.unit': '/page',
 
   'codeList.modal.upload.title.uploadCode': 'Upload Code',
   'codeList.modal.upload.content.uploadTips': 'Please click or drag the file to upload (multi-file support)',

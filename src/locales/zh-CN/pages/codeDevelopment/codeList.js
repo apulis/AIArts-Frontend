@@ -17,7 +17,6 @@ export default{
   'codeList.table.column.action.save': '保存镜像',
   'codeList.table.pagination.showTotal.prefix': '总共',
   'codeList.table.pagination.showTotal.suffix': '条',
-  'codeList.table.pagination.showSizeChanger.unit': '条/页',
 
   'codeList.modal.upload.title.uploadCode': '上传代码',
   'codeList.modal.upload.content.uploadTips': '请点击或拖入文件上传（支持多文件）',
