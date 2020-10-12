@@ -5,8 +5,16 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import service from './en-US/service';
-import codeCreate from './en-US/pages/codeDevelopment/codeCreate';
-import codeList from './en-US/pages/codeDevelopment/codeList';
+import codeDevelopment from './en-US/pages/codeDevelopment';
+import dataSet from './en-US/pages/DataSet';
+import edgeInference from './en-US/pages/EdgeInference';
+import imageManage from './en-US/pages/ImageManage';
+import inferenceService from './en-US/pages/InferenceService';
+import modelTraining from './en-US/pages/ModelTraining';
+import overView from './en-US/pages/OverView';
+import resourceMonitoring from './en-US/pages/ResourceMonitoring';
+import setting from './en-US/pages/Setting';
+import visualOperation from './en-US/pages/VisualOperation';
 
 export default {
   'navBar.lang': 'Languages',
@@ -23,6 +31,14 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...codeCreate,
-  ...codeList,
+  ...codeDevelopment,
+  ...dataSet,
+  ...edgeInference,
+  ...imageManage,
+  ...inferenceService,
+  ...modelTraining,
+  ...overView,
+  ...resourceMonitoring,
+  ...setting,
+  ...visualOperation
 };
