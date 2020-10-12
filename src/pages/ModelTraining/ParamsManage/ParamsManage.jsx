@@ -15,12 +15,14 @@ import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
 import styles from '@/global.less';
 import { downloadStringAsFile } from '@/utils/utils';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Option } = Select;
 const { Search } = Input;
 
 const ParamsManage = () => {
+  const intl = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
@@ -96,7 +98,7 @@ const ParamsManage = () => {
 
   const columns = [
     {
-      title: '参数配置名称',
+      title: intl.formatMessage({id: 'trainingParamsList.table.column.name'}),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       dataIndex: ['params', 'name'],
@@ -110,7 +112,7 @@ const ParamsManage = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: '引擎类型',
+      title: intl.formatMessage({id: 'trainingParamsList.table.column.engineType'}),
       dataIndex: ['params', 'engine'],
       key: 'engine',
       render(val) {
@@ -118,7 +120,7 @@ const ParamsManage = () => {
       },
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({id: 'trainingParamsList.table.column.createTime'}),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -126,27 +128,27 @@ const ParamsManage = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '描述',
+      title: intl.formatMessage({id: 'trainingParamsList.table.column.description'}),
       width: '25%',
       ellipsis: true,
       dataIndex: ['params', 'desc'],
     },
     {
-      title: '操作',
+      title: intl.formatMessage({id: 'trainingParamsList.table.column.action'}),
       render: (item) => {
         const id = item.metaData.id;
         const name = item.params.name;
         return (
           <>
-            <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
+            <a onClick={() => handleCreateTrainJob(id)}>{intl.formatMessage({id: 'trainingParamsList.table.column.action.createTrainingJob'})}</a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              编辑
+              {intl.formatMessage({id: 'trainingParamsList.table.column.action.edit'})}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              删除
+              {intl.formatMessage({id: 'trainingParamsList.table.column.action.delete'})}
             </a>
             <a style={{ marginLeft: '12px' }} onClick={() => saveTemplateAsFile(id, name)}>
-              导出参数
+              {intl.formatMessage({id: 'trainingParamsList.table.column.action.exportParams'})}
             </a>
           </>
         );
@@ -247,7 +249,7 @@ const ParamsManage = () => {
             }}
             type="primary"
           >
-            导入参数
+            {intl.formatMessage({id: 'trainingParamsList.add.importParams'})}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -258,7 +260,7 @@ const ParamsManage = () => {
               }
             </Select> */}
             <Search
-              placeholder="输入参数配置名称"
+              placeholder= {intl.formatMessage({id: 'trainingParamsList.placeholder.search'})}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -283,7 +285,7 @@ const ParamsManage = () => {
             pageSize: pageParams.pageSize,
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) => `${intl.formatMessage({id: 'trainingParamsList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'trainingParamsList.table.pagination.showTotal.suffix'})}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

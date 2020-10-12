@@ -12,6 +12,7 @@ import {
 } from '@/services/modelTraning';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 
@@ -34,6 +35,7 @@ const { Search } = Input;
 const { Option } = Select;
 
 const Visualization = () => {
+  const intl = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ status: 'all', jobName: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
@@ -136,23 +138,23 @@ const Visualization = () => {
   const columns = [
     {
       dataIndex: 'jobName',
-      title: '作业名称',
+      title: intl.formatMessage({id: 'visualizationList.table.column.name'}),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: intl.formatMessage({id: 'visualizationList.table.column.status'}),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'TensorboardLogDir',
-      title: '可视化日志路径',
+      title: intl.formatMessage({id: 'visualizationList.table.column.logPath'}),
     },
     {
       dataIndex: 'createTime',
-      title: '创建时间',
+      title: intl.formatMessage({id: 'visualizationList.table.column.createTime'}),
       key: 'createTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -162,10 +164,10 @@ const Visualization = () => {
     },
     {
       dataIndex: 'description',
-      title: '描述',
+      title: intl.formatMessage({id: 'visualizationList.table.column.description'}),
     },
     {
-      title: '操作',
+      title: intl.formatMessage({id: 'visualizationList.table.column.action'}),
       render(_text, item) {
         return (
           <>
@@ -176,7 +178,7 @@ const Visualization = () => {
               }}
               disabled={!['running'].includes(item.status)}
             >
-              打开
+              {intl.formatMessage({id: 'visualizationList.table.column.action.open'})}
             </Button>
             {['unapproved', 'queued', 'scheduling', 'running'].includes(item.status) ? (
               <Button
@@ -184,7 +186,7 @@ const Visualization = () => {
                 onClick={() => changeJobStatus(item.id, 'pause')}
                 disabled={!['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)}
               >
-                停止
+                {intl.formatMessage({id: 'visualizationList.table.column.action.stop'})}
               </Button>
             ) : (
               <Button
@@ -192,11 +194,11 @@ const Visualization = () => {
                 onClick={() => changeJobStatus(item.id, 'running')}
                 disabled={!['paused', 'killed'].includes(item.status)}
               >
-                运行
+                {intl.formatMessage({id: 'visualizationList.table.column.action.run'})}
               </Button>
             )}
             <Button type="link" onClick={() => handleDelete(item)} style={{ color: 'red' }}>
-              删除
+              {intl.formatMessage({id: 'visualizationList.table.column.action.delete'})}
             </Button>
           </>
         );
@@ -214,7 +216,7 @@ const Visualization = () => {
       >
         <Link to="/model-training/createVisualization">
           <Button type="primary" href="">
-            创建可视化作业
+            {intl.formatMessage({id: 'visualizationList.add.createVisaulJob'})}
           </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
@@ -231,7 +233,7 @@ const Visualization = () => {
           </Select>
           <Search
             style={{ width: '200px' }}
-            placeholder="输入作业名称查询"
+            placeholder={intl.formatMessage({id: 'visualizationList.placeholder.search'})}
             onSearch={() => {
               setPageParams({ ...pageParams, ...{ pageNum: 1 } });
               getVisualizations();
@@ -255,7 +257,7 @@ const Visualization = () => {
             pageSize: pageParams.pageSize,
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) => `${intl.formatMessage({id: 'visualizationList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'visualizationList.table.pagination.showTotal.suffix'})}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
