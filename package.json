@@ -35,7 +35,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged"
     }
   },
   "lint-staged": {
@@ -45,7 +44,7 @@
       "prettier --write"
     ]
   },
-  "browserslist": [
+  "browserslist": [  
     "> 1%",
     "last 2 versions",
     "not ie <= 10"
