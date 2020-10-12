@@ -1,5 +1,4 @@
-import { getPlatformConfig } from '../services/common'; 
-
+import { getPlatformConfig } from '../services/common';
 
 const common = {
   namespace: 'common',
@@ -30,7 +29,7 @@ const common = {
         localStorage.interval = payload;
       }
     },
-    * fetchPlatformConfig({ payload }, { call, put }) {
+    *fetchPlatformConfig({ payload }, { call, put }) {
       const res = yield call(getPlatformConfig);
       if (res.code === 0) {
         // if (typeof res.i18n === 'string') {
@@ -49,10 +48,10 @@ const common = {
             platformName: res.platformName,
             i18n: res.i18n,
             enableVC: res.enableVC,
-          }
-        })
+          },
+        });
       }
-    }
+    },
   },
   reducers: {
     updateInterval(state, { payload }) {
@@ -64,9 +63,9 @@ const common = {
     savePlatform(state, { payload }) {
       return {
         ...state,
-        ...payload
-      }
-    }
+        ...payload,
+      };
+    },
   },
 };
 

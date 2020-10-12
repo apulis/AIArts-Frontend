@@ -1,4 +1,4 @@
-export default{
+export default {
   'service.status.all': 'All',
   'service.status.unapproved': 'Unapproved',
   'service.status.queued': 'Queued',
@@ -11,4 +11,4 @@ export default{
   'service.status.killing': 'Killing',
   'service.status.killed': 'Killed',
   'service.status.error': 'Error',
-}
+};

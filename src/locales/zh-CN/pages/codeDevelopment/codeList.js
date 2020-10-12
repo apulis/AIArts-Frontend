@@ -1,4 +1,4 @@
-export default{
+export default {
   'codeList.add.codeDevelopment': '创建开发环境',
 
   'codeList.placeholder.search': '输入名称查询',
@@ -39,5 +39,5 @@ export default{
   'codeList.tips.delete.modal.title': '当前任务尚未停止',
   'codeList.tips.delete.modal.content': '请先停止该任务',
   'codeList.tips.delete.modal.okText': '确定',
-  'codeList.tips.saveImage.success':'保存镜像成功',
-}
+  'codeList.tips.saveImage.success': '保存镜像成功',
+};

@@ -126,5 +126,5 @@ const BasicLayout = (props) => {
 export default connect(({ global, settings, common }) => ({
   collapsed: global.collapsed,
   settings,
-  common
+  common,
 }))(BasicLayout);

@@ -15,6 +15,7 @@ export default {
   'component.noticeIcon.empty': 'No notifications',
   'component.noticeIcon.view-more': 'View more',
 
-  'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem':'User Management System',
-  'component.globalHeader.avatarDropdown.logout':'Sign out',
+  'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem':
+    'User Management System',
+  'component.globalHeader.avatarDropdown.logout': 'Sign out',
 };

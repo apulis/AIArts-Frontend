@@ -50,7 +50,7 @@ class AvatarDropdown extends React.Component {
 
         <Menu.Item key="logout">
           <LogoutOutlined />
-            {formatMessage({id: 'component.globalHeader.avatarDropdown.logout'})}
+          {formatMessage({ id: 'component.globalHeader.avatarDropdown.logout' })}
         </Menu.Item>
       </Menu>
     );

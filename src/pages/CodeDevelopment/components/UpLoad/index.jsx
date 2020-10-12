@@ -23,9 +23,17 @@ const CodeUpload = (props) => {
       if (status !== 'uploading') {
       }
       if (status === 'done') {
-        message.success(`${info.file.name} ${intl.formatMessage({id: 'codeList.modal.upload.tips.uploadSuccess'})}`);
+        message.success(
+          `${info.file.name} ${intl.formatMessage({
+            id: 'codeList.modal.upload.tips.uploadSuccess',
+          })}`,
+        );
       } else if (status === 'error') {
-        message.error(`${info.file.name} ${intl.formatMessage({id: 'codeList.modal.upload.tips.uploadError'})}`);
+        message.error(
+          `${info.file.name} ${intl.formatMessage({
+            id: 'codeList.modal.upload.tips.uploadError',
+          })}`,
+        );
       }
     },
     beforeUpload(file) {
@@ -42,7 +50,9 @@ const CodeUpload = (props) => {
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
-        <p className="ant-upload-text">{intl.formatMessage({id: 'codeList.modal.upload.content.uploadTips'})}</p>
+        <p className="ant-upload-text">
+          {intl.formatMessage({ id: 'codeList.modal.upload.content.uploadTips' })}
+        </p>
       </Dragger>
     </>
   );

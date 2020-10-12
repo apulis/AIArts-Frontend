@@ -1,6 +1,6 @@
 import { Button, Tag, Menu, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'umi';
 import Avatar from './AvatarDropdown';
 import SelectLang from '../SelectLang';
@@ -19,32 +19,31 @@ const GlobalHeaderRight = (props) => {
   const { theme, layout } = props;
   let className = styles.right;
 
-  useEffect(() =>{
+  useEffect(() => {
     const lang = getLocale();
     setCurLanguage(lang);
-  },[])
-  
+  }, []);
 
   if (theme === 'dark' && layout === 'topmenu') {
     className = `${styles.right}  ${styles.dark}`;
   }
   const getLanguageBtnText = () => {
-    if(curLanguage === 'en-US'){
+    if (curLanguage === 'en-US') {
       return '中文';
-    }else if(curLanguage === 'zh-CN'){
+    } else if (curLanguage === 'zh-CN') {
       return 'English';
     }
-  }
-  const switchLanguage = () =>{
+  };
+  const switchLanguage = () => {
     const lang = getLocale();
-    if(lang === 'en-US'){
+    if (lang === 'en-US') {
       setLocale('zh-CN');
       setCurLanguage('zh-CN');
-    }else if(lang === 'zh-CN'){
+    } else if (lang === 'zh-CN') {
       setLocale('en-US');
       setCurLanguage('en-US');
     }
-  }
+  };
 
   return (
     <div
@@ -60,7 +59,9 @@ const GlobalHeaderRight = (props) => {
         {getLanguageBtnText()}
       </Button>
       <Button href="/custom-user-dashboard" style={{ marginLeft: '20px' }}>
-        {intl.formatMessage({id: 'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem'})}
+        {intl.formatMessage({
+          id: 'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem',
+        })}
       </Button>
       <Avatar menu />
       {REACT_APP_ENV && (

@@ -15,6 +15,6 @@ export default {
   'component.noticeIcon.empty': '暂无数据',
   'component.noticeIcon.view-more': '查看更多',
 
-  'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem':'用户管理系统',
-  'component.globalHeader.avatarDropdown.logout':'退出登录',
+  'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem': '用户管理系统',
+  'component.globalHeader.avatarDropdown.logout': '退出登录',
 };
