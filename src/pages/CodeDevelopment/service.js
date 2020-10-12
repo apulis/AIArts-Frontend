@@ -59,7 +59,7 @@ export async function getCodeCount() {
       allCounts += data[key];
       return { status: key, desc: `${statusMap[key].local} (${data[key]})` };
     });
-    myData.unshift({ status: 'all', desc: `全部 (${allCounts})` });
+    myData.unshift({ status: 'all', desc: `${statusMap['all'].local} (${allCounts})` });
     myRes['data'] = myData;
   }
   return myRes;

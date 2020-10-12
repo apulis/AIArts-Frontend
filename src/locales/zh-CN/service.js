@@ -1,4 +1,5 @@
 export default{
+  'service.status.all': '全部',
   'service.status.unapproved': '未批准',
   'service.status.queued': '队列中',
   'service.status.scheduling': '调度中',

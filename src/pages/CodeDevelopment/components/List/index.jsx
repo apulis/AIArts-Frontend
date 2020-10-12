@@ -174,7 +174,7 @@ const CodeList = (props) => {
       if (data.name === 'ipython' && data.status === 'running' && data.accessPoint) {
         window.open(data.accessPoint);
       } else {
-        message.info('服务正在准备中，请稍候再试');
+        message.info(intl.formatMessage({id: 'codeList.tips.open.error'}));
       }
     }
   };
@@ -184,7 +184,7 @@ const CodeList = (props) => {
     const { code, data, msg } = obj;
     if (code === 0) {
       renderTable('update');
-      message.success('停止成功');
+      message.success(intl.formatMessage({id: 'codeList.tips.stop.success'}));
     }
   };
 
@@ -198,7 +198,7 @@ const CodeList = (props) => {
         setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
       }
       renderStatusSelect('update');
-      message.success('删除成功');
+      message.success(intl.formatMessage({id: 'codeList.tips.delete.success'}));
     }
   };
 
@@ -214,9 +214,9 @@ const CodeList = (props) => {
     const status = item.status;
     if (canStopStatus.has(status)) {
       Modal.warning({
-        title: '当前任务尚未停止',
-        content: '请先停止该任务',
-        okText: '确定',
+        title: intl.formatMessage({id: 'codeList.tips.delete.modal.title'}),
+        content: intl.formatMessage({id: 'codeList.tips.delete.modal.content'}),
+        okText: intl.formatMessage({id: 'codeList.tips.delete.modal.okText'}),
       });
     } else {
       apiDeleteCode(item.id);
@@ -388,7 +388,7 @@ const CodeList = (props) => {
         } else if (type === 'fresh') {
           renderTable('fresh', {
             callback: () => {
-              message.success('刷新成功');
+              message.success(intl.formatMessage({id: 'codeList.tips.fresh.success'}));
             },
           });
         }
@@ -404,7 +404,7 @@ const CodeList = (props) => {
       const res = await createSaveImage(values);
       if (res.code === 0) {
         renderTable();
-        message.success('成功保存该镜像');
+        message.success(intl.formatMessage({id: 'codeList.tips.saveImage.success'}));
         setSaveImageModalVisible(false);
       }
     }

@@ -4,10 +4,11 @@ import { ConfigProvider, message } from 'antd';
 import { Redirect, connect } from 'umi';
 // import enUS from 'antd/es/locale/en_US';
 import zhCN from 'antd/es/locale/zh_CN';
+import enUS from 'antd/es/locale/en_US';
 import LoginPage from '@/pages/exception/401';
 import { USER_LOGIN_URL } from '@/utils/const';
 import { stringify } from 'querystring';
-
+import { setLocale, getLocale } from 'umi';
 class SecurityLayout extends React.Component {
   state = {
     isReady: false,
@@ -66,21 +67,29 @@ class SecurityLayout extends React.Component {
   }
 
   render() {
+    console.log('render securityLayout')
     const { isReady } = this.state;
     const { children, loading } = this.props;
     const token = localStorage.token;
     if (loading || !isReady) {
       return <PageLoading />;
     }
-
+    const getLanguage = () => {
+      const lang = getLocale();
+      if (lang === 'en-US') {
+        return enUS;
+      }else if(lang === 'zh-CN'){
+        return zhCN;
+      }
+    }
     if (!token) {
       return (
         // <LoginPage />
         <PageLoading />
       );
     }
-
-    return <ConfigProvider locale={zhCN}>{children}</ConfigProvider>;
+    
+    return <ConfigProvider locale={getLanguage()}>{children}</ConfigProvider>;
   }
 }
 

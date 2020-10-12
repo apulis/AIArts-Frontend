@@ -2,6 +2,10 @@ import { getDeviceNumArrByNodeType, getDeviceNumPerNodeArrByNodeType } from '../
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { formatMessage } from 'umi';
 export const statusMap = {
+  all: {
+    local: formatMessage({id: 'service.status.all'}),
+    priority: 0,
+  },
   unapproved: {
     local: formatMessage({id: 'service.status.unapproved'}),
     priority: 1,

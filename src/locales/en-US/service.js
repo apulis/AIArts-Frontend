@@ -1,4 +1,5 @@
 export default{
+  'service.status.all': 'All',
   'service.status.unapproved': 'Unapproved',
   'service.status.queued': 'Queued',
   'service.status.scheduling': 'Scheduling',

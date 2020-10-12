@@ -31,4 +31,13 @@ export default{
   'codeList.modal.saveImage.label.description': '描述',
   'codeList.modal.saveImage.footer.ok': '确定',
   'codeList.modal.saveImage.footer.cancel': '取消',
+
+  'codeList.tips.fresh.success': '刷新成功',
+  'codeList.tips.open.error': '服务正在准备中，请稍候再试',
+  'codeList.tips.stop.success': '停止成功',
+  'codeList.tips.delete.success': '删除成功',
+  'codeList.tips.delete.modal.title': '当前任务尚未停止',
+  'codeList.tips.delete.modal.content': '请先停止该任务',
+  'codeList.tips.delete.modal.okText': '确定',
+  'codeList.tips.saveImage.success':'保存镜像成功',
 }
