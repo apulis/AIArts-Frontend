@@ -31,8 +31,9 @@
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
-    "pre-commit": "npm run prettier"
+    "pre-commit": "lint-staged"
   },
+  "husky": { "hooks": { "pre-commit": "npm run lint-staged" } },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
     "**/*.{js,jsx,ts,tsx}": "npm run lint-staged:js",
