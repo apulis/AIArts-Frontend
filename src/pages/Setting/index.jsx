@@ -33,7 +33,10 @@ const Setting = ({ common, dispatch }) => {
     <PageHeaderWrapper>
       <div style={{ width: '100%' }}>
         <Form form={form} {...commonLayout}>
-          <FormItem name="interval" label={<FormattedMessage id="setting.form.label.refresh.interval" />}>
+          <FormItem
+            name="interval"
+            label={<FormattedMessage id="setting.form.label.refresh.interval" />}
+          >
             <Select style={{ width: 120 }} defaultValue={defaultInterval}>
               {[0, 3, 5, 10, 30]
                 .map((val) => val * 1000)
