@@ -7,6 +7,9 @@ const CommonLayout = ({ children, dispatch, resource }) => {
     dispatch({
       type: 'resource/fetchResource',
     });
+    dispatch({
+      type: 'common/fetchPlatformConfig',
+    });
   }, []);
   if (Object.keys(resource.devices).length === 0) {
     return <PageLoading />;

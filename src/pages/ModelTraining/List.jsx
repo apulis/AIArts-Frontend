@@ -16,6 +16,7 @@ import style from './index.less';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
+import { useIntl } from 'umi';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -36,6 +37,7 @@ const { Search } = Input;
 const { Option } = Select;
 
 const List = (props) => {
+  const intl = useIntl();
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -186,7 +188,7 @@ const List = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '作业名称',
+      title: intl.formatMessage({ id: 'modelList.table.column.name' }),
       key: 'jobName',
       render(_text, item) {
         return <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>;
@@ -196,19 +198,19 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: intl.formatMessage({ id: 'modelList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'modelList.table.column.engine' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
     },
     {
       dataIndex: 'createTime',
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'modelList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -218,7 +220,7 @@ const List = (props) => {
     },
     {
       dataIndex: 'desc',
-      title: '描述',
+      title: intl.formatMessage({ id: 'modelList.table.column.description' }),
       width: '100px',
       render(_text) {
         return (
@@ -229,7 +231,7 @@ const List = (props) => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'modelList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -239,7 +241,7 @@ const List = (props) => {
                   style={{ marginRight: '16px', display: 'block' }}
                   onClick={() => stopTraining(item.id)}
                 >
-                  停止
+                  {intl.formatMessage({ id: 'modelList.table.column.action.stop' })}
                 </a>
                 <Button
                   type="link"
@@ -247,13 +249,13 @@ const List = (props) => {
                   disabled={!checkIfCanDelete(item.status)}
                   onClick={() => handleDeleteJob(item.id, item.status)}
                 >
-                  删除
+                  {intl.formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ marginRight: '16px' }} className="disabled">
-                  已停止
+                  {intl.formatMessage({ id: 'modelList.table.column.action.hasStopped' })}
                 </div>
                 <Button
                   danger
@@ -261,7 +263,7 @@ const List = (props) => {
                   disabled={!checkIfCanDelete(item.status)}
                   onClick={() => handleDeleteJob(item.id, item.status)}
                 >
-                  删除
+                  {intl.formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
               </div>
             )}
@@ -286,7 +288,7 @@ const List = (props) => {
       >
         <Link to="/model-training/submit">
           <Button type="primary" href="">
-            创建训练作业
+            {intl.formatMessage({ id: 'modelList.add.modelTraining' })}
           </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
@@ -301,7 +303,7 @@ const List = (props) => {
           </Select>
           <Search
             style={{ width: '200px' }}
-            placeholder="输入作业名称查询"
+            placeholder={intl.formatMessage({ id: 'modelList.placeholder.search' })}
             onChange={onSearchInput}
             onSearch={searchList}
             enterButton
