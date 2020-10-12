@@ -5,8 +5,7 @@ import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
 import service from './en-US/service';
-import codeCreate from './en-US/pages/codeDevelopment/codeCreate';
-import codeList from './en-US/pages/codeDevelopment/codeList';
+import codeDevelopment from './en-US/pages/codeDevelopment'
 
 export default {
   'navBar.lang': 'Languages',
@@ -23,6 +22,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...codeCreate,
-  ...codeList,
+  ...codeDevelopment
 };

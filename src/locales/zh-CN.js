@@ -5,8 +5,7 @@ import pwa from './zh-CN/pwa';
 import settingDrawer from './zh-CN/settingDrawer';
 import service from './zh-CN/service';
 import settings from './zh-CN/settings';
-import codeCreate from './zh-CN/pages/codeDevelopment/codeCreate';
-import codeList from './zh-CN/pages/codeDevelopment/codeList';
+import codeDevelopment from './zh-CN/pages/codeDevelopment';
 
 export default {
   'navBar.lang': '语言',
@@ -23,6 +22,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
-  ...codeCreate,
-  ...codeList,
+  ...codeDevelopment
 };
