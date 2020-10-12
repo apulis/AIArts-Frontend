@@ -101,27 +101,47 @@ const OverView = ({ user }) => {
           <Steps>
             <Step
               status="finish"
-              title={<Link to="/codeDevelopment"><FormattedMessage id="overview.codeDevelop" /></Link>}
+              title={
+                <Link to="/codeDevelopment">
+                  <FormattedMessage id="overview.codeDevelop" />
+                </Link>
+              }
               icon={<EditOutlined onClick={() => history.push('/codeDevelopment')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/dataManage/dataSet"><FormattedMessage id="overview.datesets" /></Link>}
+              title={
+                <Link to="/dataManage/dataSet">
+                  <FormattedMessage id="overview.datesets" />
+                </Link>
+              }
               icon={<ReadOutlined onClick={() => history.push('/dataManage/dataSet')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/model-training/modelTraining"><FormattedMessage id="overview.modelTraining" /></Link>}
+              title={
+                <Link to="/model-training/modelTraining">
+                  <FormattedMessage id="overview.modelTraining" />
+                </Link>
+              }
               icon={<FireOutlined onClick={() => history.push('/model-training/modelTraining')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/ModelManagement/MyModels"><FormattedMessage id="overview.modelManagement" /></Link>}
+              title={
+                <Link to="/ModelManagement/MyModels">
+                  <FormattedMessage id="overview.modelManagement" />
+                </Link>
+              }
               icon={<CodepenOutlined onClick={() => history.push('/ModelManagement/MyModels')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/Inference/central"><FormattedMessage id="overview.inference" /></Link>}
+              title={
+                <Link to="/Inference/central">
+                  <FormattedMessage id="overview.inference" />
+                </Link>
+              }
               icon={<BulbOutlined onClick={() => history.push('/Inference/central')} />}
             />
           </Steps>

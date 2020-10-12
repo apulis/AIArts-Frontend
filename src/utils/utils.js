@@ -104,18 +104,18 @@ export const bytesToSize = (bytes) => {
 
 export const getJobStatus = (status) => {
   const statusList = {
-    unapproved: formatMessage({ id: "service.status.unapproved" }),
-    queued: formatMessage({ id: "service.status.queued"}),
-    scheduling: formatMessage({ id: "service.status.scheduling" }),
-    running: formatMessage({ id: "service.status.running"}),
-    finished: formatMessage({ id: "service.status.finished"}) ,
-    failed: formatMessage({ id: "service.status.failed" }),
-    pausing: formatMessage({ id: "service.status.pausing"}) ,
-    paused: formatMessage({ id: "service.status.paused"} ),
-    killing: formatMessage({ id: "service.status.killing"}) ,
-    killed: formatMessage({ id: "service.status.killed"} ),
-    error: formatMessage({ id: "service.status.error"}),
-   };
+    unapproved: formatMessage({ id: 'service.status.unapproved' }),
+    queued: formatMessage({ id: 'service.status.queued' }),
+    scheduling: formatMessage({ id: 'service.status.scheduling' }),
+    running: formatMessage({ id: 'service.status.running' }),
+    finished: formatMessage({ id: 'service.status.finished' }),
+    failed: formatMessage({ id: 'service.status.failed' }),
+    pausing: formatMessage({ id: 'service.status.pausing' }),
+    paused: formatMessage({ id: 'service.status.paused' }),
+    killing: formatMessage({ id: 'service.status.killing' }),
+    killed: formatMessage({ id: 'service.status.killed' }),
+    error: formatMessage({ id: 'service.status.error' }),
+  };
   return statusList[status] || '';
 };
 

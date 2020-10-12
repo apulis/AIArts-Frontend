@@ -2,6 +2,7 @@ import React from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Select, Button, Form, message } from 'antd';
 import { connect } from 'dva';
+import { FormattedMessage } from 'umi';
 
 const { Option } = Select;
 
@@ -23,7 +24,7 @@ const Setting = ({ common, dispatch }) => {
         type: 'common/changeInterval',
         payload: interval,
       });
-      message.success('设置成功');
+      message.success(<FormattedMessage id="setting.message.success" />);
     }
   };
 
@@ -32,7 +33,7 @@ const Setting = ({ common, dispatch }) => {
     <PageHeaderWrapper>
       <div style={{ width: '100%' }}>
         <Form form={form} {...commonLayout}>
-          <FormItem name="interval" label="页面数据刷新时间">
+          <FormItem name="interval" label={<FormattedMessage id="setting.form.label.refresh.interval" />}>
             <Select style={{ width: 120 }} defaultValue={defaultInterval}>
               {[0, 3, 5, 10, 30]
                 .map((val) => val * 1000)
@@ -43,7 +44,7 @@ const Setting = ({ common, dispatch }) => {
           </FormItem>
           <Form.Item wrapperCol={{ ...commonLayout.wrapperCol, offset: 3 }}>
             <Button type="primary" onClick={changeInterval} style={{ marginLeft: '40px' }}>
-              确定
+              <FormattedMessage id="setting.button.confirm" />
             </Button>
           </Form.Item>
         </Form>

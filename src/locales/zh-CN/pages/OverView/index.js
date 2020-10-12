@@ -7,5 +7,5 @@ export default {
   'overview.inference': '推理服务',
   'overview.noData': '暂无数据',
   'overview.use.manual': '使用流程',
-  'overview.to.label.image': '去标注图片'
+  'overview.to.label.image': '去标注图片',
 };
