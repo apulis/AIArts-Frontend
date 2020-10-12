@@ -1,7 +1,13 @@
+import { getPlatformConfig } from '../services/common'; 
+
+
 const common = {
   namespace: 'common',
   state: {
     interval: localStorage.interval === 'null' ? null : Number(localStorage.interval) || 3000,
+    platformName: '',
+    i18n: 'zh-CN',
+    enableVC: false,
   },
   effects: {
     *changeInterval({ payload }, { put }) {
@@ -18,13 +24,35 @@ const common = {
         type: 'updateInterval',
         payload,
       });
-      console.log('payload', payload);
       if (payload) {
         localStorage.interval = payload;
       } else {
         localStorage.interval = payload;
       }
     },
+    * fetchPlatformConfig({ payload }, { call, put }) {
+      const res = yield call(getPlatformConfig);
+      if (res.code === 0) {
+        // if (typeof res.i18n === 'string') {
+        //   setI18n(res.i18n);
+        //   yield call(setCookieLang, res.i18n);
+        //   yield put({
+        //     type: 'saveLang',
+        //     payload: {
+        //       language: res.i18n,
+        //     }
+        //   })
+        // }
+        yield put({
+          type: 'savePlatform',
+          payload: {
+            platformName: res.platformName,
+            i18n: res.i18n,
+            enableVC: res.enableVC,
+          }
+        })
+      }
+    }
   },
   reducers: {
     updateInterval(state, { payload }) {
@@ -33,6 +61,12 @@ const common = {
         interval: payload,
       };
     },
+    savePlatform(state, { payload }) {
+      return {
+        ...state,
+        ...payload
+      }
+    }
   },
 };
 
