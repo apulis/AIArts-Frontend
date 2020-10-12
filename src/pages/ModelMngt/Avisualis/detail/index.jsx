@@ -74,8 +74,9 @@ const AvisualisDetail = (props) => {
     childrenDisabled = (Boolean(Number(detailId)) || (Boolean(Number(modelId) && Object.keys(detailData).length))) ? true : false;
     _data && _data.length && _data.forEach((i, idx) => {
       if (newData) {
-        const len = newData && newData.edges ? (newData.edges.length + 1) : 1;
-        childrenDisabled = len > 0 && !(len < (idx + 1));
+        const len = newData.nodes && newData.nodes.length ? newData.nodes.length : 0;
+        const _idx = len ? newData.nodes[len - 1].treeIdx : 0;
+        childrenDisabled = len > 0 ? !(_idx < idx) : false;
       }
       let _children = [];
       const { children, name } = i;
@@ -102,7 +103,7 @@ const AvisualisDetail = (props) => {
         icon: <FolderOpenTwoTone />,
         // titleRender: (nodeData) => <div className="test">{`步骤${idx + 1}：${name}`}</div>,
       })
-    })
+    });
     setPanelData(_treeData);
     dispatch({
       type: 'avisualis/saveData',

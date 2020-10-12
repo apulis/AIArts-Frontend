@@ -47,8 +47,6 @@ const FlowChart = forwardRef((props, ref) => {
   const [flowChartData, setFlowChartData] = useState(detailData);
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
-  const [combosTempArr, setCombosTempArr] = useState([]);
-  const [nodesTempArr, setNodesTempArr] = useState([]);
   const { panelApiData, treeData } = avisualis;
   // const data = {
   //   nodes: [
@@ -287,33 +285,41 @@ const FlowChart = forwardRef((props, ref) => {
         } else {
           comboIdObj[key] = { num: 0, treeIdx: treeIdx };
         }
-        let Y = (280 * treeIdx) + (50 * comboIdObj[key].num);
-        // let Y = 0;
+        let Y = (200 * treeIdx) + (50 * comboIdObj[key].num);
+        // let Y = 0, preY = 0;
         // if (idx > 0) {
-        //   const preNode = _graph.findById(allNodes[idx - 1]._cfg.model.id);
-        //   const preY = preNode._cfg.model.y;
-        //   if (preNode._cfg.model.treeIdx !== treeIdx) {
-        //     const allCombos = _graph.getCombos();
-        //     let preHeight = 0;
-        //     console.log('-----preY',preY)
-
-        //     console.log('-----getCombos',allCombos)
-
-        //     if (allCombos && allCombos.length) {
-        //       allCombos.forEach(p => {
-        //         if (p._cfg.model.treeIdx === treeIdx && p._cfg.sizeCache.height > preHeight) {
-        //           preHeight = p._cfg.sizeCache.height;
-        //           console.log('-----p._cfg.sizeCache.height',p._cfg.sizeCache.height)
-
-        //         }
-        //       });
+        //   const preNodes = _graph.findAll('node', n => {
+        //     if (n._cfg.model.treeIdx === treeIdx - 1) return n;
+        //   });
+        //   preNodes.map(q => {
+        //     if (q._cfg.model.y > preY || q._cfg.model.y === preY) {
+        //       preY = q._cfg.model.y;
         //     }
-        //     console.log('-----preHeight',preHeight)
-        //     preY ? preHeight ? Y = (50 * comboIdObj[key].num) + preY + preHeight : Y = preY + 100 : Y = Y + 100;
-        //   } else {
-        //     comboIdObj[key].num ? Y = preY + 50 : Y = preY;
+        //   })
+        //   console.log('-----preY',preY)
+        //   const allCombos = _graph.getCombos();
+        //   let preHeight = 0;
+        //   console.log('-----getCombos',allCombos)
+        //   if (allCombos && allCombos.length) {
+        //     allCombos.forEach(p => {
+        //       if ((p._cfg.model.treeIdx === treeIdx || p._cfg.model.treeIdx === treeIdx - 1) && p._cfg.sizeCache.height > preHeight) {
+        //         preHeight = p._cfg.sizeCache.height;
+        //         console.log('-----p._cfg.sizeCache.height',p._cfg.sizeCache.height)
+        //       }
+        //     });
+        //   }
+        //   console.log('-----preHeight',preHeight)
+        //   Y = preY + preHeight;
+        //   if (comboIdObj[key].num) {
+        //     const preBroY =  _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+        //     Y = preBroY + 50;
         //   }
         // }
+
+        if (treeIdx === panelApiData.length - 1) {
+          const preNodeY =  _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+          Y = preNodeY + 100;
+        } 
 
         _graph.updateItem(thisNode, {
           x: 250 * broNum, 
@@ -382,7 +388,6 @@ const FlowChart = forwardRef((props, ref) => {
 
   const handleDragEnd = node => {
     const { title, key, config, treeIdx, child, fName } = node;
-    // console.log('-------graph', graph)
     const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
     if ((hasNodes && treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) || (!hasNodes && treeIdx > 0)) {
       message.warning('只能按照步骤顺序依次拖拽！');
@@ -449,14 +454,14 @@ const FlowChart = forwardRef((props, ref) => {
     setFlowChartData(newData);
     transformData(null, newData);
     graph.read(newData);
-    // graph.fitCenter();
+    graph.fitCenter();
 
-    if (treeIdx > 2) {
-      graph.fitView();
-      graph.zoomTo(0.6);
-    } else {
-      graph.fitCenter();
-    }
+    // if (treeIdx > 2) {
+    //   graph.fitView();
+    //   graph.zoomTo(0.6);
+    // } else {
+    //   graph.fitCenter();
+    // }
     setSelectItem(null);
   };
 
@@ -511,9 +516,9 @@ const FlowChart = forwardRef((props, ref) => {
         combos: combos.filter(c => c._cfg.model.treeIdx !== treeIdx).map(i => { return {...i._cfg.model} })
       };
       setFlowChartData(temp);
+      transformData(panelApiData, temp);
       graph.read(temp);
       graph.fitCenter();
-      transformData(panelApiData, temp);
       setSelectItem(null);
     }
   };
@@ -540,7 +545,7 @@ const FlowChart = forwardRef((props, ref) => {
     return true;
   };
 
-  console.log('-------selectItem', selectItem)
+  // console.log('-------selectItem', selectItem)
 
   return (
     <>
