@@ -31,7 +31,7 @@
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint:fix"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
