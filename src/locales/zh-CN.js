@@ -11,6 +11,7 @@ import edgeInference from './zh-CN/pages/EdgeInference';
 import imageManage from './zh-CN/pages/ImageManage';
 import inferenceService from './zh-CN/pages/InferenceService';
 import modelTraining from './zh-CN/pages/ModelTraining';
+import modelMngt from './zh-CN/pages/ModelMngt';
 import overView from './zh-CN/pages/OverView';
 import resourceMonitoring from './zh-CN/pages/ResourceMonitoring';
 import setting from './zh-CN/pages/Setting';
@@ -41,4 +42,5 @@ export default {
   ...resourceMonitoring,
   ...setting,
   ...visualOperation,
+  ...modelMngt
 };

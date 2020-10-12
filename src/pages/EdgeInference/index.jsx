@@ -10,6 +10,7 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import useInterval from '@/hooks/useInterval';
 import { connect } from 'dva';
+import { useIntl } from 'umi';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -22,6 +23,7 @@ const typeText = {
 };
 
 const EdgeInference = (props) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [jobs, setJobs] = useState([]);
   const [fdInfo, setFdInfo] = useState({ username: '', url: '', password: '' });
@@ -103,23 +105,23 @@ const EdgeInference = (props) => {
 
   const columns = [
     {
-      title: 'ID',
+      title: intl.formatMessage({id: 'edgeInferenceList.table.column.id'}),
       dataIndex: 'jobId',
       render: (id) => <span style={{ fontFamily: 'Consolas' }}>{id}</span>,
     },
     {
-      title: '推理名称',
+      title: intl.formatMessage({id: 'edgeInferenceList.table.column.name'}),
       dataIndex: 'jobName',
       key: 'jobName',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
-      title: '类型',
+      title: intl.formatMessage({id: 'edgeInferenceList.table.column.type'}),
       dataIndex: 'modelconversionType',
     },
     {
-      title: '时间',
+      title: intl.formatMessage({id: 'edgeInferenceList.table.column.time'}),
       dataIndex: 'jobTime',
       key: 'jobTime',
       sorter: true,
@@ -127,7 +129,7 @@ const EdgeInference = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
-      title: '状态',
+      title: intl.formatMessage({id: 'edgeInferenceList.table.column.status'}),
       render: (item) => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
@@ -142,7 +144,7 @@ const EdgeInference = (props) => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({id: 'edgeInferenceList.table.column.action'}),
       render: (item) => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled =
@@ -150,10 +152,10 @@ const EdgeInference = (props) => {
         return (
           <>
             <a onClick={() => onPush(jobId)} disabled={disabled}>
-              推送
+              {intl.formatMessage({id: 'edgeInferenceList.table.column.action.push'})}
             </a>
             <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>
-              删除
+              {intl.formatMessage({id: 'edgeInferenceList.table.column.action.delete'})}
             </a>
           </>
         );
@@ -256,10 +258,10 @@ const EdgeInference = (props) => {
       <Card>
         <div className={styles.edgeInferences}>
           <Link to="/Inference/EdgeInference/submit">
-            <Button type="primary">新建推理</Button>
+            <Button type="primary">{intl.formatMessage({id: 'edgeInferenceList.add.inference'})}</Button>
           </Link>
           <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>
-            设置
+            {intl.formatMessage({id: 'edgeInferenceList.setting'})}
           </Button>
           {fdInfo.url && (
             <Button type="primary" onClick={() => window.open(fdInfo.url)}>
@@ -271,7 +273,7 @@ const EdgeInference = (props) => {
               {getOptions()}
             </Select>
             <Search
-              placeholder="请输入推理名称查询"
+              placeholder={intl.formatMessage({id: 'edgeInferenceList.placeholder.search'})}
               enterButton
               onChange={(e) => setName(e.target.value)}
               onSearch={(v) => onSearchChange(v, 2)}
@@ -286,7 +288,7 @@ const EdgeInference = (props) => {
             pagination={{
               total: total,
               showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
+              showTotal: (total) => `${intl.formatMessage({id: 'edgeInferenceList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'edgeInferenceList.table.pagination.showTotal.suffix'})}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
