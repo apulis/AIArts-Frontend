@@ -7,7 +7,6 @@ import settings from './en-US/settings';
 import service from './en-US/service';
 import codeCreate from './en-US/pages/codeDevelopment/codeCreate';
 import codeList from './en-US/pages/codeDevelopment/codeList';
-import config from './en-US/config'
 
 export default {
   'navBar.lang': 'Languages',
@@ -17,7 +16,6 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   'app.welcome.link.fetch-blocks': 'Get all block',
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
-  ...config,
   ...globalHeader,
   ...menu,
   ...settingDrawer,
