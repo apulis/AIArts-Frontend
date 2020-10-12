@@ -7,5 +7,5 @@ export default {
   ...modelList,
   ...visualizationList,
   ...trainingParamsList,
-  ...presetModelList
-}
+  ...presetModelList,
+};
