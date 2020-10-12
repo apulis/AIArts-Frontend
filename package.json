@@ -31,7 +31,7 @@
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
     "tsc": "tsc",
-    "pre-commit": "lint"
+    "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -63,6 +63,7 @@
     "classnames": "^2.2.6",
     "connect-history-api-fallback": "^1.6.0",
     "ecstatic": "^4.1.4",
+    "eslint-config-airbnb": "^18.2.0",
     "gg-editor": "^2.0.2",
     "insert-css": "^2.0.0",
     "lodash": "^4.17.11",
