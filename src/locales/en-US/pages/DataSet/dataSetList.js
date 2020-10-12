@@ -1,4 +1,4 @@
-export default{
+export default {
   'dataSetList.add.dataSet': 'Create Code Development',
 
   'dataSetList.placeholder.search': 'input name query',
@@ -15,5 +15,4 @@ export default{
   'dataSetList.table.column.action.delete': 'Delete',
   'dataSetList.table.pagination.showTotal.prefix': 'Total',
   'dataSetList.table.pagination.showTotal.suffix': 'items',
-
-}
+};

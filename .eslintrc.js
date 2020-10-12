@@ -6,10 +6,10 @@ module.exports = {
     REACT_APP_ENV: true,
   },
   rules: {
-    "no-console": "off",
-    "no-shadow": "off",
-    "prefer-destructuring": "off",
-    "no-return-await": "off",
-    "space-before-blocks": "on",
+    'no-console': 'off',
+    'no-shadow': 'off',
+    'prefer-destructuring': 'off',
+    'no-return-await': 'off',
+    'space-before-blocks': 'on',
   },
 };

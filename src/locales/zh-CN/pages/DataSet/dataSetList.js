@@ -1,4 +1,4 @@
-export default{
+export default {
   'dataSetList.add.dataSet': '新增数据集',
 
   'dataSetList.placeholder.search': '输入名称查询',
@@ -15,4 +15,4 @@ export default{
   'dataSetList.table.column.action.delete': '删除',
   'dataSetList.table.pagination.showTotal.prefix': '总共',
   'dataSetList.table.pagination.showTotal.suffix': '条',
-}
+};

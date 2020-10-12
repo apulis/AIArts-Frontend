@@ -40,5 +40,5 @@ export default {
   ...overView,
   ...resourceMonitoring,
   ...setting,
-  ...visualOperation
+  ...visualOperation,
 };
