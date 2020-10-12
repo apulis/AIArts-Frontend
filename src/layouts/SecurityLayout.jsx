@@ -67,7 +67,7 @@ class SecurityLayout extends React.Component {
   }
 
   render() {
-    console.log('render securityLayout')
+    console.log('render securityLayout');
     const { isReady } = this.state;
     const { children, loading } = this.props;
     const token = localStorage.token;
@@ -78,17 +78,17 @@ class SecurityLayout extends React.Component {
       const lang = getLocale();
       if (lang === 'en-US') {
         return enUS;
-      }else if(lang === 'zh-CN'){
+      } else if (lang === 'zh-CN') {
         return zhCN;
       }
-    }
+    };
     if (!token) {
       return (
         // <LoginPage />
         <PageLoading />
       );
     }
-    
+
     return <ConfigProvider locale={getLanguage()}>{children}</ConfigProvider>;
   }
 }

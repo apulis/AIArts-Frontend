@@ -1,6 +1,6 @@
 export default {
   'trainingParamsList.add.importParams': 'Import Params',
-  
+
   'trainingParamsList.placeholder.search': 'input name query',
 
   'trainingParamsList.table.column.name': 'Params Config Name',
@@ -14,4 +14,4 @@ export default {
   'trainingParamsList.table.column.action.exportParams': 'Export Params',
   'trainingParamsList.table.pagination.showTotal.prefix': 'Total',
   'trainingParamsList.table.pagination.showTotal.suffix': 'items',
-}
+};

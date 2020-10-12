@@ -10,4 +10,4 @@ export default {
   'presetModelList.table.column.action.createTrainingJob': 'Create Training Job',
   'presetModelList.table.pagination.showTotal.prefix': 'Total',
   'presetModelList.table.pagination.showTotal.suffix': 'items',
-}
+};

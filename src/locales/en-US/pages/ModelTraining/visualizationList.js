@@ -1,6 +1,6 @@
 export default {
   'visualizationList.add.createVisaulJob': 'Create Visual Job',
-  
+
   'visualizationList.placeholder.search': 'input name query',
 
   'visualizationList.table.column.name': 'Name',
@@ -15,4 +15,4 @@ export default {
   'visualizationList.table.column.action.delete': 'Delete',
   'visualizationList.table.pagination.showTotal.prefix': 'Total',
   'visualizationList.table.pagination.showTotal.suffix': 'items',
-}
+};

@@ -138,23 +138,23 @@ const Visualization = () => {
   const columns = [
     {
       dataIndex: 'jobName',
-      title: intl.formatMessage({id: 'visualizationList.table.column.name'}),
+      title: intl.formatMessage({ id: 'visualizationList.table.column.name' }),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({id: 'visualizationList.table.column.status'}),
+      title: intl.formatMessage({ id: 'visualizationList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'TensorboardLogDir',
-      title: intl.formatMessage({id: 'visualizationList.table.column.logPath'}),
+      title: intl.formatMessage({ id: 'visualizationList.table.column.logPath' }),
     },
     {
       dataIndex: 'createTime',
-      title: intl.formatMessage({id: 'visualizationList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'visualizationList.table.column.createTime' }),
       key: 'createTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -164,10 +164,10 @@ const Visualization = () => {
     },
     {
       dataIndex: 'description',
-      title: intl.formatMessage({id: 'visualizationList.table.column.description'}),
+      title: intl.formatMessage({ id: 'visualizationList.table.column.description' }),
     },
     {
-      title: intl.formatMessage({id: 'visualizationList.table.column.action'}),
+      title: intl.formatMessage({ id: 'visualizationList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -178,7 +178,7 @@ const Visualization = () => {
               }}
               disabled={!['running'].includes(item.status)}
             >
-              {intl.formatMessage({id: 'visualizationList.table.column.action.open'})}
+              {intl.formatMessage({ id: 'visualizationList.table.column.action.open' })}
             </Button>
             {['unapproved', 'queued', 'scheduling', 'running'].includes(item.status) ? (
               <Button
@@ -186,7 +186,7 @@ const Visualization = () => {
                 onClick={() => changeJobStatus(item.id, 'pause')}
                 disabled={!['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)}
               >
-                {intl.formatMessage({id: 'visualizationList.table.column.action.stop'})}
+                {intl.formatMessage({ id: 'visualizationList.table.column.action.stop' })}
               </Button>
             ) : (
               <Button
@@ -194,11 +194,11 @@ const Visualization = () => {
                 onClick={() => changeJobStatus(item.id, 'running')}
                 disabled={!['paused', 'killed'].includes(item.status)}
               >
-                {intl.formatMessage({id: 'visualizationList.table.column.action.run'})}
+                {intl.formatMessage({ id: 'visualizationList.table.column.action.run' })}
               </Button>
             )}
             <Button type="link" onClick={() => handleDelete(item)} style={{ color: 'red' }}>
-              {intl.formatMessage({id: 'visualizationList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'visualizationList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -216,7 +216,7 @@ const Visualization = () => {
       >
         <Link to="/model-training/createVisualization">
           <Button type="primary" href="">
-            {intl.formatMessage({id: 'visualizationList.add.createVisaulJob'})}
+            {intl.formatMessage({ id: 'visualizationList.add.createVisaulJob' })}
           </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
@@ -233,7 +233,7 @@ const Visualization = () => {
           </Select>
           <Search
             style={{ width: '200px' }}
-            placeholder={intl.formatMessage({id: 'visualizationList.placeholder.search'})}
+            placeholder={intl.formatMessage({ id: 'visualizationList.placeholder.search' })}
             onSearch={() => {
               setPageParams({ ...pageParams, ...{ pageNum: 1 } });
               getVisualizations();
@@ -257,7 +257,12 @@ const Visualization = () => {
             pageSize: pageParams.pageSize,
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `${intl.formatMessage({id: 'visualizationList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'visualizationList.table.pagination.showTotal.suffix'})}`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'visualizationList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'visualizationList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

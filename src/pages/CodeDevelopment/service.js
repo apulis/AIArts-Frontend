@@ -21,15 +21,15 @@ export async function searchData(params) {
 }
 
 export async function stopCode(id) {
-  return await request(`/codes/${id}`, { method: 'DELETE' })
+  return await request(`/codes/${id}`, { method: 'DELETE' });
 }
 
 export async function deleteCode(id) {
-  return await deleteJob(id)
+  return await deleteJob(id);
 }
 
 export async function getJupyterUrl(id) {
-  return await request(`/codes/${id}/jupyter`)
+  return await request(`/codes/${id}/jupyter`);
 }
 
 export async function getResource() {

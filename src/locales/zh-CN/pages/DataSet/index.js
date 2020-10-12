@@ -1,7 +1,7 @@
 import dataSetCreate from './dataSetCreate';
 import dataSetList from './dataSetList';
 
-export default{ 
+export default {
   ...dataSetCreate,
-  ...dataSetList
-}
+  ...dataSetList,
+};

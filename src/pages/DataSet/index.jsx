@@ -93,7 +93,7 @@ const DataSetList = () => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.name'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.name' }),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -104,17 +104,17 @@ const DataSetList = () => {
       ),
     },
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.description'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
       width: 350,
     },
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.creator'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.creator' }),
       dataIndex: 'creator',
     },
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.updatedAt'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.updatedAt' }),
       key: 'updatedAt',
       dataIndex: 'updatedAt',
       sorter: true,
@@ -122,29 +122,31 @@ const DataSetList = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.version'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.version' }),
       dataIndex: 'version',
     },
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.isTranslated'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.isTranslated' }),
       dataIndex: 'isTranslated',
       render: (i) => <span>{i === true ? '是' : '否'}</span>,
     },
     {
-      title: intl.formatMessage({id: 'dataSetList.table.column.action'}),
+      title: intl.formatMessage({ id: 'dataSetList.table.column.action' }),
       render: (item) => {
         const { id } = item;
         return (
           <>
-            <a onClick={() => onEditClick(item)}>{intl.formatMessage({id: 'dataSetList.table.column.action.edit'})}</a>
+            <a onClick={() => onEditClick(item)}>
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.edit' })}
+            </a>
             <a
               style={{ margin: '0 16px' }}
               onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}
             >
-              {intl.formatMessage({id: 'dataSetList.table.column.action.download'})}
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.download' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
-              {intl.formatMessage({id: 'dataSetList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.delete' })}
             </a>
           </>
         );
@@ -191,11 +193,11 @@ const DataSetList = () => {
       <Card>
         <div className={styles.datasetWrap}>
           <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>
-            {intl.formatMessage({id: 'dataSetList.add.dataSet'})}
+            {intl.formatMessage({ id: 'dataSetList.add.dataSet' })}
           </Button>
           <div className={styles.searchWrap}>
             <Search
-              placeholder={intl.formatMessage({id: 'dataSetList.placeholder.search'})}
+              placeholder={intl.formatMessage({ id: 'dataSetList.placeholder.search' })}
               enterButton
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
@@ -210,7 +212,12 @@ const DataSetList = () => {
             pagination={{
               total: dataSets.total,
               showQuickJumper: true,
-              showTotal: (total) => `${intl.formatMessage({id: 'dataSetList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'dataSetList.table.pagination.showTotal.suffix'})}`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'dataSetList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'dataSetList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,

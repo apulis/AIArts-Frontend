@@ -86,7 +86,7 @@ const PretrainedModelList = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'presetModelList.table.column.name'}),
+      title: intl.formatMessage({ id: 'presetModelList.table.column.name' }),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -95,26 +95,26 @@ const PretrainedModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'presetModelList.table.column.use'}),
+      title: intl.formatMessage({ id: 'presetModelList.table.column.use' }),
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
     },
     {
-      title: intl.formatMessage({id: 'presetModelList.table.column.precision'}),
+      title: intl.formatMessage({ id: 'presetModelList.table.column.precision' }),
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
     },
     {
-      title: intl.formatMessage({id: 'presetModelList.table.column.size'}),
+      title: intl.formatMessage({ id: 'presetModelList.table.column.size' }),
       // dataIndex: 'size',
       ellipsis: true,
       width: 150,
       render: (item) => bytesToSize(item.size),
     },
     {
-      title: intl.formatMessage({id: 'presetModelList.table.column.createdAt'}),
+      title: intl.formatMessage({ id: 'presetModelList.table.column.createdAt' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -124,10 +124,14 @@ const PretrainedModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'presetModelList.table.column.action'}),
+      title: intl.formatMessage({ id: 'presetModelList.table.column.action' }),
       width: 220,
       render: (item) => {
-        return <a onClick={() => createInference(item)}>{intl.formatMessage({id: 'presetModelList.table.column.action.createTrainingJob'})}</a>;
+        return (
+          <a onClick={() => createInference(item)}>
+            {intl.formatMessage({ id: 'presetModelList.table.column.action.createTrainingJob' })}
+          </a>
+        );
       },
     },
   ];
@@ -192,7 +196,7 @@ const PretrainedModelList = (props) => {
           >
             <Search
               style={{ width: '200px', marginRight: '20px' }}
-              placeholder={intl.formatMessage({id: 'presetModelList.placeholder.search'})}
+              placeholder={intl.formatMessage({ id: 'presetModelList.placeholder.search' })}
               onSearch={handleNameSearch}
               enterButton
               ref={searchEl}
@@ -208,7 +212,12 @@ const PretrainedModelList = (props) => {
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,
-            showTotal: (total) => `${intl.formatMessage({id: 'presetModelList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'presetModelList.table.pagination.showTotal.suffix'})}`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'presetModelList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'presetModelList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

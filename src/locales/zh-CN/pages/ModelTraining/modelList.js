@@ -1,6 +1,6 @@
-export default{
+export default {
   'modelList.add.modelTraining': '创建训练作业',
-  
+
   'modelList.placeholder.search': '输入名称查询',
 
   'modelList.table.column.name': '作业名称',
@@ -14,4 +14,4 @@ export default{
   'modelList.table.column.action.delete': '删除',
   'modelList.table.pagination.showTotal.prefix': '总共',
   'modelList.table.pagination.showTotal.suffix': '条',
-}
+};

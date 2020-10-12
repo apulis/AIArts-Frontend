@@ -1,7 +1,7 @@
 import codeCreate from './codeCreate';
 import codeList from './codeList';
 
-export default{
+export default {
   ...codeCreate,
-  ...codeList
-}
+  ...codeList,
+};

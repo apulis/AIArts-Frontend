@@ -10,4 +10,4 @@ export default {
   'presetModelList.table.column.action.createTrainingJob': '创建训练作业',
   'presetModelList.table.pagination.showTotal.prefix': '总共',
   'presetModelList.table.pagination.showTotal.suffix': '条',
-}
+};

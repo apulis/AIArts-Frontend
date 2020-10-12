@@ -1,6 +1,6 @@
-export default{
+export default {
   'modelList.add.modelTraining': 'Create Model Training',
-  
+
   'modelList.placeholder.search': 'input name query',
 
   'modelList.table.column.name': 'Name',
@@ -14,4 +14,4 @@ export default{
   'modelList.table.column.action.delete': 'Delete',
   'modelList.table.pagination.showTotal.prefix': 'Total',
   'modelList.table.pagination.showTotal.suffix': 'items',
-}
+};

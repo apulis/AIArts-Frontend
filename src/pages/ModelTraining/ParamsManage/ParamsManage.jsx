@@ -98,7 +98,7 @@ const ParamsManage = () => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'trainingParamsList.table.column.name'}),
+      title: intl.formatMessage({ id: 'trainingParamsList.table.column.name' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       dataIndex: ['params', 'name'],
@@ -112,7 +112,7 @@ const ParamsManage = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: intl.formatMessage({id: 'trainingParamsList.table.column.engineType'}),
+      title: intl.formatMessage({ id: 'trainingParamsList.table.column.engineType' }),
       dataIndex: ['params', 'engine'],
       key: 'engine',
       render(val) {
@@ -120,7 +120,7 @@ const ParamsManage = () => {
       },
     },
     {
-      title: intl.formatMessage({id: 'trainingParamsList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'trainingParamsList.table.column.createTime' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -128,27 +128,31 @@ const ParamsManage = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: intl.formatMessage({id: 'trainingParamsList.table.column.description'}),
+      title: intl.formatMessage({ id: 'trainingParamsList.table.column.description' }),
       width: '25%',
       ellipsis: true,
       dataIndex: ['params', 'desc'],
     },
     {
-      title: intl.formatMessage({id: 'trainingParamsList.table.column.action'}),
+      title: intl.formatMessage({ id: 'trainingParamsList.table.column.action' }),
       render: (item) => {
         const id = item.metaData.id;
         const name = item.params.name;
         return (
           <>
-            <a onClick={() => handleCreateTrainJob(id)}>{intl.formatMessage({id: 'trainingParamsList.table.column.action.createTrainingJob'})}</a>
+            <a onClick={() => handleCreateTrainJob(id)}>
+              {intl.formatMessage({
+                id: 'trainingParamsList.table.column.action.createTrainingJob',
+              })}
+            </a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              {intl.formatMessage({id: 'trainingParamsList.table.column.action.edit'})}
+              {intl.formatMessage({ id: 'trainingParamsList.table.column.action.edit' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              {intl.formatMessage({id: 'trainingParamsList.table.column.action.delete'})}
+              {intl.formatMessage({ id: 'trainingParamsList.table.column.action.delete' })}
             </a>
             <a style={{ marginLeft: '12px' }} onClick={() => saveTemplateAsFile(id, name)}>
-              {intl.formatMessage({id: 'trainingParamsList.table.column.action.exportParams'})}
+              {intl.formatMessage({ id: 'trainingParamsList.table.column.action.exportParams' })}
             </a>
           </>
         );
@@ -249,7 +253,7 @@ const ParamsManage = () => {
             }}
             type="primary"
           >
-            {intl.formatMessage({id: 'trainingParamsList.add.importParams'})}
+            {intl.formatMessage({ id: 'trainingParamsList.add.importParams' })}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -260,7 +264,7 @@ const ParamsManage = () => {
               }
             </Select> */}
             <Search
-              placeholder= {intl.formatMessage({id: 'trainingParamsList.placeholder.search'})}
+              placeholder={intl.formatMessage({ id: 'trainingParamsList.placeholder.search' })}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -285,7 +289,12 @@ const ParamsManage = () => {
             pageSize: pageParams.pageSize,
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `${intl.formatMessage({id: 'trainingParamsList.table.pagination.showTotal.prefix'})} ${total} ${intl.formatMessage({id: 'trainingParamsList.table.pagination.showTotal.suffix'})}`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'trainingParamsList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'trainingParamsList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

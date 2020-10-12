@@ -188,7 +188,7 @@ const List = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: intl.formatMessage({id: 'modelList.table.column.name'}),
+      title: intl.formatMessage({ id: 'modelList.table.column.name' }),
       key: 'jobName',
       render(_text, item) {
         return <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>;
@@ -198,19 +198,19 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({id: 'modelList.table.column.status'}),
+      title: intl.formatMessage({ id: 'modelList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
-      title: intl.formatMessage({id: 'modelList.table.column.engine'}),
+      title: intl.formatMessage({ id: 'modelList.table.column.engine' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
     },
     {
       dataIndex: 'createTime',
-      title: intl.formatMessage({id: 'modelList.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'modelList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -220,7 +220,7 @@ const List = (props) => {
     },
     {
       dataIndex: 'desc',
-      title: intl.formatMessage({id: 'modelList.table.column.description'}),
+      title: intl.formatMessage({ id: 'modelList.table.column.description' }),
       width: '100px',
       render(_text) {
         return (
@@ -231,7 +231,7 @@ const List = (props) => {
       },
     },
     {
-      title: intl.formatMessage({id: 'modelList.table.column.action'}),
+      title: intl.formatMessage({ id: 'modelList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -241,7 +241,7 @@ const List = (props) => {
                   style={{ marginRight: '16px', display: 'block' }}
                   onClick={() => stopTraining(item.id)}
                 >
-                  {intl.formatMessage({id: 'modelList.table.column.action.stop'})}
+                  {intl.formatMessage({ id: 'modelList.table.column.action.stop' })}
                 </a>
                 <Button
                   type="link"
@@ -249,13 +249,13 @@ const List = (props) => {
                   disabled={!checkIfCanDelete(item.status)}
                   onClick={() => handleDeleteJob(item.id, item.status)}
                 >
-                  {intl.formatMessage({id: 'modelList.table.column.action.delete'})}
+                  {intl.formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ marginRight: '16px' }} className="disabled">
-                  {intl.formatMessage({id: 'modelList.table.column.action.hasStopped'})}
+                  {intl.formatMessage({ id: 'modelList.table.column.action.hasStopped' })}
                 </div>
                 <Button
                   danger
@@ -263,7 +263,7 @@ const List = (props) => {
                   disabled={!checkIfCanDelete(item.status)}
                   onClick={() => handleDeleteJob(item.id, item.status)}
                 >
-                  {intl.formatMessage({id: 'modelList.table.column.action.delete'})}
+                  {intl.formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
               </div>
             )}
@@ -288,7 +288,7 @@ const List = (props) => {
       >
         <Link to="/model-training/submit">
           <Button type="primary" href="">
-            {intl.formatMessage({id: 'modelList.add.modelTraining'})}
+            {intl.formatMessage({ id: 'modelList.add.modelTraining' })}
           </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
@@ -303,7 +303,7 @@ const List = (props) => {
           </Select>
           <Search
             style={{ width: '200px' }}
-            placeholder={intl.formatMessage({id: 'modelList.placeholder.search'})}
+            placeholder={intl.formatMessage({ id: 'modelList.placeholder.search' })}
             onChange={onSearchInput}
             onSearch={searchList}
             enterButton

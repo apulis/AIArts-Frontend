@@ -1,4 +1,4 @@
-export default{
+export default {
   'service.status.all': '全部',
   'service.status.unapproved': '未批准',
   'service.status.queued': '队列中',
@@ -11,4 +11,4 @@ export default{
   'service.status.killing': '关闭中',
   'service.status.killed': '已关闭',
   'service.status.error': '错误',
-}
+};

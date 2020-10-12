@@ -1,5 +1,5 @@
 import request from '../utils/request';
-import requestUser from '../utils/request-user'
+import requestUser from '../utils/request-user';
 
 export async function fetchCommonResource() {
   return await request('/common/resources');

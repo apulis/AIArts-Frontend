@@ -102,7 +102,6 @@ const InferenceDetail = (props) => {
           setImageUrl('data:image/jpg;base64,' + data);
         }
         setLoading(false);
-        
       }
     }
 
@@ -112,7 +111,14 @@ const InferenceDetail = (props) => {
     }
   };
   const beforeUpload = (file) => {
-    const isImage = ['image/jpeg', 'image/png', 'image/png', 'image/bmg', 'image/tif', 'image/gif'].includes(file.type);
+    const isImage = [
+      'image/jpeg',
+      'image/png',
+      'image/png',
+      'image/bmg',
+      'image/tif',
+      'image/gif',
+    ].includes(file.type);
     if (!isImage) {
       message.error('只能上传图片');
     }
@@ -139,7 +145,7 @@ const InferenceDetail = (props) => {
   };
   const jobRunning = jobDetail.jobStatus === 'running';
   const uploadButton = (
-    <div style={{height: '104px', width: '104px', paddingTop: '30px'}}>
+    <div style={{ height: '104px', width: '104px', paddingTop: '30px' }}>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
       <div className="ant-upload-text">{loading ? '识别中' : '上传图片'}</div>
     </div>

@@ -1,6 +1,6 @@
 export default {
   'visualizationList.add.createVisaulJob': '创建可视化作业',
-  
+
   'visualizationList.placeholder.search': '输入名称查询',
 
   'visualizationList.table.column.name': '名称',
@@ -15,4 +15,4 @@ export default {
   'visualizationList.table.column.action.delete': '删除',
   'visualizationList.table.pagination.showTotal.prefix': '总共',
   'visualizationList.table.pagination.showTotal.suffix': '条',
-}
+};
