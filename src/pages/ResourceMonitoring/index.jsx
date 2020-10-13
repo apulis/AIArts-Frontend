@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React from 'react';
 import Iframe from 'react-iframe';
+import { FormattedMessage } from 'umi';
 
 const ResourceMonitoring = () => {
   let grafana;
@@ -17,9 +18,13 @@ const ResourceMonitoring = () => {
   return (
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '0px 0px' }}>
-        <h1 style={{ fontSize: 24, fontWeight: 500, margin: 8 }}>VC设备使用情况</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 500, margin: 8 }}>
+          <FormattedMessage id="resourceMonitoring.vc.device.usage" />
+        </h1>
         <Iframe url={VCUsageUrl} width="100%" height="500" />
-        <h1 style={{ fontSize: 24, fontWeight: 500, margin: 8 }}>集群使用情况</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 500, margin: 8 }}>
+        <FormattedMessage id="resourceMonitoring.cluster.usage" />
+        </h1>
         <Iframe url={clusterUsageUrl} width="100%" height="500" />
       </Card>
     </PageHeaderWrapper>
