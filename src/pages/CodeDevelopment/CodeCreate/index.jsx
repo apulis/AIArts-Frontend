@@ -169,7 +169,7 @@ const CodeCreate = (props) => {
   };
 
   const validateMessages = {
-    required: '${label} ' + intl.formatMessage({ id: 'codeCreate.tips.needInput' }),
+    required: '${label} ' + intl.formatMessage({ id: 'codeCreate.rule.needInput' }),
     types: {},
   };
 
@@ -276,7 +276,7 @@ const CodeCreate = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: intl.formatMessage({ id: 'codeCreate.tips.selectEngineType' }),
+                    message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineType' }),
                   },
                 ]}
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
@@ -295,7 +295,7 @@ const CodeCreate = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: intl.formatMessage({ id: 'codeCreate.tips.selectEngineName' }),
+                    message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                   },
                 ]}
                 style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
@@ -317,7 +317,7 @@ const CodeCreate = (props) => {
               rules={[
                 {
                   required: true,
-                  message: intl.formatMessage({ id: 'codeCreate.tips.selectEngineName' }),
+                  message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                 },
               ]}
             >

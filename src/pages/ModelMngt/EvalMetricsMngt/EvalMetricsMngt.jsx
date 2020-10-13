@@ -11,12 +11,14 @@ import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail';
 import styles from '@/global.less';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { downloadStringAsFile } from '@/utils/utils';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Option } = Select;
 const { Search } = Input;
 
 const EvalMetricsMngt = () => {
+  const intl = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
@@ -83,7 +85,7 @@ const EvalMetricsMngt = () => {
 
   const columns = [
     {
-      title: '评估参数名称',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.name' }),
       sorter: true,
       width: '16%',
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -98,7 +100,7 @@ const EvalMetricsMngt = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.engineType' }),
       dataIndex: ['params', 'engine'],
       width: '16%',
       key: 'engine',
@@ -107,7 +109,7 @@ const EvalMetricsMngt = () => {
       },
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.createTime' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -115,26 +117,28 @@ const EvalMetricsMngt = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.description' }),
       ellipsis: true,
       width: '16%',
       dataIndex: ['params', 'desc'],
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action' }),
       align: 'center',
       render: (item) => {
         const id = item.metaData.id;
         return (
           <>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              编辑
+              {intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action.edit' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              删除
+              {intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action.delete' })}
             </a>
             <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)}>
-              导出参数
+              {intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.column.action.exportParams',
+              })}
             </a>
           </>
         );
@@ -252,7 +256,7 @@ const EvalMetricsMngt = () => {
               setImportedParamsModalVisible(true);
             }}
           >
-            导入参数
+            {intl.formatMessage({ id: 'modelEvaluationMetricsList.add.importParams' })}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -263,7 +267,9 @@ const EvalMetricsMngt = () => {
               }
             </Select>             */}
             <Search
-              placeholder="输入评估参数名称"
+              placeholder={intl.formatMessage({
+                id: 'modelEvaluationMetricsList.placeholder.search',
+              })}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -288,7 +294,12 @@ const EvalMetricsMngt = () => {
           pagination={{
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

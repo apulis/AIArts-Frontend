@@ -13,12 +13,14 @@ import { statusList } from '@/pages/ModelTraining/List';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
 import useInterval from '@/hooks/useInterval';
+import { useIntl } from 'umi';
 
 const { Option } = Select;
 const { Search } = Input;
 const { confirm } = Modal;
 
 const InferenceList = (props) => {
+  const intl = useIntl();
   const {
     dispatch,
     inferenceList: { data },
@@ -86,7 +88,7 @@ const InferenceList = (props) => {
 
   const columns = [
     {
-      title: '作业名称',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.jobName' }),
       dataIndex: 'jobName',
       key: 'jobName',
       render(_text, item) {
@@ -96,19 +98,19 @@ const InferenceList = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
-      title: '使用模型',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.useModel' }),
       render: (text, item) => item.jobParams?.model_base_path,
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.status' }),
       render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.engineType' }),
       render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework),
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.createTime' }),
       dataIndex: 'jobTime',
       key: 'jobTime',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -116,29 +118,29 @@ const InferenceList = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
-      title: '运行时长',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.runningTime' }),
       align: 'center',
       render: (text, item) =>
         item.duration ? formatDuration(moment.duration(item.duration)) : '-',
     },
     {
-      title: '服务地址',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.serviceAddr' }),
       ellipsis: true,
       render: (text, item) => (item['inference-url'] ? item['inference-url'] : ''),
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.description' }),
       dataIndex: 'desc',
       render: (text, item) => item.jobParams?.desc,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'centerInferenceList.table.column.action' }),
       align: 'center',
       render: (item) => {
         return (
           <>
             <Button type="link" onClick={() => stopJob(item)} disabled={isStopDisabled(item)}>
-              停止
+              {intl.formatMessage({ id: 'centerInferenceList.table.column.action.stop' })}
             </Button>
             <Button
               type="link"
@@ -146,7 +148,7 @@ const InferenceList = (props) => {
               onClick={() => deleteJob(item)}
               disabled={isDeleteDisabled(item)}
             >
-              删除
+              {intl.formatMessage({ id: 'centerInferenceList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -294,7 +296,7 @@ const InferenceList = (props) => {
           }}
         >
           <Button type="primary" onClick={CreateJob}>
-            创建推理作业
+            {intl.formatMessage({ id: 'centerInferenceList.add.inferenceJob' })}
           </Button>
           <div
             style={{
@@ -315,7 +317,7 @@ const InferenceList = (props) => {
             </Select>
             <Search
               style={{ width: '200px', marginRight: '20px' }}
-              placeholder="请输入作业名称"
+              placeholder={intl.formatMessage({ id: 'centerInferenceList.placeholder.search' })}
               onSearch={onSearchName}
               enterButton
             />
@@ -330,7 +332,12 @@ const InferenceList = (props) => {
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'centerInferenceList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'centerInferenceList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

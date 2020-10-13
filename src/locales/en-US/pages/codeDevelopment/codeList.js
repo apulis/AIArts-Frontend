@@ -3,21 +3,6 @@ export default {
 
   'codeList.placeholder.search': 'input name query',
 
-  'codeList.table.column.name': 'Name',
-  'codeList.table.column.status': 'Status',
-  'codeList.table.column.engineType': 'Engine Type',
-  'codeList.table.column.createTime': 'Create Time',
-  'codeList.table.column.storePath': 'Code Store Path',
-  'codeList.table.column.description': 'Description',
-  'codeList.table.column.action': 'Action',
-  'codeList.table.column.action.open': 'Open',
-  'codeList.table.column.action.upload': 'Upload Code',
-  'codeList.table.column.action.stop': 'Stop',
-  'codeList.table.column.action.delete': 'Delete',
-  'codeList.table.column.action.save': 'Save Image',
-  'codeList.table.pagination.showTotal.prefix': 'Total',
-  'codeList.table.pagination.showTotal.suffix': 'items',
-
   'codeList.modal.upload.title.uploadCode': 'Upload Code',
   'codeList.modal.upload.content.uploadTips':
     'Please click or drag the file to upload (multi-file support)',

@@ -1,4 +1,4 @@
-import codeCreate from './codeCreate';
+import codeCreate from './createCode';
 import codeList from './codeList';
 
 export default {

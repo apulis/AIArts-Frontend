@@ -43,6 +43,7 @@ import {
 } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -59,6 +60,7 @@ export const subCodePathPrefix = (s) => {
 let haveSetedParamsDetail = false;
 
 const ModelTraining = (props) => {
+  const intl = useIntl();
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
@@ -481,22 +483,32 @@ const ModelTraining = (props) => {
           {...commonLayout}
           style={{ marginTop: '30px' }}
           name="name"
-          label={typeEdit ? '参数配置名称' : '作业名称'}
+          label={
+            typeEdit
+              ? intl.formatMessage({ id: 'trainingCreate.label.paramConfigName' })
+              : intl.formatMessage({ id: 'trainingCreate.label.jobName' })
+          }
           rules={[{ required: true }, { ...jobNameReg }]}
         >
           <Input
             style={{ width: 300 }}
-            placeholder={typeEdit ? '请输入参数配置名称' : '请输入作业名称'}
+            placeholder={
+              typeEdit
+                ? intl.formatMessage({ id: 'trainingCreate.placeholder.inputParamsConfigName' })
+                : intl.formatMessage({ id: 'trainingCreate.placeholder.inputJobName' })
+            }
           />
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="desc"
-          label="描述"
+          label={intl.formatMessage({ id: 'trainingCreate.label.desc' })}
           rules={[{ max: 191 }]}
         >
-          <TextArea placeholder="请输入描述信息" />
+          <TextArea
+            placeholder={intl.formatMessage({ id: 'trainingCreate.placeholder.inputDescription' })}
+          />
         </FormItem>
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
@@ -507,23 +519,31 @@ const ModelTraining = (props) => {
         参数配置
       </div>
       {isSubmitPage && (
-        <FormItem {...commonLayout} label="参数来源">
+        <FormItem
+          {...commonLayout}
+          label={intl.formatMessage({ id: 'trainingCreate.label.paramsSource' })}
+        >
           <Radio.Group defaultValue={1} buttonStyle="solid">
-            <Radio.Button value={1}>手动参数配置</Radio.Button>
+            <Radio.Button value={1}>
+              {intl.formatMessage({ id: 'trainingCreate.value.manualParameterConfiguration' })}
+            </Radio.Button>
             <Radio.Button
               value={2}
               onClick={() => {
                 setPresetParamsVisible(true);
               }}
             >
-              导入训练参数
+              {intl.formatMessage({ id: 'trainingCreate.value.importTrainingParams' })}
             </Radio.Button>
           </Radio.Group>
         </FormItem>
       )}
       <Form form={form}>
         {isSubmitPage && (
-          <FormItem {...commonLayout} label="选择引擎来源">
+          <FormItem
+            {...commonLayout}
+            label={intl.formatMessage({ id: 'trainingCreate.label.engineSource' })}
+          >
             <Radio.Group
               value={engineSource}
               onChange={(e) => {
@@ -531,13 +551,22 @@ const ModelTraining = (props) => {
               }}
               style={{ width: '300px' }}
             >
-              <Radio value={1}>预置引擎</Radio>
-              <Radio value={2}>已保存引擎</Radio>
+              <Radio value={1}>
+                {intl.formatMessage({ id: 'trainingCreate.value.presetEngine' })}
+              </Radio>
+              <Radio value={2}>
+                {intl.formatMessage({ id: 'trainingCreate.value.savedEngine' })}
+              </Radio>
             </Radio.Group>
           </FormItem>
         )}
 
-        <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
+        <FormItem
+          {...commonLayout}
+          name="engine"
+          label={intl.formatMessage({ id: 'trainingCreate.label.engine' })}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2}>
             {engineSource === 1 &&
               frameWorks.map((f) => (
@@ -556,7 +585,7 @@ const ModelTraining = (props) => {
         <FormItem
           labelCol={{ span: 4 }}
           name="codePath"
-          label="代码目录"
+          label={intl.formatMessage({ id: 'trainingCreate.label.codePath' })}
           rules={[{ required: isPretrainedModel }]}
         >
           {isPretrainedModel || importedTrainingParams ? (
@@ -567,7 +596,7 @@ const ModelTraining = (props) => {
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
-          label="启动文件"
+          label={intl.formatMessage({ id: 'trainingCreate.label.startupFile' })}
           name="startupFile"
           rules={[{ required: true }, startUpFileReg]}
         >
@@ -580,7 +609,7 @@ const ModelTraining = (props) => {
         <FormItem
           name="visualPath"
           labelCol={{ span: 4 }}
-          label="可视化路径"
+          label={intl.formatMessage({ id: 'trainingCreate.label.visualPath' })}
           style={{ marginTop: '50px' }}
         >
           {
@@ -593,7 +622,7 @@ const ModelTraining = (props) => {
         <FormItem
           name="outputPath"
           labelCol={{ span: 4 }}
-          label="输出路径"
+          label={intl.formatMessage({ id: 'trainingCreate.label.outputPath' })}
           rules={[{ required: isPretrainedModel }]}
         >
           {
@@ -603,7 +632,12 @@ const ModelTraining = (props) => {
             />
           }
         </FormItem>
-        <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
+        <FormItem
+          name="datasetPath"
+          rules={[]}
+          labelCol={{ span: 4 }}
+          label={intl.formatMessage({ id: 'trainingCreate.label.datasetPath' })}
+        >
           {/* <Input style={{ width: 300 }} /> */}
           <Select style={{ width: '300px' }}>
             {datasets.map((d) => (
@@ -613,7 +647,10 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
-        <FormItem label="运行参数" labelCol={{ span: 4 }}>
+        <FormItem
+          label={intl.formatMessage({ id: 'trainingCreate.label.runningParams' })}
+          labelCol={{ span: 4 }}
+        >
           {runningParams.map((param, index) => {
             return (
               <div key={param.createTime || param.key}>
@@ -663,7 +700,7 @@ const ModelTraining = (props) => {
           </div>
         </FormItem>
         <FormItem
-          label="是否分布式训练"
+          label={intl.formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
           name="jobTrainingType"
           {...commonLayout}
           rules={[{ required: true }]}
@@ -671,18 +708,25 @@ const ModelTraining = (props) => {
           onChange={handleDistributedJob}
         >
           <Radio.Group style={{ width: '300px' }}>
-            <Radio value={'PSDistJob'}>是</Radio>
-            <Radio value={'RegularJob'}>否</Radio>
+            <Radio value={'PSDistJob'}>
+              {intl.formatMessage({ id: 'trainingCreate.value.yes' })}
+            </Radio>
+            <Radio value={'RegularJob'}>
+              {intl.formatMessage({ id: 'trainingCreate.value.no' })}
+            </Radio>
           </Radio.Group>
         </FormItem>
         {distributedJob && (
           <FormItem
-            label="节点数量"
+            label={intl.formatMessage({ id: 'trainingCreate.label.numPsWorker' })}
             {...commonLayout}
             name="numPsWorker"
             rules={[
               { required: true },
-              { type: 'number', message: '需要填写一个数字' },
+              {
+                type: 'number',
+                message: intl.formatMessage({ id: 'trainingCreate.rule.needANumber' }),
+              },
               {
                 validator(rule, value, callback) {
                   if (Number(value) > totalNodes) {
@@ -702,7 +746,12 @@ const ModelTraining = (props) => {
             <InputNumber onChange={handleDeviceChange} min={1} max={totalNodes} />
           </FormItem>
         )}
-        <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem
+          label={intl.formatMessage({ id: 'trainingCreate.label.deviceType' })}
+          name="deviceType"
+          {...commonLayout}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {deviceList.map((d) => (
               <Option value={d.deviceType}>{d.deviceType}</Option>
@@ -710,7 +759,11 @@ const ModelTraining = (props) => {
           </Select>
         </FormItem>
         <FormItem
-          label={distributedJob ? '每个节点设备数量' : '设备数量'}
+          label={
+            distributedJob
+              ? intl.formatMessage({ id: 'trainingCreate.label.perNodeDeviceNum' })
+              : intl.formatMessage({ id: 'trainingCreate.label.deviceNum' })
+          }
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}
@@ -726,7 +779,12 @@ const ModelTraining = (props) => {
           </Select>
         </FormItem>
         {distributedJob && (
-          <FormItem {...commonLayout} label="设备总数" name="deviceTotal" disabled>
+          <FormItem
+            {...commonLayout}
+            label={intl.formatMessage({ id: 'trainingCreate.label.deviceTotal' })}
+            name="deviceTotal"
+            disabled
+          >
             <Input value={deviceTotal} style={{ width: '300px' }} disabled />
           </FormItem>
         )}
@@ -817,7 +875,9 @@ const ModelTraining = (props) => {
         style={{ float: 'right', marginBottom: '16px' }}
         onClick={handleSubmit}
       >
-        {typeEdit ? '保存' : '立即创建'}
+        {typeEdit
+          ? intl.formatMessage({ id: 'trainingCreate.save' })
+          : intl.formatMessage({ id: 'trainingCreate.submit' })}
       </Button>
     </div>
   );

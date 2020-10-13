@@ -2,10 +2,12 @@ import { message, Form, Input, Button, Select, Radio, Upload } from 'antd';
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import { FilePathReg, FilePathErrorText } from '@/utils/const';
+import { useIntl } from 'umi';
 
 const { Dragger } = Upload;
 
 const AddModalForm = (props, ref) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const { modalType, editData, setBtn, pathId } = props;
   const [fileLists, setFileLists] = useState([]);
@@ -88,70 +90,113 @@ const AddModalForm = (props, ref) => {
       }
     >
       <Form.Item
-        label="数据集名称"
+        label={intl.formatMessage({ id: 'dataSetCreate.label.name' })}
         name="name"
-        rules={[{ required: true, message: '请输入数据集名称！' }, { max: 25 }]}
+        rules={[
+          { required: true, message: intl.formatMessage({ id: 'dataSetCreate.rule.needName' }) },
+          { max: 25 },
+        ]}
       >
-        <Input placeholder="请输入数据集名称" disabled={modalType} />
+        <Input
+          placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputName' })}
+          disabled={modalType}
+        />
       </Form.Item>
       <Form.Item
-        label="简介"
+        label={intl.formatMessage({ id: 'dataSetCreate.label.description' })}
         name="description"
-        rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]}
+        rules={[
+          { required: true, message: intl.formatMessage({ id: 'dataSetCreate.rule.needDesc' }) },
+          { max: 50 },
+        ]}
       >
-        <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
+        <Input.TextArea
+          placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputDescription' })}
+          autoSize={{ minRows: 4 }}
+        />
       </Form.Item>
       {!modalType && (
         <>
-          <Form.Item label="是否已标注" rules={[{ required: true }]} name="isTranslated">
+          <Form.Item
+            label={intl.formatMessage({ id: 'dataSetCreate.label.isTranslated' })}
+            rules={[{ required: true }]}
+            name="isTranslated"
+          >
             <Radio.Group>
-              <Radio value={false}>否</Radio>
-              <Radio value={true}>是</Radio>
+              <Radio value={false}>{intl.formatMessage({ id: 'dataSetCreate.value.no' })}</Radio>
+              <Radio value={true}>{intl.formatMessage({ id: 'dataSetCreate.value.yes' })}</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="数据权限" rules={[{ required: true }]} name="isPrivate">
+          <Form.Item
+            label={intl.formatMessage({ id: 'dataSetCreate.label.isPrivate' })}
+            rules={[{ required: true }]}
+            name="isPrivate"
+          >
             <Radio.Group
               onChange={(e) => setIsPrivate(e.target.value)}
               disabled={fileLists.length > 0}
             >
-              <Radio value={true}>私有</Radio>
-              <Radio value={false}>公有</Radio>
+              <Radio value={true}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.private' })}
+              </Radio>
+              <Radio value={false}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.public' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="数据源" rules={[{ required: true }]} name="sourceType">
+          <Form.Item
+            label={intl.formatMessage({ id: 'dataSetCreate.label.sourceType' })}
+            rules={[{ required: true }]}
+            name="sourceType"
+          >
             <Radio.Group onChange={(e) => setSourceType(e.target.value)}>
-              <Radio value={1}>网页上传新数据源</Radio>
-              <Radio value={2}>使用以其它方式上传的数据源</Radio>
+              <Radio value={1}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.uploadDataSource' })}
+              </Radio>
+              <Radio value={2}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.otherDataSource' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
         </>
       )}
       {!modalType && sourceType == 1 && (
         <Form.Item
-          label="上传文件"
+          label={intl.formatMessage({ id: 'dataSetCreate.label.fileLists' })}
           name="fileLists"
-          rules={[{ required: true, message: '请上传文件！' }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'dataSetCreate.rule.needFile' }) },
+          ]}
           valuePropName="fileLists"
         >
           <Dragger {...uploadProps}>
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
-            <p className="ant-upload-text">请点击或拖入文件上传</p>
-            <p className="ant-upload-hint">（只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）</p>
+            <p className="ant-upload-text">
+              {intl.formatMessage({ id: 'dataSetCreate.value.tips' })}
+            </p>
+            <p className="ant-upload-hint">
+              {intl.formatMessage({ id: 'dataSetCreate.value.tips.desc' })}
+            </p>
           </Dragger>
         </Form.Item>
       )}
       {sourceType == 2 && (
         <Form.Item
-          label="存储路径"
+          label={intl.formatMessage({ id: 'dataSetCreate.label.path' })}
           name="path"
           rules={[
-            { required: true, message: '请输入存储路径！' },
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'dataSetCreate.rule.needStorePath' }),
+            },
             { pattern: FilePathReg, message: FilePathErrorText },
           ]}
         >
-          <Input placeholder="请输入存储路径" />
+          <Input
+            placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputStorePath' })}
+          />
         </Form.Item>
       )}
     </Form>

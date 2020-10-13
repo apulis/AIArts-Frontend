@@ -11,10 +11,14 @@ import edgeInference from './en-US/pages/EdgeInference';
 import imageManage from './en-US/pages/ImageManage';
 import inferenceService from './en-US/pages/InferenceService';
 import modelTraining from './en-US/pages/ModelTraining';
+import modelMngt from './en-US/pages/ModelMngt';
 import overView from './en-US/pages/OverView';
 import resourceMonitoring from './en-US/pages/ResourceMonitoring';
 import setting from './en-US/pages/Setting';
 import visualOperation from './en-US/pages/VisualOperation';
+import table from './en-US/table';
+import form from './en-US/form';
+import tips from './en-US/tips';
 
 export default {
   'navBar.lang': 'Languages',
@@ -41,4 +45,8 @@ export default {
   ...resourceMonitoring,
   ...setting,
   ...visualOperation,
+  ...modelMngt,
+  ...table,
+  ...form,
+  ...tips,
 };

@@ -17,11 +17,13 @@ import ModalForm from './components/ModalForm';
 import { addModel } from '../ModelList/services';
 import { fetchAvilableResource } from '@/services/modelTraning';
 import { modelNameReg, jobNameReg } from '@/utils/reg';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
 
 const CreateModel = (props) => {
+  const intl = useIntl();
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -176,37 +178,68 @@ const CreateModel = (props) => {
             <Form.Item
               {...layout}
               name="name"
-              label="名称"
+              label={intl.formatMessage({ id: 'modelCreate.label.name' })}
               rules={[
-                { required: true, message: '名称不能为空!' },
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'modelCreate.rule.needName' }),
+                },
                 { ...modelNameReg },
                 { ...jobNameReg },
               ]}
             >
-              <Input placeholder="请输入模型名称" />
-            </Form.Item>
-            <Form.Item {...layout} name="description" label="描述" rules={[{ max: 256 }]}>
-              <TextArea rows={4} placeholder="请输入描述信息" />
+              <Input
+                placeholder={intl.formatMessage({ id: 'modelCreate.placeholder.inputModelName' })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
-              label="模型文件"
+              name="description"
+              label={intl.formatMessage({ id: 'modelCreate.label.description' })}
+              rules={[{ max: 256 }]}
+            >
+              <TextArea
+                rows={4}
+                placeholder={intl.formatMessage({ id: 'modelCreate.placeholder.inputDescription' })}
+              />
+            </Form.Item>
+            <Form.Item
+              {...layout}
+              label={intl.formatMessage({ id: 'modelCreate.label.modelFileType' })}
               name="modelFileType"
               rules={[{ required: true }]}
             >
               <Radio.Group onChange={(e) => setModelFileType(e.target.value)}>
-                <Radio value={'1'}>选择模型文件</Radio>
-                <Radio value={'2'}>上传模型文件</Radio>
+                <Radio value={'1'}>
+                  {intl.formatMessage({ id: 'modelCreate.value.selectModelFile' })}
+                </Radio>
+                <Radio value={'2'}>
+                  {intl.formatMessage({ id: 'modelCreate.value.uploadModelFile' })}
+                </Radio>
               </Radio.Group>
             </Form.Item>
             {modelFileType == '1' && (
-              <Form.Item {...layout} label="训练作业" required>
+              <Form.Item
+                {...layout}
+                label={intl.formatMessage({ id: 'modelCreate.label.job' })}
+                required
+              >
                 <Form.Item
                   name="job"
-                  rules={[{ required: true, message: '训练作业不能为空!' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.formatMessage({ id: 'modelCreate.rule.needJob' }),
+                    },
+                  ]}
                   style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}
                 >
-                  <Input placeholder="请选择训练作业名称" disabled />
+                  <Input
+                    placeholder={intl.formatMessage({
+                      id: 'modelCreate.placeholder.selectTrainingJobName',
+                    })}
+                    disabled
+                  />
                 </Form.Item>
                 <Form.Item
                   style={{ display: 'inline-block', width: 'calc(10% - 4px)', margin: '0 0 0 8px' }}
@@ -219,18 +252,25 @@ const CreateModel = (props) => {
               <Form.Item
                 labelCol={{ span: 3 }}
                 wrapperCol={{ span: 14 }}
-                label="上传文件"
+                label={intl.formatMessage({ id: 'modelCreate.label.file' })}
                 name="file"
-                rules={[{ required: true, message: '请上传文件！' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'modelCreate.rule.needFile' }),
+                  },
+                ]}
                 valuePropName="file"
               >
                 <Dragger {...uploadProps}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
-                  <p className="ant-upload-text">请点击或拖入文件上传</p>
+                  <p className="ant-upload-text">
+                    {intl.formatMessage({ id: 'modelCreate.value.upload.tips' })}
+                  </p>
                   <p className="ant-upload-hint">
-                    （只支持上传格式为 .zip, .tar 和 .tar.gz 的文件）
+                    {intl.formatMessage({ id: 'modelCreate.value.upload.tips.desc' })}
                   </p>
                 </Dragger>
               </Form.Item>
@@ -239,10 +279,20 @@ const CreateModel = (props) => {
               <Form.Item
                 {...layout}
                 name="argumentPath"
-                label="模型权重文件"
-                rules={[{ required: true, message: '模型权重文件不能为空!' }]}
+                label={intl.formatMessage({ id: 'modelCreate.label.argumentPath' })}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'modelCreate.rule.needWeight' }),
+                  },
+                ]}
               >
-                <Input addonBefore={codePathPrefix} placeholder="请输入模型权重文件" />
+                <Input
+                  addonBefore={codePathPrefix}
+                  placeholder={intl.formatMessage({
+                    id: 'modelCreate.placeholder.inputArgumentPath',
+                  })}
+                />
               </Form.Item>
             )}
             <Form.Item name="jobId" hidden>
@@ -253,7 +303,7 @@ const CreateModel = (props) => {
             </Form.Item>
             <Form.Item style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit" disabled={btnDisabled}>
-                立即创建
+                {intl.formatMessage({ id: 'modelCreate.submit' })}
               </Button>
             </Form.Item>
           </Form>
