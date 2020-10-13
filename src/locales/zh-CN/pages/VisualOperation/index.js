@@ -5,7 +5,8 @@ export default {
   'visualOperation.version.modal.upgrade.title': '升级提示',
   'visualOperation.version.modal.upgrade.confirm': '升级',
   'visualOperation.version.modal.upgrade.cancel': '取消',
-  'visualOperation.version.modal.upgrade.check.content': '升级版本低于或等于当前版本，是否确认升级？',
+  'visualOperation.version.modal.upgrade.check.content':
+    '升级版本低于或等于当前版本，是否确认升级？',
   'visualOperation.version.modal.upgrade.30501.content': '目标文件不存在，升级失败',
   'visualOperation.version.modal.upgrade.30502.content': '文件读取错误',
   'visualOperation.version.modal.upgrade.30503.content': '正在升级，请等待升级结束',

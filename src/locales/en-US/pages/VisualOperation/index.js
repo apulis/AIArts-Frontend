@@ -5,16 +5,20 @@ export default {
   'visualOperation.version.modal.upgrade.title': 'Upgrade Message',
   'visualOperation.version.modal.upgrade.confirm': 'Upgrade',
   'visualOperation.version.modal.upgrade.cancel': 'Cancel',
-  'visualOperation.version.modal.upgrade.check.content': 'The upgrade version is lower than or equal to the current version, confirm the upgrade',
-  'visualOperation.version.modal.upgrade.30501.content': 'The target file does not exist, the upgrade failed',
+  'visualOperation.version.modal.upgrade.check.content':
+    'The upgrade version is lower than or equal to the current version, confirm the upgrade',
+  'visualOperation.version.modal.upgrade.30501.content':
+    'The target file does not exist, the upgrade failed',
   'visualOperation.version.modal.upgrade.30502.content': 'File read error',
-  'visualOperation.version.modal.upgrade.30503.content': 'Upgrading, please wait for the end of the upgrade',
+  'visualOperation.version.modal.upgrade.30503.content':
+    'Upgrading, please wait for the end of the upgrade',
   'visualOperation.version.modal.error.title': 'Upgrade',
   'visualOperation.version.modal.error.content': 'No upgrade file detected',
   'visualOperation.version.button.begin.upgrade': 'Start upgrade',
-  'visualOperation.version.button.upgrading': 'Upgrading', 
+  'visualOperation.version.button.upgrading': 'Upgrading',
   'visualOperation.version.button.upgrade.success': 'Success',
-  'visualOperation.version.message.upgrade.success': 'The upgrade is successful, the version data has been updated',
+  'visualOperation.version.message.upgrade.success':
+    'The upgrade is successful, the version data has been updated',
   'visualOperation.version.button.upgrade.error': 'Upgrade unsuccessful',
   'visualOperation.version.message.upgrade.error': 'Upgrade unsuccessful',
   'visualOperation.version.service.error': 'Request exception',
