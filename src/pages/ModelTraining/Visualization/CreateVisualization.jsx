@@ -6,10 +6,12 @@ import { createVisualization } from '@/services/modelTraning';
 import { history } from 'umi';
 import { getModels } from '../../ModelMngt/ModelList/services/index';
 import { getResource } from '../../CodeDevelopment/service';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 
 export default function CreateVisualization() {
+  const intl = useIntl();
   const goBackPath = '/model-training/visualization';
   const [form] = useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
@@ -92,19 +94,19 @@ export default function CreateVisualization() {
           wrapperCol={{ span: 14 }}
           style={{ marginTop: '30px' }}
           name="jobName"
-          label="可视化作业名称"
+          label={intl.formatMessage({id: 'visualJobCreate.label.jobName'})}
           rules={[{ required: true }, { ...jobNameReg }]}
         >
-          <Input style={{ width: 300 }} placeholder="请输入可视化作业名称" />
+          <Input style={{ width: 300 }} placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.inputVisualJobName'})} />
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="selectModel"
-          label="选择模型"
+          label={intl.formatMessage({id: 'visualJobCreate.label.selectModel'})}
         >
           <Select
-            placeholder="请选择模型"
+            placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.selectModel'})}
             style={{ width: 300 }}
             allowClear
             optionFilterProp="children"
@@ -122,23 +124,23 @@ export default function CreateVisualization() {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="tensorboardLogDir"
-          label="可视化日志路径"
+          label={intl.formatMessage({id: 'visualJobCreate.label.tensorboardLogDir'})}
           rules={[{ required: true }]}
         >
-          <Input addonBefore={codePathPrefix} placeholder="请输入可视化日志路径" />
+          <Input addonBefore={codePathPrefix} placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.inputVisualLogPath'})} />
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="description"
-          label="描述"
+          label={intl.formatMessage({id: 'visualJobCreate.label.description'})}
           rules={[{ max: 191 }]}
         >
-          <TextArea placeholder="请输入描述信息" />
+          <TextArea placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.inputDescription'})} />
         </Form.Item>
       </Form>
       <Button type="primary" onClick={onCreate} style={{ marginLeft: '16.7%' }}>
-        创建
+        {intl.formatMessage({id: 'visualJobCreate.submit'})}
       </Button>
     </>
   );

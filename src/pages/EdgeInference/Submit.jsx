@@ -13,6 +13,7 @@ import { NameReg, NameErrorText } from '@/utils/const';
 import { getTypes, submit } from './service';
 import FormItem from 'antd/lib/form/FormItem';
 import SelectModelPath from '@/components/BizComponent/SelectModelPath';
+import { useIntl } from 'umi';
 
 const initArg = {
   key: '',
@@ -53,6 +54,7 @@ const argsOptions = [
 const ArgNameReg = /^[A-Za-z0-9-_."",:]+$/;
 
 const Submit = () => {
+  const intl = useIntl();
   const [typesData, setTypesData] = useState([]);
   const [argArr, setArgArr] = useState([{ ...initArg, time: new Date().getTime() }]);
   const [btnLoading, setBtnLoading] = useState(false);
@@ -140,7 +142,7 @@ const Submit = () => {
       <Card>
         <Form form={form} preserve={false} initialValues={{}}>
           <Form.Item
-            label="推理名称"
+            label={intl.formatMessage({id: 'edgeInferenceJobCreate.label.jobName'})}
             name="jobName"
             rules={[
               { required: true, message: '请输入推理名称！' },
@@ -149,22 +151,22 @@ const Submit = () => {
             ]}
             {...commonLayout}
           >
-            <Input placeholder="请输入推理名称" />
+            <Input placeholder={intl.formatMessage({id: 'edgeInferenceJobCreate.placeholder.inputInferenceName'})} />
           </Form.Item>
           <Form.Item
-            label="类型"
+            label={intl.formatMessage({id: 'edgeInferenceJobCreate.label.conversionType'})}
             name="conversionType"
             rules={[{ required: true, message: '请选择类型！' }]}
             {...commonLayout}
           >
-            <Select placeholder="请选择类型">
+            <Select placeholder={intl.formatMessage({id: 'edgeInferenceJobCreate.placeholder.selectType'})}>
               {typesData.map((i) => (
                 <Option value={i}>{i}</Option>
               ))}
             </Select>
           </Form.Item>
           <Form.Item
-            label="输入路径"
+            label={intl.formatMessage({id: 'edgeInferenceJobCreate.label.inputPath'})}
             labelCol={commonLayout.labelCol}
             wrapperCol={commonLayout.wrapperCol + 3}
             required
@@ -174,7 +176,7 @@ const Submit = () => {
               rules={[{ required: true, message: '请填写输入路径！' }]}
               style={{ display: 'inline-block', width: '40%' }}
             >
-              <Input placeholder="请填写输入路径" />
+              <Input placeholder={intl.formatMessage({id: 'edgeInferenceJobCreate.placeholder.inputInputPath'})} />
             </FormItem>
             <FormItem style={{ display: 'inline-block', width: '36px', marginLeft: '16px' }}>
               <Button
@@ -184,14 +186,14 @@ const Submit = () => {
             </FormItem>
           </Form.Item>
           <Form.Item
-            label="输出路径"
+            label={intl.formatMessage({id: 'edgeInferenceJobCreate.label.outputPath'})}
             name="outputPath"
             rules={[{ required: true, message: '请填写输出路径！' }]}
             {...commonLayout}
           >
-            <Input placeholder="请填写输出路径" />
+            <Input placeholder={intl.formatMessage({id: 'edgeInferenceJobCreate.placeholder.inputOutputPath'})} />
           </Form.Item>
-          <Form.Item label="转换参数" rules={[{ required: true }]} labelCol={commonLayout.labelCol}>
+          <Form.Item label={intl.formatMessage({id: 'edgeInferenceJobCreate.label.transformParams'})} rules={[{ required: true }]} labelCol={commonLayout.labelCol}>
             {argArr.map((i, idx) => {
               const { time, key, val } = i;
               return (
@@ -202,7 +204,7 @@ const Submit = () => {
                     rules={[{ required: Boolean(val), message: '请选择参数类型！' }]}
                   >
                     <Select
-                      placeholder="请选择参数类型"
+                      placeholder={intl.formatMessage({id: 'edgeInferenceJobCreate.placeholder.selectParamsType'})}
                       style={{ width: 220 }}
                       allowClear
                       optionFilterProp="children"
@@ -230,7 +232,7 @@ const Submit = () => {
                   >
                     <Input
                       style={{ width: 276 }}
-                      placeholder="请填写参数值"
+                      placeholder={intl.formatMessage({id: 'edgeInferenceJobCreate.placeholder.inputParamsValue'})}
                       onChange={(e) => onArgsArrChange(3, time, e.target.value)}
                     />
                   </Form.Item>
@@ -249,7 +251,7 @@ const Submit = () => {
             </div>
           </Form.Item>
           <Button type="primary" style={{ float: 'right' }} onClick={onSubmit} loading={btnLoading}>
-            提交
+            {intl.formatMessage({id: 'edgeInferenceJobCreate.submit'})}
           </Button>
         </Form>
         {selectModelPathVisible && (
