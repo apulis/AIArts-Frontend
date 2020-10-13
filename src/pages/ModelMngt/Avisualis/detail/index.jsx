@@ -64,46 +64,53 @@ const AvisualisDetail = (props) => {
           panelApiData: _panel,
         },
       });
-      console.log('------_panel',_panel)
+      console.log('------_panel', _panel);
     }
     setLoading(false);
   };
 
   const transformData = (data, newData) => {
-    let _treeData = [], _children = [], _data = data || panelApiData, 
-    childrenDisabled = (Boolean(Number(detailId)) || (Boolean(Number(modelId) && Object.keys(detailData).length))) ? true : false;
-    _data && _data.length && _data.forEach((i, idx) => {
-      if (newData) {
-        const len = newData.nodes && newData.nodes.length ? newData.nodes.length : 0;
-        const _idx = len ? newData.nodes[len - 1].treeIdx : 0;
-        childrenDisabled = len > 0 ? !(_idx < idx) : false;
-      }
-      let _children = [];
-      const { children, name } = i;
-      if (children &&  children.length) {
-        children.forEach(c => {
-          const { children, config } = c;
-          const childName = c.name;
-          _children.push({
-            title: childName,
-            key: childName,
-            config: config,
-            disabled: childrenDisabled,
-            treeIdx: idx,
-            child: children || [],
-            fName: name
-          })
-        })
-      }
-      _treeData.push({
-        title: `步骤${idx + 1}：${name}`,
-        key: name,
-        children: _children,
-        disabled: true,
-        icon: <FolderOpenTwoTone />,
-        // titleRender: (nodeData) => <div className="test">{`步骤${idx + 1}：${name}`}</div>,
-      })
-    });
+    let _treeData = [],
+      _children = [],
+      _data = data || panelApiData,
+      childrenDisabled =
+        Boolean(Number(detailId)) || Boolean(Number(modelId) && Object.keys(detailData).length)
+          ? true
+          : false;
+    _data &&
+      _data.length &&
+      _data.forEach((i, idx) => {
+        if (newData) {
+          const len = newData.nodes && newData.nodes.length ? newData.nodes.length : 0;
+          const _idx = len ? newData.nodes[len - 1].treeIdx : 0;
+          childrenDisabled = len > 0 ? !(_idx < idx) : false;
+        }
+        let _children = [];
+        const { children, name } = i;
+        if (children && children.length) {
+          children.forEach((c) => {
+            const { children, config } = c;
+            const childName = c.name;
+            _children.push({
+              title: childName,
+              key: childName,
+              config: config,
+              disabled: childrenDisabled,
+              treeIdx: idx,
+              child: children || [],
+              fName: name,
+            });
+          });
+        }
+        _treeData.push({
+          title: `步骤${idx + 1}：${name}`,
+          key: name,
+          children: _children,
+          disabled: true,
+          icon: <FolderOpenTwoTone />,
+          // titleRender: (nodeData) => <div className="test">{`步骤${idx + 1}：${name}`}</div>,
+        });
+      });
     setPanelData(_treeData);
     dispatch({
       type: 'avisualis/saveData',
@@ -140,8 +147,8 @@ const AvisualisDetail = (props) => {
           ) : null}
         </Card>
         <FlowChart
-          ref={flowChartRef} 
-          transformData={transformData} 
+          ref={flowChartRef}
+          transformData={transformData}
           detailId={detailId}
           detailData={detailData || {}}
         />
