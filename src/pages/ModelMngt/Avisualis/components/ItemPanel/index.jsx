@@ -20,14 +20,18 @@ const ItemPanel = (props) => {
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
-  const hasSelectItem = selectItem && selectItem._cfg && selectItem._cfg.model.config && selectItem._cfg.model.config.length > 0;
+  const hasSelectItem =
+    selectItem &&
+    selectItem._cfg &&
+    selectItem._cfg.model.config &&
+    selectItem._cfg.model.config.length > 0;
 
   useEffect(() => {
     if (selectItem) {
       const { id, treeIdx } = selectItem._cfg.model;
       if (treeIdx === 0 || treeIdx > 0) {
         const child = treeData[treeIdx].children;
-        setChangeNodeOptions(child.filter(i => i.key !== id));
+        setChangeNodeOptions(child.filter((i) => i.key !== id));
       }
     }
   }, [selectItem]);
@@ -48,14 +52,14 @@ const ItemPanel = (props) => {
       _values.datasetPath = nodes[0].config[0].value;
       _values.outputPath = nodes[nodes.length - 1].config[0].value;
       _values.paramPath = _values.outputPath;
-      const newEdges = edges.map(i => {
+      const newEdges = edges.map((i) => {
         const { source, target, sourceAnchor, targetAnchor } = i;
         return {
           source: source,
           target: target,
           sourceAnchor: sourceAnchor || 1,
-          targetAnchor: targetAnchor || 0
-        }
+          targetAnchor: targetAnchor || 0,
+        };
       });
       let submitData = {
         ...addFormData,
@@ -66,7 +70,7 @@ const ItemPanel = (props) => {
           nodes: JSON.stringify(nodes),
           edges: JSON.stringify(newEdges),
           combos: JSON.stringify(combos),
-        }
+        },
       };
       if (!detailId) delete submitData.id;
       const { code, data } = detailId
@@ -92,21 +96,46 @@ const ItemPanel = (props) => {
       const { type, value, key, options } = i;
       if (type === 'string' || type === 'disabled') {
         return (
-        <Form.Item key={key} name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
-          <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
-        </Form.Item>)
+          <Form.Item
+            key={key}
+            name={key}
+            label={key}
+            initialValue={value}
+            rules={[{ required: true, message: `请输入${key}` }]}
+          >
+            <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
+          </Form.Item>
+        );
       } else if (type === 'number') {
         return (
-        <Form.Item key={key} name={key} label={key} initialValue={value} rules={[{ required: true, message: `请输入${key}` }]}>
-          <InputNumber style={{ width: '100%' }} value={value} />
-        </Form.Item>)
+          <Form.Item
+            key={key}
+            name={key}
+            label={key}
+            initialValue={value}
+            rules={[{ required: true, message: `请输入${key}` }]}
+          >
+            <InputNumber style={{ width: '100%' }} value={value} />
+          </Form.Item>
+        );
       } else if (type === 'select') {
         return (
-        <Form.Item key={key} name={key} label={key} initialValue={value} rules={[{ required: true, message: `请选择${key}！` }]}>
-          <Select placeholder="请选择" value={value}>
-            {options.map(o => <Option key={o} value={o}>{o}</Option>)}
-          </Select>
-        </Form.Item>)
+          <Form.Item
+            key={key}
+            name={key}
+            label={key}
+            initialValue={value}
+            rules={[{ required: true, message: `请选择${key}！` }]}
+          >
+            <Select placeholder="请选择" value={value}>
+              {options.map((o) => (
+                <Option key={o} value={o}>
+                  {o}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
       }
     });
   };
@@ -118,8 +147,8 @@ const ItemPanel = (props) => {
       const { type, model } = selectItem._cfg;
       const selectId = model.id;
       let findData = [];
-      type === 'combo' ? findData = cloneData.combos : findData = cloneData.nodes;
-      findData[findData.findIndex(i => i.id === selectId)].config.forEach((m, n) => {
+      type === 'combo' ? (findData = cloneData.combos) : (findData = cloneData.nodes);
+      findData[findData.findIndex((i) => i.id === selectId)].config.forEach((m, n) => {
         m.value = newValues[n];
       });
       setFlowChartData(cloneData);
@@ -149,10 +178,16 @@ const ItemPanel = (props) => {
       </div>
       <Descriptions title="模型详情"></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
-      <div className="ant-descriptions-title">{`${hasSelectItem ? `节点配置(${selectItem._cfg.id})` : '该节点无配置项'}`}</div>
+      <div className="ant-descriptions-title">{`${
+        hasSelectItem ? `节点配置(${selectItem._cfg.id})` : '该节点无配置项'
+      }`}</div>
       {hasSelectItem && <Form form={form}>{getConfig()}</Form>}
       <div style={{ float: 'right', textAlign: 'right' }}>
-        {hasSelectItem && <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>保存配置</Button>}
+        {hasSelectItem && (
+          <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>
+            保存配置
+          </Button>
+        )}
         {/* {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
       </div>
       {modalFlag && (
