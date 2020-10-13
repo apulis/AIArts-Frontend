@@ -1,4 +1,3 @@
-
 export default {
   // list
   'codeList.add.codeDevelopment': '创建开发环境',

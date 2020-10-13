@@ -4,7 +4,7 @@ export default {
 
   'dataSetList.placeholder.search': '输入名称查询',
 
-// Create
+  // Create
   'dataSetCreate.modal.title': '新增数据集',
 
   'datasetCreate.tips.upload.success': '文件上传成功！',
