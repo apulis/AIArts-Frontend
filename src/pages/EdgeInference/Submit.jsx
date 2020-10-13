@@ -145,7 +145,10 @@ const Submit = () => {
             label={intl.formatMessage({ id: 'edgeInferenceJobCreate.label.jobName' })}
             name="jobName"
             rules={[
-              { required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needName'}) },
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'edgeInferenceJobCreate.rule.needName' }),
+              },
               { pattern: NameReg, message: NameErrorText },
               { max: 20 },
             ]}
@@ -160,7 +163,12 @@ const Submit = () => {
           <Form.Item
             label={intl.formatMessage({ id: 'edgeInferenceJobCreate.label.conversionType' })}
             name="conversionType"
-            rules={[{ required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needType'}) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'edgeInferenceJobCreate.rule.needType' }),
+              },
+            ]}
             {...commonLayout}
           >
             <Select
@@ -181,7 +189,12 @@ const Submit = () => {
           >
             <FormItem
               name="inputPath"
-              rules={[{ required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needInputPath'}) }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'edgeInferenceJobCreate.rule.needInputPath' }),
+                },
+              ]}
               style={{ display: 'inline-block', width: '40%' }}
             >
               <Input
@@ -200,7 +213,12 @@ const Submit = () => {
           <Form.Item
             label={intl.formatMessage({ id: 'edgeInferenceJobCreate.label.outputPath' })}
             name="outputPath"
-            rules={[{ required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needOutputPath'}) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'edgeInferenceJobCreate.rule.needOutputPath' }),
+              },
+            ]}
             {...commonLayout}
           >
             <Input
@@ -221,7 +239,14 @@ const Submit = () => {
                   <Form.Item
                     name={`argKey-${time}`}
                     style={{ display: 'inline-block' }}
-                    rules={[{ required: Boolean(val), message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needParamsType'}) }]}
+                    rules={[
+                      {
+                        required: Boolean(val),
+                        message: intl.formatMessage({
+                          id: 'edgeInferenceJobCreate.rule.needParamsType',
+                        }),
+                      },
+                    ]}
                   >
                     <Select
                       placeholder={intl.formatMessage({
@@ -246,7 +271,9 @@ const Submit = () => {
                     rules={[
                       {
                         pattern: ArgNameReg,
-                        message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.supportInput'}),
+                        message: intl.formatMessage({
+                          id: 'edgeInferenceJobCreate.rule.supportInput',
+                        }),
                       },
                     ]}
                     style={{ display: 'inline-block' }}

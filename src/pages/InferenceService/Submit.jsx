@@ -252,7 +252,12 @@ const SubmitModelTraining = (props) => {
           >
             <FormItem
               name="modelPath"
-              rules={[{ required: true, message: intl.formatMessage({id: 'inferenceJobCreate.rule.needModelPath'}) }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'inferenceJobCreate.rule.needModelPath' }),
+                },
+              ]}
               style={{ display: 'inline-block', width: '250px' }}
             >
               <Input

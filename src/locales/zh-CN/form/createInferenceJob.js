@@ -13,7 +13,7 @@ export default {
   'inferenceJobCreate.placeholder.engineName': '引擎名称',
   'inferenceJobCreate.placeholder.engineVersion': '引擎版本',
   'inferenceJobCreate.placeholder.select': '请选择',
-  
+
   'inferenceJobCreate.rule.needModelPath': '请输入推理模型路径',
 
   'inferenceJobCreate.submit': '立即创建',
