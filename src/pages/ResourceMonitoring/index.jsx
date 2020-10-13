@@ -23,7 +23,7 @@ const ResourceMonitoring = () => {
         </h1>
         <Iframe url={VCUsageUrl} width="100%" height="500" />
         <h1 style={{ fontSize: 24, fontWeight: 500, margin: 8 }}>
-        <FormattedMessage id="resourceMonitoring.cluster.usage" />
+          <FormattedMessage id="resourceMonitoring.cluster.usage" />
         </h1>
         <Iframe url={clusterUsageUrl} width="100%" height="500" />
       </Card>
