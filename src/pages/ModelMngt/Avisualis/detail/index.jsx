@@ -81,7 +81,7 @@ const AvisualisDetail = (props) => {
       _data.length &&
       _data.forEach((i, idx) => {
         if (newData) {
-          childrenDisabled = !(Math.max(...newData.nodes.map(i => i.treeIdx)) < idx)
+          childrenDisabled = !(Math.max(...newData.nodes.map((i) => i.treeIdx)) < idx);
         }
         let _children = [];
         const { children, name } = i;

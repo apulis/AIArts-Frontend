@@ -31,7 +31,7 @@ const ItemPanel = (props) => {
       const { id, treeIdx } = selectItem._cfg.model;
       if (treeIdx === 0 || treeIdx > 0) {
         const child = treeData[treeIdx].children;
-        setChangeNodeOptions(child.filter(i => i.key !== id));
+        setChangeNodeOptions(child.filter((i) => i.key !== id));
       }
     }
   }, [selectItem]);
@@ -188,7 +188,11 @@ const ItemPanel = (props) => {
             保存配置
           </Button>
         )}
-        {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>}
+        {changeNodeOptions.length > 0 && (
+          <Button type="primary" onClick={() => setModalFlag(true)}>
+            更换节点
+          </Button>
+        )}
       </div>
       {modalFlag && (
         <Modal

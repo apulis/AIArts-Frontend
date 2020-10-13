@@ -270,35 +270,37 @@ const FlowChart = forwardRef((props, ref) => {
         return n;
       });
       let comboIdObj = { one: { num: 0, treeIdx: 0 } };
-      allNodes && allNodes.length && allNodes.forEach((i, idx) => {
-        const { id, comboId, treeIdx, edges } = i._cfg.model;
-        const thisNode = _graph.findById(id);
-        const key = comboId ? comboId : id;
-        let broNum = 0;
-        if (idx === 0) {
-          _graph.updateItem(thisNode, { x: 0, y: 0 });
-          return;
-        }
-        Object.keys(comboIdObj).forEach((b) => {
-          if (comboIdObj[b].treeIdx === treeIdx && b !== comboId) broNum++;
-        });
-        if (comboIdObj[key]) {
-          comboIdObj[key] = { num: comboIdObj[key].num + 1, treeIdx: treeIdx };
-        } else {
-          comboIdObj[key] = { num: 0, treeIdx: treeIdx };
-        }
-        let Y = 200 * treeIdx + 50 * comboIdObj[key].num;
-        if (treeIdx === panelApiData.length - 1) {
-          const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
-          Y = preNodeY + 100;
-        }
+      allNodes &&
+        allNodes.length &&
+        allNodes.forEach((i, idx) => {
+          const { id, comboId, treeIdx, edges } = i._cfg.model;
+          const thisNode = _graph.findById(id);
+          const key = comboId ? comboId : id;
+          let broNum = 0;
+          if (idx === 0) {
+            _graph.updateItem(thisNode, { x: 0, y: 0 });
+            return;
+          }
+          Object.keys(comboIdObj).forEach((b) => {
+            if (comboIdObj[b].treeIdx === treeIdx && b !== comboId) broNum++;
+          });
+          if (comboIdObj[key]) {
+            comboIdObj[key] = { num: comboIdObj[key].num + 1, treeIdx: treeIdx };
+          } else {
+            comboIdObj[key] = { num: 0, treeIdx: treeIdx };
+          }
+          let Y = 200 * treeIdx + 50 * comboIdObj[key].num;
+          if (treeIdx === panelApiData.length - 1) {
+            const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+            Y = preNodeY + 100;
+          }
 
-        _graph.updateItem(thisNode, {
-          x: 250 * broNum,
-          y: Y,
-          anchorPoints: anchorPoints,
+          _graph.updateItem(thisNode, {
+            x: 250 * broNum,
+            y: Y,
+            anchorPoints: anchorPoints,
+          });
         });
-      });
     });
     _graph.data(flowChartData);
     _graph.render();
@@ -358,20 +360,26 @@ const FlowChart = forwardRef((props, ref) => {
 
   const handleDragEnd = (node, isChangeNode) => {
     const { title, key, config, treeIdx, child } = node;
-    const hasNodes = Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
-    if (!isChangeNode && (hasNodes && treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) || (!hasNodes && treeIdx > 0)) {
+    const hasNodes =
+      Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
+    if (
+      (!isChangeNode &&
+        hasNodes &&
+        treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) ||
+      (!hasNodes && treeIdx > 0)
+    ) {
       message.warning('只能按照步骤顺序依次拖拽！');
       return;
     }
     let newData = {},
-        nodeArr = [],
-        combosArr = [],
-        newNodes = {
-          id: key,
-          name: title,
-          config: config,
-          treeIdx: treeIdx,
-        };
+      nodeArr = [],
+      combosArr = [],
+      newNodes = {
+        id: key,
+        name: title,
+        config: config,
+        treeIdx: treeIdx,
+      };
     if (child && child.length) {
       combosArr.push({
         id: key,
@@ -385,9 +393,9 @@ const FlowChart = forwardRef((props, ref) => {
       newData = _.cloneDeep(flowChartData);
       let thisId = '';
       if (isChangeNode) {
-        newData.nodes = newData.nodes.filter(i => i.treeIdx !== treeIdx);
-        newData.edges = newData.edges.filter(i => i.treeIdx !== treeIdx);
-        newData.combos = newData.combos.filter(i => i.treeIdx !== treeIdx);
+        newData.nodes = newData.nodes.filter((i) => i.treeIdx !== treeIdx);
+        newData.edges = newData.edges.filter((i) => i.treeIdx !== treeIdx);
+        newData.combos = newData.combos.filter((i) => i.treeIdx !== treeIdx);
       }
       const { edges, nodes, combos } = newData;
       const edgesLen = edges.length;
@@ -404,15 +412,15 @@ const FlowChart = forwardRef((props, ref) => {
       }
       let edgesTemp = [];
       edgesTemp.push({
-        source: newData.nodes.find(o => o.treeIdx === treeIdx - 1).id,
-        target: newData.nodes.find(o => o.treeIdx === treeIdx).id,
-        treeIdx: treeIdx
+        source: newData.nodes.find((o) => o.treeIdx === treeIdx - 1).id,
+        target: newData.nodes.find((o) => o.treeIdx === treeIdx).id,
+        treeIdx: treeIdx,
       });
-      if (isChangeNode && treeIdx !== Math.max(...newData.nodes.map(i => i.treeIdx))) {
+      if (isChangeNode && treeIdx !== Math.max(...newData.nodes.map((i) => i.treeIdx))) {
         edgesTemp.push({
-          source: newData.nodes.find(o => o.treeIdx === treeIdx).id,
-          target: newData.nodes.find(o => o.treeIdx === treeIdx + 1).id,
-          treeIdx: treeIdx + 1
+          source: newData.nodes.find((o) => o.treeIdx === treeIdx).id,
+          target: newData.nodes.find((o) => o.treeIdx === treeIdx + 1).id,
+          treeIdx: treeIdx + 1,
         });
       }
       if (edges && edgesLen) {
@@ -430,12 +438,12 @@ const FlowChart = forwardRef((props, ref) => {
     }
     Object.keys(newData).forEach((i) => {
       if (i === 'edges') {
-        newData[i].forEach(m => {
+        newData[i].forEach((m) => {
           m.sourceAnchor = 1;
           m.targetAnchor = 0;
         });
       } else {
-        newData[i].forEach(m => (m.anchorPoints = anchorPoints));
+        newData[i].forEach((m) => (m.anchorPoints = anchorPoints));
       }
     });
 
@@ -515,7 +523,7 @@ const FlowChart = forwardRef((props, ref) => {
   const onChangeNode = (key) => {
     const treeIdx = key.split('-')[0];
     const id = key.split('-')[1];
-    const changeNodeData = treeData[treeIdx].children.find(i => i.key === id);
+    const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
     handleDragEnd(changeNodeData, true);
     return true;
   };
