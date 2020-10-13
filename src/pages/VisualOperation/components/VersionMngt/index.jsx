@@ -91,7 +91,9 @@ const VersionMngt = (props) => {
               title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
               okText: <FormattedMessage id="visualOperation.version.modal.upgrade.confirm" />,
               cancelText: <FormattedMessage id="visualOperation.version.modal.upgrade.cancel" />,
-              content: <FormattedMessage id="visualOperation.version.modal.upgrade.check.content" />,
+              content: (
+                <FormattedMessage id="visualOperation.version.modal.upgrade.check.content" />
+              ),
               onOk() {
                 upgradeManager('begin');
               },
@@ -130,7 +132,9 @@ const VersionMngt = (props) => {
         setUpgradeText(formatMessage({ id: 'visualOperation.version.button.upgrade.success' }));
         if (logTimer) clearInterval(logTimer);
         setTimeout(() => {
-          message.success(<FormattedMessage id="visualOperation.version.message.upgrade.success" />);
+          message.success(
+            <FormattedMessage id="visualOperation.version.message.upgrade.success" />,
+          );
           upgradeManager('init');
         }, 1000);
 
@@ -235,18 +239,29 @@ const VersionMngt = (props) => {
         <FormattedMessage id="visualOperation.upgrade.history" />
       </Button>
       <Descriptions title={<FormattedMessage id="visualOperation.version.info" />} bordered>
-        <Descriptions.Item label={<FormattedMessage id="visualOperation.version.code" />}>{versionInfo.name}</Descriptions.Item>
-        <Descriptions.Item label={<FormattedMessage id="visualOperation.upgraded.person" />} span={1}>
+        <Descriptions.Item label={<FormattedMessage id="visualOperation.version.code" />}>
+          {versionInfo.name}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={<FormattedMessage id="visualOperation.upgraded.person" />}
+          span={1}
+        >
           {versionInfo.creator}
         </Descriptions.Item>
         <Descriptions.Item label={<FormattedMessage id="visualOperation.install.time" />} span={1}>
           {versionInfo.time}
         </Descriptions.Item>
-        <Descriptions.Item label={<FormattedMessage id="visualOperation.version.describe" />} span={3}>
+        <Descriptions.Item
+          label={<FormattedMessage id="visualOperation.version.describe" />}
+          span={3}
+        >
           {versionInfo.desc}
         </Descriptions.Item>
       </Descriptions>
-      <Descriptions title={<FormattedMessage id="visualOperation.local.upgrade" />} style={{ marginTop: '30px' }}></Descriptions>
+      <Descriptions
+        title={<FormattedMessage id="visualOperation.local.upgrade" />}
+        style={{ marginTop: '30px' }}
+      ></Descriptions>
       <div>
         <Button
           type="primary"
