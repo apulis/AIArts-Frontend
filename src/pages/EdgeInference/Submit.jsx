@@ -145,7 +145,7 @@ const Submit = () => {
             label={intl.formatMessage({ id: 'edgeInferenceJobCreate.label.jobName' })}
             name="jobName"
             rules={[
-              { required: true, message: '请输入推理名称！' },
+              { required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needName'}) },
               { pattern: NameReg, message: NameErrorText },
               { max: 20 },
             ]}
@@ -160,7 +160,7 @@ const Submit = () => {
           <Form.Item
             label={intl.formatMessage({ id: 'edgeInferenceJobCreate.label.conversionType' })}
             name="conversionType"
-            rules={[{ required: true, message: '请选择类型！' }]}
+            rules={[{ required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needType'}) }]}
             {...commonLayout}
           >
             <Select
@@ -181,7 +181,7 @@ const Submit = () => {
           >
             <FormItem
               name="inputPath"
-              rules={[{ required: true, message: '请填写输入路径！' }]}
+              rules={[{ required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needInputPath'}) }]}
               style={{ display: 'inline-block', width: '40%' }}
             >
               <Input
@@ -200,7 +200,7 @@ const Submit = () => {
           <Form.Item
             label={intl.formatMessage({ id: 'edgeInferenceJobCreate.label.outputPath' })}
             name="outputPath"
-            rules={[{ required: true, message: '请填写输出路径！' }]}
+            rules={[{ required: true, message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needOutputPath'}) }]}
             {...commonLayout}
           >
             <Input
@@ -221,7 +221,7 @@ const Submit = () => {
                   <Form.Item
                     name={`argKey-${time}`}
                     style={{ display: 'inline-block' }}
-                    rules={[{ required: Boolean(val), message: '请选择参数类型！' }]}
+                    rules={[{ required: Boolean(val), message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.needParamsType'}) }]}
                   >
                     <Select
                       placeholder={intl.formatMessage({
@@ -246,7 +246,7 @@ const Submit = () => {
                     rules={[
                       {
                         pattern: ArgNameReg,
-                        message: '只支持字母，数字，下划线，横线，点，双引号和逗号！',
+                        message: intl.formatMessage({id: 'edgeInferenceJobCreate.rule.supportInput'}),
                       },
                     ]}
                     style={{ display: 'inline-block' }}

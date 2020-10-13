@@ -11,6 +11,13 @@ export default {
   'edgeInferenceJobCreate.placeholder.inputOutputPath': 'Please Input Output Path',
   'edgeInferenceJobCreate.placeholder.selectParamsType': 'Please Select Params Type',
   'edgeInferenceJobCreate.placeholder.inputParamsValue': 'Please Input Params Value',
+  
+  'edgeInferenceJobCreate.rule.needName': 'Please Input Inference Name！',
+  'edgeInferenceJobCreate.rule.needType': 'Please Select Type!',
+  'edgeInferenceJobCreate.rule.needInputPath': 'Please Input Input Path！',
+  'edgeInferenceJobCreate.rule.needOutputPath': 'Please Input Output Path！',
+  'edgeInferenceJobCreate.rule.needParamsType': 'Please Select Params Type！',
+  'edgeInferenceJobCreate.rule.supportInput': 'Only files uploaded in.zip,.tar, and.tar.gz are supported with letters, Numbers, underscores, lines, dots, double quotes, and commas！',
 
   'edgeInferenceJobCreate.submit': 'Submit',
 };

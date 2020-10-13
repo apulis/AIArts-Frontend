@@ -92,7 +92,7 @@ const AddModalForm = (props, ref) => {
       <Form.Item
         label={intl.formatMessage({ id: 'dataSetCreate.label.name' })}
         name="name"
-        rules={[{ required: true, message: '请输入数据集名称！' }, { max: 25 }]}
+        rules={[{ required: true, message: intl.formatMessage({id: 'dataSetCreate.rule.needName'}) }, { max: 25 }]}
       >
         <Input
           placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputName' })}
@@ -102,7 +102,7 @@ const AddModalForm = (props, ref) => {
       <Form.Item
         label={intl.formatMessage({ id: 'dataSetCreate.label.description' })}
         name="description"
-        rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]}
+        rules={[{ required: true, message: intl.formatMessage({id: 'dataSetCreate.rule.needDesc'}) }, { max: 50 }]}
       >
         <Input.TextArea
           placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputDescription' })}
@@ -158,7 +158,7 @@ const AddModalForm = (props, ref) => {
         <Form.Item
           label={intl.formatMessage({ id: 'dataSetCreate.label.fileLists' })}
           name="fileLists"
-          rules={[{ required: true, message: '请上传文件！' }]}
+          rules={[{ required: true, message: intl.formatMessage({id: 'dataSetCreate.rule.needFile'}) }]}
           valuePropName="fileLists"
         >
           <Dragger {...uploadProps}>
@@ -179,7 +179,7 @@ const AddModalForm = (props, ref) => {
           label={intl.formatMessage({ id: 'dataSetCreate.label.path' })}
           name="path"
           rules={[
-            { required: true, message: '请输入存储路径！' },
+            { required: true, message: intl.formatMessage({id: 'dataSetCreate.rule.needStorePath'}) },
             { pattern: FilePathReg, message: FilePathErrorText },
           ]}
         >

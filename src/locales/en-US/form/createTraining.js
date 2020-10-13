@@ -29,6 +29,8 @@ export default {
   'trainingCreate.placeholder.inputJobName': 'Please Input Job Name',
   'trainingCreate.placeholder.inputDescription': 'Please Input Description',
 
+  'trainingCreate.rule.needANumber': 'Need Input A Number',
+
   'trainingCreate.save': 'Save',
   'trainingCreate.submit': 'Submit',
 };

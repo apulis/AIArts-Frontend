@@ -1,9 +1,6 @@
 export default {
   'codeCreate.pageHeader.backCodeCreate': 'Back To CodeDevelopment',
 
-  'codeCreate.tips.needInput': 'is required!',
-  'codeCreate.tips.selectEngineType': 'Please select a engine type',
-  'codeCreate.tips.selectEngineName': 'Please select a engine name',
   'codeCreate.tips.submit.success': 'create success',
 
   'codeCreate.modal.noDevice.title':

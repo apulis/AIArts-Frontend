@@ -20,6 +20,11 @@ export default {
   'dataSetCreate.placeholder.inputDescription': 'Please Input Description',
   'dataSetCreate.placeholder.inputStorePath': 'Please Input Store Path',
 
+  'dataSetCreate.rule.needName': 'Please Input DataSet Name！',
+  'dataSetCreate.rule.needDesc': 'Please Input Description！',
+  'dataSetCreate.rule.needFile': 'Please Upload File！',
+  'dataSetCreate.rule.needStorePath': 'Please Input Store Path！',
+
   'dataSetCreate.cancel': 'Cancel',
   'dataSetCreate.submit': 'Submit',
 };

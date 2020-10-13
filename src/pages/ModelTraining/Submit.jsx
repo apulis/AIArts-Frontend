@@ -723,7 +723,7 @@ const ModelTraining = (props) => {
             name="numPsWorker"
             rules={[
               { required: true },
-              { type: 'number', message: '需要填写一个数字' },
+              { type: 'number', message: intl.formatMessage({id: 'trainingCreate.rule.needANumber'}) },
               {
                 validator(rule, value, callback) {
                   if (Number(value) > totalNodes) {

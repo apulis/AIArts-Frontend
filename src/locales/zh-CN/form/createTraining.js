@@ -29,6 +29,8 @@ export default {
   'trainingCreate.placeholder.inputJobName': '请输入作业名称',
   'trainingCreate.placeholder.inputDescription': '请输入描述信息',
 
+  'trainingCreate.rule.needANumber': '需要填写一个数字',
+
   'trainingCreate.save': '保存',
   'trainingCreate.submit': '立即创建',
 };

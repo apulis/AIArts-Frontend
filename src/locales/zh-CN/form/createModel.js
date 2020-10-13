@@ -16,5 +16,10 @@ export default {
   'modelCreate.placeholder.selectTrainingJobName': '请选择训练作业名称',
   'modelCreate.placeholder.inputArgumentPath': '请输入模型权重文件',
 
+  'modelCreate.rule.needName': '名称不能为空！',
+  'modelCreate.rule.needJob': '训练作业不能为空！',
+  'modelCreate.rule.needFile': '请上传文件！',
+  'modelCreate.rule.needWeight': '模型权重文件不能为空！',
+
   'modelCreate.submit': '立即创建',
 };

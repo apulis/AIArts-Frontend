@@ -20,6 +20,11 @@ export default {
   'dataSetCreate.placeholder.inputDescription': '请输入简介',
   'dataSetCreate.placeholder.inputStorePath': '请输入简介',
 
+  'dataSetCreate.rule.needName': '请输入数据集名称！',
+  'dataSetCreate.rule.needDesc': '请输入简介！',
+  'dataSetCreate.rule.needFile': '请上传文件！',
+  'dataSetCreate.rule.needStorePath': '请输入存储路径！',
+
   'dataSetCreate.cancel': '取消',
   'dataSetCreate.submit': '提交',
 };

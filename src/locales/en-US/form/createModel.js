@@ -16,5 +16,10 @@ export default {
   'modelCreate.placeholder.selectTrainingJobName': 'Please Select Training Job Name',
   'modelCreate.placeholder.inputArgumentPath': 'please input model weight file path',
 
+  'modelCreate.rule.needName': 'Please Input Model Name！',
+  'modelCreate.rule.needJob': 'Please Select Training Job Name！',
+  'modelCreate.rule.needFile': 'please Upload File！',
+  'modelCreate.rule.needWeight': 'please input model weight file path！',
+
   'modelCreate.submit': 'Submit',
 };

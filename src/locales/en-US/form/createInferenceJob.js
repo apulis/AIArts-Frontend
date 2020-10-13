@@ -14,5 +14,7 @@ export default {
   'inferenceJobCreate.placeholder.engineVersion': 'Engine Version',
   'inferenceJobCreate.placeholder.select': 'Please Select',
 
+  'inferenceJobCreate.rule.needModelPath': 'Please Input Model Path',
+
   'inferenceJobCreate.submit': 'Submit',
 };

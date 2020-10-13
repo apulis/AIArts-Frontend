@@ -180,7 +180,7 @@ const CreateModel = (props) => {
               name="name"
               label={intl.formatMessage({ id: 'modelCreate.label.name' })}
               rules={[
-                { required: true, message: '名称不能为空!' },
+                { required: true, message: intl.formatMessage({id: 'modelCreate.rule.needName'}) },
                 { ...modelNameReg },
                 { ...jobNameReg },
               ]}
@@ -223,7 +223,7 @@ const CreateModel = (props) => {
               >
                 <Form.Item
                   name="job"
-                  rules={[{ required: true, message: '训练作业不能为空!' }]}
+                  rules={[{ required: true, message: intl.formatMessage({id: 'modelCreate.rule.needJob'}) }]}
                   style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}
                 >
                   <Input
@@ -246,7 +246,7 @@ const CreateModel = (props) => {
                 wrapperCol={{ span: 14 }}
                 label={intl.formatMessage({ id: 'modelCreate.label.file' })}
                 name="file"
-                rules={[{ required: true, message: '请上传文件！' }]}
+                rules={[{ required: true, message: intl.formatMessage({id: 'modelCreate.rule.needFile'}) }]}
                 valuePropName="file"
               >
                 <Dragger {...uploadProps}>
@@ -267,7 +267,7 @@ const CreateModel = (props) => {
                 {...layout}
                 name="argumentPath"
                 label={intl.formatMessage({ id: 'modelCreate.label.argumentPath' })}
-                rules={[{ required: true, message: '模型权重文件不能为空!' }]}
+                rules={[{ required: true, message: intl.formatMessage({id: 'modelCreate.rule.needWeight'}) }]}
               >
                 <Input
                   addonBefore={codePathPrefix}

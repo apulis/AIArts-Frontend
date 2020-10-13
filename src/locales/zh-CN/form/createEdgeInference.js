@@ -12,5 +12,12 @@ export default {
   'edgeInferenceJobCreate.placeholder.selectParamsType': '请选择参数类型',
   'edgeInferenceJobCreate.placeholder.inputParamsValue': '请填写参数值',
 
+  'edgeInferenceJobCreate.rule.needName': '请输入推理名称！',
+  'edgeInferenceJobCreate.rule.needType': '请选择类型！',
+  'edgeInferenceJobCreate.rule.needInputPath': '请填写输入路径！',
+  'edgeInferenceJobCreate.rule.needOutputPath': '请填写输出路径！',
+  'edgeInferenceJobCreate.rule.needParamsType': '请选择参数类型！',
+  'edgeInferenceJobCreate.rule.supportInput': '只支持字母，数字，下划线，横线，点，双引号和逗号！',
+
   'edgeInferenceJobCreate.submit': '提交',
 };

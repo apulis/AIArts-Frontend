@@ -21,5 +21,9 @@ export default {
   'codeCreate.placeholder.storePath': 'Please enter a store path',
   'codeCreate.placeholder.nodeNum': 'Please enter a node num',
 
+  'codeCreate.rule.needInput': 'is required!',
+  'codeCreate.rule.selectEngineType': 'Please select a engine type',
+  'codeCreate.rule.selectEngineName': 'Please select a engine name',
+
   'codeCreate.submit': 'Submit',
 };

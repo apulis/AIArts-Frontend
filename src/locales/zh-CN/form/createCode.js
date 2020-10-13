@@ -21,5 +21,9 @@ export default {
   'codeCreate.placeholder.storePath': '代码存储路径',
   'codeCreate.placeholder.nodeNum': '请输入节点数量',
 
+  'codeCreate.rule.needInput': '是必填项!',
+  'codeCreate.rule.selectEngineType': '至少需要一个引擎类型！',
+  'codeCreate.rule.selectEngineName': '至少需要一个引擎！',
+
   'codeCreate.submit': '立即创建',
 };
