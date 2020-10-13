@@ -159,6 +159,8 @@ const FlowChart = forwardRef((props, ref) => {
     );
 
     const height = document.getElementById('container').scrollHeight || 500;
+    const width = document.getElementById('container').scrollWidth || 800;
+
     const minimap = new G6.Minimap({
       size: [150, 100],
     });
@@ -202,7 +204,7 @@ const FlowChart = forwardRef((props, ref) => {
 
     let _graph = new G6.Graph({
       container: 'container',
-      width: 800,
+      width: width,
       height,
       layout: {
         type: 'dagre',
