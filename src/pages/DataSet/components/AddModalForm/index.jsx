@@ -38,9 +38,9 @@ const AddModalForm = (props, ref) => {
       }
       if (status === 'done') {
         setBtn(false);
-        message.success(`${name}文件上传成功！`);
+        message.success(`${name} ${intl.formatMessage({id: 'datasetCreate.tips.upload.success'})}！`);
       } else if (status === 'error') {
-        message.error(`${name} 文件上传失败！`);
+        message.error(`${name} ${intl.formatMessage({id: 'datasetCreate.tips.upload.error'})}`);
         setBtn(false);
       }
       form.setFieldsValue({ fileLists: info.fileList });
@@ -61,11 +61,11 @@ const AddModalForm = (props, ref) => {
         // }
 
         if (fileLists.length && fileLists.findIndex((i) => i.name === name) > -1) {
-          message.warning(`不能上传相同的文件！`);
+          message.warning(`${intl.formatMessage({id: 'datasetCreate.tips.upload.equalFile'})}`);
           reject(file);
         }
         if (!typeReg.test(name)) {
-          message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
+          message.warning(`${intl.formatMessage({id: 'datasetCreate.tips.upload.supportFile'})}`);
           reject(file);
         }
         resolve(file);

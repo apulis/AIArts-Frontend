@@ -1,5 +1,3 @@
-import imageList from './imageList';
-
 export default {
-  ...imageList,
+  'imageList.placeholder.search': '输入名称查询',
 };

@@ -18,7 +18,6 @@ import setting from './en-US/pages/Setting';
 import visualOperation from './en-US/pages/VisualOperation';
 import table from './en-US/table';
 import form from './en-US/form';
-import tips from './en-US/tips';
 
 export default {
   'navBar.lang': 'Languages',
@@ -48,5 +47,4 @@ export default {
   ...modelMngt,
   ...table,
   ...form,
-  ...tips,
 };

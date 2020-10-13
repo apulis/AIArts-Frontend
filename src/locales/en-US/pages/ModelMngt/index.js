@@ -1,9 +1,9 @@
-import myModels from './myModelsList';
-import modelEvaluationList from './modelEvaluationList';
-import modelEvaluationMetricsList from './modelEvaluationMetricsList';
-
 export default {
-  ...myModels,
-  ...modelEvaluationList,
-  ...modelEvaluationMetricsList,
+  'modelEvaluationList.placeholder.search': 'Input Name Query',
+  'modelEvaluationMetricsList.add.importParams': 'Import Params',
+
+  'modelEvaluationMetricsList.placeholder.search': 'Input Name Query',
+  'myModelsList.add.createModel': 'Create Model',
+
+  'myModelsList.placeholder.search': 'Input Name Query',
 };
