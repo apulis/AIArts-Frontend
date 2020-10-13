@@ -13,4 +13,4 @@ export default {
   'codeList.table.column.action.save': '保存镜像',
   'codeList.table.pagination.showTotal.prefix': '总共',
   'codeList.table.pagination.showTotal.suffix': '条',
-}
+};

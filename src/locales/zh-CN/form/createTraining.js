@@ -31,4 +31,4 @@ export default {
 
   'trainingCreate.save': '保存',
   'trainingCreate.submit': '立即创建',
-}
+};

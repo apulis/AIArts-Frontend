@@ -238,9 +238,11 @@ const DataSetList = () => {
           width={600}
           className={styles.dataSetModal}
           footer={[
-            <Button onClick={() => setModalFlag(false)}>{intl.formatMessage({id: 'dataSetCreate.cancel'})}</Button>,
+            <Button onClick={() => setModalFlag(false)}>
+              {intl.formatMessage({ id: 'dataSetCreate.cancel' })}
+            </Button>,
             <Button type="primary" disabled={btnDisabled} loading={btnLoading} onClick={onSubmit}>
-              {intl.formatMessage({id: 'dataSetCreate.submit'})}
+              {intl.formatMessage({ id: 'dataSetCreate.submit' })}
             </Button>,
           ]}
         >

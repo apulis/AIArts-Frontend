@@ -94,19 +94,24 @@ export default function CreateVisualization() {
           wrapperCol={{ span: 14 }}
           style={{ marginTop: '30px' }}
           name="jobName"
-          label={intl.formatMessage({id: 'visualJobCreate.label.jobName'})}
+          label={intl.formatMessage({ id: 'visualJobCreate.label.jobName' })}
           rules={[{ required: true }, { ...jobNameReg }]}
         >
-          <Input style={{ width: 300 }} placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.inputVisualJobName'})} />
+          <Input
+            style={{ width: 300 }}
+            placeholder={intl.formatMessage({
+              id: 'visualJobCreate.placeholder.inputVisualJobName',
+            })}
+          />
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="selectModel"
-          label={intl.formatMessage({id: 'visualJobCreate.label.selectModel'})}
+          label={intl.formatMessage({ id: 'visualJobCreate.label.selectModel' })}
         >
           <Select
-            placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.selectModel'})}
+            placeholder={intl.formatMessage({ id: 'visualJobCreate.placeholder.selectModel' })}
             style={{ width: 300 }}
             allowClear
             optionFilterProp="children"
@@ -124,23 +129,30 @@ export default function CreateVisualization() {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="tensorboardLogDir"
-          label={intl.formatMessage({id: 'visualJobCreate.label.tensorboardLogDir'})}
+          label={intl.formatMessage({ id: 'visualJobCreate.label.tensorboardLogDir' })}
           rules={[{ required: true }]}
         >
-          <Input addonBefore={codePathPrefix} placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.inputVisualLogPath'})} />
+          <Input
+            addonBefore={codePathPrefix}
+            placeholder={intl.formatMessage({
+              id: 'visualJobCreate.placeholder.inputVisualLogPath',
+            })}
+          />
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="description"
-          label={intl.formatMessage({id: 'visualJobCreate.label.description'})}
+          label={intl.formatMessage({ id: 'visualJobCreate.label.description' })}
           rules={[{ max: 191 }]}
         >
-          <TextArea placeholder={intl.formatMessage({id: 'visualJobCreate.placeholder.inputDescription'})} />
+          <TextArea
+            placeholder={intl.formatMessage({ id: 'visualJobCreate.placeholder.inputDescription' })}
+          />
         </Form.Item>
       </Form>
       <Button type="primary" onClick={onCreate} style={{ marginLeft: '16.7%' }}>
-        {intl.formatMessage({id: 'visualJobCreate.submit'})}
+        {intl.formatMessage({ id: 'visualJobCreate.submit' })}
       </Button>
     </>
   );

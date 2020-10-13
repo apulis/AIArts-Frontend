@@ -23,5 +23,5 @@ export default {
   ...myModelList,
   ...presetModelList,
   ...trainingParamsList,
-  ...visualizationList
-}
+  ...visualizationList,
+};

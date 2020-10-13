@@ -6,4 +6,4 @@ export default {
   'imageList.table.column.action.delete': '删除',
   'imageList.table.pagination.showTotal.prefix': '总共',
   'imageList.table.pagination.showTotal.suffix': '条',
-}
+};

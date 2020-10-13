@@ -3,5 +3,4 @@ export default {
   'edgeInferenceList.setting': 'Setting',
 
   'edgeInferenceList.placeholder.search': 'Input Name Query',
-
 };

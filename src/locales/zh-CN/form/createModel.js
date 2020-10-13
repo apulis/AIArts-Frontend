@@ -4,7 +4,7 @@ export default {
   'modelCreate.label.modelFileType': '模型文件',
   'modelCreate.label.job': '训练作业',
   'modelCreate.label.file': '上传模型文件',
-  'modelCreate.label.argumentPath':'模型权重文件',
+  'modelCreate.label.argumentPath': '模型权重文件',
 
   'modelCreate.value.selectModelFile': '选择模型文件',
   'modelCreate.value.uploadModelFile': '上传模型文件',
@@ -17,4 +17,4 @@ export default {
   'modelCreate.placeholder.inputArgumentPath': '请输入模型权重文件',
 
   'modelCreate.submit': '立即创建',
-}
+};

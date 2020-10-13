@@ -13,4 +13,4 @@ export default {
   'edgeInferenceJobCreate.placeholder.inputParamsValue': 'Please Input Params Value',
 
   'edgeInferenceJobCreate.submit': 'Submit',
-}
+};

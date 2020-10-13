@@ -11,4 +11,4 @@ export default {
   'dataSetList.table.column.action.delete': '删除',
   'dataSetList.table.pagination.showTotal.prefix': '总共',
   'dataSetList.table.pagination.showTotal.suffix': '条',
-}
+};

@@ -10,4 +10,4 @@ export default {
   'visualJobCreate.placeholder.inputDescription': '请输入描述信息',
 
   'visualJobCreate.submit': '创建',
-}
+};

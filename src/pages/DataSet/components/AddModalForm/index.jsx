@@ -90,47 +90,73 @@ const AddModalForm = (props, ref) => {
       }
     >
       <Form.Item
-        label={intl.formatMessage({id: 'dataSetCreate.label.name'})}
+        label={intl.formatMessage({ id: 'dataSetCreate.label.name' })}
         name="name"
         rules={[{ required: true, message: '请输入数据集名称！' }, { max: 25 }]}
       >
-        <Input placeholder={intl.formatMessage({id: 'dataSetCreate.placeholder.inputName'})} disabled={modalType} />
+        <Input
+          placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputName' })}
+          disabled={modalType}
+        />
       </Form.Item>
       <Form.Item
-        label={intl.formatMessage({id: 'dataSetCreate.label.description'})}
+        label={intl.formatMessage({ id: 'dataSetCreate.label.description' })}
         name="description"
         rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]}
       >
-        <Input.TextArea placeholder={intl.formatMessage({id: 'dataSetCreate.placeholder.inputDescription'})} autoSize={{ minRows: 4 }} />
+        <Input.TextArea
+          placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputDescription' })}
+          autoSize={{ minRows: 4 }}
+        />
       </Form.Item>
       {!modalType && (
         <>
-          <Form.Item label={intl.formatMessage({id: 'dataSetCreate.label.isTranslated'})} rules={[{ required: true }]} name="isTranslated">
+          <Form.Item
+            label={intl.formatMessage({ id: 'dataSetCreate.label.isTranslated' })}
+            rules={[{ required: true }]}
+            name="isTranslated"
+          >
             <Radio.Group>
-              <Radio value={false}>{intl.formatMessage({id: 'dataSetCreate.value.no'})}</Radio>
-              <Radio value={true}>{intl.formatMessage({id: 'dataSetCreate.value.yes'})}</Radio>
+              <Radio value={false}>{intl.formatMessage({ id: 'dataSetCreate.value.no' })}</Radio>
+              <Radio value={true}>{intl.formatMessage({ id: 'dataSetCreate.value.yes' })}</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label={intl.formatMessage({id: 'dataSetCreate.label.isPrivate'})} rules={[{ required: true }]} name="isPrivate">
+          <Form.Item
+            label={intl.formatMessage({ id: 'dataSetCreate.label.isPrivate' })}
+            rules={[{ required: true }]}
+            name="isPrivate"
+          >
             <Radio.Group
               onChange={(e) => setIsPrivate(e.target.value)}
               disabled={fileLists.length > 0}
             >
-              <Radio value={true}>{intl.formatMessage({id: 'dataSetCreate.value.private'})}</Radio>
-              <Radio value={false}>{intl.formatMessage({id: 'dataSetCreate.value.public'})}</Radio>
+              <Radio value={true}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.private' })}
+              </Radio>
+              <Radio value={false}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.public' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label={intl.formatMessage({id: 'dataSetCreate.label.sourceType'})} rules={[{ required: true }]} name="sourceType">
+          <Form.Item
+            label={intl.formatMessage({ id: 'dataSetCreate.label.sourceType' })}
+            rules={[{ required: true }]}
+            name="sourceType"
+          >
             <Radio.Group onChange={(e) => setSourceType(e.target.value)}>
-              <Radio value={1}>{intl.formatMessage({id: 'dataSetCreate.value.uploadDataSource'})}</Radio>
-              <Radio value={2}>{intl.formatMessage({id: 'dataSetCreate.value.otherDataSource'})}</Radio>
+              <Radio value={1}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.uploadDataSource' })}
+              </Radio>
+              <Radio value={2}>
+                {intl.formatMessage({ id: 'dataSetCreate.value.otherDataSource' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
         </>
       )}
       {!modalType && sourceType == 1 && (
         <Form.Item
-          label={intl.formatMessage({id: 'dataSetCreate.label.fileLists'})}
+          label={intl.formatMessage({ id: 'dataSetCreate.label.fileLists' })}
           name="fileLists"
           rules={[{ required: true, message: '请上传文件！' }]}
           valuePropName="fileLists"
@@ -139,21 +165,27 @@ const AddModalForm = (props, ref) => {
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
-            <p className="ant-upload-text">{intl.formatMessage({id: 'dataSetCreate.value.tips'})}</p>
-            <p className="ant-upload-hint">{intl.formatMessage({id: 'dataSetCreate.value.tips.desc'})}</p>
+            <p className="ant-upload-text">
+              {intl.formatMessage({ id: 'dataSetCreate.value.tips' })}
+            </p>
+            <p className="ant-upload-hint">
+              {intl.formatMessage({ id: 'dataSetCreate.value.tips.desc' })}
+            </p>
           </Dragger>
         </Form.Item>
       )}
       {sourceType == 2 && (
         <Form.Item
-          label={intl.formatMessage({id: 'dataSetCreate.label.path'})}
+          label={intl.formatMessage({ id: 'dataSetCreate.label.path' })}
           name="path"
           rules={[
             { required: true, message: '请输入存储路径！' },
             { pattern: FilePathReg, message: FilePathErrorText },
           ]}
         >
-          <Input placeholder={intl.formatMessage({id: 'dataSetCreate.placeholder.inputStorePath'})} />
+          <Input
+            placeholder={intl.formatMessage({ id: 'dataSetCreate.placeholder.inputStorePath' })}
+          />
         </Form.Item>
       )}
     </Form>

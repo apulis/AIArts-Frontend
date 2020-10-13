@@ -483,22 +483,32 @@ const ModelTraining = (props) => {
           {...commonLayout}
           style={{ marginTop: '30px' }}
           name="name"
-          label={typeEdit ? intl.formatMessage({id: 'trainingCreate.label.paramConfigName'}) : intl.formatMessage({id: 'trainingCreate.label.jobName'})}
+          label={
+            typeEdit
+              ? intl.formatMessage({ id: 'trainingCreate.label.paramConfigName' })
+              : intl.formatMessage({ id: 'trainingCreate.label.jobName' })
+          }
           rules={[{ required: true }, { ...jobNameReg }]}
         >
           <Input
             style={{ width: 300 }}
-            placeholder={typeEdit ? intl.formatMessage({id: 'trainingCreate.placeholder.inputParamsConfigName'}) : intl.formatMessage({id: 'trainingCreate.placeholder.inputJobName'})}
+            placeholder={
+              typeEdit
+                ? intl.formatMessage({ id: 'trainingCreate.placeholder.inputParamsConfigName' })
+                : intl.formatMessage({ id: 'trainingCreate.placeholder.inputJobName' })
+            }
           />
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="desc"
-          label={intl.formatMessage({id: 'trainingCreate.label.desc'})}
+          label={intl.formatMessage({ id: 'trainingCreate.label.desc' })}
           rules={[{ max: 191 }]}
         >
-          <TextArea placeholder={intl.formatMessage({id: 'trainingCreate.placeholder.inputDescription'})} />
+          <TextArea
+            placeholder={intl.formatMessage({ id: 'trainingCreate.placeholder.inputDescription' })}
+          />
         </FormItem>
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
@@ -509,23 +519,31 @@ const ModelTraining = (props) => {
         参数配置
       </div>
       {isSubmitPage && (
-        <FormItem {...commonLayout} label={intl.formatMessage({id: 'trainingCreate.label.paramsSource'})}>
+        <FormItem
+          {...commonLayout}
+          label={intl.formatMessage({ id: 'trainingCreate.label.paramsSource' })}
+        >
           <Radio.Group defaultValue={1} buttonStyle="solid">
-            <Radio.Button value={1}>{intl.formatMessage({id: 'trainingCreate.value.manualParameterConfiguration'})}</Radio.Button>
+            <Radio.Button value={1}>
+              {intl.formatMessage({ id: 'trainingCreate.value.manualParameterConfiguration' })}
+            </Radio.Button>
             <Radio.Button
               value={2}
               onClick={() => {
                 setPresetParamsVisible(true);
               }}
             >
-              {intl.formatMessage({id: 'trainingCreate.value.importTrainingParams'})}
+              {intl.formatMessage({ id: 'trainingCreate.value.importTrainingParams' })}
             </Radio.Button>
           </Radio.Group>
         </FormItem>
       )}
       <Form form={form}>
         {isSubmitPage && (
-          <FormItem {...commonLayout} label={intl.formatMessage({id: 'trainingCreate.label.engineSource'})}>
+          <FormItem
+            {...commonLayout}
+            label={intl.formatMessage({ id: 'trainingCreate.label.engineSource' })}
+          >
             <Radio.Group
               value={engineSource}
               onChange={(e) => {
@@ -533,13 +551,22 @@ const ModelTraining = (props) => {
               }}
               style={{ width: '300px' }}
             >
-              <Radio value={1}>{intl.formatMessage({id: 'trainingCreate.value.presetEngine'})}</Radio>
-              <Radio value={2}>{intl.formatMessage({id: 'trainingCreate.value.savedEngine'})}</Radio>
+              <Radio value={1}>
+                {intl.formatMessage({ id: 'trainingCreate.value.presetEngine' })}
+              </Radio>
+              <Radio value={2}>
+                {intl.formatMessage({ id: 'trainingCreate.value.savedEngine' })}
+              </Radio>
             </Radio.Group>
           </FormItem>
         )}
 
-        <FormItem {...commonLayout} name="engine" label={intl.formatMessage({id: 'trainingCreate.label.engine'})} rules={[{ required: true }]}>
+        <FormItem
+          {...commonLayout}
+          name="engine"
+          label={intl.formatMessage({ id: 'trainingCreate.label.engine' })}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2}>
             {engineSource === 1 &&
               frameWorks.map((f) => (
@@ -558,7 +585,7 @@ const ModelTraining = (props) => {
         <FormItem
           labelCol={{ span: 4 }}
           name="codePath"
-          label={intl.formatMessage({id: 'trainingCreate.label.codePath'})}
+          label={intl.formatMessage({ id: 'trainingCreate.label.codePath' })}
           rules={[{ required: isPretrainedModel }]}
         >
           {isPretrainedModel || importedTrainingParams ? (
@@ -569,7 +596,7 @@ const ModelTraining = (props) => {
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
-          label={intl.formatMessage({id: 'trainingCreate.label.startupFile'})}
+          label={intl.formatMessage({ id: 'trainingCreate.label.startupFile' })}
           name="startupFile"
           rules={[{ required: true }, startUpFileReg]}
         >
@@ -582,7 +609,7 @@ const ModelTraining = (props) => {
         <FormItem
           name="visualPath"
           labelCol={{ span: 4 }}
-          label={intl.formatMessage({id: 'trainingCreate.label.visualPath'})}
+          label={intl.formatMessage({ id: 'trainingCreate.label.visualPath' })}
           style={{ marginTop: '50px' }}
         >
           {
@@ -595,7 +622,7 @@ const ModelTraining = (props) => {
         <FormItem
           name="outputPath"
           labelCol={{ span: 4 }}
-          label={intl.formatMessage({id: 'trainingCreate.label.outputPath'})}
+          label={intl.formatMessage({ id: 'trainingCreate.label.outputPath' })}
           rules={[{ required: isPretrainedModel }]}
         >
           {
@@ -605,7 +632,12 @@ const ModelTraining = (props) => {
             />
           }
         </FormItem>
-        <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label={intl.formatMessage({id: 'trainingCreate.label.datasetPath'})}>
+        <FormItem
+          name="datasetPath"
+          rules={[]}
+          labelCol={{ span: 4 }}
+          label={intl.formatMessage({ id: 'trainingCreate.label.datasetPath' })}
+        >
           {/* <Input style={{ width: 300 }} /> */}
           <Select style={{ width: '300px' }}>
             {datasets.map((d) => (
@@ -615,7 +647,10 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
-        <FormItem label={intl.formatMessage({id: 'trainingCreate.label.runningParams'})} labelCol={{ span: 4 }}>
+        <FormItem
+          label={intl.formatMessage({ id: 'trainingCreate.label.runningParams' })}
+          labelCol={{ span: 4 }}
+        >
           {runningParams.map((param, index) => {
             return (
               <div key={param.createTime || param.key}>
@@ -665,7 +700,7 @@ const ModelTraining = (props) => {
           </div>
         </FormItem>
         <FormItem
-          label={intl.formatMessage({id: 'trainingCreate.label.jobTrainingType'})}
+          label={intl.formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
           name="jobTrainingType"
           {...commonLayout}
           rules={[{ required: true }]}
@@ -673,13 +708,17 @@ const ModelTraining = (props) => {
           onChange={handleDistributedJob}
         >
           <Radio.Group style={{ width: '300px' }}>
-            <Radio value={'PSDistJob'}>{intl.formatMessage({id: 'trainingCreate.value.yes'})}</Radio>
-            <Radio value={'RegularJob'}>{intl.formatMessage({id: 'trainingCreate.value.no'})}</Radio>
+            <Radio value={'PSDistJob'}>
+              {intl.formatMessage({ id: 'trainingCreate.value.yes' })}
+            </Radio>
+            <Radio value={'RegularJob'}>
+              {intl.formatMessage({ id: 'trainingCreate.value.no' })}
+            </Radio>
           </Radio.Group>
         </FormItem>
         {distributedJob && (
           <FormItem
-            label={intl.formatMessage({id: 'trainingCreate.label.numPsWorker'})}
+            label={intl.formatMessage({ id: 'trainingCreate.label.numPsWorker' })}
             {...commonLayout}
             name="numPsWorker"
             rules={[
@@ -704,7 +743,12 @@ const ModelTraining = (props) => {
             <InputNumber onChange={handleDeviceChange} min={1} max={totalNodes} />
           </FormItem>
         )}
-        <FormItem label={intl.formatMessage({id: 'trainingCreate.label.deviceType'})} name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem
+          label={intl.formatMessage({ id: 'trainingCreate.label.deviceType' })}
+          name="deviceType"
+          {...commonLayout}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {deviceList.map((d) => (
               <Option value={d.deviceType}>{d.deviceType}</Option>
@@ -712,7 +756,11 @@ const ModelTraining = (props) => {
           </Select>
         </FormItem>
         <FormItem
-          label={distributedJob ? intl.formatMessage({id: 'trainingCreate.label.perNodeDeviceNum'}) : intl.formatMessage({id: 'trainingCreate.label.deviceNum'})}
+          label={
+            distributedJob
+              ? intl.formatMessage({ id: 'trainingCreate.label.perNodeDeviceNum' })
+              : intl.formatMessage({ id: 'trainingCreate.label.deviceNum' })
+          }
           name="deviceNum"
           {...commonLayout}
           rules={[{ required: true }]}
@@ -728,7 +776,12 @@ const ModelTraining = (props) => {
           </Select>
         </FormItem>
         {distributedJob && (
-          <FormItem {...commonLayout} label={intl.formatMessage({id: 'trainingCreate.label.deviceTotal'})} name="deviceTotal" disabled>
+          <FormItem
+            {...commonLayout}
+            label={intl.formatMessage({ id: 'trainingCreate.label.deviceTotal' })}
+            name="deviceTotal"
+            disabled
+          >
             <Input value={deviceTotal} style={{ width: '300px' }} disabled />
           </FormItem>
         )}
@@ -819,7 +872,9 @@ const ModelTraining = (props) => {
         style={{ float: 'right', marginBottom: '16px' }}
         onClick={handleSubmit}
       >
-        {typeEdit ? intl.formatMessage({id: 'trainingCreate.save'}) : intl.formatMessage({id: 'trainingCreate.submit'})}
+        {typeEdit
+          ? intl.formatMessage({ id: 'trainingCreate.save' })
+          : intl.formatMessage({ id: 'trainingCreate.submit' })}
       </Button>
     </div>
   );

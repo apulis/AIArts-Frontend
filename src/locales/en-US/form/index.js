@@ -13,5 +13,5 @@ export default {
   ...createEdgeInference,
   ...createInferenceJob,
   ...createTraining,
-  ...createVisualJob
-}
+  ...createVisualJob,
+};

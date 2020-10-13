@@ -3,7 +3,7 @@ export default {
   'inferenceJobCreate.label.desc': 'Description',
   'inferenceJobCreate.label.modelPath': 'Inference Model Path',
   'inferenceJobCreate.label.engineName': 'Engine',
-  'inferenceJobCreate.label.runningParams': 'Job Params', 
+  'inferenceJobCreate.label.runningParams': 'Job Params',
   'inferenceJobCreate.label.deviceType': 'Device Type',
   'inferenceJobCreate.label.resourcegpu': 'Device Num',
 
@@ -15,4 +15,4 @@ export default {
   'inferenceJobCreate.placeholder.select': 'Please Select',
 
   'inferenceJobCreate.submit': 'Submit',
-}
+};

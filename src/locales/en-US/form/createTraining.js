@@ -31,4 +31,4 @@ export default {
 
   'trainingCreate.save': 'Save',
   'trainingCreate.submit': 'Submit',
-}
+};

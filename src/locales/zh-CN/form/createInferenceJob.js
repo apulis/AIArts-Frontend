@@ -3,7 +3,7 @@ export default {
   'inferenceJobCreate.label.desc': '描述',
   'inferenceJobCreate.label.modelPath': '推理模型路径',
   'inferenceJobCreate.label.engineName': '引擎',
-  'inferenceJobCreate.label.runningParams': '作业参数', 
+  'inferenceJobCreate.label.runningParams': '作业参数',
   'inferenceJobCreate.label.deviceType': '设备类型',
   'inferenceJobCreate.label.resourcegpu': '设备数量',
 
@@ -15,4 +15,4 @@ export default {
   'inferenceJobCreate.placeholder.select': '请选择',
 
   'inferenceJobCreate.submit': '立即创建',
-}
+};

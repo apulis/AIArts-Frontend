@@ -10,4 +10,4 @@ export default {
   'visualJobCreate.placeholder.inputDescription': 'Please Input Description',
 
   'visualJobCreate.submit': 'Submit',
-}
+};

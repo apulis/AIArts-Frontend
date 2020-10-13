@@ -219,31 +219,48 @@ const SubmitModelTraining = (props) => {
           <FormItem
             {...commonLayout}
             name="workName"
-            label={intl.formatMessage({id: 'inferenceJobCreate.label.workName'})}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.workName' })}
             rules={[{ required: true }, { ...jobNameReg }]}
           >
-            <Input placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.inputJobName'})} />
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'inferenceJobCreate.placeholder.inputJobName',
+              })}
+            />
           </FormItem>
           <FormItem
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 14 }}
             name="desc"
-            label={intl.formatMessage({id: 'inferenceJobCreate.label.desc'})}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.desc' })}
             rules={[{ max: 191 }]}
           >
-            <TextArea placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.inputDescription'})} />
+            <TextArea
+              placeholder={intl.formatMessage({
+                id: 'inferenceJobCreate.placeholder.inputDescription',
+              })}
+            />
           </FormItem>
         </Form>
         <Divider style={{ borderColor: '#cdcdcd' }} />
         <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
         <Form form={form}>
-          <FormItem labelCol={commonLayout.labelCol} label={intl.formatMessage({id: 'inferenceJobCreate.label.modelPath'})} required>
+          <FormItem
+            labelCol={commonLayout.labelCol}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.modelPath' })}
+            required
+          >
             <FormItem
               name="modelPath"
               rules={[{ required: true, message: '请输入推理模型路径' }]}
               style={{ display: 'inline-block', width: '250px' }}
             >
-              <Input placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.inputModelPath'})} style={{ width: '230px' }} />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'inferenceJobCreate.placeholder.inputModelPath',
+                })}
+                style={{ width: '230px' }}
+              />
             </FormItem>
             <FormItem style={{ display: 'inline-block', width: '36px' }}>
               <Button
@@ -257,12 +274,21 @@ const SubmitModelTraining = (props) => {
               </FormItem>
             )}
           </FormItem>
-          <FormItem {...commonLayout} label={intl.formatMessage({id: 'inferenceJobCreate.label.engineName'})} required>
+          <FormItem
+            {...commonLayout}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.engineName' })}
+            required
+          >
             <FormItem
               name="engineName"
               style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
             >
-              <Select placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.engineName'})} onChange={(name) => handleEngineChange('name', name)}>
+              <Select
+                placeholder={intl.formatMessage({
+                  id: 'inferenceJobCreate.placeholder.engineName',
+                })}
+                onChange={(name) => handleEngineChange('name', name)}
+              >
                 {engineNameList.map((val) => (
                   <Option value={val}>{getNameFromDockerImage(val)}</Option>
                 ))}
@@ -273,7 +299,9 @@ const SubmitModelTraining = (props) => {
               style={{ display: 'inline-block', width: 'cal(50% - 8px)', marginLeft: '10px' }}
             >
               <Select
-                placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.engineVersion'})}
+                placeholder={intl.formatMessage({
+                  id: 'inferenceJobCreate.placeholder.engineVersion',
+                })}
                 onChange={(version) => handleEngineChange('version', version)}
               >
                 {engineVersionList.map((val) => (
@@ -282,7 +310,10 @@ const SubmitModelTraining = (props) => {
               </Select>
             </FormItem>
           </FormItem>
-          <FormItem label={intl.formatMessage({id: 'inferenceJobCreate.label.runningParams'})} labelCol={{ span: 4 }}>
+          <FormItem
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.runningParams' })}
+            labelCol={{ span: 4 }}
+          >
             {runningParams.map((param, index) => {
               return (
                 <div>
@@ -335,13 +366,13 @@ const SubmitModelTraining = (props) => {
             </div>
           </FormItem>
           <FormItem
-            label={intl.formatMessage({id: 'inferenceJobCreate.label.deviceType'})}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.deviceType' })}
             name="deviceType"
             {...commonLayout}
             rules={[{ required: false }]}
           >
             <Select
-              placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.select'})}
+              placeholder={intl.formatMessage({ id: 'inferenceJobCreate.placeholder.select' })}
               style={{ width: '260px' }}
               onChange={() => setCurrentDeviceType(getFieldValue('deviceType'))}
             >
@@ -350,8 +381,16 @@ const SubmitModelTraining = (props) => {
               ))}
             </Select>
           </FormItem>
-          <FormItem label={intl.formatMessage({id: 'inferenceJobCreate.label.resourcegpu'})} name="resourcegpu" {...commonLayout} initialValue={0}>
-            <Select placeholder={intl.formatMessage({id: 'inferenceJobCreate.placeholder.select'})} style={{ width: '260px' }}>
+          <FormItem
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.resourcegpu' })}
+            name="resourcegpu"
+            {...commonLayout}
+            initialValue={0}
+          >
+            <Select
+              placeholder={intl.formatMessage({ id: 'inferenceJobCreate.placeholder.select' })}
+              style={{ width: '260px' }}
+            >
               {[0, 1].map((val) => (
                 <Option value={val}>{val}</Option>
               ))}
@@ -364,7 +403,7 @@ const SubmitModelTraining = (props) => {
           style={{ float: 'right' }}
           onClick={handleSubmit}
         >
-          {intl.formatMessage({id: 'inferenceJobCreate.submit'})}
+          {intl.formatMessage({ id: 'inferenceJobCreate.submit' })}
         </Button>
       </div>
       {selectModelPathModalVisible && (

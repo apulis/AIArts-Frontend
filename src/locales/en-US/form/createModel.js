@@ -3,8 +3,8 @@ export default {
   'modelCreate.label.description': 'Description',
   'modelCreate.label.modelFileType': 'Model File',
   'modelCreate.label.job': 'Training Job',
-  'modelCreate.label.file': 'Upload Model File', 
-  'modelCreate.label.argumentPath':'Model Weight File Path',
+  'modelCreate.label.file': 'Upload Model File',
+  'modelCreate.label.argumentPath': 'Model Weight File Path',
 
   'modelCreate.value.selectModelFile': 'Select Model File',
   'modelCreate.value.uploadModelFile': 'Upload Model File',
@@ -17,4 +17,4 @@ export default {
   'modelCreate.placeholder.inputArgumentPath': 'please input model weight file path',
 
   'modelCreate.submit': 'Submit',
-}
+};

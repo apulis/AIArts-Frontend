@@ -13,4 +13,4 @@ export default {
   'edgeInferenceJobCreate.placeholder.inputParamsValue': '请填写参数值',
 
   'edgeInferenceJobCreate.submit': '提交',
-}
+};

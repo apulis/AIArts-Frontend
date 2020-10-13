@@ -11,4 +11,4 @@ export default {
 
   'trainingCreate.cancel': '取消',
   'trainingCreate.save': '保存',
-}
+};
