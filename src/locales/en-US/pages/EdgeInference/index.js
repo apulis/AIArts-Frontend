@@ -1,7 +1,7 @@
 export default {
-  'edgeInference.list.add.inference':'Create EdgeInference Job',
-  'edgeInference.list.setting':'Setting',
-  'edgeInference.list.placeholder.search':'Input Name Query',
+  'edgeInference.list.add.inference': 'Create EdgeInference Job',
+  'edgeInference.list.setting': 'Setting',
+  'edgeInference.list.placeholder.search': 'Input Name Query',
   'edgeInference.list.typeText.converting': 'Converting',
   'edgeInference.list.typeText.push': 'Pushing',
   'edgeInference.list.typeText.push.success': 'Push Success',

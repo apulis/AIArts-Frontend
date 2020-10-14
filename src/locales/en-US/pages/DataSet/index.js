@@ -4,6 +4,18 @@ export default {
   'dataSet.list.modal.title.edit': 'Edit',
   'dataSet.list.modal.title.add': 'Create',
 
+  'dataSet.list.edit': 'Edit',
+  'dataSet.list.add': 'Add',
+  'dataSet.list.success': 'Success！',
+  'dataSet.list.yes': 'yes',
+  'dataSet.list.no': 'no',
+  'dataSet.list.onDelete.title': 'Are you sure you want to delete this dataset?',
+  'dataSet.list.onDelete.okText': 'Delete',
+  'dataSet.list.onDelete.cancelText': 'Cancel',
+  'dataSet.list.onDelete.success': 'successfully delete!',
+  'dataSet.list.fresh.success': 'successfully fresh!',
+
+
   'dataSet.create.tips.upload.success': 'File Upload Success！',
   'dataSet.create.tips.upload.error': 'File Upload Error！',
   'dataSet.create.tips.upload.equalFile': 'Cannot upload the same file！',

@@ -1,6 +1,6 @@
 export default {
   'centerInference.list.add.inferenceJob': 'Create Inference Job',
-  'centerInference.list.placeholder.search':'Input Name Query',
+  'centerInference.list.placeholder.search': 'Input Name Query',
   'centerInference.list.all': 'All',
   'centerInference.list.stopJob.success': 'success stop job！',
   'centerInference.list.stopJob.error': 'error stop job：',

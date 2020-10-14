@@ -72,19 +72,19 @@ const DataSetList = () => {
       const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
-        text = '编辑';
+        text = intl.formatMessage({id: 'dataSet.list.edit'});
         res = await edit(editData.id, values);
       } else {
         values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
         delete values.fileLists;
         delete values.sourceType;
-        text = '新增';
+        text = intl.formatMessage({id: 'dataSet.list.add'});
         res = await add(values);
       }
       const { code } = res;
       if (code === 0) {
         getData();
-        message.success(`${text}成功！`);
+        message.success(`${text}${intl.formatMessage({id: 'dataSet.list.success'})}`);
         setModalFlag(false);
       }
       setBtnLoading(false);
@@ -128,7 +128,7 @@ const DataSetList = () => {
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.isTranslated' }),
       dataIndex: 'isTranslated',
-      render: (i) => <span>{i === true ? '是' : '否'}</span>,
+      render: (i) => <span>{i === true ? intl.formatMessage({id: 'dataSet.list.yes'}) : intl.formatMessage({id: 'dataSet.list.no'})}</span>,
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.action' }),
@@ -161,11 +161,11 @@ const DataSetList = () => {
 
   const onDelete = (id) => {
     confirm({
-      title: '确定要删除该数据集吗？',
+      title: intl.formatMessage({id: 'dataSet.list.onDelete.title'}),
       icon: <ExclamationCircleOutlined />,
-      okText: '删除',
+      okText: intl.formatMessage({id: 'dataSet.list.onDelete.okText'}),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({id: 'dataSet.list.onDelete.cancelText'}),
       onOk: async () => {
         const { code } = await deleteDataSet(id);
         if (code === 0) {
@@ -175,7 +175,7 @@ const DataSetList = () => {
           } else {
             getData();
           }
-          message.success('删除成功！');
+          message.success(intl.formatMessage({id: 'dataSet.list.onDelete.success'}));
         }
       },
       onCancel() {},
@@ -202,7 +202,7 @@ const DataSetList = () => {
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
             />
-            <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+            <Button onClick={() => getData(intl.formatMessage({id: 'dataSet.list.fresh.success'}))} icon={<SyncOutlined />} />
           </div>
           <Table
             columns={columns}

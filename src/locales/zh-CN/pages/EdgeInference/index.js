@@ -1,7 +1,7 @@
 export default {
-  'edgeInference.list.add.inference':'创建边缘推理',
-  'edgeInference.list.setting':'设置',
-  'edgeInference.list.placeholder.search':'输入名称搜索',
+  'edgeInference.list.add.inference': '创建边缘推理',
+  'edgeInference.list.setting': '设置',
+  'edgeInference.list.placeholder.search': '输入名称搜索',
   'edgeInference.list.typeText.converting': '转换中',
   'edgeInference.list.typeText.push': '推送中',
   'edgeInference.list.typeText.push.success': '推送成功',

@@ -1,6 +1,6 @@
 export default {
   'centerInference.list.add.inferenceJob': '创建推理作业',
-  'centerInference.list.placeholder.search':'输入名称搜索',
+  'centerInference.list.placeholder.search': '输入名称搜索',
   'centerInference.list.all': '全部',
   'centerInference.list.stopJob.success': 'Job成功停止！',
   'centerInference.list.stopJob.error': 'Job停止错误：',
