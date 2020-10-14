@@ -302,7 +302,7 @@ const InferenceList = (props) => {
           }}
         >
           <Button type="primary" onClick={CreateJob}>
-            {intl.formatMessage({ id: 'centerInferenceList.add.inferenceJob' })}
+            {intl.formatMessage({ id: 'centerInference.list.add.inferenceJob' })}
           </Button>
           <div
             style={{
@@ -323,7 +323,7 @@ const InferenceList = (props) => {
             </Select>
             <Search
               style={{ width: '200px', marginRight: '20px' }}
-              placeholder={intl.formatMessage({ id: 'centerInferenceList.placeholder.search' })}
+              placeholder={intl.formatMessage({ id: 'centerInference.list.placeholder.search' })}
               onSearch={onSearchName}
               enterButton
             />

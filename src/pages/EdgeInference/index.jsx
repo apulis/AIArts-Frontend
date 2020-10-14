@@ -259,11 +259,11 @@ const EdgeInference = (props) => {
         <div className={styles.edgeInferences}>
           <Link to="/Inference/EdgeInference/submit">
             <Button type="primary">
-              {intl.formatMessage({ id: 'edgeInferenceList.add.inference' })}
+              {intl.formatMessage({ id: 'edgeInference.list.add.inference' })}
             </Button>
           </Link>
           <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>
-            {intl.formatMessage({ id: 'edgeInferenceList.setting' })}
+            {intl.formatMessage({ id: 'edgeInference.list.setting' })}
           </Button>
           {fdInfo.url && (
             <Button type="primary" onClick={() => window.open(fdInfo.url)}>
@@ -275,7 +275,7 @@ const EdgeInference = (props) => {
               {getOptions()}
             </Select>
             <Search
-              placeholder={intl.formatMessage({ id: 'edgeInferenceList.placeholder.search' })}
+              placeholder={intl.formatMessage({ id: 'edgeInference.list.placeholder.search' })}
               enterButton
               onChange={(e) => setName(e.target.value)}
               onSearch={(v) => onSearchChange(v, 2)}
