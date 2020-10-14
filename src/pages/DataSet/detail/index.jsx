@@ -6,10 +6,12 @@ import styles from './index.less';
 import { getDatasetDetail } from '../service';
 import { PageLoading } from '@ant-design/pro-layout';
 import moment from 'moment';
+import { useIntl } from 'umi';
 
 const { Panel } = Collapse;
 
 const DataSetDetail = (props) => {
+  const intl = useIntl();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const id = props.location.query.id;
@@ -29,8 +31,8 @@ const DataSetDetail = (props) => {
   const getPanelHeader = (i, version) => {
     return (
       <div className={styles.panelHeader}>
-        <h3>版本号: {version}</h3>
-        {i === 0 && <Tag color="#1890ff">当前版本</Tag>}
+        <h3>{intl.formatMessage({id: 'dataSet.detail.versionNum'})} {version}</h3>
+        {i === 0 && <Tag color="#1890ff">{intl.formatMessage({id: 'dataSet.detail.curVersion'})}</Tag>}
       </div>
     );
   };
@@ -42,7 +44,7 @@ const DataSetDetail = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/dataManage/dataSet')}
-        title={`数据集名称: ${data[0].name}`}
+        title={`${intl.formatMessage({id: 'dataSet.detail.dataSetName'})} ${data[0].name}`}
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {
@@ -50,15 +52,15 @@ const DataSetDetail = (props) => {
             return (
               <Panel header={getPanelHeader(index, version)} key={index}>
                 <Descriptions size="small" column={2}>
-                  <Descriptions.Item label="创建者">{creator}</Descriptions.Item>
-                  <Descriptions.Item label="存储路径">{path}</Descriptions.Item>
-                  <Descriptions.Item label="创建时间">
+                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.creater'})}>{creator}</Descriptions.Item>
+                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.storePath'})}>{path}</Descriptions.Item>
+                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.createTime'})}>
                     {moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}
                   </Descriptions.Item>
-                  <Descriptions.Item label="更新时间">
+                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.updateTime'})}>
                     {moment(updatedAt).format('YYYY-MM-DD HH:mm:ss')}
                   </Descriptions.Item>
-                  <Descriptions.Item label="简介 ">{description}</Descriptions.Item>
+                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.description'})}>{description}</Descriptions.Item>
                 </Descriptions>
               </Panel>
             );

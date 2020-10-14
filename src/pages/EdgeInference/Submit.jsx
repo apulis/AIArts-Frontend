@@ -131,14 +131,14 @@ const Submit = () => {
       });
       setBtnLoading(false);
       if (code === 0) {
-        message.success('提交成功！');
+        message.success(intl.formatMessage({id: 'edgeInference.create.submit.success'}));
         history.push('/Inference/EdgeInference');
       }
     });
   };
 
   return (
-    <PageHeader title="提交边缘推理" onBack={() => history.push('/Inference/EdgeInference')}>
+    <PageHeader title={intl.formatMessage({id: 'edgeInference.create.title'})} onBack={() => history.push('/Inference/EdgeInference')}>
       <Card>
         <Form form={form} preserve={false} initialValues={{}}>
           <Form.Item
@@ -298,7 +298,7 @@ const Submit = () => {
             })}
             <div style={{ float: 'left' }} onClick={() => onArgsArrChange(1)}>
               <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: 6 }} />
-              <a>点击增加参数</a>
+              <a>{intl.formatMessage({id: 'edgeInference.create.clickForAddParams'})}</a>
             </div>
           </Form.Item>
           <Button type="primary" style={{ float: 'right' }} onClick={onSubmit} loading={btnLoading}>

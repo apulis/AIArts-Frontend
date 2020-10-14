@@ -193,11 +193,11 @@ const DataSetList = () => {
       <Card>
         <div className={styles.datasetWrap}>
           <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>
-            {intl.formatMessage({ id: 'dataSetList.add.dataSet' })}
+            {intl.formatMessage({ id: 'dataSet.list.add.dataSet' })}
           </Button>
           <div className={styles.searchWrap}>
             <Search
-              placeholder={intl.formatMessage({ id: 'dataSetList.placeholder.search' })}
+              placeholder={intl.formatMessage({ id: 'dataSet.list.placeholder.search' })}
               enterButton
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
@@ -230,7 +230,7 @@ const DataSetList = () => {
       </Card>
       {modalFlag && (
         <Modal
-          title={`${modalType ? '编辑' : '新增'} 数据集`}
+          title={`${modalType ? intl.formatMessage({id: 'dataSet.list.modal.title.edit'}) : intl.formatMessage({id: 'dataSet.list.modal.title.add'})} ${intl.formatMessage({id: 'dataSet.list.modal.title.dataSet'})}`}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
