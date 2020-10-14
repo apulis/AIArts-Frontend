@@ -1,5 +1,3 @@
-import imageList from './imageList';
-
 export default {
-  ...imageList,
+  'imageList.placeholder.search': 'Input Name Query',
 };

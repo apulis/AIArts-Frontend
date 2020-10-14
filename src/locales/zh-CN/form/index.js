@@ -5,6 +5,7 @@ import createInferenceJob from './createInferenceJob';
 import createModel from './createModel';
 import createTraining from './createTraining';
 import createVisualJob from './createVisualJob';
+import confirmEdgeInferencePush from './confirmEdgeInferencePush';
 
 export default {
   ...createCode,
@@ -14,4 +15,5 @@ export default {
   ...createInferenceJob,
   ...createTraining,
   ...createVisualJob,
+  ...confirmEdgeInferencePush,
 };
