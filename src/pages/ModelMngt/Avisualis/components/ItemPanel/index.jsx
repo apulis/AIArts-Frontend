@@ -40,7 +40,7 @@ const ItemPanel = (props) => {
   const onSubmit = async (isSvaeTPL) => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
       const { nodes, edges, combos } = flowChartData;
-      if (!nodes || nodes && Math.max(...nodes.map(i => i.treeIdx)) < treeData.length - 1) {
+      if (!nodes || (nodes && Math.max(...nodes.map((i) => i.treeIdx)) < treeData.length - 1)) {
         message.warning('请完成剩余步骤！');
         return;
       }
@@ -65,7 +65,7 @@ const ItemPanel = (props) => {
       let submitData = {
         ...addFormData,
         ..._values,
-        isAdvance: isSvaeTPL,
+        isAdvance: isSvaeTPL ? true : false,
         params: {
           ...addFormData.params,
           nodes: JSON.stringify(nodes),
@@ -83,7 +83,7 @@ const ItemPanel = (props) => {
           type: 'avisualis/saveData',
           payload: {
             addFormData: {},
-          }
+          },
         });
         history.push('/ModelManagement/avisualis');
       }
@@ -173,7 +173,11 @@ const ItemPanel = (props) => {
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        {!detailId && <Button type="primary" loading={btnLoading1} onClick={() => onSubmit(true)}>保存模板</Button>}
+        {!detailId && (
+          <Button type="primary" loading={btnLoading1} onClick={() => onSubmit(true)}>
+            保存模板
+          </Button>
+        )}
         <Button type="primary" loading={btnLoading2} onClick={onSubmit}>
           {`${detailId ? '保存' : '创建'}模型`}
         </Button>
