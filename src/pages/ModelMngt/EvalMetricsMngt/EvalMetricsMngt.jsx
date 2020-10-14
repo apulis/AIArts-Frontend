@@ -322,14 +322,14 @@ const EvalMetricsMngt = () => {
           }}
           onOk={saveFileAsTemplate}
         >
-          <Upload beforeUpload={beforeUpload} action="/" ref={uploadRef} onChange={(info) => setFileList(info.fileList)}>
-            <Tooltip
-              title={fileList.length >= 1 ? '每次只能上传一个文件' : ''}
-            >
-              <Button
-                disabled={fileList.length >= 1}
-                icon={<UploadOutlined />}
-              >
+          <Upload
+            beforeUpload={beforeUpload}
+            action="/"
+            ref={uploadRef}
+            onChange={(info) => setFileList(info.fileList)}
+          >
+            <Tooltip title={fileList.length >= 1 ? '每次只能上传一个文件' : ''}>
+              <Button disabled={fileList.length >= 1} icon={<UploadOutlined />}>
                 上传 json 文件
               </Button>
             </Tooltip>
