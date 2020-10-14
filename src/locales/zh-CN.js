@@ -48,5 +48,5 @@ export default {
   ...modelMngt,
   ...table,
   ...form,
-  ...ModelList
+  ...ModelList,
 };
