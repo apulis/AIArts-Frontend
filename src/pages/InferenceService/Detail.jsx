@@ -47,11 +47,11 @@ const InferenceDetail = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'centerInference.detail.recognition.result'}),
+      title: intl.formatMessage({ id: 'centerInference.detail.recognition.result' }),
       dataIndex: 'key',
     },
     {
-      title: intl.formatMessage({id: 'centerInference.detail.recognition.accuracy'}),
+      title: intl.formatMessage({ id: 'centerInference.detail.recognition.accuracy' }),
       dataIndex: 'value',
     },
   ];
@@ -109,7 +109,7 @@ const InferenceDetail = (props) => {
 
     if (info.file.status === 'error') {
       setLoading(false);
-      message.error(intl.formatMessage({id: 'centerInference.detail.dealwith.error'}));
+      message.error(intl.formatMessage({ id: 'centerInference.detail.dealwith.error' }));
     }
   };
   const beforeUpload = (file) => {
@@ -122,11 +122,11 @@ const InferenceDetail = (props) => {
       'image/gif',
     ].includes(file.type);
     if (!isImage) {
-      message.error(intl.formatMessage({id: 'centerInference.detail.upload.mediaLimit'}));
+      message.error(intl.formatMessage({ id: 'centerInference.detail.upload.mediaLimit' }));
     }
     const isLt100M = file.size / 1024 / 1024 < 100;
     if (!isLt100M) {
-      message.error(intl.formatMessage({id: 'centerInference.detail.upload.sizeLimit'}));
+      message.error(intl.formatMessage({ id: 'centerInference.detail.upload.sizeLimit' }));
     }
     return isImage && isLt100M;
   };
@@ -138,18 +138,22 @@ const InferenceDetail = (props) => {
     }, 1000);
   };
   const getLateastLogs = async () => {
-    const cancel = message.loading(intl.formatMessage({id: 'centerInference.detail.getLogging'}));
+    const cancel = message.loading(intl.formatMessage({ id: 'centerInference.detail.getLogging' }));
     const res = await getInferenceLog();
     cancel();
     if (res.code === 0) {
-      message.success(intl.formatMessage({id: 'centerInference.detail.getLog.success'}));
+      message.success(intl.formatMessage({ id: 'centerInference.detail.getLog.success' }));
     }
   };
   const jobRunning = jobDetail.jobStatus === 'running';
   const uploadButton = (
     <div style={{ height: '104px', width: '104px', paddingTop: '30px' }}>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">{loading ? intl.formatMessage({id: 'centerInference.detail.recognzing'}) : intl.formatMessage({id: 'centerInference.detail.upload.file'})}</div>
+      <div className="ant-upload-text">
+        {loading
+          ? intl.formatMessage({ id: 'centerInference.detail.recognzing' })
+          : intl.formatMessage({ id: 'centerInference.detail.upload.file' })}
+      </div>
     </div>
   );
 
@@ -178,7 +182,12 @@ const InferenceDetail = (props) => {
               onChange={handleChange}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="avatar" title={intl.formatMessage({id: 'centerInference.detail.upload.again'})} style={{ width: '620px' }} />
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  title={intl.formatMessage({ id: 'centerInference.detail.upload.again' })}
+                  style={{ width: '620px' }}
+                />
               ) : (
                 uploadButton
               )}
@@ -198,42 +207,72 @@ const InferenceDetail = (props) => {
       </main>
       {recognizeResult.length !== 0 && (
         <Button type="primary" onClick={() => reUpload()} style={{ marginTop: '18px' }}>
-          {intl.formatMessage({id: 'centerInference.detail.clearData'})}
+          {intl.formatMessage({ id: 'centerInference.detail.clearData' })}
         </Button>
       )}
 
       <Descriptions style={{ marginTop: '20px' }} bordered={true} column={1}>
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.jobName'})}>{jobDetail.jobName}</Descriptions.Item>
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.jobStatus'})}>{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.engineType'})}>{jobDetail.jobParams?.framework}</Descriptions.Item>
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.id'})}>{jobDetail.jobId}</Descriptions.Item>
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.createTime'})}>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.jobName' })}
+        >
+          {jobDetail.jobName}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.jobStatus' })}
+        >
+          {getJobStatus(jobDetail.jobStatus)}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.engineType' })}
+        >
+          {jobDetail.jobParams?.framework}
+        </Descriptions.Item>
+        <Descriptions.Item label={intl.formatMessage({ id: 'centerInference.detail.label.id' })}>
+          {jobDetail.jobId}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.createTime' })}
+        >
           {moment(jobDetail.jobTime).format('YYYY-MM-DD HH:mm')}
         </Descriptions.Item>
         {jobDetail.jobParams?.device && (
-          <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.deviceType'})}>{jobDetail.jobParams?.device}</Descriptions.Item>
+          <Descriptions.Item
+            label={intl.formatMessage({ id: 'centerInference.detail.label.deviceType' })}
+          >
+            {jobDetail.jobParams?.device}
+          </Descriptions.Item>
         )}
         {jobDetail.jobParams?.gpuType && (
-          <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.gpuType'})}>{jobDetail.jobParams?.gpuType}</Descriptions.Item>
+          <Descriptions.Item
+            label={intl.formatMessage({ id: 'centerInference.detail.label.gpuType' })}
+          >
+            {jobDetail.jobParams?.gpuType}
+          </Descriptions.Item>
         )}
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.useModel'})}>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.useModel' })}
+        >
           {jobDetail.jobParams?.model_base_path}
         </Descriptions.Item>
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.nodeCount'})}>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.nodeCount' })}
+        >
           {jobDetail.jobParams?.resourcegpu}
         </Descriptions.Item>
         {/* <Descriptions.Item label="作业参数"></Descriptions.Item> */}
         {/* <Descriptions.Item label="服务地址">test</Descriptions.Item> */}
-        <Descriptions.Item label={intl.formatMessage({id: 'centerInference.detail.label.desc'})}>{jobDetail.jobParams?.desc}</Descriptions.Item>
+        <Descriptions.Item label={intl.formatMessage({ id: 'centerInference.detail.label.desc' })}>
+          {jobDetail.jobParams?.desc}
+        </Descriptions.Item>
       </Descriptions>
       {logs && (
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-          {intl.formatMessage({id: 'centerInference.detail.trainingLog'})}
+          {intl.formatMessage({ id: 'centerInference.detail.trainingLog' })}
         </div>
       )}
       {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && (
         <Button type="primary" style={{ marginTop: '20px' }} onClick={getLateastLogs}>
-          {intl.formatMessage({id: 'centerInference.detail.clickGetLog'})}
+          {intl.formatMessage({ id: 'centerInference.detail.clickGetLog' })}
         </Button>
       )}
       <div>
@@ -243,11 +282,13 @@ const InferenceDetail = (props) => {
           </pre>
         ) : (
           ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && (
-            <div>{intl.formatMessage({id: 'centerInference.detail.notStart'})}</div>
+            <div>{intl.formatMessage({ id: 'centerInference.detail.notStart' })}</div>
           )
         )}
         {['failed'].includes(jobDetail.jobStatus) && (
-          <div style={{ marginTop: '20px' }}>{intl.formatMessage({id: 'centerInference.detail.trainingError'})}</div>
+          <div style={{ marginTop: '20px' }}>
+            {intl.formatMessage({ id: 'centerInference.detail.trainingError' })}
+          </div>
         )}
       </div>
     </PageHeaderWrapper>

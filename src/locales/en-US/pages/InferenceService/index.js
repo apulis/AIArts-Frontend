@@ -3,7 +3,8 @@ export default {
   'centerInference.list.stopJob.success': 'success stop job！',
   'centerInference.list.stopJob.error': 'error stop job：',
   'centerInference.list.deleteJob.title': 'delete inference job',
-  'centerInference.list.deleteJob.content': 'The delete operation could not be restored. Do you want to continue?',
+  'centerInference.list.deleteJob.content':
+    'The delete operation could not be restored. Do you want to continue?',
   'centerInference.list.deleteJob.okText': 'Ok',
   'centerInference.list.deleteJob.cancelText': 'Cancel',
   'centerInference.list.deleteJob.tips.suucess': 'success delete job！',

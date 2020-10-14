@@ -40,7 +40,9 @@ const InferenceList = (props) => {
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
-      const jobSumary = [{ value: 'all', label: intl.formatMessage({id: 'centerInference.list.all'}) }];
+      const jobSumary = [
+        { value: 'all', label: intl.formatMessage({ id: 'centerInference.list.all' }) },
+      ];
       let total = 0;
       Object.keys(res.data).forEach((k) => {
         let count = res.data[k];
@@ -237,21 +239,21 @@ const InferenceList = (props) => {
     const { code, msg, data } = await stopInference(params);
 
     if (code === 0) {
-      message.success(`${intl.formatMessage({id: 'centerInference.list.stopJob.success'})}`);
+      message.success(`${intl.formatMessage({ id: 'centerInference.list.stopJob.success' })}`);
       handleSearch();
     } else {
-      message.error(`${intl.formatMessage({id: 'centerInference.list.stopJob.error'})}${msg}`);
+      message.error(`${intl.formatMessage({ id: 'centerInference.list.stopJob.error' })}${msg}`);
     }
   };
 
   const deleteJob = async (item) => {
     confirm({
-      title: intl.formatMessage({id: 'centerInference.list.deleteJob.title'}),
+      title: intl.formatMessage({ id: 'centerInference.list.deleteJob.title' }),
       icon: <ExclamationCircleOutlined />,
-      content: intl.formatMessage({id: 'centerInference.list.deleteJob.content'}),
-      okText: intl.formatMessage({id: 'centerInference.list.deleteJob.okText'}),
+      content: intl.formatMessage({ id: 'centerInference.list.deleteJob.content' }),
+      okText: intl.formatMessage({ id: 'centerInference.list.deleteJob.okText' }),
       okType: 'danger',
-      cancelText: intl.formatMessage({id: 'centerInference.list.deleteJob.cancelText'}),
+      cancelText: intl.formatMessage({ id: 'centerInference.list.deleteJob.cancelText' }),
       onOk: async () => {
         const { code, msg } = await deleteInference(item.jobId);
 
@@ -263,9 +265,13 @@ const InferenceList = (props) => {
             handleSearch();
           }
           getJobStatusSumary();
-          message.success(`${intl.formatMessage({id: 'centerInference.list.deleteJob.tips.suucess'})}`);
+          message.success(
+            `${intl.formatMessage({ id: 'centerInference.list.deleteJob.tips.suucess' })}`,
+          );
         } else {
-          message.error(`${intl.formatMessage({id: 'centerInference.list.deleteJob.tips.error'})}${msg}`);
+          message.error(
+            `${intl.formatMessage({ id: 'centerInference.list.deleteJob.tips.error' })}${msg}`,
+          );
         }
       },
       onCancel() {},
