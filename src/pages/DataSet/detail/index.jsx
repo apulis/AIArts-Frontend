@@ -31,8 +31,12 @@ const DataSetDetail = (props) => {
   const getPanelHeader = (i, version) => {
     return (
       <div className={styles.panelHeader}>
-        <h3>{intl.formatMessage({id: 'dataSet.detail.versionNum'})} {version}</h3>
-        {i === 0 && <Tag color="#1890ff">{intl.formatMessage({id: 'dataSet.detail.curVersion'})}</Tag>}
+        <h3>
+          {intl.formatMessage({ id: 'dataSet.detail.versionNum' })} {version}
+        </h3>
+        {i === 0 && (
+          <Tag color="#1890ff">{intl.formatMessage({ id: 'dataSet.detail.curVersion' })}</Tag>
+        )}
       </div>
     );
   };
@@ -44,7 +48,7 @@ const DataSetDetail = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/dataManage/dataSet')}
-        title={`${intl.formatMessage({id: 'dataSet.detail.dataSetName'})} ${data[0].name}`}
+        title={`${intl.formatMessage({ id: 'dataSet.detail.dataSetName' })} ${data[0].name}`}
       >
         <Collapse defaultActiveKey={['0']}>
           {data.map((item, index) => {
@@ -52,15 +56,31 @@ const DataSetDetail = (props) => {
             return (
               <Panel header={getPanelHeader(index, version)} key={index}>
                 <Descriptions size="small" column={2}>
-                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.creater'})}>{creator}</Descriptions.Item>
-                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.storePath'})}>{path}</Descriptions.Item>
-                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.createTime'})}>
+                  <Descriptions.Item
+                    label={intl.formatMessage({ id: 'dataSet.detail.label.creater' })}
+                  >
+                    {creator}
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    label={intl.formatMessage({ id: 'dataSet.detail.label.storePath' })}
+                  >
+                    {path}
+                  </Descriptions.Item>
+                  <Descriptions.Item
+                    label={intl.formatMessage({ id: 'dataSet.detail.label.createTime' })}
+                  >
                     {moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}
                   </Descriptions.Item>
-                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.updateTime'})}>
+                  <Descriptions.Item
+                    label={intl.formatMessage({ id: 'dataSet.detail.label.updateTime' })}
+                  >
                     {moment(updatedAt).format('YYYY-MM-DD HH:mm:ss')}
                   </Descriptions.Item>
-                  <Descriptions.Item label={intl.formatMessage({id: 'dataSet.detail.label.description'})}>{description}</Descriptions.Item>
+                  <Descriptions.Item
+                    label={intl.formatMessage({ id: 'dataSet.detail.label.description' })}
+                  >
+                    {description}
+                  </Descriptions.Item>
                 </Descriptions>
               </Panel>
             );

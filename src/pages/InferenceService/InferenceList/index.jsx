@@ -40,7 +40,7 @@ const InferenceList = (props) => {
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
-      const jobSumary = [{ value: 'all', label: '全部' }];
+      const jobSumary = [{ value: 'all', label: intl.formatMessage({id: 'centerInference.list.all'}) }];
       let total = 0;
       Object.keys(res.data).forEach((k) => {
         let count = res.data[k];
@@ -237,21 +237,21 @@ const InferenceList = (props) => {
     const { code, msg, data } = await stopInference(params);
 
     if (code === 0) {
-      message.success(`Job成功停止！`);
+      message.success(`${intl.formatMessage({id: 'centerInference.list.stopJob.success'})}`);
       handleSearch();
     } else {
-      message.error(`Job停止错误：${msg}。`);
+      message.error(`${intl.formatMessage({id: 'centerInference.list.stopJob.error'})}${msg}`);
     }
   };
 
   const deleteJob = async (item) => {
     confirm({
-      title: '删除推理作业',
+      title: intl.formatMessage({id: 'centerInference.list.deleteJob.title'}),
       icon: <ExclamationCircleOutlined />,
-      content: '删除操作无法恢复，是否继续？',
-      okText: '确定',
+      content: intl.formatMessage({id: 'centerInference.list.deleteJob.content'}),
+      okText: intl.formatMessage({id: 'centerInference.list.deleteJob.okText'}),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({id: 'centerInference.list.deleteJob.cancelText'}),
       onOk: async () => {
         const { code, msg } = await deleteInference(item.jobId);
 
@@ -263,9 +263,9 @@ const InferenceList = (props) => {
             handleSearch();
           }
           getJobStatusSumary();
-          message.success(`Job删除成功！`);
+          message.success(`${intl.formatMessage({id: 'centerInference.list.deleteJob.tips.suucess'})}`);
         } else {
-          message.error(`Job删除错误：${msg}。`);
+          message.error(`${intl.formatMessage({id: 'centerInference.list.deleteJob.tips.error'})}${msg}`);
         }
       },
       onCancel() {},

@@ -15,5 +15,5 @@ export default {
   ...createInferenceJob,
   ...createTraining,
   ...createVisualJob,
-  ...confirmEdgeInferencePush
+  ...confirmEdgeInferencePush,
 };

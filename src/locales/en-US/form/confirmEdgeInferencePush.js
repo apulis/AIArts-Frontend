@@ -10,4 +10,4 @@ export default {
   'codeCreate.rule.needUrl': 'Please Inout Inference Name！',
   'codeCreate.rule.needUsername': 'Please Input Username！',
   'codeCreate.rule.needPassword': 'Please Input Passwrod！',
-}
+};

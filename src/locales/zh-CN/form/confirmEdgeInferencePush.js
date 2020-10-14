@@ -10,4 +10,4 @@ export default {
   'confirmEdgeInferencePush.rule.needUrl': '请输入推理名称！',
   'confirmEdgeInferencePush.rule.needUsername': '请输入用户名！',
   'confirmEdgeInferencePush.rule.needPassword': '请输入密码！',
-}
+};

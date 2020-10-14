@@ -67,7 +67,9 @@ const AddModalForm = (props, ref) => {
           reject(file);
         }
         if (!typeReg.test(name)) {
-          message.warning(`${intl.formatMessage({ id: 'dataset.create.tips.upload.supportFile' })}`);
+          message.warning(
+            `${intl.formatMessage({ id: 'dataset.create.tips.upload.supportFile' })}`,
+          );
           reject(file);
         }
         resolve(file);

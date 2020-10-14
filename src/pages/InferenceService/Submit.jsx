@@ -52,7 +52,7 @@ const SubmitModelTraining = (props) => {
   const handleSubmit = async () => {
     const values = await validateFields();
     setButtonDisabled(true);
-    const cancel = message.loading('正在提交');
+    const cancel = message.loading(intl.formatMessage({id: 'centerInference.create.submit.ing'}));
     const submitData = {};
     submitData.framework = values.engineName;
     submitData.version = values.engineVersion;
@@ -71,7 +71,7 @@ const SubmitModelTraining = (props) => {
     setButtonDisabled(false);
     if (res.code === 0) {
       cancel();
-      message.success('成功提交');
+      message.success(intl.formatMessage({id: 'centerInference.create.submit.success'}));
       history.push('/Inference/central');
     }
   };
@@ -157,7 +157,7 @@ const SubmitModelTraining = (props) => {
     const runningParams = await getFieldValue('runningParams');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        callback('不能输入相同的参数名称');
+        callback(intl.formatMessage({id: 'centerInference.create.tips.repetParams'}));
       }
     });
     callback();
@@ -195,7 +195,7 @@ const SubmitModelTraining = (props) => {
     setFieldsValue({
       modelPath: row.outputPath,
     });
-    setCurrentModelUsedEngine(`当前训练引擎：${getNameFromDockerImage(row.engine)}`);
+    setCurrentModelUsedEngine(`${intl.formatMessage({id: 'centerInference.create.curTrainingEngine'})}${getNameFromDockerImage(row.engine)}`);
   };
 
   useEffect(() => {
@@ -212,7 +212,7 @@ const SubmitModelTraining = (props) => {
     <PageHeader
       ghost={false}
       onBack={() => history.push('/Inference/central')}
-      title="创建推理作业"
+      title={intl.formatMessage({id: 'centerInference.create.job'})}
     >
       <div className={styles.modelTraining}>
         <Form form={form}>
@@ -243,7 +243,7 @@ const SubmitModelTraining = (props) => {
           </FormItem>
         </Form>
         <Divider style={{ borderColor: '#cdcdcd' }} />
-        <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
+        <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>{intl.formatMessage({id: 'centerInference.create.paramsConfig'})}</h2>
         <Form form={form}>
           <FormItem
             labelCol={commonLayout.labelCol}
@@ -367,7 +367,7 @@ const SubmitModelTraining = (props) => {
                 fill="#1890ff"
                 style={{ color: '#1890ff', marginRight: '10px' }}
               />
-              <a>点击增加参数</a>
+              <a>{intl.formatMessage({id: 'centerInference.create.addParams'})}</a>
             </div>
           </FormItem>
           <FormItem

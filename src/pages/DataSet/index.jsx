@@ -230,7 +230,11 @@ const DataSetList = () => {
       </Card>
       {modalFlag && (
         <Modal
-          title={`${modalType ? intl.formatMessage({id: 'dataSet.list.modal.title.edit'}) : intl.formatMessage({id: 'dataSet.list.modal.title.add'})} ${intl.formatMessage({id: 'dataSet.list.modal.title.dataSet'})}`}
+          title={`${
+            modalType
+              ? intl.formatMessage({ id: 'dataSet.list.modal.title.edit' })
+              : intl.formatMessage({ id: 'dataSet.list.modal.title.add' })
+          } ${intl.formatMessage({ id: 'dataSet.list.modal.title.dataSet' })}`}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose

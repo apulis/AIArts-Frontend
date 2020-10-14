@@ -12,15 +12,14 @@ import useInterval from '@/hooks/useInterval';
 import { connect } from 'dva';
 import { useIntl, formatMessage } from 'umi';
 
-
 const { Option } = Select;
 const { Search } = Input;
 const { confirm } = Modal;
 const typeText = {
-  converting: formatMessage({id: 'edgeInference.list.typeText.converting'}),
-  pushing: formatMessage({id: 'edgeInference.list.typeText.push'}),
-  'push success': formatMessage({id: 'edgeInference.list.typeText.push.success'}),
-  'push failed': formatMessage({id: 'edgeInference.list.typeText.push.failed'}),
+  converting: formatMessage({ id: 'edgeInference.list.typeText.converting' }),
+  pushing: formatMessage({ id: 'edgeInference.list.typeText.push' }),
+  'push success': formatMessage({ id: 'edgeInference.list.typeText.push.success' }),
+  'push failed': formatMessage({ id: 'edgeInference.list.typeText.push.failed' }),
 };
 
 const EdgeInference = (props) => {
@@ -83,11 +82,11 @@ const EdgeInference = (props) => {
 
   const onDelete = (id) => {
     confirm({
-      title: intl.formatMessage({id: 'edgeInference.list.onDelete.title'}),
+      title: intl.formatMessage({ id: 'edgeInference.list.onDelete.title' }),
       icon: <ExclamationCircleOutlined />,
-      okText: intl.formatMessage({id: 'edgeInference.list.onDelete.okText'}),
+      okText: intl.formatMessage({ id: 'edgeInference.list.onDelete.okText' }),
       okType: 'danger',
-      cancelText: intl.formatMessage({id: 'edgeInference.list.onDelete.cancelText'}),
+      cancelText: intl.formatMessage({ id: 'edgeInference.list.onDelete.cancelText' }),
       onOk: async () => {
         const { code } = await deleteEG(id);
         if (code === 0) {
@@ -97,7 +96,7 @@ const EdgeInference = (props) => {
           } else {
             getData();
           }
-          message.success(intl.formatMessage({id: 'edgeInference.list.onDelete.ok.tips'}));
+          message.success(intl.formatMessage({ id: 'edgeInference.list.onDelete.ok.tips' }));
         }
       },
       onCancel() {},
@@ -137,9 +136,9 @@ const EdgeInference = (props) => {
         if (modelconversionStatus === 'converting')
           status =
             jobStatus === 'finished'
-              ? intl.formatMessage({id: 'edgeInference.list.converting.result.success'})
+              ? intl.formatMessage({ id: 'edgeInference.list.converting.result.success' })
               : jobStatus === 'failed' || jobStatus === 'error'
-              ? intl.formatMessage({id: 'edgeInference.list.converting.result.error'})
+              ? intl.formatMessage({ id: 'edgeInference.list.converting.result.error' })
               : status;
         return <span>{status}</span>;
       },
@@ -181,12 +180,12 @@ const EdgeInference = (props) => {
       const { code, data } = await push({ jobId: id });
       if (code === 0) {
         getData();
-        message.success(intl.formatMessage({id: 'edgeInference.list.onPush.success'}));
+        message.success(intl.formatMessage({ id: 'edgeInference.list.onPush.success' }));
       } else {
         setPushId('');
       }
     } else {
-      message.warning(intl.formatMessage({id: 'edgeInference.list.onPush.error'}));
+      message.warning(intl.formatMessage({ id: 'edgeInference.list.onPush.error' }));
       setModalFlag2(true);
     }
   };
@@ -201,7 +200,7 @@ const EdgeInference = (props) => {
     form.validateFields().then(async (values) => {
       const { code, data } = await submitFD(values);
       if (code === 0) {
-        message.success(intl.formatMessage({id: 'edgeInference.list.onSubmitFD.success'}));
+        message.success(intl.formatMessage({ id: 'edgeInference.list.onSubmitFD.success' }));
         getFdInfo();
         setModalFlag2(false);
       }
@@ -218,31 +217,31 @@ const EdgeInference = (props) => {
   const getOptions = () => {
     const statusMap = [
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.all'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.all' }),
         status: '',
       },
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.push.ing'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.push.ing' }),
         status: 'finished-pushing',
       },
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.push.success'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.push.success' }),
         status: 'finished-push success',
       },
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.push.error'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.push.error' }),
         status: 'finished-push failed',
       },
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.converting.ing'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.converting.ing' }),
         status: 'running,scheduling,queued,unapproved-converting',
       },
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.converting.success'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.converting.success' }),
         status: 'finished-converting',
       },
       {
-        text: intl.formatMessage({id: 'edgeInference.list.statusMap.converting.error'}),
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.converting.error' }),
         status: 'error,failed-converting',
       },
     ];
@@ -268,7 +267,7 @@ const EdgeInference = (props) => {
           </Button>
           {fdInfo.url && (
             <Button type="primary" onClick={() => window.open(fdInfo.url)}>
-              {intl.formatMessage({id: 'edgeInference.list.fdServer'})}
+              {intl.formatMessage({ id: 'edgeInference.list.fdServer' })}
             </Button>
           )}
           <div className={styles.searchWrap}>
@@ -281,7 +280,12 @@ const EdgeInference = (props) => {
               onChange={(e) => setName(e.target.value)}
               onSearch={(v) => onSearchChange(v, 2)}
             />
-            <Button onClick={() => getData(intl.formatMessage({id: 'edgeInference.list.fresh.success'}))} icon={<SyncOutlined />} />
+            <Button
+              onClick={() =>
+                getData(intl.formatMessage({ id: 'edgeInference.list.fresh.success' }))
+              }
+              icon={<SyncOutlined />}
+            />
           </div>
           <Table
             columns={columns}
@@ -309,36 +313,69 @@ const EdgeInference = (props) => {
       </Card>
       {modalFlag2 && (
         <Modal
-          title={intl.formatMessage({id: 'edgeInference.list.setting'})}
+          title={intl.formatMessage({ id: 'edgeInference.list.setting' })}
           visible={modalFlag2}
           onCancel={() => setModalFlag2(false)}
           destroyOnClose
           maskClosable={false}
           className="settingModal"
           footer={[
-            <Button onClick={() => setModalFlag2(false)}>{intl.formatMessage({id: 'edgeInference.list.cancel'})}</Button>,
+            <Button onClick={() => setModalFlag2(false)}>
+              {intl.formatMessage({ id: 'edgeInference.list.cancel' })}
+            </Button>,
             <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>
-              {intl.formatMessage({id: 'edgeInference.list.save'})}
+              {intl.formatMessage({ id: 'edgeInference.list.save' })}
             </Button>,
           ]}
         >
           <Form form={form} initialValues={fdInfo}>
-            <Form.Item label={intl.formatMessage({id: 'confirmEdgeInferencePush.label.url'})} name="url" rules={[{ required: true, message: intl.formatMessage({id: 'confirmEdgeInferencePush.rule.needUrl'}) }]}>
-              <Input placeholder={intl.formatMessage({id: 'confirmEdgeInferencePush.placeholder.inputUrl'})} />
+            <Form.Item
+              label={intl.formatMessage({ id: 'confirmEdgeInferencePush.label.url' })}
+              name="url"
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'confirmEdgeInferencePush.rule.needUrl' }),
+                },
+              ]}
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'confirmEdgeInferencePush.placeholder.inputUrl',
+                })}
+              />
             </Form.Item>
             <Form.Item
-              label={intl.formatMessage({id: 'confirmEdgeInferencePush.label.username'})}
+              label={intl.formatMessage({ id: 'confirmEdgeInferencePush.label.username' })}
               name="username"
-              rules={[{ required: true, message: intl.formatMessage({id: 'confirmEdgeInferencePush.rule.needUsername'}) }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'confirmEdgeInferencePush.rule.needUsername' }),
+                },
+              ]}
             >
-              <Input placeholder={intl.formatMessage({id: 'confirmEdgeInferencePush.placeholder.inputUsername'})} />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'confirmEdgeInferencePush.placeholder.inputUsername',
+                })}
+              />
             </Form.Item>
             <Form.Item
-              label={intl.formatMessage({id: 'confirmEdgeInferencePush.label.password'})}
+              label={intl.formatMessage({ id: 'confirmEdgeInferencePush.label.password' })}
               name="password"
-              rules={[{ required: true, message: intl.formatMessage({id: 'confirmEdgeInferencePush.rule.needPassword'}) }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'confirmEdgeInferencePush.rule.needPassword' }),
+                },
+              ]}
             >
-              <Input placeholder={intl.formatMessage({id: 'confirmEdgeInferencePush.placeholder.inputPassword'})} />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'confirmEdgeInferencePush.placeholder.inputPassword',
+                })}
+              />
             </Form.Item>
           </Form>
         </Modal>
