@@ -178,7 +178,7 @@ const ItemPanel = (props) => {
             保存模板
           </Button>
         )}
-        <Button type="primary" loading={btnLoading2} onClick={onSubmit}>
+        <Button type="primary" loading={btnLoading2} onClick={() => onSubmit()}>
           {`${detailId ? '保存' : '创建'}模型`}
         </Button>
       </div>
