@@ -72,19 +72,19 @@ const DataSetList = () => {
       const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
-        text = intl.formatMessage({id: 'dataSet.list.edit'});
+        text = intl.formatMessage({ id: 'dataSet.list.edit' });
         res = await edit(editData.id, values);
       } else {
         values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
         delete values.fileLists;
         delete values.sourceType;
-        text = intl.formatMessage({id: 'dataSet.list.add'});
+        text = intl.formatMessage({ id: 'dataSet.list.add' });
         res = await add(values);
       }
       const { code } = res;
       if (code === 0) {
         getData();
-        message.success(`${text}${intl.formatMessage({id: 'dataSet.list.success'})}`);
+        message.success(`${text}${intl.formatMessage({ id: 'dataSet.list.success' })}`);
         setModalFlag(false);
       }
       setBtnLoading(false);
@@ -128,7 +128,13 @@ const DataSetList = () => {
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.isTranslated' }),
       dataIndex: 'isTranslated',
-      render: (i) => <span>{i === true ? intl.formatMessage({id: 'dataSet.list.yes'}) : intl.formatMessage({id: 'dataSet.list.no'})}</span>,
+      render: (i) => (
+        <span>
+          {i === true
+            ? intl.formatMessage({ id: 'dataSet.list.yes' })
+            : intl.formatMessage({ id: 'dataSet.list.no' })}
+        </span>
+      ),
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.action' }),
@@ -161,11 +167,11 @@ const DataSetList = () => {
 
   const onDelete = (id) => {
     confirm({
-      title: intl.formatMessage({id: 'dataSet.list.onDelete.title'}),
+      title: intl.formatMessage({ id: 'dataSet.list.onDelete.title' }),
       icon: <ExclamationCircleOutlined />,
-      okText: intl.formatMessage({id: 'dataSet.list.onDelete.okText'}),
+      okText: intl.formatMessage({ id: 'dataSet.list.onDelete.okText' }),
       okType: 'danger',
-      cancelText: intl.formatMessage({id: 'dataSet.list.onDelete.cancelText'}),
+      cancelText: intl.formatMessage({ id: 'dataSet.list.onDelete.cancelText' }),
       onOk: async () => {
         const { code } = await deleteDataSet(id);
         if (code === 0) {
@@ -175,7 +181,7 @@ const DataSetList = () => {
           } else {
             getData();
           }
-          message.success(intl.formatMessage({id: 'dataSet.list.onDelete.success'}));
+          message.success(intl.formatMessage({ id: 'dataSet.list.onDelete.success' }));
         }
       },
       onCancel() {},
@@ -202,7 +208,10 @@ const DataSetList = () => {
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
             />
-            <Button onClick={() => getData(intl.formatMessage({id: 'dataSet.list.fresh.success'}))} icon={<SyncOutlined />} />
+            <Button
+              onClick={() => getData(intl.formatMessage({ id: 'dataSet.list.fresh.success' }))}
+              icon={<SyncOutlined />}
+            />
           </div>
           <Table
             columns={columns}
