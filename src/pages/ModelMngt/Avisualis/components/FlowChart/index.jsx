@@ -523,9 +523,9 @@ const FlowChart = forwardRef((props, ref) => {
   const onChangeNode = (key) => {
     const treeIdx = key.split('-')[0];
     const id = key.split('-')[1];
-    const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
-    handleDragEnd(changeNodeData, true);
-    return true;
+    // const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
+    // handleDragEnd(changeNodeData, true);
+    // return true;
   };
 
   // console.log('-------selectItem', selectItem)

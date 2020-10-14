@@ -16,7 +16,8 @@ const ItemPanel = (props) => {
   const addFormModalRef = useRef();
   const { avisualis, flowChartData, selectItem, setFlowChartData, detailId, onChangeNode } = props;
   const { addFormData, treeData } = avisualis;
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [btnLoading1, setBtnLoading1] = useState(false);
+  const [btnLoading2, setBtnLoading2] = useState(false);
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
@@ -36,14 +37,14 @@ const ItemPanel = (props) => {
     }
   }, [selectItem]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (isSvaeTPL) => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
       const { nodes, edges, combos } = flowChartData;
-      if (nodes[nodes.length - 1].treeIdx + 1 !== treeData.length) {
+      if (!nodes || nodes && Math.max(...nodes.map(i => i.treeIdx)) < treeData.length - 1) {
         message.warning('请完成剩余步骤！');
         return;
       }
-      setBtnLoading(true);
+      isSvaeTPL ? setBtnLoading1(true) : setBtnLoading2(true);
       const _values = _.cloneDeep(values);
       if (_values.deviceType === 'PSDistJob') {
         _values.numPs = 1;
@@ -64,7 +65,7 @@ const ItemPanel = (props) => {
       let submitData = {
         ...addFormData,
         ..._values,
-        isAdvance: false,
+        isAdvance: isSvaeTPL,
         params: {
           ...addFormData.params,
           nodes: JSON.stringify(nodes),
@@ -77,16 +78,16 @@ const ItemPanel = (props) => {
         ? await patchAvisualis(detailId, submitData)
         : await submitAvisualis(submitData);
       if (code === 0) {
-        message.success(`${detailId ? '保存' : '创建'}成功！`);
+        message.success(`${detailId || isSvaeTPL ? '保存' : '创建'}成功！`);
         dispatch({
           type: 'avisualis/saveData',
           payload: {
             addFormData: {},
-          },
+          }
         });
         history.push('/ModelManagement/avisualis');
       }
-      setBtnLoading(false);
+      isSvaeTPL ? setBtnLoading1(false) : setBtnLoading2(false);
     });
   };
 
@@ -172,8 +173,9 @@ const ItemPanel = (props) => {
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        <Button type="primary" loading={btnLoading} onClick={onSubmit}>
-          {detailId ? '保存模型' : '创建模型'}
+        {!detailId && <Button type="primary" loading={btnLoading1} onClick={() => onSubmit(true)}>保存模板</Button>}
+        <Button type="primary" loading={btnLoading2} onClick={onSubmit}>
+          {`${detailId ? '保存' : '创建'}模型`}
         </Button>
       </div>
       <Descriptions title="模型详情"></Descriptions>
