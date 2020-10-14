@@ -18,8 +18,6 @@ import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 import { useIntl } from 'umi';
 
-
-
 const { Search } = Input;
 const { Option } = Select;
 

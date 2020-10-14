@@ -18,6 +18,7 @@ import setting from './zh-CN/pages/Setting';
 import visualOperation from './zh-CN/pages/VisualOperation';
 import table from './zh-CN/table';
 import form from './zh-CN/form';
+import ModelList from './zh-CN/pages/ModelTraining/List';
 
 export default {
   'navBar.lang': '语言',
@@ -47,4 +48,5 @@ export default {
   ...modelMngt,
   ...table,
   ...form,
+  ...ModelList
 };

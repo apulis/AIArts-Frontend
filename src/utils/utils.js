@@ -102,8 +102,6 @@ export const bytesToSize = (bytes) => {
   return `${(bytes / Math.pow(k, i)).toFixed(0)} ${sizes[i]}`;
 };
 
-
-
 export const getStatusList = () => [
   { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
   { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
@@ -118,7 +116,6 @@ export const getStatusList = () => [
   { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
   { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
-
 
 export const getJobStatus = (status) => {
   const statusList = {
