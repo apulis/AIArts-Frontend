@@ -23,6 +23,7 @@ const EvalMetricsMngt = () => {
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const [total, setTotal] = useState(0);
   const uploadRef = useRef(null);
   const [sortedInfo, setSortedInfo] = useState({
@@ -321,12 +322,12 @@ const EvalMetricsMngt = () => {
           }}
           onOk={saveFileAsTemplate}
         >
-          <Upload beforeUpload={beforeUpload} action="/" ref={uploadRef}>
+          <Upload beforeUpload={beforeUpload} action="/" ref={uploadRef} onChange={(info) => setFileList(info.fileList)}>
             <Tooltip
-              title={uploadRef.current?.state.fileList.length >= 1 ? '每次只能上传一个文件' : ''}
+              title={fileList.length >= 1 ? '每次只能上传一个文件' : ''}
             >
               <Button
-                disabled={uploadRef.current?.state.fileList.length >= 1}
+                disabled={fileList.length >= 1}
                 icon={<UploadOutlined />}
               >
                 上传 json 文件
