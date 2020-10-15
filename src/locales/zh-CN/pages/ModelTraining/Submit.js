@@ -20,5 +20,4 @@ export default {
   'model.params.item.deviceType': '计算节点规格',
   'model.params.item.engine': '引擎类型',
   'model.submit.modal.save.params.none': '暂无',
-
 };

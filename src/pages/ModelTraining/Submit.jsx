@@ -476,7 +476,11 @@ const ModelTraining = (props) => {
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title={typeEdit ? formatMessage({ id: 'model.submit.pageTitle.edit' }) : formatMessage({ id: 'model.submit.pageTitle.submit' })}
+        title={
+          typeEdit
+            ? formatMessage({ id: 'model.submit.pageTitle.edit' })
+            : formatMessage({ id: 'model.submit.pageTitle.submit' })
+        }
       />
       <Form form={form}>
         <FormItem
@@ -551,12 +555,8 @@ const ModelTraining = (props) => {
               }}
               style={{ width: '300px' }}
             >
-              <Radio value={1}>
-                {formatMessage({ id: 'trainingCreate.value.presetEngine' })}
-              </Radio>
-              <Radio value={2}>
-                {formatMessage({ id: 'trainingCreate.value.savedEngine' })}
-              </Radio>
+              <Radio value={1}>{formatMessage({ id: 'trainingCreate.value.presetEngine' })}</Radio>
+              <Radio value={2}>{formatMessage({ id: 'trainingCreate.value.savedEngine' })}</Radio>
             </Radio.Group>
           </FormItem>
         )}
@@ -708,12 +708,8 @@ const ModelTraining = (props) => {
           onChange={handleDistributedJob}
         >
           <Radio.Group style={{ width: '300px' }}>
-            <Radio value={'PSDistJob'}>
-              {formatMessage({ id: 'trainingCreate.value.yes' })}
-            </Radio>
-            <Radio value={'RegularJob'}>
-              {formatMessage({ id: 'trainingCreate.value.no' })}
-            </Radio>
+            <Radio value={'PSDistJob'}>{formatMessage({ id: 'trainingCreate.value.yes' })}</Radio>
+            <Radio value={'RegularJob'}>{formatMessage({ id: 'trainingCreate.value.no' })}</Radio>
           </Radio.Group>
         </FormItem>
         {distributedJob && (
@@ -730,7 +726,14 @@ const ModelTraining = (props) => {
               {
                 validator(rule, value, callback) {
                   if (Number(value) > totalNodes) {
-                    callback(formatMessage({ id: 'trainingCreate.npmPsWorker.validator.max' }.replace(/\{num\}/, totalNodes)));
+                    callback(
+                      formatMessage(
+                        { id: 'trainingCreate.npmPsWorker.validator.max' }.replace(
+                          /\{num\}/,
+                          totalNodes,
+                        ),
+                      ),
+                    );
                     return;
                   }
                   if (Number(value) < 1) {
@@ -828,7 +831,9 @@ const ModelTraining = (props) => {
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>
-                    <Col span={5}>{formatMessage({ id: 'model.submit.modal.save.params.deviceNum' })}</Col>
+                    <Col span={5}>
+                      {formatMessage({ id: 'model.submit.modal.save.params.deviceNum' })}
+                    </Col>
                     <Col span={19}>{p.params.deviceNum}</Col>
                   </Row>
                   <Row>
@@ -859,16 +864,14 @@ const ModelTraining = (props) => {
                     <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
                   <Row>
-                      <Col span={5}>{formatMessage({ id: 'model.params.item.engine' })}</Col> 
+                    <Col span={5}>{formatMessage({ id: 'model.params.item.engine' })}</Col>
                     <Col span={19}>{getNameFromDockerImage(p.params.engine)}</Col>
                   </Row>
                 </TabPane>
               ))}
             </Tabs>
           ) : (
-            <div>
-              {formatMessage({ id: 'model.submit.modal.save.params.none' })}
-            </div>
+            <div>{formatMessage({ id: 'model.submit.modal.save.params.none' })}</div>
           )}
         </Form>
       </Modal>

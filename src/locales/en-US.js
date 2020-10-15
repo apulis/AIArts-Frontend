@@ -19,7 +19,7 @@ import visualOperation from './en-US/pages/VisualOperation';
 import table from './en-US/table';
 import form from './en-US/form';
 import ModelList from './en-US/pages/ModelTraining/List';
-import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit'
+import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit';
 
 export default {
   'navBar.lang': 'Languages',
@@ -50,5 +50,5 @@ export default {
   ...table,
   ...form,
   ...ModelList,
-  ...SubmitTrainingJob
+  ...SubmitTrainingJob,
 };

@@ -2,7 +2,8 @@ export default {
   'model.submit.message.save.success': 'Successfully saved',
   'model.submit.message.uploading': 'Uploading',
   'model.submit.message.create.success': 'Successfully created',
-  'model.submit.resource.not.enough.title': 'There is currently no training device available. Continue to submit will enter the waiting queue',
+  'model.submit.resource.not.enough.title':
+    'There is currently no training device available. Continue to submit will enter the waiting queue',
   'model.submit.resource.not.enough.content': 'Whether to continue',
   'model.submit.validate.running.params.validator.same.name': 'Cannot enter the same params name',
   'model.submit.message.device.error': 'Need to select the device type first',
@@ -20,5 +21,4 @@ export default {
   'model.params.item.deviceType': 'Device Type',
   'model.params.item.engine': 'Engine Type',
   'model.submit.modal.save.params.none': 'None',
-
 };
