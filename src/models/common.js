@@ -1,14 +1,11 @@
-import { setI18n } from '@/utils/utils';
 import { getPlatformConfig } from '../services/common';
-
-export const locales = ['zh-CN', 'en-US'];
 
 const common = {
   namespace: 'common',
   state: {
     interval: localStorage.interval === 'null' ? null : Number(localStorage.interval) || 3000,
     platformName: '',
-    i18n: locales.includes(localStorage.language) ? localStorage.language : navigator.language,
+    i18n: 'zh-CN',
     enableVC: false,
   },
   effects: {
@@ -45,9 +42,6 @@ const common = {
         //     }
         //   })
         // }
-        if (locales.includes(res.i18n)) {
-          setI18n(res.i18n);
-        }
         yield put({
           type: 'savePlatform',
           payload: {
