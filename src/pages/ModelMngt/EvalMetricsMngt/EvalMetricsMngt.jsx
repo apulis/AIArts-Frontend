@@ -331,9 +331,15 @@ const EvalMetricsMngt = () => {
             ref={uploadRef}
             onChange={(info) => setFileList(info.fileList)}
           >
-            <Tooltip title={fileList.length >= 1 ? intl.formatMessage({ id: 'evalMetricsMngt.upload.tips' }) : ''}>
+            <Tooltip
+              title={
+                fileList.length >= 1
+                  ? intl.formatMessage({ id: 'evalMetricsMngt.upload.tips' })
+                  : ''
+              }
+            >
               <Button disabled={fileList.length >= 1} icon={<UploadOutlined />}>
-              {intl.formatMessage({ id: 'evalMetricsMngt.upload' })}
+                {intl.formatMessage({ id: 'evalMetricsMngt.upload' })}
               </Button>
             </Tooltip>
           </Upload>

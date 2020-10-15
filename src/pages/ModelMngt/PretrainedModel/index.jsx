@@ -40,8 +40,12 @@ const ExpandDetails = (item) => {
 
   return (
     <Descriptions>
-      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.datasetName' })}>{item.datasetName}</Descriptions.Item>
-      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.dataFormat' })}>{item.dataFormat}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.datasetName' })}>
+        {item.datasetName}
+      </Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.dataFormat' })}>
+        {item.dataFormat}
+      </Descriptions.Item>
       <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.runningParams' })}>
         <Popover content={argumentsContent}>
           {runArguments && runArguments.length > 0 && (
@@ -49,8 +53,12 @@ const ExpandDetails = (item) => {
           )}
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.engine' })}>{getNameFromDockerImage(item.engine)}</Descriptions.Item>
-      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.outputModel' })}>{item.outputPath}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.engine' })}>
+        {getNameFromDockerImage(item.engine)}
+      </Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.outputModel' })}>
+        {item.outputPath}
+      </Descriptions.Item>
     </Descriptions>
   );
 };
