@@ -39,17 +39,25 @@ const ExpandDetails = (item) => {
 
   return (
     <Descriptions>
-      <Descriptions.Item label="训练数据集">{item.datasetName}</Descriptions.Item>
-      <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
-      <Descriptions.Item label="运行参数">
+      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.trainingDataSet' })}>
+        {item.datasetName}
+      </Descriptions.Item>
+      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.dataFormat' })}>
+        {item.dataFormat}
+      </Descriptions.Item>
+      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.runningParam' })}>
         <Popover content={argumentsContent}>
           {runArguments && runArguments.length > 0 && (
             <div>{runArguments[0].key + '=' + runArguments[0].value + argsSuffix}</div>
           )}
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="引擎类型">{getNameFromDockerImage(item.engine)}</Descriptions.Item>
-      <Descriptions.Item label="模型输出">{item.outputPath}</Descriptions.Item>
+      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.engineType' })}>
+        {getNameFromDockerImage(item.engine)}
+      </Descriptions.Item>
+      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.modelOutput' })}>
+        {item.outputPath}
+      </Descriptions.Item>
     </Descriptions>
   );
 };

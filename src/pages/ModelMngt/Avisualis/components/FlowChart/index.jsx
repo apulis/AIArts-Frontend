@@ -7,6 +7,7 @@ import { PageLoading } from '@ant-design/pro-layout';
 import ItemPanel from '../ItemPanel';
 import _ from 'lodash';
 import { connect } from 'dva';
+import { useIntl } from 'umi';
 
 insertCss(`
   .g6-minimap-container {
@@ -18,6 +19,7 @@ insertCss(`
 `);
 
 const FlowChart = forwardRef((props, ref) => {
+  const intl = useIntl();
   const { transformData, detailData, avisualis, detailId } = props;
   const [graph, setGraph] = useState(null);
   const [flowChartData, setFlowChartData] = useState(detailData);
@@ -210,7 +212,7 @@ const FlowChart = forwardRef((props, ref) => {
         idx: idx,
       };
     if ((hasNodes && idx > flowChartData.nodes.length) || (!hasNodes && idx > 0)) {
-      message.warning('只能按照步骤顺序依次拖拽！');
+      message.warning(intl.formatMessage({ id: 'flowChart.tips.drag' }));
       return;
     }
     if (hasNodes) {
@@ -247,7 +249,7 @@ const FlowChart = forwardRef((props, ref) => {
     if (selectedItem && selectedItem.length) {
       const _id = selectedItem[0]._cfg.id;
       if (_id !== allNodes[allNodes.length - 1]._cfg.id) {
-        message.warning('只能按照模型顺序依次删除！');
+        message.warning(intl.formatMessage({ id: 'flowChart.tips.delete' }));
         return;
       }
       allNodes.forEach((i) => {

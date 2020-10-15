@@ -13,11 +13,13 @@ import {
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
 import _ from 'lodash';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const AvisualisDetail = (props) => {
+  const intl = useIntl();
   const { avisualis, location } = props;
   const { type, modelId } = location.query;
   const detailId = props.match.params.id;
@@ -101,7 +103,7 @@ const AvisualisDetail = (props) => {
           });
         }
         _treeData.push({
-          title: `步骤${idx + 1}：${name}`,
+          title: `${intl.formatMessage({ id: 'detail.step' })}${idx + 1}：${name}`,
           key: `${name}`,
           children: _children,
           disabled: true,

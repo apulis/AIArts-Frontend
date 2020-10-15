@@ -128,10 +128,10 @@ const ModelList = (props) => {
       });
 
       if (error === null) {
-        message.success(`编辑成功`);
+        message.success(`${intl.formatMessage({ id: 'modelList.edit.success' })}`);
         handleSearch();
       } else {
-        msg && message.error(`编辑失败:${msg}`);
+        msg && message.error(`${intl.formatMessage({ id: 'modelList.edit.error' })}:${msg}`);
       }
       setVisible(false);
     }
@@ -175,12 +175,12 @@ const ModelList = (props) => {
 
   const deleteModel = (item) => {
     confirm({
-      title: '删除模型',
+      title: intl.formatMessage({ id: 'modelList.model.delete' }),
       icon: <ExclamationCircleOutlined />,
-      content: '删除操作无法恢复，是否继续？',
-      okText: '确定',
+      content: intl.formatMessage({ id: 'modelList.model.delete.tips' }),
+      okText: intl.formatMessage({ id: 'modelList.ok' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'modelList.cancel' }),
       onOk() {
         dispatch({
           type: 'modelList/delete',
@@ -195,9 +195,12 @@ const ModelList = (props) => {
             } else {
               handleSearch();
             }
-            message.success(`删除成功`);
+            message.success(`${intl.formatMessage({ id: 'modelList.delete.success' })}`);
           } else {
-            message.error(`删除失败${error.msg}` || `删除失败`);
+            message.error(
+              `${intl.formatMessage({ id: 'modelList.delete.error' })}${error.msg}` ||
+                `${intl.formatMessage({ id: 'xxx' })}`,
+            );
           }
         });
       },
@@ -237,7 +240,7 @@ const ModelList = (props) => {
             }}
           >
             <Button type="primary" onClick={createModel}>
-              {intl.formatMessage({ id: 'myModelsList.add.createModel' })}
+              {intl.formatMessage({ id: 'myModels.list.add.createModel' })}
             </Button>
             <div
               style={{
@@ -247,7 +250,7 @@ const ModelList = (props) => {
             >
               <Search
                 style={{ width: '200px', marginRight: '20px' }}
-                placeholder={intl.formatMessage({ id: 'myModelsList.placeholder.search' })}
+                placeholder={intl.formatMessage({ id: 'myModels.list.placeholder.search' })}
                 onSearch={onSearchName}
                 enterButton
                 ref={searchEl}

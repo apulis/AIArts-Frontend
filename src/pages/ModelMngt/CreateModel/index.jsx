@@ -64,10 +64,10 @@ const CreateModel = (props) => {
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
-      message.success(`创建成功`);
+      message.success(`${createModel.onFinish.success}`);
       history.push('/ModelManagement/MyModels');
     } else {
-      msg && message.error(`创建失败:${msg}`);
+      msg && message.error(`${createModel.onFinish.error}${msg}`);
     }
   };
 
@@ -113,7 +113,9 @@ const CreateModel = (props) => {
         console.log(111, info.fileList);
         setFileList(info.fileList);
         setBtnDisabled(false);
-        message.success(`${info.file.name}文件上传成功！`);
+        message.success(
+          `${info.file.name}${intl.formatMessage({ id: 'createModel.upload.success' })}`,
+        );
 
         // 获取上传路径
         const {
@@ -121,7 +123,9 @@ const CreateModel = (props) => {
         } = info.fileList[0].response;
         form.setFieldsValue({ modelPath: path });
       } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败！`);
+        message.error(
+          `${info.file.name} ${intl.formatMessage({ id: 'createModel.upload.error' })}`,
+        );
         setBtnDisabled(false);
       }
     },
@@ -129,7 +133,7 @@ const CreateModel = (props) => {
       const { type, size } = file;
       return new Promise((resolve, reject) => {
         if (fileList.length && fileList.findIndex((i) => i.name === name && i.type === type) > -1) {
-          message.warning(`不能上传相同的文件！`);
+          message.warning(`${intl.formatMessage({ id: 'createModel.upload.tips.desc' })}`);
           reject(file);
         }
         if (
@@ -141,7 +145,7 @@ const CreateModel = (props) => {
             type === 'application/gzip'
           )
         ) {
-          message.warning(`只支持上传格式为 .zip, .tar 和 .tar.gz 的文件！`);
+          message.warning(`${intl.formatMessage({ id: 'createModel.upload.tips' })}`);
           reject(file);
         }
         resolve(file);
@@ -162,7 +166,7 @@ const CreateModel = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/ModelManagement/MyModels')}
-        title="创建模型"
+        title={intl.formatMessage({ id: 'createModel.model.create' })}
       >
         <div
           style={{

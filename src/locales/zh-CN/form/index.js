@@ -6,6 +6,7 @@ import createModel from './createModel';
 import createTraining from './createTraining';
 import createVisualJob from './createVisualJob';
 import confirmEdgeInferencePush from './confirmEdgeInferencePush';
+import avisualisForm from './avisualisForm';
 
 export default {
   ...createCode,
@@ -16,4 +17,5 @@ export default {
   ...createTraining,
   ...createVisualJob,
   ...confirmEdgeInferencePush,
+  ...avisualisForm,
 };

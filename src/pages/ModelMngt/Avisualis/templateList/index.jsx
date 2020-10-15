@@ -9,11 +9,13 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import noDataImg from '../../../../assets/no_data.png';
 import modelIconImg from '../../../../assets/modelIconImg.png';
 import appIconImg from '../../../../assets/appIconImg.png';
+import { useIntl } from 'umi';
 
 const { Panel } = Collapse;
 const { Meta } = Card;
 
 const TemplateList = () => {
+  const intl = useIntl();
   const [modelTplData, setModelTplData] = useState({ data: [], total: 0 });
   const [appTplData, setAppTplData] = useState({ data: [], total: 0 });
   const [mPageParams, setMPageParams] = useState(PAGEPARAMS);
@@ -93,7 +95,7 @@ const TemplateList = () => {
                   history.push(`/ModelManagement/avisualis/detail/${`add`}?modelId=${id}`)
                 }
               >
-                从模板创建
+                {intl.formatMessage({ id: 'templateList.createFromTemplate' })}
               </div>,
               <EllipsisOutlined key="ellipsis" />,
             ]}
@@ -106,7 +108,7 @@ const TemplateList = () => {
     return (
       <div className={styles.noData}>
         <img src={noDataImg} />
-        <p>暂无数据</p>
+        <p>{intl.formatMessage({ id: 'templateList.noData' })}</p>
       </div>
     );
   };
@@ -118,14 +120,14 @@ const TemplateList = () => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/ModelManagement/avisualis')}
-        title="可视化建模"
+        title={intl.formatMessage({ id: 'templateList.visualModeling' })}
       >
         <div className={styles.templateListWrap}>
           <Collapse defaultActiveKey={['1', '2']}>
-            <Panel header="模型库" key="1">
+            <Panel header={intl.formatMessage({ id: 'templateList.modelRepo' })} key="1">
               {getCardList(1)}
             </Panel>
-            <Panel header="应用库" key="2">
+            <Panel header={intl.formatMessage({ id: 'templateList.applicationRepo' })} key="2">
               {getCardList(2)}
             </Panel>
           </Collapse>

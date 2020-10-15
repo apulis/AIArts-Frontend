@@ -10,6 +10,7 @@ import myModelList from './myModelsList';
 import presetModelList from './presetModelList';
 import trainingParamsList from './trainingParamsList';
 import visualizationList from './visualizationList';
+import avisualisList from './avisualisList';
 
 export default {
   ...centerInferenceList,
@@ -24,4 +25,5 @@ export default {
   ...presetModelList,
   ...trainingParamsList,
   ...visualizationList,
+  ...avisualisList,
 };
