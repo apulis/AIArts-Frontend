@@ -28,5 +28,4 @@ export default {
   'model.training.detail.form.jobType.label': 'Job Type',
   'model.training.detail.form.jobType.initValue': 'Model Training',
   'model.training.detail.desc': 'description',
-
 };

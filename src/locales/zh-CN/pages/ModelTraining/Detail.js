@@ -28,5 +28,4 @@ export default {
   'model.training.detail.form.jobType.label': '类型',
   'model.training.detail.form.jobType.initValue': '模型训练',
   'model.training.detail.desc': '描述',
-
 };

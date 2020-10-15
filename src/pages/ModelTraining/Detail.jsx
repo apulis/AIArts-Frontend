@@ -77,7 +77,9 @@ const Detail = (props) => {
   };
 
   const handleFetchTrainingLogs = async () => {
-    const cancel = message.loading(formatMessage({ id: 'model.training.detail.message.getting.log' }));
+    const cancel = message.loading(
+      formatMessage({ id: 'model.training.detail.message.getting.log' }),
+    );
     await getTrainingLogs(id);
     cancel();
     message.success(formatMessage({ id: 'model.training.detail.message.got.log' }));
@@ -119,7 +121,10 @@ const Detail = (props) => {
         <div>
           <Tooltip
             placement="bottomLeft"
-            title={setTemplateButtonDisabled && formatMessage({ id: 'model.training.detail.tooltip.cannot.save' })}
+            title={
+              setTemplateButtonDisabled &&
+              formatMessage({ id: 'model.training.detail.tooltip.cannot.save' })
+            }
             arrowPointAtCenter
           >
             <Button
@@ -133,30 +138,54 @@ const Detail = (props) => {
         </div>
       </div>
       <Descriptions bordered={true} column={1}>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobName' })} >{jobDetail.name}</Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobStatus' })}>{getJobStatus(jobDetail.status)}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobName' })}>
+          {jobDetail.name}
+        </Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobStatus' })}>
+          {getJobStatus(jobDetail.status)}
+        </Descriptions.Item>
         <Descriptions.Item label={formatMessage({ id: 'model.training.detail.engine' })}>
           {getNameFromDockerImage(jobDetail.engine)}
         </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.ID' })}>{jobDetail.id}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.ID' })}>
+          {jobDetail.id}
+        </Descriptions.Item>
         <Descriptions.Item label={formatMessage({ id: 'model.training.detail.createTime' })}>
           {moment(jobDetail.createTime).format('YYYY-MM-DD HH:mm:ss')}
         </Descriptions.Item>
         <Descriptions.Item label={formatMessage({ id: 'model.training.detail.runningParams' })}>
           {jobDetail.params && formatParams(jobDetail.params).map((val) => <div>{val}</div>)}
         </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.codePath' })}>{jobDetail.codePath}</Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceNum' })}>{jobDetail.deviceNum}</Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.startupFile' })}>{jobDetail.startupFile}</Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceType' })}>{jobDetail.deviceType}</Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.datasetPath' })}>{jobDetail.datasetPath}</Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.desc' })}>{jobDetail.desc}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.codePath' })}>
+          {jobDetail.codePath}
+        </Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceNum' })}>
+          {jobDetail.deviceNum}
+        </Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.startupFile' })}>
+          {jobDetail.startupFile}
+        </Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceType' })}>
+          {jobDetail.deviceType}
+        </Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.datasetPath' })}>
+          {jobDetail.datasetPath}
+        </Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.desc' })}>
+          {jobDetail.desc}
+        </Descriptions.Item>
         {jobDetail.visualPath && (
-          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.visualPath' })}>{jobDetail.visualPath}</Descriptions.Item>
+          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.visualPath' })}>
+            {jobDetail.visualPath}
+          </Descriptions.Item>
         )}
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.outputPath' })}>{jobDetail.outputPath}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.outputPath' })}>
+          {jobDetail.outputPath}
+        </Descriptions.Item>
         {jobDetail.checkpoint && (
-          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.checkpoint' })}>{jobDetail.checkpoint}</Descriptions.Item>
+          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.checkpoint' })}>
+            {jobDetail.checkpoint}
+          </Descriptions.Item>
         )}
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
@@ -190,7 +219,13 @@ const Detail = (props) => {
           )}
         </div>
       ) : (
-        <div>{jobStarted ? <div>{formatMessage({ id: 'model.training.detail.job.not.started' })}</div> : <LoadingOutlined />}</div>
+        <div>
+          {jobStarted ? (
+            <div>{formatMessage({ id: 'model.training.detail.job.not.started' })}</div>
+          ) : (
+            <LoadingOutlined />
+          )}
+        </div>
       )}
       {modalVisible && (
         <Modal
@@ -206,7 +241,9 @@ const Detail = (props) => {
               label={formatMessage({ id: 'model.training.detail.form.name.label' })}
               rules={[{ required: true }, { ...jobNameReg }]}
             >
-              <Input placeholder={formatMessage({ id: 'model.training.detail.form.name.placeholder' })} />
+              <Input
+                placeholder={formatMessage({ id: 'model.training.detail.form.name.placeholder' })}
+              />
             </FormItem>
             <FormItem
               {...commonLayout}
@@ -226,7 +263,12 @@ const Detail = (props) => {
             >
               <Input disabled />
             </FormItem>
-            <FormItem {...commonLayout} name="desc" label={formatMessage({ id: 'model.training.detail.desc' })} rules={[{ required: true }]}>
+            <FormItem
+              {...commonLayout}
+              name="desc"
+              label={formatMessage({ id: 'model.training.detail.desc' })}
+              rules={[{ required: true }]}
+            >
               <Input.TextArea />
             </FormItem>
           </Form>
