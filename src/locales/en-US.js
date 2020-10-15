@@ -21,6 +21,7 @@ import form from './en-US/form';
 import ModelList from './en-US/pages/ModelTraining/List';
 import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit';
 import SubmitTrainingJobDetail from './en-US/pages/ModelTraining/Detail';
+import ParamsManage from './en-US/pages/ModelTraining/ParamsManage';
 
 export default {
   'navBar.lang': 'Languages',
@@ -53,4 +54,5 @@ export default {
   ...ModelList,
   ...SubmitTrainingJob,
   ...SubmitTrainingJobDetail,
+  ...ParamsManage,
 };

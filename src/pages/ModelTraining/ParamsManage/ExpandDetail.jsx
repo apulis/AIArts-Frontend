@@ -2,8 +2,10 @@ import React from 'react';
 import { omitText } from '@/utils/utils';
 import { Descriptions, Popover } from 'antd';
 import { getNameFromDockerImage } from '@/utils/reg';
+import { useIntl } from 'umi'; 
 
 const ExpandDetail = (props) => {
+  const { formatMessage } = useIntl();
   const record = props.record;
   // check null
   record.params.params = record.params.params || [];
@@ -24,16 +26,16 @@ const ExpandDetail = (props) => {
   const datasetContent = <p>{record.params.datasetPath}</p>;
   return (
     <Descriptions>
-      <Descriptions.Item label="参数配置名称">{record.params.name}</Descriptions.Item>
-      <Descriptions.Item label="启动文件">{record.params.startupFile}</Descriptions.Item>
-      <Descriptions.Item label="计算节点数">{record.params.deviceNum}</Descriptions.Item>
-      <Descriptions.Item label="训练数据集">
-        <Popover title="训练数据集" content={datasetContent}>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.form.name.labe' })}>{record.params.name}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.startupFile' })}>{record.params.startupFile}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceNum' })}>{record.params.deviceNum}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.datasetPath' })}>
+        <Popover title={formatMessage({ id: 'model.training.detail.datasetPath' })} content={datasetContent}>
           {omitText(record.params.datasetPath)}
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="运行参数">
-        <Popover title="运行参数" content={argumentsContent}>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.runningParams' })}>
+        <Popover title={formatMessage({ id: 'model.training.detail.runningParams' })} content={argumentsContent}>
           {Object.entries(record.params.params).map((item, index) => {
             if (index === 2) return <p key={item[0]}>...</p>;
             if (index > 2) return;
@@ -41,13 +43,13 @@ const ExpandDetail = (props) => {
           })}
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="引擎类型">
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.engine' })}>
         {getNameFromDockerImage(record.params.engine)}
       </Descriptions.Item>
-      <Descriptions.Item label="代码目录">{record.params.codePath}</Descriptions.Item>
-      <Descriptions.Item label="计算节点规格">{record.params.deviceType}</Descriptions.Item>
-      <Descriptions.Item label="描述">
-        <Popover title="描述" content={descriptionContent}>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.codePath' })}>{record.params.codePath}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceType' })}>{record.params.deviceType}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.desc' })}>
+        <Popover title={formatMessage({ id: 'model.training.detail.desc' })} content={descriptionContent}>
           {omitText(record.params.desc)}
         </Popover>
       </Descriptions.Item>
