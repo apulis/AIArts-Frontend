@@ -33,4 +33,7 @@ export default {
 
   'trainingCreate.save': 'Save',
   'trainingCreate.submit': 'Submit',
+  'trainingCreate.npmPsWorker.validator.max': 'Currently only {num} nodes',
+  'trainingCreate.npmPsWorker.validator.min': 'Cannot be less than 1',
+
 };
