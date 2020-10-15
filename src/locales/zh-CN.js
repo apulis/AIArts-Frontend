@@ -18,6 +18,11 @@ import setting from './zh-CN/pages/Setting';
 import visualOperation from './zh-CN/pages/VisualOperation';
 import table from './zh-CN/table';
 import form from './zh-CN/form';
+import ModelList from './zh-CN/pages/ModelTraining/List';
+import SubmitTrainingJob from './zh-CN/pages/ModelTraining/Submit';
+import SubmitTrainingJobDetail from './zh-CN/pages/ModelTraining/Detail';
+import ParamsManage from './zh-CN/pages/ModelTraining/ParamsManage';
+import PretrainedModel from './zh-CN/pages/ModelMngt/PretrainedModel';
 
 export default {
   'navBar.lang': '语言',
@@ -47,4 +52,9 @@ export default {
   ...modelMngt,
   ...table,
   ...form,
+  ...ModelList,
+  ...SubmitTrainingJob,
+  ...SubmitTrainingJobDetail,
+  ...ParamsManage,
+  ...PretrainedModel,
 };

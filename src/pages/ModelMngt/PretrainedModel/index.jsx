@@ -14,6 +14,7 @@ import { useIntl } from 'umi';
 const { Search } = Input;
 
 const ExpandDetails = (item) => {
+  const { formatMessage } = useIntl();
   // 转换运行参数格式
   let runArguments = [];
 
@@ -39,31 +40,23 @@ const ExpandDetails = (item) => {
 
   return (
     <Descriptions>
-      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.trainingDataSet' })}>
-        {item.datasetName}
-      </Descriptions.Item>
-      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.dataFormat' })}>
-        {item.dataFormat}
-      </Descriptions.Item>
-      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.runningParam' })}>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.datasetName' })}>{item.datasetName}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.dataFormat' })}>{item.dataFormat}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.runningParams' })}>
         <Popover content={argumentsContent}>
           {runArguments && runArguments.length > 0 && (
             <div>{runArguments[0].key + '=' + runArguments[0].value + argsSuffix}</div>
           )}
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.engineType' })}>
-        {getNameFromDockerImage(item.engine)}
-      </Descriptions.Item>
-      <Descriptions.Item label={intl.formatMessage({ id: 'pretrainedModel.modelOutput' })}>
-        {item.outputPath}
-      </Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.engine' })}>{getNameFromDockerImage(item.engine)}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.outputModel' })}>{item.outputPath}</Descriptions.Item>
     </Descriptions>
   );
 };
 
 const PretrainedModelList = (props) => {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const {
     loading,
     dispatch,
@@ -94,7 +87,7 @@ const PretrainedModelList = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({ id: 'presetModelList.table.column.name' }),
+      title: formatMessage({ id: 'presetModelList.table.column.name' }),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -103,26 +96,26 @@ const PretrainedModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({ id: 'presetModelList.table.column.use' }),
+      title: formatMessage({ id: 'presetModelList.table.column.use' }),
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
     },
     {
-      title: intl.formatMessage({ id: 'presetModelList.table.column.precision' }),
+      title: formatMessage({ id: 'presetModelList.table.column.precision' }),
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
     },
     {
-      title: intl.formatMessage({ id: 'presetModelList.table.column.size' }),
+      title: formatMessage({ id: 'presetModelList.table.column.size' }),
       // dataIndex: 'size',
       ellipsis: true,
       width: 150,
       render: (item) => bytesToSize(item.size),
     },
     {
-      title: intl.formatMessage({ id: 'presetModelList.table.column.createdAt' }),
+      title: formatMessage({ id: 'presetModelList.table.column.createdAt' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -132,12 +125,12 @@ const PretrainedModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({ id: 'presetModelList.table.column.action' }),
+      title: formatMessage({ id: 'presetModelList.table.column.action' }),
       width: 220,
       render: (item) => {
         return (
           <a onClick={() => createInference(item)}>
-            {intl.formatMessage({ id: 'presetModelList.table.column.action.createTrainingJob' })}
+            {formatMessage({ id: 'presetModelList.table.column.action.createTrainingJob' })}
           </a>
         );
       },
@@ -204,7 +197,7 @@ const PretrainedModelList = (props) => {
           >
             <Search
               style={{ width: '200px', marginRight: '20px' }}
-              placeholder={intl.formatMessage({ id: 'presetModelList.placeholder.search' })}
+              placeholder={formatMessage({ id: 'presetModelList.placeholder.search' })}
               onSearch={handleNameSearch}
               enterButton
               ref={searchEl}
@@ -221,9 +214,9 @@ const PretrainedModelList = (props) => {
             total: data.pagination.total,
             showQuickJumper: true,
             showTotal: (total) =>
-              `${intl.formatMessage({
+              `${formatMessage({
                 id: 'presetModelList.table.pagination.showTotal.prefix',
-              })} ${total} ${intl.formatMessage({
+              })} ${total} ${formatMessage({
                 id: 'presetModelList.table.pagination.showTotal.suffix',
               })}`,
             showSizeChanger: true,

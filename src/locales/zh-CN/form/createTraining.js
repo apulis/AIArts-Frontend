@@ -33,4 +33,6 @@ export default {
 
   'trainingCreate.save': '保存',
   'trainingCreate.submit': '立即创建',
+  'trainingCreate.npmPsWorker.validator.max': '当前只有 {num} 个节点',
+  'trainingCreate.npmPsWorker.validator.min': '不能小于 1',
 };

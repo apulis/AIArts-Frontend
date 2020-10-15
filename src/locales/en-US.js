@@ -18,6 +18,11 @@ import setting from './en-US/pages/Setting';
 import visualOperation from './en-US/pages/VisualOperation';
 import table from './en-US/table';
 import form from './en-US/form';
+import ModelList from './en-US/pages/ModelTraining/List';
+import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit';
+import SubmitTrainingJobDetail from './en-US/pages/ModelTraining/Detail';
+import ParamsManage from './en-US/pages/ModelTraining/ParamsManage';
+import PretrainedModel from './en-US/pages/ModelMngt/PretrainedModel';
 
 export default {
   'navBar.lang': 'Languages',
@@ -47,4 +52,9 @@ export default {
   ...modelMngt,
   ...table,
   ...form,
+  ...ModelList,
+  ...SubmitTrainingJob,
+  ...SubmitTrainingJobDetail,
+  ...ParamsManage,
+  ...PretrainedModel,
 };

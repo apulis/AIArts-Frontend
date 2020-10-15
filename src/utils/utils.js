@@ -102,8 +102,24 @@ export const bytesToSize = (bytes) => {
   return `${(bytes / Math.pow(k, i)).toFixed(0)} ${sizes[i]}`;
 };
 
+export const getStatusList = () => [
+  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
+  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
+  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
+  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
+  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
+  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
+  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
+  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
+  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
+  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
+  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
+];
+
 export const getJobStatus = (status) => {
   const statusList = {
+    all: formatMessage({ id: 'service.status.all' }),
     unapproved: formatMessage({ id: 'service.status.unapproved' }),
     queued: formatMessage({ id: 'service.status.queued' }),
     scheduling: formatMessage({ id: 'service.status.scheduling' }),

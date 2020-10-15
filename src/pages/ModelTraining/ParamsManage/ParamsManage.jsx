@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Table, Input, Button, Select, Card, message, Upload, Tooltip } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {
   fetchTemplates,
@@ -15,18 +15,18 @@ import moment from 'moment';
 import ExpandDetail from './ExpandDetail';
 import styles from '@/global.less';
 import { downloadStringAsFile } from '@/utils/utils';
-import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Option } = Select;
 const { Search } = Input;
 
 const ParamsManage = () => {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const [total, setTotal] = useState(0);
   const uploadRef = useRef(null);
   const [importedParamsModalVisible, setImportedParamsModalVisible] = useState(false);
@@ -55,12 +55,10 @@ const ParamsManage = () => {
 
   const handleDelete = async (id) => {
     confirm({
-      title: '删除参数配置',
+      title: formatMessage({ id: 'paramsManage.modal.confirm.delete.title' }),
       icon: <ExclamationCircleOutlined />,
-      content: '删除操作无法恢复，是否继续？',
-      okText: '确定',
+      content: formatMessage({ id: 'paramsManage.modal.confirm.delete.content' }),
       okType: 'danger',
-      cancelText: '取消',
       onOk: async () => {
         const res = await removeTemplate(id);
         if (res.code === 0) {
@@ -70,9 +68,9 @@ const ParamsManage = () => {
           } else {
             handleSearch();
           }
-          message.success('删除成功');
+          message.success(formatMessage({ id: 'paramsManage.modal.confirm.delete.success' }));
         } else {
-          message.error(`删除失败${error.msg}` || `删除失败`);
+          message.error(`${paramsManage.modal.confirm.delete.fail}${error.msg}`);
         }
       },
       onCancel() {},
@@ -98,7 +96,7 @@ const ParamsManage = () => {
 
   const columns = [
     {
-      title: intl.formatMessage({ id: 'trainingParamsList.table.column.name' }),
+      title: formatMessage({ id: 'trainingParamsList.table.column.name' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       dataIndex: ['params', 'name'],
@@ -112,7 +110,7 @@ const ParamsManage = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: intl.formatMessage({ id: 'trainingParamsList.table.column.engineType' }),
+      title: formatMessage({ id: 'trainingParamsList.table.column.engineType' }),
       dataIndex: ['params', 'engine'],
       key: 'engine',
       render(val) {
@@ -120,7 +118,7 @@ const ParamsManage = () => {
       },
     },
     {
-      title: intl.formatMessage({ id: 'trainingParamsList.table.column.createTime' }),
+      title: formatMessage({ id: 'trainingParamsList.table.column.createTime' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -128,31 +126,31 @@ const ParamsManage = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: intl.formatMessage({ id: 'trainingParamsList.table.column.description' }),
+      title: formatMessage({ id: 'trainingParamsList.table.column.description' }),
       width: '25%',
       ellipsis: true,
       dataIndex: ['params', 'desc'],
     },
     {
-      title: intl.formatMessage({ id: 'trainingParamsList.table.column.action' }),
+      title: formatMessage({ id: 'trainingParamsList.table.column.action' }),
       render: (item) => {
         const id = item.metaData.id;
         const name = item.params.name;
         return (
           <>
             <a onClick={() => handleCreateTrainJob(id)}>
-              {intl.formatMessage({
+              {formatMessage({
                 id: 'trainingParamsList.table.column.action.createTrainingJob',
               })}
             </a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              {intl.formatMessage({ id: 'trainingParamsList.table.column.action.edit' })}
+              {formatMessage({ id: 'trainingParamsList.table.column.action.edit' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              {intl.formatMessage({ id: 'trainingParamsList.table.column.action.delete' })}
+              {formatMessage({ id: 'trainingParamsList.table.column.action.delete' })}
             </a>
             <a style={{ marginLeft: '12px' }} onClick={() => saveTemplateAsFile(id, name)}>
-              {intl.formatMessage({ id: 'trainingParamsList.table.column.action.exportParams' })}
+              {formatMessage({ id: 'trainingParamsList.table.column.action.exportParams' })}
             </a>
           </>
         );
@@ -253,7 +251,7 @@ const ParamsManage = () => {
             }}
             type="primary"
           >
-            {intl.formatMessage({ id: 'trainingParamsList.add.importParams' })}
+            {formatMessage({ id: 'trainingParamsList.add.importParams' })}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -264,7 +262,7 @@ const ParamsManage = () => {
               }
             </Select> */}
             <Search
-              placeholder={intl.formatMessage({ id: 'trainingParamsList.placeholder.search' })}
+              placeholder={formatMessage({ id: 'trainingParamsList.placeholder.search' })}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -290,9 +288,9 @@ const ParamsManage = () => {
             total: total,
             showQuickJumper: true,
             showTotal: (total) =>
-              `${intl.formatMessage({
+              `${formatMessage({
                 id: 'trainingParamsList.table.pagination.showTotal.prefix',
-              })} ${total} ${intl.formatMessage({
+              })} ${total} ${formatMessage({
                 id: 'trainingParamsList.table.pagination.showTotal.suffix',
               })}`,
             showSizeChanger: true,
@@ -316,15 +314,17 @@ const ParamsManage = () => {
           }}
           onOk={saveFileAsTemplate}
         >
-          <Upload ref={uploadRef} beforeUpload={beforeUpload} action="/">
+          <Upload
+            ref={uploadRef}
+            beforeUpload={beforeUpload}
+            action="/"
+            onChange={(info) => setFileList(info.fileList)}
+          >
             <Tooltip
-              title={uploadRef.current?.state.fileList.length >= 1 ? '每次只能上传一个文件' : ''}
+              title={fileList.length >= 1 ? formatMessage({ id: 'paramsManage.upload.tip' }) : ''}
             >
-              <Button
-                disabled={uploadRef.current?.state.fileList.length >= 1}
-                icon={<UploadOutlined />}
-              >
-                上传 json 文件
+              <Button disabled={fileList.length >= 1} icon={<UploadOutlined />}>
+                {formatMessage({ id: 'paramsManage.upload.button' })}
               </Button>
             </Tooltip>
           </Upload>
