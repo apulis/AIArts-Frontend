@@ -26,7 +26,7 @@ const ExpandDetail = (props) => {
   const datasetContent = <p>{record.params.datasetPath}</p>;
   return (
     <Descriptions>
-      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.form.name.labe' })}>
+      <Descriptions.Item label={formatMessage({ id: 'model.training.detail.form.name.label' })}>
         {record.params.name}
       </Descriptions.Item>
       <Descriptions.Item label={formatMessage({ id: 'model.training.detail.startupFile' })}>
