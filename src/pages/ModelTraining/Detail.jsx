@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Button, Descriptions, Modal } from 'antd';
-import { useParams } from 'umi';
+import { useParams, useIntl } from 'umi';
 import { message, Form, Input, Tooltip, Pagination } from 'antd';
 import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
 import List from 'react-virtualized/dist/es/List';
 import moment from 'moment';
-import { history } from 'umi';
 import {
   fetchTrainingDetail,
   removeTrainings,
@@ -24,6 +23,8 @@ const { useForm } = Form;
 const FormItem = Form.Item;
 
 const Detail = (props) => {
+  const intl = useIntl();
+  const { formatMessage } = intl;
   const params = useParams();
   const logEl = useRef(null);
   const [form] = useForm();
@@ -76,10 +77,10 @@ const Detail = (props) => {
   };
 
   const handleFetchTrainingLogs = async () => {
-    const cancel = message.loading('获取日志中');
+    const cancel = message.loading(formatMessage({ id: 'model.training.detail.message.getting.log' }));
     await getTrainingLogs(id);
     cancel();
-    message.success('成功获取日志');
+    message.success(formatMessage({ id: 'model.training.detail.message.got.log' }));
   };
 
   const saveTrainingDetail = async () => {
@@ -92,7 +93,7 @@ const Detail = (props) => {
     delete submitData.templateData.id;
     const res = await saveTrainingParams(submitData);
     if (res.code === 0) {
-      message.success('保存成功');
+      message.success(formatMessage({ id: 'model.training.detail.message.save.success' }));
       setModalVisible(false);
     }
   };
@@ -113,12 +114,12 @@ const Detail = (props) => {
     <div className={styles.modelDetail}>
       <div className={styles.topButtons}>
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-          模型训练
+          {formatMessage({ id: 'model.training.detail.title' })}
         </div>
         <div>
           <Tooltip
             placement="bottomLeft"
-            title={setTemplateButtonDisabled && '公有模板，不可保存'}
+            title={setTemplateButtonDisabled && formatMessage({ id: 'model.training.detail.tooltip.cannot.save' })}
             arrowPointAtCenter
           >
             <Button
@@ -126,40 +127,40 @@ const Detail = (props) => {
               disabled={setTemplateButtonDisabled}
               onClick={() => setModalVisible(true)}
             >
-              保存训练参数
+              {formatMessage({ id: 'model.training.detail.button.save.params' })}
             </Button>
           </Tooltip>
         </div>
       </div>
       <Descriptions bordered={true} column={1}>
-        <Descriptions.Item label="作业名称">{jobDetail.name}</Descriptions.Item>
-        <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.status)}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobName' })} >{jobDetail.name}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobStatus' })}>{getJobStatus(jobDetail.status)}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.engine' })}>
           {getNameFromDockerImage(jobDetail.engine)}
         </Descriptions.Item>
-        <Descriptions.Item label="ID">{jobDetail.id}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.ID' })}>{jobDetail.id}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.createTime' })}>
           {moment(jobDetail.createTime).format('YYYY-MM-DD HH:mm:ss')}
         </Descriptions.Item>
-        <Descriptions.Item label="运行参数">
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.runningParams' })}>
           {jobDetail.params && formatParams(jobDetail.params).map((val) => <div>{val}</div>)}
         </Descriptions.Item>
-        <Descriptions.Item label="代码目录">{jobDetail.codePath}</Descriptions.Item>
-        <Descriptions.Item label="计算节点个数">{jobDetail.deviceNum}</Descriptions.Item>
-        <Descriptions.Item label="启动文件">{jobDetail.startupFile}</Descriptions.Item>
-        <Descriptions.Item label="计算节点规格">{jobDetail.deviceType}</Descriptions.Item>
-        <Descriptions.Item label="训练数据集">{jobDetail.datasetPath}</Descriptions.Item>
-        <Descriptions.Item label="描述">{jobDetail.desc}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.codePath' })}>{jobDetail.codePath}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceNum' })}>{jobDetail.deviceNum}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.startupFile' })}>{jobDetail.startupFile}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceType' })}>{jobDetail.deviceType}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.datasetPath' })}>{jobDetail.datasetPath}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.desc' })}>{jobDetail.desc}</Descriptions.Item>
         {jobDetail.visualPath && (
-          <Descriptions.Item label="可视化路径">{jobDetail.visualPath}</Descriptions.Item>
+          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.visualPath' })}>{jobDetail.visualPath}</Descriptions.Item>
         )}
-        <Descriptions.Item label="输出路径">{jobDetail.outputPath}</Descriptions.Item>
+        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.outputPath' })}>{jobDetail.outputPath}</Descriptions.Item>
         {jobDetail.checkpoint && (
-          <Descriptions.Item label="checkpoint 文件">{jobDetail.checkpoint}</Descriptions.Item>
+          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.checkpoint' })}>{jobDetail.checkpoint}</Descriptions.Item>
         )}
       </Descriptions>
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-        训练日志
+        {formatMessage({ id: 'model.training.detail.log' })}
       </div>
       {!jobStarted && !jobFailed && (
         <Button
@@ -167,7 +168,7 @@ const Detail = (props) => {
           onClick={handleFetchTrainingLogs}
           style={{ marginBottom: '20px', marginTop: '16px' }}
         >
-          获取训练日志
+          {formatMessage({ id: 'model.training.detail.get.log' })}
         </Button>
       )}
       {typeof logs !== 'undefined' ? (
@@ -189,29 +190,29 @@ const Detail = (props) => {
           )}
         </div>
       ) : (
-        <div>{jobStarted ? <div>训练任务尚未开始运行</div> : <LoadingOutlined />}</div>
+        <div>{jobStarted ? <div>{formatMessage({ id: 'model.training.detail.job.not.started' })}</div> : <LoadingOutlined />}</div>
       )}
       {modalVisible && (
         <Modal
           visible={modalVisible}
           onCancel={() => setModalVisible(false)}
           onOk={saveTrainingDetail}
-          title="保存至"
+          title={formatMessage({ id: 'model.training.detail.title.save.to' })}
         >
           <Form form={form}>
             <FormItem
               {...commonLayout}
               name="name"
-              label="配置名称"
+              label={formatMessage({ id: 'model.training.detail.form.name.label' })}
               rules={[{ required: true }, { ...jobNameReg }]}
             >
-              <Input placeholder="请输入配置名称" />
+              <Input placeholder={formatMessage({ id: 'model.training.detail.form.name.placeholder' })} />
             </FormItem>
             <FormItem
               {...commonLayout}
               name="jobType"
-              label="类型"
-              initialValue="模型训练"
+              label={formatMessage({ id: 'model.training.detail.form.jobType.label' })}
+              initialValue={formatMessage({ id: 'model.training.detail.form.jobType.initValue' })}
               rules={[{ required: true }]}
             >
               <Input disabled />
@@ -219,13 +220,13 @@ const Detail = (props) => {
             <FormItem
               {...commonLayout}
               name="engine"
-              label="引擎类型"
+              label={formatMessage({ id: 'model.training.detail.engine' })}
               initialValue={getNameFromDockerImage(jobDetail.engine)}
               rules={[{ required: true }]}
             >
               <Input disabled />
             </FormItem>
-            <FormItem {...commonLayout} name="desc" label="描述" rules={[{ required: true }]}>
+            <FormItem {...commonLayout} name="desc" label={formatMessage({ id: 'model.training.detail.desc' })} rules={[{ required: true }]}>
               <Input.TextArea />
             </FormItem>
           </Form>
