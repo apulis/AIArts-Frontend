@@ -320,7 +320,9 @@ const ParamsManage = () => {
             action="/"
             onChange={(info) => setFileList(info.fileList)}
           >
-            <Tooltip title={fileList.length >= 1 ? formatMessage({ id: 'paramsManage.upload.tip' }) : ''}>
+            <Tooltip
+              title={fileList.length >= 1 ? formatMessage({ id: 'paramsManage.upload.tip' }) : ''}
+            >
               <Button disabled={fileList.length >= 1} icon={<UploadOutlined />}>
                 {formatMessage({ id: 'paramsManage.upload.button' })}
               </Button>
