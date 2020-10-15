@@ -9,7 +9,7 @@ import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
 import { fetchJobStatusSumary, getInferences } from './services';
-import { statusList } from '@/pages/ModelTraining/List';
+import { getStatusList } from '@/utils/utils';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
 import useInterval from '@/hooks/useInterval';
@@ -48,7 +48,7 @@ const InferenceList = (props) => {
         let count = res.data[k];
         total += count;
         jobSumary.push({
-          label: statusList.find((status) => status.value === k)?.label + `（${count}）`,
+          label: getStatusList().find((status) => status.value === k)?.label + `（${count}）`,
           value: k,
         });
       });

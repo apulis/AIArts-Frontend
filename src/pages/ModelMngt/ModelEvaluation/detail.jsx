@@ -37,8 +37,8 @@ const EvaluationDetail = (props) => {
       const {
         data: { evaluation, log, indicator, confusion },
       } = res;
-      if ('visualPath' in evaluation.params) {
-        evaluation.visualPath = evaluation.params.visualPath;
+      if (evaluation.params && 'visualPath' in evaluation.params) {
+        evaluation.visualPath = evaluation.params?.visualPath;
         delete evaluation.params['visualPath'];
       }
       setEvaluationJob(evaluation);
@@ -85,7 +85,7 @@ const EvaluationDetail = (props) => {
       } = res;
       message.success(intl.formatMessage({ id: 'modelMngt.detail.getLateastLogs.tips.success' }));
       if ('visualPath' in evaluation.params) {
-        evaluation.visualPath = evaluation.params.visualPath;
+        evaluation.visualPath = evaluation.params?.visualPath;
         delete evaluation.params['visualPath'];
       }
       setEvaluationJob(evaluation);
