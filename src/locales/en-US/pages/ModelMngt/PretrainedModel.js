@@ -3,4 +3,4 @@ export default {
   'pretrainedModel.runningParams': 'Running Params',
   'pretrainedModel.engine': 'Engine',
   'pretrainedModel.outputModel': 'Output Model',
-}
+};

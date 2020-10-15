@@ -4,4 +4,4 @@ export default {
   'pretrainedModel.runningParams': '运行参数',
   'pretrainedModel.engine': '引擎类型',
   'pretrainedModel.outputModel': '模型输出',
-}
+};

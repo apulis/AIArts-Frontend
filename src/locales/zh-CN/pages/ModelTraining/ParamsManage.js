@@ -7,4 +7,3 @@ export default {
   'paramsManage.upload.tip': '每次只能上传一个文件',
   'paramsManage.upload.button': '上传 json 文件',
 };
- 
