@@ -259,7 +259,7 @@ const List = (props) => {
           <Search
             ref={searchEl}
             style={{ width: '200px' }}
-            placeholder={intl.formatMessage({ id: 'modelEvaluationList.placeholder.search' })}
+            placeholder={intl.formatMessage({ id: 'modelEvaluation.list.placeholder.search' })}
             onSearch={onSearchName}
             enterButton
           />

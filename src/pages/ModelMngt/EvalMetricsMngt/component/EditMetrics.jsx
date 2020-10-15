@@ -28,6 +28,7 @@ import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
 import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -45,6 +46,7 @@ export const generateKey = () => {
 let haveSetedParamsDetail = false;
 
 const EditMetrics = (props) => {
+  const intl = useIntl();
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const paramsId = props.match.params.id;
   const goBackPath = '/ModelManagement/EvaluationMetricsManage/';
@@ -187,7 +189,7 @@ const EditMetrics = (props) => {
     };
     const res = await updateParams(editParams);
     if (res.code === 0) {
-      message.success('保存成功');
+      message.success(intl.formatMessage({ id: 'editMetrics.save.success' }));
       history.push(goBackPath);
     }
   };
@@ -213,7 +215,7 @@ const EditMetrics = (props) => {
     const runningParams = await getFieldValue('params');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        callback('不能输入相同的参数名称');
+        callback(intl.formatMessage({ id: 'editMetrics.inputLimitEqualParamName' }));
       }
     });
     callback();
@@ -284,7 +286,7 @@ const EditMetrics = (props) => {
 
   const handleClickDeviceNum = (e) => {
     if (!getFieldValue('deviceType')) {
-      message.error('需要先选择设置类型');
+      message.error(intl.formatMessage({ id: 'editMetrics.needSelectSettingType' }));
     }
   };
 
@@ -293,26 +295,33 @@ const EditMetrics = (props) => {
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title="编辑评估参数"
+        title={intl.formatMessage({ id: 'editMetrics.editEvaluationParam' })}
       />
       <Form form={form}>
         <FormItem
           {...commonLayout}
           style={{ marginTop: '30px' }}
           name="name"
-          label="评估参数名称"
+          label={intl.formatMessage({ id: 'editMetrics.label.evaluationParamName' })}
           rules={[{ required: true }, { ...jobNameReg }]}
         >
-          <Input style={{ width: 300 }} placeholder="请输入评估参数名称" />
+          <Input
+            style={{ width: 300 }}
+            placeholder={intl.formatMessage({
+              id: 'editMetrics.placeholder.needEvaluationParamName',
+            })}
+          />
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           name="desc"
-          label="描述"
+          label={intl.formatMessage({ id: 'editMetrics.label.description' })}
           rules={[{ max: 191 }]}
         >
-          <TextArea placeholder="请输入描述信息" />
+          <TextArea
+            placeholder={intl.formatMessage({ id: 'editMetrics.placeholder.needDescription' })}
+          />
         </FormItem>
       </Form>
       <Divider style={{ borderColor: '#cdcdcd' }} />
@@ -320,7 +329,7 @@ const EditMetrics = (props) => {
         className="ant-page-header-heading-title"
         style={{ marginLeft: '38px', marginBottom: '20px' }}
       >
-        参数配置
+        {intl.formatMessage({ id: 'editMetrics.paramConfig' })}
       </div>
       {/* <FormItem {...commonLayout} label="参数来源">
         <Radio.Group defaultValue={1} buttonStyle="solid">
@@ -329,7 +338,12 @@ const EditMetrics = (props) => {
         </Radio.Group>
       </FormItem> */}
       <Form form={form}>
-        <FormItem {...commonLayout} name="engine" label="引擎" rules={[{ required: true }]}>
+        <FormItem
+          {...commonLayout}
+          name="engine"
+          label={intl.formatMessage({ id: 'editMetrics.label.engine' })}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: 300 }}>
             {frameWorks.map((f) => (
               <Option value={f} key={f}>
@@ -338,24 +352,41 @@ const EditMetrics = (props) => {
             ))}
           </Select>
         </FormItem>
-        <FormItem labelCol={{ span: 4 }} name="codePath" label="代码目录">
+        <FormItem
+          labelCol={{ span: 4 }}
+          name="codePath"
+          label={intl.formatMessage({ id: 'editMetrics.codePath' })}
+        >
           <Input style={{ width: 420 }} />
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
-          label="启动文件"
+          label={intl.formatMessage({ id: 'editMetrics.label.startupFile' })}
           name="startupFile"
           rules={[{ required: true }, startUpFileReg]}
         >
           <Input style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="outputPath" labelCol={{ span: 4 }} label="输出路径">
+        <FormItem
+          name="outputPath"
+          labelCol={{ span: 4 }}
+          label={intl.formatMessage({ id: 'editMetrics.label.outputPath' })}
+        >
           <Input disabled style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="paramPath" labelCol={{ span: 4 }} label="模型参数路径">
+        <FormItem
+          name="paramPath"
+          labelCol={{ span: 4 }}
+          label={intl.formatMessage({ id: 'editMetrics.label.modelParamPath' })}
+        >
           <Input style={{ width: 420 }} />
         </FormItem>
-        <FormItem name="datasetPath" rules={[]} labelCol={{ span: 4 }} label="训练数据集">
+        <FormItem
+          name="datasetPath"
+          rules={[]}
+          labelCol={{ span: 4 }}
+          label={intl.formatMessage({ id: 'editMetrics.label.trainingDataSet' })}
+        >
           <Select style={{ width: '300px' }}>
             {datasets.map((d) => (
               <Option value={d.path} key={d.id}>
@@ -364,7 +395,10 @@ const EditMetrics = (props) => {
             ))}
           </Select>
         </FormItem>
-        <FormItem label="运行参数" labelCol={{ span: 4 }}>
+        <FormItem
+          label={intl.formatMessage({ id: 'editMetrics.label.runningParam' })}
+          labelCol={{ span: 4 }}
+        >
           {runningParams.map((param, index) => {
             return (
               <div>
@@ -408,17 +442,27 @@ const EditMetrics = (props) => {
           })}
           <div className={styles.addParams} onClick={addParams}>
             <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
-            <a>点击增加参数</a>
+            <a>{intl.formatMessage({ id: 'editMetrics.clickAddParam' })}</a>
           </div>
         </FormItem>
-        <FormItem label="设备类型" name="deviceType" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem
+          label={intl.formatMessage({ id: 'editMetrics.label.deviceType' })}
+          name="deviceType"
+          {...commonLayout}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: '300px' }} onChange={onDeviceTypeChange}>
             {deviceList.map((d) => (
               <Option value={d.deviceType}>{d.deviceType}</Option>
             ))}
           </Select>
         </FormItem>
-        <FormItem label="设备数量" name="deviceNum" {...commonLayout} rules={[{ required: true }]}>
+        <FormItem
+          label={intl.formatMessage({ id: 'editMetrics.label.deviceNum' })}
+          name="deviceNum"
+          {...commonLayout}
+          rules={[{ required: true }]}
+        >
           <Select style={{ width: '300px' }} onClick={handleClickDeviceNum}>
             {availableDeviceNumList.map((avail) => (
               <Option value={avail}>{avail}</Option>
@@ -450,7 +494,7 @@ const EditMetrics = (props) => {
         visible={presetParamsVisible}
         onCancel={() => setPresetParamsVisible(false)}
         onOk={handleConfirmPresetParams}
-        title="导入训练参数配置"
+        title={intl.formatMessage({ id: 'editMetrics.importTrainingParamConfig' })}
         forceRender
         width="80%"
       >
@@ -465,42 +509,44 @@ const EditMetrics = (props) => {
               {presetRunningParams.map((p, index) => (
                 <TabPane tab={p.metaData.name} key={p.metaData.id}>
                   <Row>
-                    <Col span={5}>计算节点个数</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.computeNodeCount' })}</Col>
                     <Col span={19}>{p.params.deviceNum}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>启动文件</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.startupFile' })}</Col>
                     <Col span={19}>{p.params.startupFile}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>代码目录</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.codePath' })}</Col>
                     <Col span={19}>{p.params.codePath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>训练数据集</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.trainingDataSet' })}</Col>
                     <Col span={19}>{p.params.datasetPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>输出路径</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.outputPath' })}</Col>
                     <Col span={19}>{p.params.outputPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>运行参数</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.runningParam' })}</Col>
                     <Col span={19}>{p.params.params && formatParams(p.params.params)}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>计算节点规格</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'editMetrics.computeNodeSpecifications' })}
+                    </Col>
                     <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>引擎类型</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'editMetrics.engineType' })}</Col>
                     <Col span={19}>{getNameFromDockerImage(p.params.engine)}</Col>
                   </Row>
                 </TabPane>
               ))}
             </Tabs>
           ) : (
-            <div>暂无</div>
+            <div>{intl.formatMessage({ id: 'editMetrics.noData' })}</div>
           )}
         </Form>
       </Modal>
@@ -509,7 +555,7 @@ const EditMetrics = (props) => {
         style={{ float: 'right', marginBottom: '16px' }}
         onClick={handleSubmit}
       >
-        保存
+        {intl.formatMessage({ id: 'editMetrics.save' })}
       </Button>
     </div>
   );
