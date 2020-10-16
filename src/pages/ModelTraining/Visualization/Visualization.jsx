@@ -17,18 +17,18 @@ import { useIntl, formatMessage } from 'umi';
 const { confirm } = Modal;
 
 const statusList = [
-  { value: 'all', label: formatMessage({id: 'service.status.all'}) },
-  { value: 'unapproved', label: formatMessage({id: 'service.status.unapproved'}) },
-  { value: 'queued', label: formatMessage({id: 'service.status.queued'}) },
-  { value: 'scheduling', label: formatMessage({id: 'service.status.scheduling'}) },
-  { value: 'running', label: formatMessage({id: 'service.status.running'}) },
-  { value: 'finished', label: formatMessage({id: 'service.status.finished'}) },
-  { value: 'failed', label: formatMessage({id: 'service.status.failed'}) },
-  { value: 'pausing', label: formatMessage({id: 'service.status.pausing'}) },
-  { value: 'paused', label: formatMessage({id: 'service.status.paused'}) },
-  { value: 'killing', label: formatMessage({id: 'service.status.killing'}) },
-  { value: 'killed', label: formatMessage({id: 'service.status.killed'}) },
-  { value: 'error', label: formatMessage({id: 'service.status.error'}) },
+  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
+  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
+  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
+  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
+  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
+  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
+  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
+  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
+  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
+  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
+  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
 const { Search } = Input;

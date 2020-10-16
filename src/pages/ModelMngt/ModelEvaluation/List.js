@@ -13,18 +13,18 @@ import useInterval from '@/hooks/useInterval';
 import { useIntl, formatMessage } from 'umi';
 
 export const statusList = [
-  { value: 'all', label: formatMessage({id: 'service.status.all'}) },
-  { value: 'unapproved', label: formatMessage({id: 'service.status.unapproved'}) },
-  { value: 'queued', label: formatMessage({id: 'service.status.queued'}) },
-  { value: 'scheduling', label: formatMessage({id: 'service.status.scheduling'}) },
-  { value: 'running', label: formatMessage({id: 'service.status.running'}) },
-  { value: 'finished', label: formatMessage({id: 'service.status.finished'}) },
-  { value: 'failed', label: formatMessage({id: 'service.status.failed'}) },
-  { value: 'pausing', label: formatMessage({id: 'service.status.pausing'}) },
-  { value: 'paused', label: formatMessage({id: 'service.status.paused'}) },
-  { value: 'killing', label: formatMessage({id: 'service.status.killing'}) },
-  { value: 'killed', label: formatMessage({id: 'service.status.killed'}) },
-  { value: 'error', label: formatMessage({id: 'service.status.error'}) },
+  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
+  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
+  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
+  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
+  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
+  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
+  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
+  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
+  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
+  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
+  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
 const { Search } = Input;
@@ -78,7 +78,7 @@ const List = (props) => {
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
-      const jobSumary = [{ value: 'all', label: intl.formatMessage({id: 'list.all'}) }];
+      const jobSumary = [{ value: 'all', label: intl.formatMessage({ id: 'list.all' }) }];
       let total = 0;
       Object.keys(res.data).forEach((k) => {
         let count = res.data[k];
@@ -123,16 +123,16 @@ const List = (props) => {
   const stopEvaluationJob = async (id) => {
     const res = await stopEvaluation(id);
     if (res.code === 0) {
-      message.success(intl.formatMessage({id: 'list.stop.success'}));
+      message.success(intl.formatMessage({ id: 'list.stop.success' }));
       handleSearch();
     }
   };
   const deleteEvaluationJob = async (item) => {
     if (canStop(item)) {
       Modal.warning({
-        title: intl.formatMessage({id: 'list.stop.not'}),
-        content: intl.formatMessage({id: 'list.needStop'}),
-        okText: intl.formatMessage({id: 'list.ok'}),
+        title: intl.formatMessage({ id: 'list.stop.not' }),
+        content: intl.formatMessage({ id: 'list.needStop' }),
+        okText: intl.formatMessage({ id: 'list.ok' }),
       });
       return;
     }
@@ -154,9 +154,9 @@ const List = (props) => {
         handleSearch();
       }
       getJobStatusSumary();
-      message.success(`${intl.formatMessage({id: 'list.delete.success'})}`);
+      message.success(`${intl.formatMessage({ id: 'list.delete.success' })}`);
     } else {
-      message.error(`${intl.formatMessage({id: 'list.delete.error'})}${msg}。`);
+      message.error(`${intl.formatMessage({ id: 'list.delete.error' })}${msg}。`);
     }
   };
   const onSearchName = (name) => {
@@ -181,7 +181,7 @@ const List = (props) => {
       key: 'jobName',
       render(_text, item) {
         return (
-          <Popover content={intl.formatMessage({id: 'list.delete.evaluation.detail.view'})}>
+          <Popover content={intl.formatMessage({ id: 'list.delete.evaluation.detail.view' })}>
             <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
           </Popover>
         );
