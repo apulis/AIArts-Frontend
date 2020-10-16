@@ -4,7 +4,7 @@ import pathRegexp from 'path-to-regexp';
 import { formatMessage, setLocale } from 'umi';
 import { isObject } from './types';
 import { checkIfGpuOrNpu } from '@/models/resource';
-import requestUser from './request-user'
+import requestUser from './request-user';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -300,9 +300,8 @@ export const checkIfCanStop = (status) => {
   return ['unapproved', 'queued', 'scheduling', 'running'].includes(status);
 };
 
-
 export function setI18n(lang) {
   localStorage.language = lang;
   requestUser('/language/' + lang);
-  setLocale(lang, false)
+  setLocale(lang, false);
 }
