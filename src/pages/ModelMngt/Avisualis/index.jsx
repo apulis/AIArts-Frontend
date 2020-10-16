@@ -10,11 +10,13 @@ import moment from 'moment';
 import { connect } from 'dva';
 import AddFormModal from './components/AddFormModal';
 import { getJobStatus } from '@/utils/utils';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const Avisualis = () => {
+  const intl = useIntl();
   const dispatch = useDispatch();
   const [avisualisData, setAvisualisData] = useState({ data: [], total: 0 });
   const [modalFlag, setModalFlag] = useState(false);
@@ -65,7 +67,7 @@ const Avisualis = () => {
 
   const columns = [
     {
-      title: '模型名称',
+      title: intl.formatMessage({ id: 'avisualis.table.column.name' }),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -75,21 +77,21 @@ const Avisualis = () => {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: intl.formatMessage({ id: 'avisualis.table.column.status' }),
       render: (text, item) => (
         <Link to={`/model-training/${item.jobId}/detail`}>{getJobStatus(text)}</Link>
       ),
     },
     {
-      title: '模型用途',
+      title: intl.formatMessage({ id: 'avisualis.table.column.use' }),
       dataIndex: 'use',
     },
     {
-      title: '简介',
+      title: intl.formatMessage({ id: 'avisualis.table.column.description' }),
       dataIndex: 'description',
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'avisualis.table.column.createdAt' }),
       key: 'createdAt',
       dataIndex: 'createdAt',
       sorter: true,
@@ -97,7 +99,7 @@ const Avisualis = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'avisualis.table.column.action' }),
       render: (item) => {
         const { id, status } = item;
         return (
@@ -106,10 +108,10 @@ const Avisualis = () => {
               onClick={() => history.push(`/ModelManagement/CreateEvaluation?modelId=${id}`)}
               disabled={status !== 'finished'}
             >
-              模型评估
+              {intl.formatMessage({ id: 'avisualis.table.column.action.modelEvaluation' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
-              删除
+              {intl.formatMessage({ id: 'avisualis.table.column.action.delete' })}
             </a>
           </Space>
         );
@@ -119,11 +121,11 @@ const Avisualis = () => {
 
   const onDelete = (id) => {
     confirm({
-      title: '确定要删除该模型吗？',
+      title: intl.formatMessage({ id: 'avisualis.delete.tips' }),
       icon: <ExclamationCircleOutlined />,
-      okText: '删除',
+      okText: intl.formatMessage({ id: 'avisualis.delete' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'avisualis.cancel' }),
       onOk: async () => {
         const { code } = await deleteAvisualis(id);
         if (code === 0) {
@@ -133,7 +135,7 @@ const Avisualis = () => {
           } else {
             getData();
           }
-          message.success('删除成功！');
+          message.success(intl.formatMessage({ id: 'avisualis.delete.success' }));
         }
       },
       onCancel() {},
@@ -149,16 +151,19 @@ const Avisualis = () => {
             style={{ marginBottom: 16 }}
             onClick={() => history.push(`/ModelManagement/avisualis/templateList`)}
           >
-            新建模型
+            {intl.formatMessage({ id: 'avisualis.model.create' })}
           </Button>
           <div className={styles.searchWrap}>
             <Search
-              placeholder="请输入模型名称查询"
+              placeholder={intl.formatMessage({ id: 'avisualis.queryModel' })}
               enterButton
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
             />
-            <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+            <Button
+              onClick={() => getData(intl.formatMessage({ id: 'avisualis.fresh.success' }))}
+              icon={<SyncOutlined />}
+            />
           </div>
           <Table
             columns={columns}
@@ -168,7 +173,12 @@ const Avisualis = () => {
             pagination={{
               total: avisualisData.total,
               showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'avisualis.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'avisualis.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,

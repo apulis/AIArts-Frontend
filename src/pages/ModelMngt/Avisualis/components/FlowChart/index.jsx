@@ -7,6 +7,7 @@ import { PageLoading } from '@ant-design/pro-layout';
 import ItemPanel from '../ItemPanel';
 import _ from 'lodash';
 import { connect } from 'dva';
+import { useIntl } from 'umi';
 
 insertCss(`
   .g6-minimap-container {
@@ -45,6 +46,7 @@ const anchorPoints = [
 ];
 
 const FlowChart = forwardRef((props, ref) => {
+  const intl = useIntl();
   const { transformData, detailData, avisualis, detailId } = props;
   const [graph, setGraph] = useState(null);
   const [flowChartData, setFlowChartData] = useState(detailData);

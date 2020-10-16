@@ -1,8 +1,4 @@
 export default {
-  'trainingParamsList.add.importParams': 'Import Params',
-
-  'trainingParamsList.placeholder.search': 'input name query',
-
   'trainingParamsList.table.column.name': 'Params Config Name',
   'trainingParamsList.table.column.engineType': 'Engine Type',
   'trainingParamsList.table.column.createTime': 'Create Time',

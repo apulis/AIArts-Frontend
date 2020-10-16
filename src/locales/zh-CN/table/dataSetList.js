@@ -1,8 +1,4 @@
 export default {
-  'dataSetList.add.dataSet': '新增数据集',
-
-  'dataSetList.placeholder.search': '输入名称查询',
-
   'dataSetList.table.column.name': '数据集名称',
   'dataSetList.table.column.description': '简介',
   'dataSetList.table.column.creator': '创建者',

@@ -8,11 +8,13 @@ import { connect } from 'umi';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const ModelList = (props) => {
+  const intl = useIntl();
   const {
     loading,
     dispatch,
@@ -46,7 +48,7 @@ const ModelList = (props) => {
 
   const columns = [
     {
-      title: '模型名称',
+      title: intl.formatMessage({ id: 'myModelsList.table.column.name' }),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -61,13 +63,13 @@ const ModelList = (props) => {
     //   width: 100,
     // },
     {
-      title: '存储路径',
+      title: intl.formatMessage({ id: 'myModelsList.table.column.codePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
       width: 100,
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'myModelsList.table.column.createAt' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -77,23 +79,27 @@ const ModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'myModelsList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
       width: 150,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'myModelsList.table.column.action' }),
       width: 220,
       render: (item) => {
         return (
           <Space size="middle">
-            <a onClick={() => handleDownload(item)}>模型下载</a>
+            <a onClick={() => handleDownload(item)}>
+              {intl.formatMessage({ id: 'myModelsList.table.column.action.download' })}
+            </a>
             {/* <a onClick={() => createInference(item)}>创建推理</a> */}
             {/* <a onClick={() => modifyModel(item)}>编辑</a> */}
-            <a onClick={() => evaluateModel(item)}>模型评估</a>
+            <a onClick={() => evaluateModel(item)}>
+              {intl.formatMessage({ id: 'myModelsList.table.column.action.evaluate' })}
+            </a>
             <a style={{ color: 'red' }} onClick={() => deleteModel(item)}>
-              删除
+              {intl.formatMessage({ id: 'myModelsList.table.column.action.delete' })}
             </a>
           </Space>
         );
@@ -122,10 +128,10 @@ const ModelList = (props) => {
       });
 
       if (error === null) {
-        message.success(`编辑成功`);
+        message.success(`${intl.formatMessage({ id: 'modelList.edit.success' })}`);
         handleSearch();
       } else {
-        msg && message.error(`编辑失败:${msg}`);
+        msg && message.error(`${intl.formatMessage({ id: 'modelList.edit.error' })}:${msg}`);
       }
       setVisible(false);
     }
@@ -169,12 +175,12 @@ const ModelList = (props) => {
 
   const deleteModel = (item) => {
     confirm({
-      title: '删除模型',
+      title: intl.formatMessage({ id: 'modelList.model.delete' }),
       icon: <ExclamationCircleOutlined />,
-      content: '删除操作无法恢复，是否继续？',
-      okText: '确定',
+      content: intl.formatMessage({ id: 'modelList.model.delete.tips' }),
+      okText: intl.formatMessage({ id: 'modelList.ok' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'modelList.cancel' }),
       onOk() {
         dispatch({
           type: 'modelList/delete',
@@ -189,9 +195,12 @@ const ModelList = (props) => {
             } else {
               handleSearch();
             }
-            message.success(`删除成功`);
+            message.success(`${intl.formatMessage({ id: 'modelList.delete.success' })}`);
           } else {
-            message.error(`删除失败${error.msg}` || `删除失败`);
+            message.error(
+              `${intl.formatMessage({ id: 'modelList.delete.error' })}${error.msg}` ||
+                `${intl.formatMessage({ id: 'xxx' })}`,
+            );
           }
         });
       },
@@ -231,7 +240,7 @@ const ModelList = (props) => {
             }}
           >
             <Button type="primary" onClick={createModel}>
-              创建模型
+              {intl.formatMessage({ id: 'myModels.list.add.createModel' })}
             </Button>
             <div
               style={{
@@ -241,7 +250,7 @@ const ModelList = (props) => {
             >
               <Search
                 style={{ width: '200px', marginRight: '20px' }}
-                placeholder="请输入模型名称"
+                placeholder={intl.formatMessage({ id: 'myModels.list.placeholder.search' })}
                 onSearch={onSearchName}
                 enterButton
                 ref={searchEl}
@@ -257,7 +266,12 @@ const ModelList = (props) => {
             pagination={{
               total: data.pagination.total,
               showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'myModelsList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'myModelsList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,

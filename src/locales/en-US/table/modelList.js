@@ -1,8 +1,4 @@
 export default {
-  'modelList.add.modelTraining': 'Create Model Training',
-
-  'modelList.placeholder.search': 'input name query',
-
   'modelList.table.column.name': 'Name',
   'modelList.table.column.status': 'Status',
   'modelList.table.column.engine': 'Engine Type',

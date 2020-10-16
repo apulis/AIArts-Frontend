@@ -28,8 +28,8 @@ import { fetchPresetTemplates } from './services';
 import { generateKey } from '@/pages/ModelTraining/Submit';
 import { formatParams } from '@/utils/utils';
 import { getAllLabeledDatasets } from '@/pages/ModelMngt/ModelEvaluation/services';
-
 import styles from '@/pages/ModelTraining/index.less';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 const { Dragger } = Upload;
@@ -37,6 +37,7 @@ const { Option } = Select;
 const { TabPane } = Tabs;
 
 const CreatePretrained = (props) => {
+  const intl = useIntl();
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -54,8 +55,14 @@ const CreatePretrained = (props) => {
   const [datasets, setDatasets] = useState([]);
 
   const usages = [
-    { key: 'ImageClassification', label: '图像分类' },
-    { key: 'ObjectDetection', label: '物体检测' },
+    {
+      key: 'ImageClassification',
+      label: intl.formatMessage({ id: 'createPretrained.imageClassification' }),
+    },
+    {
+      key: 'ObjectDetection',
+      label: intl.formatMessage({ id: 'createPretrained.objectDetection' }),
+    },
   ];
 
   const engineTypes = [
@@ -130,7 +137,7 @@ const CreatePretrained = (props) => {
     const runningParams = await getFieldValue('params');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        callback('不能输入相同的参数名称');
+        callback(intl.formatMessage({ id: 'createPretrained.inputLimitEqualParamName' }));
       }
     });
     callback();
@@ -237,10 +244,10 @@ const CreatePretrained = (props) => {
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
-      message.success(`创建成功`);
+      message.success(`${intl.formatMessage({ id: 'createPretrained.create.success' })}`);
       history.push('/model-training/PretrainedModels');
     } else {
-      msg && message.error(`创建失败:${msg}`);
+      msg && message.error(`${intl.formatMessage({ id: 'createPretrained.create.error' })}${msg}`);
     }
   };
 
@@ -279,9 +286,13 @@ const CreatePretrained = (props) => {
       if (status === 'done') {
         setFileList(info.fileList);
         setBtnDisabled(false);
-        message.success(`${info.file.name}文件上传成功！`);
+        message.success(
+          `${info.file.name}${intl.formatMessage({ id: 'createPretrained.upload.success' })}`,
+        );
       } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败！`);
+        message.error(
+          `${info.file.name} ${intl.formatMessage({ id: 'createPretrained.upload.error' })}`,
+        );
         setBtnDisabled(false);
       }
     },
@@ -300,9 +311,15 @@ const CreatePretrained = (props) => {
         } else {
           let text = '';
           text = isOverSize
-            ? '2GB以内的文件'
-            : `${fileList.length ? '一个文件' : '格式为 .zip, .tar 和 .tar.gz 的文件'}`;
-          message.warning(`只支持上传 ${text}！`);
+            ? intl.formatMessage({ id: 'createPretrained.fileSizeLimit2GB' })
+            : `${
+                fileList.length
+                  ? intl.formatMessage({ id: 'createPretrained.oneFile' })
+                  : intl.formatMessage({ id: 'createPretrained.upload.tips.desc' })
+              }`;
+          message.warning(
+            `${intl.formatMessage({ id: 'createPretrained.upload.support' })} ${text}！`,
+          );
           reject(file);
         }
       });
@@ -322,7 +339,7 @@ const CreatePretrained = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/model-training/PretrainedModels')}
-        title="录入预置模型"
+        title={intl.formatMessage({ id: 'createPretrained.inputPresetModel' })}
       >
         <div
           style={{
@@ -338,23 +355,38 @@ const CreatePretrained = (props) => {
               engine: 'apulistech/tensorflow:1.14.0-gpu-py3',
               precision: '0.99',
               size: '',
-              use: '图像分类',
+              use: intl.formatMessage({ id: 'createPretrained.imageClassification' }),
               size: 80 * 1024 * 1024,
             }}
           >
             <Form.Item
               {...layout}
               name="name"
-              label="模型名称"
-              rules={[{ required: true, message: '名称不能为空!' }, { ...jobNameReg }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.modelName' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needModelName' }),
+                },
+                { ...jobNameReg },
+              ]}
             >
-              <Input placeholder="请输入模型名称" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputModelName',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="use"
-              label="模型用途"
-              rules={[{ required: true, message: '用途不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.modelUseful' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needModelUseful' }),
+                },
+              ]}
             >
               {/* <Select>
                 {
@@ -363,28 +395,42 @@ const CreatePretrained = (props) => {
                   ))
                 }
               </Select> */}
-              <Input placeholder="请输入模型用途" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputModelUse',
+                })}
+              />
             </Form.Item>
             <Divider style={{ borderColor: '#cdcdcd' }} />
-            <Form.Item {...layout} label="参数来源">
+            <Form.Item
+              {...layout}
+              label={intl.formatMessage({ id: 'createPretrained.label.paramsSource' })}
+            >
               <Radio.Group defaultValue={1} buttonStyle="solid">
-                <Radio.Button value={1}>手动配置</Radio.Button>
+                <Radio.Button value={1}>
+                  {intl.formatMessage({ id: 'createPretrained.value.conifg' })}
+                </Radio.Button>
                 <Radio.Button
                   value={2}
                   onClick={() => {
                     setPresetParamsVisible(true);
                   }}
                 >
-                  导入参数
+                  {intl.formatMessage({ id: 'createPretrained.value.importParams' })}
                 </Radio.Button>
               </Radio.Group>
             </Form.Item>
             <Form.Item
               {...layout}
-              label="引擎类型"
+              label={intl.formatMessage({ id: 'createPretrained.label.engineType' })}
               name="engine"
               // rules={[{ required: true, message: '请选择引擎类型' }]}
-              rules={[{ required: true, message: '请输入引擎类型' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needEngineType' }),
+                },
+              ]}
             >
               {/* <Select>
                 {
@@ -393,29 +439,56 @@ const CreatePretrained = (props) => {
                   ))
                 }
               </Select> */}
-              <Input placeholder="请输入引擎类型" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputEngineType',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="precision"
-              label="模型精度"
-              rules={[{ required: true, message: '模型精度为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.precision' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needPrecision' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入模型精度" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputPrecision',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="size"
-              label="模型大小"
-              rules={[{ required: true, message: '模型大小不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.modelSize' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needModelSize' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入模型大小" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputModelSize',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="datasetName"
-              label="数据集名称"
-              rules={[{ required: true, message: '数据集名称不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.dataSetName' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needDataSetName' }),
+                },
+              ]}
             >
               {/* <Input placeholder="请输入数据集名称" /> */}
               <Select onChange={handleDatasetChange}>
@@ -429,18 +502,36 @@ const CreatePretrained = (props) => {
             <Form.Item
               {...layout}
               name="datasetPath"
-              label="数据集路径"
-              rules={[{ required: true, message: '数据集路径不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.dataSetPath' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needDataSetPath' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入数据集路径" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputDataSetPath',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="dataFormat"
-              label="数据格式"
-              rules={[{ required: true, message: '数据格式不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.dataSetFormat' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needDataSetFormat' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入数据格式" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputDataSetFormat',
+                })}
+              />
             </Form.Item>
             {/* <Form.Item
               {...layout}
@@ -461,38 +552,74 @@ const CreatePretrained = (props) => {
             <Form.Item
               {...layout}
               name="codePath"
-              label="代码目录"
-              rules={[{ required: true, message: '代码目录不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.codePath' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needCodePath' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入代码目录" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputCodePath',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="startupFile"
-              label="启动文件"
-              rules={[{ required: true, message: '启动文件不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.startupFile' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needStartupFile' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入启动文件" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputStartupFile',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="outputPath"
-              label="输出路径"
-              rules={[{ required: true, message: '输出路径不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.outputPath' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needOutputPath' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入输出路径" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputOutputPath',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...layout}
               name="paramPath"
-              label="模型参数路径"
-              rules={[{ required: true, message: '模型参数路径不能为空!' }]}
+              label={intl.formatMessage({ id: 'createPretrained.label.modelParamPath' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'createPretrained.rule.needModelParamPath' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入参数路径" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'createPretrained.placeholder.inputModelParamPath',
+                })}
+              />
             </Form.Item>
             <Form.Item
               // {...layout}
-              label="运行参数"
+              label={intl.formatMessage({ id: 'createPretrained.label.runningParam' })}
               labelCol={{ span: 3 }}
             >
               {runningParams.map((param, index) => {
@@ -541,12 +668,12 @@ const CreatePretrained = (props) => {
                   fill="#1890ff"
                   style={{ color: '#1890ff', marginRight: '10px' }}
                 />
-                <a>点击增加参数</a>
+                <a>{intl.formatMessage({ id: 'createPretrained.clickAddParam' })}</a>
               </div>
             </Form.Item>
             <Form.Item style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit" disabled={btnDisabled}>
-                立即创建
+                {intl.formatMessage({ id: 'createPretrained.Submit' })}
               </Button>
             </Form.Item>
           </Form>
@@ -556,7 +683,7 @@ const CreatePretrained = (props) => {
         visible={presetParamsVisible}
         onCancel={() => setPresetParamsVisible(false)}
         onOk={handleConfirmPresetParams}
-        title="导入评估参数"
+        title={intl.formatMessage({ id: 'createPretrained.importEvaluationParam' })}
         forceRender
         width="80%"
       >
@@ -579,40 +706,54 @@ const CreatePretrained = (props) => {
                     </Col>
                   </Row> */}
                   <Row>
-                    <Col span={5}>启动文件</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.startUpFile' })}
+                    </Col>
                     <Col span={19}>{p.params.startupFile}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>代码目录</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.codePath' })}
+                    </Col>
                     <Col span={19}>{p.params.codePath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>训练数据集</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.trainingDataSet' })}
+                    </Col>
                     <Col span={19}>{p.params.datasetPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>输出路径</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.outputPath' })}
+                    </Col>
                     <Col span={19}>{p.params.outputPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>运行参数</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.runningPath' })}
+                    </Col>
                     <Col span={19}>
                       {p.params.params && formatParams(p.params.params).map((p) => <div>{p}</div>)}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={5}>计算节点规格</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.computeNodeSpecification' })}
+                    </Col>
                     <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>引擎类型</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'createPretrained.tab.engineType' })}
+                    </Col>
                     <Col span={19}>{getNameFromDockerImage(p.params.engine)}</Col>
                   </Row>
                 </TabPane>
               ))}
             </Tabs>
           ) : (
-            <div>暂无</div>
+            <div>{intl.formatMessage({ id: 'createPretrained.tab.noData' })}</div>
           )}
         </Form>
       </Modal>
