@@ -5,7 +5,6 @@ import { connect } from 'umi';
 import Avatar from './AvatarDropdown';
 import SelectLang from '../SelectLang';
 import styles from './index.less';
-import { setLocale, getLocale } from 'umi';
 import { useIntl } from 'umi';
 const ENVTagColor = {
   dev: 'orange',

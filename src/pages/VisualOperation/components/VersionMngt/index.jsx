@@ -16,7 +16,7 @@ import {
   Descriptions,
   Tabs,
 } from 'antd';
-import { throttle } from 'lodash';
+import { FormattedMessage, formatMessage } from 'umi';
 import { getInitData, getUpgradeInfo, getUpgradeLog, upgrade } from '../../service.js';
 import { isEmptyString } from '../../../../utils/utils.js';
 import styles from './index.less';
@@ -46,7 +46,7 @@ const VersionMngt = (props) => {
         upgradeManager('continue');
       } else {
         // upgradeManager('init')
-        setUpgradeText('一键升级');
+        setUpgradeText(formatMessage({ id: 'visualOperation.version.button.upgrade' }));
         setUpgrading(false);
         setLogs('');
       }
@@ -88,10 +88,12 @@ const VersionMngt = (props) => {
         if (upgradeInfo.canUpgrade) {
           if (upgradeInfo.isLowerVersion) {
             Modal.confirm({
-              title: '升级提示',
-              okText: '升级',
-              cancelText: '取消',
-              content: '升级版本低于或等于当前版本，是否确认升级？',
+              title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
+              okText: <FormattedMessage id="visualOperation.version.modal.upgrade.confirm" />,
+              cancelText: <FormattedMessage id="visualOperation.version.modal.upgrade.cancel" />,
+              content: (
+                <FormattedMessage id="visualOperation.version.modal.upgrade.check.content" />
+              ),
               onOk() {
                 upgradeManager('begin');
               },
@@ -101,8 +103,8 @@ const VersionMngt = (props) => {
           }
         } else {
           Modal.error({
-            title: '升级提示',
-            content: '没有检测到升级文件',
+            title: <FormattedMessage id="visualOperation.version.modal.error.title" />,
+            content: <FormattedMessage id="visualOperation.version.modal.error.content" />,
           });
         }
         setCheckingFlag(false);
@@ -110,7 +112,7 @@ const VersionMngt = (props) => {
       case 'begin':
         const result = await apiUpgrade();
         if (result) {
-          setUpgradeText('开始升级');
+          setUpgradeText(formatMessage({ id: 'visualOperation.version.button.begin.upgrade' }));
           logTimer = setInterval(upgradeManager.bind(this, 'upgrading'), 1000);
         }
         break;
@@ -120,25 +122,27 @@ const VersionMngt = (props) => {
         break;
       case 'upgrading':
         if (!upgrading) setUpgrading(true);
-        if (upgradeText !== '正在升级') setUpgradeText('正在升级');
+        setUpgradeText(formatMessage({ id: 'visualOperation.version.button.upgrading' }));
         const logData = await apiGetUpgradeLog();
         if (logData) {
           upgradIngStatusHandler(logData);
         }
         break;
       case 'finish':
-        if (upgradeText !== '升级成功') setUpgradeText('升级成功');
+        setUpgradeText(formatMessage({ id: 'visualOperation.version.button.upgrade.success' }));
         if (logTimer) clearInterval(logTimer);
         setTimeout(() => {
-          message.success('升级成功，版本数据已更新');
+          message.success(
+            <FormattedMessage id="visualOperation.version.message.upgrade.success" />,
+          );
           upgradeManager('init');
         }, 1000);
 
         break;
       case 'error':
-        setUpgradeText('升级失败');
+        setUpgradeText(formatMessage({ id: 'visualOperation.version.button.upgrade.error' }));
         if (logTimer) clearInterval(logTimer);
-        message.error('升级失败');
+        message.error(<FormattedMessage id="visualOperation.version.message.upgrade.error" />);
         break;
     }
   };
@@ -149,7 +153,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return data;
     }
-    message.error('请求异常');
+    message.error(<FormattedMessage id="visualOperation.version.service.error" />);
   };
 
   const apiGetUpgradeInfo = async () => {
@@ -158,7 +162,7 @@ const VersionMngt = (props) => {
     if (code === 0) {
       return_data = data;
     } else {
-      message.error('请求异常');
+      message.error(<FormattedMessage id="visualOperation.version.service.error" />);
     }
     return return_data;
   };
@@ -170,20 +174,20 @@ const VersionMngt = (props) => {
         return true;
       case 30501:
         Modal.error({
-          title: '升级提示',
-          content: '目标文件不存在，升级失败',
+          title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
+          content: <FormattedMessage id="visualOperation.version.modal.upgrade.30501.content" />,
         });
         break;
       case 30502:
         Modal.error({
-          title: '升级提示',
-          content: '文件读取错误',
+          title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
+          content: <FormattedMessage id="visualOperation.version.modal.upgrade.30502.content" />,
         });
         break;
       case 30503:
         Modal.error({
-          title: '升级提示',
-          content: '正在升级，请等待升级结束',
+          title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
+          content: <FormattedMessage id="visualOperation.version.modal.upgrade.30503.content" />,
         });
         break;
     }
@@ -211,10 +215,12 @@ const VersionMngt = (props) => {
       setVHistoryNum(newNum);
     } else {
       Modal.info({
-        title: '提示',
+        title: <FormattedMessage id="visualOperation.version.modal.tip" />,
         content: (
           <div>
-            <p>没有更多历史记录</p>
+            <p>
+              <FormattedMessage id="visualOperation.version.modal.content.no.more.history" />
+            </p>
           </div>
         ),
       });
@@ -230,28 +236,39 @@ const VersionMngt = (props) => {
         }}
         style={{ position: 'absolute', right: '0px', marginRight: '24px' }}
       >
-        升级历史
+        <FormattedMessage id="visualOperation.upgrade.history" />
       </Button>
-      <Descriptions title="版本信息" bordered>
-        <Descriptions.Item label="版本号">{versionInfo.name}</Descriptions.Item>
-        <Descriptions.Item label="操作人" span={1}>
+      <Descriptions title={<FormattedMessage id="visualOperation.version.info" />} bordered>
+        <Descriptions.Item label={<FormattedMessage id="visualOperation.version.code" />}>
+          {versionInfo.name}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={<FormattedMessage id="visualOperation.upgraded.person" />}
+          span={1}
+        >
           {versionInfo.creator}
         </Descriptions.Item>
-        <Descriptions.Item label="安装时间" span={1}>
+        <Descriptions.Item label={<FormattedMessage id="visualOperation.install.time" />} span={1}>
           {versionInfo.time}
         </Descriptions.Item>
-        <Descriptions.Item label="版本描述" span={3}>
+        <Descriptions.Item
+          label={<FormattedMessage id="visualOperation.version.describe" />}
+          span={3}
+        >
           {versionInfo.desc}
         </Descriptions.Item>
       </Descriptions>
-      <Descriptions title="本地升级" style={{ marginTop: '30px' }}></Descriptions>
+      <Descriptions
+        title={<FormattedMessage id="visualOperation.local.upgrade" />}
+        style={{ marginTop: '30px' }}
+      ></Descriptions>
       <div>
         <Button
           type="primary"
           onClick={() => {
             if (!checkingFlag) upgradeManager('check');
           }}
-          disabled={upgradeText !== '一键升级'}
+          disabled={upgradeText !== formatMessage({ id: 'visualOperation.version.button.upgrade' })}
         >
           {upgradeText}
         </Button>
@@ -263,7 +280,7 @@ const VersionMngt = (props) => {
       </div>
       {historyVisible && (
         <Modal
-          title="升级历史"
+          title={<FormattedMessage id="visualOperation.upgrade.history" />}
           visible={historyVisible}
           onCancel={() => {
             setHistoryVisible(false);
@@ -275,7 +292,7 @@ const VersionMngt = (props) => {
                 setHistoryVisible(false);
               }}
             >
-              关闭
+              <FormattedMessage id="visualOperation.button.close" />
             </Button>,
           ]}
         >
@@ -302,7 +319,7 @@ const VersionMngt = (props) => {
               }}
             >
               <Button type="primary" onClick={handleLoadMoreHistory}>
-                更多历史
+                <FormattedMessage id="visualOperation.more.history" />
               </Button>
             </div>
           </div>

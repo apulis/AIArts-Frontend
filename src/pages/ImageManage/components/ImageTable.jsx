@@ -4,10 +4,12 @@ import { getImages, deleteImages } from '@/services/images';
 import moment from 'moment';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
+import { useIntl } from 'umi';
 
 const { Search } = Input;
 
 const ImageTable = (props) => {
+  const intl = useIntl();
   const [imageList, setImageList] = useState([]);
   const [pageParams, setPageParams] = useState({ pageNum: 1, pageSize: 10 });
   const [search, setSearch] = useState('');
@@ -33,26 +35,26 @@ const ImageTable = (props) => {
 
   const columns = [
     {
-      title: '镜像 ID',
+      title: intl.formatMessage({ id: 'imageList.table.column.imageId' }),
       dataIndex: 'imageId',
     },
     {
-      title: '名称',
+      title: intl.formatMessage({ id: 'imageList.table.column.name' }),
       dataIndex: 'name',
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'imageList.table.column.createTime' }),
       render(_text, item) {
         return <div>{moment(item.createdAt).format('YYYY-MM-DD HH:mm')}</div>;
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'imageList.table.column.action' }),
       render(_text, item) {
         return (
           <div>
             <a style={{ color: 'red' }} onClick={() => handleDeleteImage(item.id)}>
-              删除
+              {intl.formatMessage({ id: 'imageList.table.column.action.delete' })}
             </a>
           </div>
         );
@@ -96,7 +98,12 @@ const ImageTable = (props) => {
         loading={loading}
         pagination={{
           total: total,
-          showTotal: (total) => `总共 ${total} 条`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'imageList.table.pagination.showTotal.prefix',
+            })} ${total} ${intl.formatMessage({
+              id: 'imageList.table.pagination.showTotal.suffix',
+            })}`,
           showQuickJumper: true,
           showSizeChanger: true,
           onChange: (pageNum, pageSize) => setPageParams({ pageNum, pageSize }),

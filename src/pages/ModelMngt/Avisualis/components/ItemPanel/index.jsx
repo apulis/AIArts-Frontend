@@ -16,7 +16,8 @@ const ItemPanel = (props) => {
   const addFormModalRef = useRef();
   const { avisualis, flowChartData, selectItem, setFlowChartData, detailId, onChangeNode } = props;
   const { addFormData, treeData } = avisualis;
-  const [btnLoading, setBtnLoading] = useState(false);
+  const [btnLoading1, setBtnLoading1] = useState(false);
+  const [btnLoading2, setBtnLoading2] = useState(false);
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
@@ -36,14 +37,14 @@ const ItemPanel = (props) => {
     }
   }, [selectItem]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (isSvaeTPL) => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
       const { nodes, edges, combos } = flowChartData;
-      if (nodes[nodes.length - 1].treeIdx + 1 !== treeData.length) {
+      if (!nodes || (nodes && Math.max(...nodes.map((i) => i.treeIdx)) < treeData.length - 1)) {
         message.warning('请完成剩余步骤！');
         return;
       }
-      setBtnLoading(true);
+      isSvaeTPL ? setBtnLoading1(true) : setBtnLoading2(true);
       const _values = _.cloneDeep(values);
       if (_values.deviceType === 'PSDistJob') {
         _values.numPs = 1;
@@ -64,7 +65,7 @@ const ItemPanel = (props) => {
       let submitData = {
         ...addFormData,
         ..._values,
-        isAdvance: false,
+        isAdvance: isSvaeTPL ? true : false,
         params: {
           ...addFormData.params,
           nodes: JSON.stringify(nodes),
@@ -77,7 +78,7 @@ const ItemPanel = (props) => {
         ? await patchAvisualis(detailId, submitData)
         : await submitAvisualis(submitData);
       if (code === 0) {
-        message.success(`${detailId ? '保存' : '创建'}成功！`);
+        message.success(`${detailId || isSvaeTPL ? '保存' : '创建'}成功！`);
         dispatch({
           type: 'avisualis/saveData',
           payload: {
@@ -86,7 +87,7 @@ const ItemPanel = (props) => {
         });
         history.push('/ModelManagement/avisualis');
       }
-      setBtnLoading(false);
+      isSvaeTPL ? setBtnLoading1(false) : setBtnLoading2(false);
     });
   };
 
@@ -101,9 +102,13 @@ const ItemPanel = (props) => {
             name={key}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `请输入${key}` }]}
+            rules={[{ required: true, message: `${itemPanel.input}${key}` }]}
           >
-            <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
+            <Input
+              placeholder={`${intl.formatMessage({ id: 'itemPanel.input' })}${key}`}
+              disabled={type === 'disabled'}
+              value={value}
+            />
           </Form.Item>
         );
       } else if (type === 'number') {
@@ -113,7 +118,9 @@ const ItemPanel = (props) => {
             name={key}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `请输入${key}` }]}
+            rules={[
+              { required: true, message: `${intl.formatMessage({ id: 'itemPanel.input' })}${key}` },
+            ]}
           >
             <InputNumber style={{ width: '100%' }} value={value} />
           </Form.Item>
@@ -125,9 +132,14 @@ const ItemPanel = (props) => {
             name={key}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `请选择${key}！` }]}
+            rules={[
+              {
+                required: true,
+                message: `${intl.formatMessage({ id: 'itemPanel.select' })}${key}！`,
+              },
+            ]}
           >
-            <Select placeholder="请选择" value={value}>
+            <Select placeholder={intl.formatMessage({ id: 'itemPanel.select' })} value={value}>
               {options.map((o) => (
                 <Option key={o} value={o}>
                   {o}
@@ -152,19 +164,19 @@ const ItemPanel = (props) => {
         m.value = newValues[n];
       });
       setFlowChartData(cloneData);
-      message.success('保存成功！');
+      message.success(intl.formatMessage({ id: 'itemPanel.save.success' }));
     });
   };
 
   const selectChangeNode = () => {
     if (!changeNodeKey) {
-      message.warning('请选择更换节点');
+      message.warning(intl.formatMessage({ id: 'itemPanel.node.change' }));
       return;
     }
     const success = onChangeNode(changeNodeKey);
     if (success) {
       setModalFlag(false);
-      message.success('更换成功！');
+      message.success(intl.formatMessage({ id: 'itemPanel.node.change.success' }));
     }
   };
 
@@ -172,11 +184,16 @@ const ItemPanel = (props) => {
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
         <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
-        <Button type="primary" loading={btnLoading} onClick={onSubmit}>
-          {detailId ? '保存模型' : '创建模型'}
+        {!detailId && (
+          <Button type="primary" loading={btnLoading1} onClick={() => onSubmit(true)}>
+            保存模板
+          </Button>
+        )}
+        <Button type="primary" loading={btnLoading2} onClick={() => onSubmit()}>
+          {`${detailId ? '保存' : '创建'}模型`}
         </Button>
       </div>
-      <Descriptions title="模型详情"></Descriptions>
+      <Descriptions title={intl.formatMessage({ id: 'itemPanel.model.deatil' })}></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
       <div className="ant-descriptions-title">{`${
         hasSelectItem ? `节点配置(${selectItem._cfg.id})` : '该节点无配置项'
@@ -185,32 +202,38 @@ const ItemPanel = (props) => {
       <div style={{ float: 'right', textAlign: 'right' }}>
         {hasSelectItem && (
           <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>
-            保存配置
+            {intl.formatMessage({ id: 'itemPanel.config.save' })}
           </Button>
         )}
-        {/* {changeNodeOptions.length > 0 && <Button type="primary" onClick={() => setModalFlag(true)}>更换节点</Button>} */}
+        {changeNodeOptions.length > 0 && (
+          <Button type="primary" onClick={() => setModalFlag(true)}>
+            {intl.formatMessage({ id: 'itemPanel.node.change' })}
+          </Button>
+        )}
       </div>
       {modalFlag && (
         <Modal
-          title="更换节点"
+          title={intl.formatMessage({ id: 'itemPanel.node.change' })}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
           maskClosable={false}
           footer={[
-            <Button onClick={() => setModalFlag(false)}>取消</Button>,
+            <Button onClick={() => setModalFlag(false)}>
+              {intl.formatMessage({ id: 'itemPanel.cancel' })}
+            </Button>,
             <Button type="primary" onClick={selectChangeNode}>
-              更换
+              {intl.formatMessage({ id: 'itemPanel.change' })}
             </Button>,
           ]}
         >
           <Select
-            placeholder="请选择节点"
+            placeholder={intl.formatMessage({ id: 'itemPanel.node.select' })}
             style={{ width: '100%' }}
             onChange={(v) => setChangeNodeKey(v)}
           >
             {changeNodeOptions.map((i) => (
-              <Option value={i.key}>{i.title}</Option>
+              <Option value={`${i.treeIdx}-${i.key}`}>{i.title}</Option>
             ))}
           </Select>
         </Modal>

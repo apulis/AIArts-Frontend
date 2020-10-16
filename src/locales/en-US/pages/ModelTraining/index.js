@@ -1,11 +1,12 @@
-import modelList from './modelList';
-import visualizationList from './visualizationList';
-import trainingParamsList from './trainingParamsList';
-import presetModelList from './presetModelList';
-
 export default {
-  ...modelList,
-  ...visualizationList,
-  ...trainingParamsList,
-  ...presetModelList,
+  'modelList.add.modelTraining': 'Create Model Training',
+
+  'modelList.placeholder.search': 'input name query',
+  'presetModelList.placeholder.search': 'Input Name Query',
+  'trainingParamsList.add.importParams': 'Import Params',
+
+  'trainingParamsList.placeholder.search': 'input name query',
+  'visualizationList.add.createVisaulJob': 'Create Visual Job',
+
+  'visualizationList.placeholder.search': 'input name query',
 };

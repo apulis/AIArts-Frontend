@@ -1,8 +1,4 @@
 export default {
-  'visualizationList.add.createVisaulJob': '创建可视化作业',
-
-  'visualizationList.placeholder.search': '输入名称查询',
-
   'visualizationList.table.column.name': '名称',
   'visualizationList.table.column.status': '状态',
   'visualizationList.table.column.logPath': '可视化日志路径',

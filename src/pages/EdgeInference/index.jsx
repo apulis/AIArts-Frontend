@@ -10,18 +10,20 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import useInterval from '@/hooks/useInterval';
 import { connect } from 'dva';
+import { useIntl, formatMessage } from 'umi';
 
 const { Option } = Select;
 const { Search } = Input;
 const { confirm } = Modal;
 const typeText = {
-  converting: '转换中',
-  pushing: '推送中',
-  'push success': '推送成功',
-  'push failed': '推送失败',
+  converting: formatMessage({ id: 'edgeInference.list.typeText.converting' }),
+  pushing: formatMessage({ id: 'edgeInference.list.typeText.push' }),
+  'push success': formatMessage({ id: 'edgeInference.list.typeText.push.success' }),
+  'push failed': formatMessage({ id: 'edgeInference.list.typeText.push.failed' }),
 };
 
 const EdgeInference = (props) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [jobs, setJobs] = useState([]);
   const [fdInfo, setFdInfo] = useState({ username: '', url: '', password: '' });
@@ -80,11 +82,11 @@ const EdgeInference = (props) => {
 
   const onDelete = (id) => {
     confirm({
-      title: '确定要删除该推理吗？',
+      title: intl.formatMessage({ id: 'edgeInference.list.onDelete.title' }),
       icon: <ExclamationCircleOutlined />,
-      okText: '删除',
+      okText: intl.formatMessage({ id: 'edgeInference.list.onDelete.okText' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'edgeInference.list.onDelete.cancelText' }),
       onOk: async () => {
         const { code } = await deleteEG(id);
         if (code === 0) {
@@ -94,7 +96,7 @@ const EdgeInference = (props) => {
           } else {
             getData();
           }
-          message.success('删除成功！');
+          message.success(intl.formatMessage({ id: 'edgeInference.list.onDelete.ok.tips' }));
         }
       },
       onCancel() {},
@@ -103,23 +105,23 @@ const EdgeInference = (props) => {
 
   const columns = [
     {
-      title: 'ID',
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.id' }),
       dataIndex: 'jobId',
       render: (id) => <span style={{ fontFamily: 'Consolas' }}>{id}</span>,
     },
     {
-      title: '推理名称',
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.name' }),
       dataIndex: 'jobName',
       key: 'jobName',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
-      title: '类型',
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.type' }),
       dataIndex: 'modelconversionType',
     },
     {
-      title: '时间',
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.time' }),
       dataIndex: 'jobTime',
       key: 'jobTime',
       sorter: true,
@@ -127,22 +129,22 @@ const EdgeInference = (props) => {
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.status' }),
       render: (item) => {
         const { jobStatus, modelconversionStatus } = item;
         let status = typeText[modelconversionStatus];
         if (modelconversionStatus === 'converting')
           status =
             jobStatus === 'finished'
-              ? '转换成功'
+              ? intl.formatMessage({ id: 'edgeInference.list.converting.result.success' })
               : jobStatus === 'failed' || jobStatus === 'error'
-              ? '转换失败'
+              ? intl.formatMessage({ id: 'edgeInference.list.converting.result.error' })
               : status;
         return <span>{status}</span>;
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'edgeInferenceList.table.column.action' }),
       render: (item) => {
         const { jobStatus, modelconversionStatus, jobId } = item;
         const disabled =
@@ -150,10 +152,10 @@ const EdgeInference = (props) => {
         return (
           <>
             <a onClick={() => onPush(jobId)} disabled={disabled}>
-              推送
+              {intl.formatMessage({ id: 'edgeInferenceList.table.column.action.push' })}
             </a>
             <a style={{ color: 'red', marginLeft: 16 }} onClick={() => onDelete(jobId)}>
-              删除
+              {intl.formatMessage({ id: 'edgeInferenceList.table.column.action.delete' })}
             </a>
           </>
         );
@@ -178,12 +180,12 @@ const EdgeInference = (props) => {
       const { code, data } = await push({ jobId: id });
       if (code === 0) {
         getData();
-        message.success('推送成功！');
+        message.success(intl.formatMessage({ id: 'edgeInference.list.onPush.success' }));
       } else {
         setPushId('');
       }
     } else {
-      message.warning('请先填写设置！');
+      message.warning(intl.formatMessage({ id: 'edgeInference.list.onPush.error' }));
       setModalFlag2(true);
     }
   };
@@ -198,7 +200,7 @@ const EdgeInference = (props) => {
     form.validateFields().then(async (values) => {
       const { code, data } = await submitFD(values);
       if (code === 0) {
-        message.success('设置成功！');
+        message.success(intl.formatMessage({ id: 'edgeInference.list.onSubmitFD.success' }));
         getFdInfo();
         setModalFlag2(false);
       }
@@ -215,31 +217,31 @@ const EdgeInference = (props) => {
   const getOptions = () => {
     const statusMap = [
       {
-        text: '全部',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.all' }),
         status: '',
       },
       {
-        text: '推送中',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.push.ing' }),
         status: 'finished-pushing',
       },
       {
-        text: '推送成功',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.push.success' }),
         status: 'finished-push success',
       },
       {
-        text: '推送失败',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.push.error' }),
         status: 'finished-push failed',
       },
       {
-        text: '转换中',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.converting.ing' }),
         status: 'running,scheduling,queued,unapproved-converting',
       },
       {
-        text: '转换成功',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.converting.success' }),
         status: 'finished-converting',
       },
       {
-        text: '转换失败',
+        text: intl.formatMessage({ id: 'edgeInference.list.statusMap.converting.error' }),
         status: 'error,failed-converting',
       },
     ];
@@ -256,14 +258,16 @@ const EdgeInference = (props) => {
       <Card>
         <div className={styles.edgeInferences}>
           <Link to="/Inference/EdgeInference/submit">
-            <Button type="primary">新建推理</Button>
+            <Button type="primary">
+              {intl.formatMessage({ id: 'edgeInference.list.add.inference' })}
+            </Button>
           </Link>
           <Button type="primary" style={{ margin: '0 16px 16px' }} onClick={openSettings}>
-            设置
+            {intl.formatMessage({ id: 'edgeInference.list.setting' })}
           </Button>
           {fdInfo.url && (
             <Button type="primary" onClick={() => window.open(fdInfo.url)}>
-              FD服务器
+              {intl.formatMessage({ id: 'edgeInference.list.fdServer' })}
             </Button>
           )}
           <div className={styles.searchWrap}>
@@ -271,12 +275,17 @@ const EdgeInference = (props) => {
               {getOptions()}
             </Select>
             <Search
-              placeholder="请输入推理名称查询"
+              placeholder={intl.formatMessage({ id: 'edgeInference.list.placeholder.search' })}
               enterButton
               onChange={(e) => setName(e.target.value)}
               onSearch={(v) => onSearchChange(v, 2)}
             />
-            <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+            <Button
+              onClick={() =>
+                getData(intl.formatMessage({ id: 'edgeInference.list.fresh.success' }))
+              }
+              icon={<SyncOutlined />}
+            />
           </div>
           <Table
             columns={columns}
@@ -286,7 +295,12 @@ const EdgeInference = (props) => {
             pagination={{
               total: total,
               showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'edgeInferenceList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'edgeInferenceList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
@@ -299,36 +313,69 @@ const EdgeInference = (props) => {
       </Card>
       {modalFlag2 && (
         <Modal
-          title="设置"
+          title={intl.formatMessage({ id: 'edgeInference.list.setting' })}
           visible={modalFlag2}
           onCancel={() => setModalFlag2(false)}
           destroyOnClose
           maskClosable={false}
           className="settingModal"
           footer={[
-            <Button onClick={() => setModalFlag2(false)}>取消</Button>,
+            <Button onClick={() => setModalFlag2(false)}>
+              {intl.formatMessage({ id: 'edgeInference.list.cancel' })}
+            </Button>,
             <Button type="primary" loading={btnLoading} onClick={onSubmitFD}>
-              保存
+              {intl.formatMessage({ id: 'edgeInference.list.save' })}
             </Button>,
           ]}
         >
           <Form form={form} initialValues={fdInfo}>
-            <Form.Item label="URL" name="url" rules={[{ required: true, message: '请输入URL！' }]}>
-              <Input placeholder="请输入推理名称" />
+            <Form.Item
+              label={intl.formatMessage({ id: 'confirmEdgeInferencePush.label.url' })}
+              name="url"
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'confirmEdgeInferencePush.rule.needUrl' }),
+                },
+              ]}
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'confirmEdgeInferencePush.placeholder.inputUrl',
+                })}
+              />
             </Form.Item>
             <Form.Item
-              label="用户名"
+              label={intl.formatMessage({ id: 'confirmEdgeInferencePush.label.username' })}
               name="username"
-              rules={[{ required: true, message: '请输入用户名！' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'confirmEdgeInferencePush.rule.needUsername' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入用户名" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'confirmEdgeInferencePush.placeholder.inputUsername',
+                })}
+              />
             </Form.Item>
             <Form.Item
-              label="密码"
+              label={intl.formatMessage({ id: 'confirmEdgeInferencePush.label.password' })}
               name="password"
-              rules={[{ required: true, message: '请输入密码！' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'confirmEdgeInferencePush.rule.needPassword' }),
+                },
+              ]}
             >
-              <Input placeholder="请输入密码" />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'confirmEdgeInferencePush.placeholder.inputPassword',
+                })}
+              />
             </Form.Item>
           </Form>
         </Modal>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { parse } from 'querystring';
 import pathRegexp from 'path-to-regexp';
-import { formatMessage } from 'umi';
+import { formatMessage, setLocale } from 'umi';
 import { isObject } from './types';
 import { checkIfGpuOrNpu } from '@/models/resource';
+import requestUser from './request-user';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -102,8 +103,24 @@ export const bytesToSize = (bytes) => {
   return `${(bytes / Math.pow(k, i)).toFixed(0)} ${sizes[i]}`;
 };
 
+export const getStatusList = () => [
+  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
+  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
+  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
+  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
+  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
+  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
+  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
+  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
+  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
+  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
+  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
+];
+
 export const getJobStatus = (status) => {
   const statusList = {
+    all: formatMessage({ id: 'service.status.all' }),
     unapproved: formatMessage({ id: 'service.status.unapproved' }),
     queued: formatMessage({ id: 'service.status.queued' }),
     scheduling: formatMessage({ id: 'service.status.scheduling' }),
@@ -282,3 +299,9 @@ export const checkIfCanDelete = (status) => {
 export const checkIfCanStop = (status) => {
   return ['unapproved', 'queued', 'scheduling', 'running'].includes(status);
 };
+
+export function setI18n(lang) {
+  localStorage.language = lang;
+  requestUser('/language/' + lang);
+  setLocale(lang, false);
+}

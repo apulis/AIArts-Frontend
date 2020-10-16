@@ -21,10 +21,12 @@ import { history, withRouter } from 'umi';
 import styles from './index.less';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import SelectModelPath from '@/components/BizComponent/SelectModelPath';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 
 const SubmitModelTraining = (props) => {
+  const intl = useIntl();
   const query = props.location.query;
 
   const [runningParams, setRunningParams] = useState([
@@ -50,7 +52,7 @@ const SubmitModelTraining = (props) => {
   const handleSubmit = async () => {
     const values = await validateFields();
     setButtonDisabled(true);
-    const cancel = message.loading('正在提交');
+    const cancel = message.loading(intl.formatMessage({ id: 'centerInference.create.submit.ing' }));
     const submitData = {};
     submitData.framework = values.engineName;
     submitData.version = values.engineVersion;
@@ -69,7 +71,7 @@ const SubmitModelTraining = (props) => {
     setButtonDisabled(false);
     if (res.code === 0) {
       cancel();
-      message.success('成功提交');
+      message.success(intl.formatMessage({ id: 'centerInference.create.submit.success' }));
       history.push('/Inference/central');
     }
   };
@@ -155,7 +157,7 @@ const SubmitModelTraining = (props) => {
     const runningParams = await getFieldValue('runningParams');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        callback('不能输入相同的参数名称');
+        callback(intl.formatMessage({ id: 'centerInference.create.tips.repetParams' }));
       }
     });
     callback();
@@ -193,7 +195,11 @@ const SubmitModelTraining = (props) => {
     setFieldsValue({
       modelPath: row.outputPath,
     });
-    setCurrentModelUsedEngine(`当前训练引擎：${getNameFromDockerImage(row.engine)}`);
+    setCurrentModelUsedEngine(
+      `${intl.formatMessage({
+        id: 'centerInference.create.curTrainingEngine',
+      })}${getNameFromDockerImage(row.engine)}`,
+    );
   };
 
   useEffect(() => {
@@ -210,38 +216,62 @@ const SubmitModelTraining = (props) => {
     <PageHeader
       ghost={false}
       onBack={() => history.push('/Inference/central')}
-      title="创建推理作业"
+      title={intl.formatMessage({ id: 'centerInference.create.job' })}
     >
       <div className={styles.modelTraining}>
         <Form form={form}>
           <FormItem
             {...commonLayout}
             name="workName"
-            label="作业名称"
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.workName' })}
             rules={[{ required: true }, { ...jobNameReg }]}
           >
-            <Input placeholder="请输入作业名称" />
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'inferenceJobCreate.placeholder.inputJobName',
+              })}
+            />
           </FormItem>
           <FormItem
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 14 }}
             name="desc"
-            label="描述"
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.desc' })}
             rules={[{ max: 191 }]}
           >
-            <TextArea placeholder="请输入描述信息" />
+            <TextArea
+              placeholder={intl.formatMessage({
+                id: 'inferenceJobCreate.placeholder.inputDescription',
+              })}
+            />
           </FormItem>
         </Form>
         <Divider style={{ borderColor: '#cdcdcd' }} />
-        <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>参数配置</h2>
+        <h2 style={{ marginLeft: '38px', marginBottom: '20px' }}>
+          {intl.formatMessage({ id: 'centerInference.create.paramsConfig' })}
+        </h2>
         <Form form={form}>
-          <FormItem labelCol={commonLayout.labelCol} label="推理模型路径" required>
+          <FormItem
+            labelCol={commonLayout.labelCol}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.modelPath' })}
+            required
+          >
             <FormItem
               name="modelPath"
-              rules={[{ required: true, message: '请输入推理模型路径' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'inferenceJobCreate.rule.needModelPath' }),
+                },
+              ]}
               style={{ display: 'inline-block', width: '250px' }}
             >
-              <Input placeholder="请输入推理模型路径" style={{ width: '230px' }} />
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'inferenceJobCreate.placeholder.inputModelPath',
+                })}
+                style={{ width: '230px' }}
+              />
             </FormItem>
             <FormItem style={{ display: 'inline-block', width: '36px' }}>
               <Button
@@ -255,12 +285,21 @@ const SubmitModelTraining = (props) => {
               </FormItem>
             )}
           </FormItem>
-          <FormItem {...commonLayout} label="引擎" required>
+          <FormItem
+            {...commonLayout}
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.engineName' })}
+            required
+          >
             <FormItem
               name="engineName"
               style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
             >
-              <Select placeholder="引擎名称" onChange={(name) => handleEngineChange('name', name)}>
+              <Select
+                placeholder={intl.formatMessage({
+                  id: 'inferenceJobCreate.placeholder.engineName',
+                })}
+                onChange={(name) => handleEngineChange('name', name)}
+              >
                 {engineNameList.map((val) => (
                   <Option value={val}>{getNameFromDockerImage(val)}</Option>
                 ))}
@@ -271,7 +310,9 @@ const SubmitModelTraining = (props) => {
               style={{ display: 'inline-block', width: 'cal(50% - 8px)', marginLeft: '10px' }}
             >
               <Select
-                placeholder="引擎版本"
+                placeholder={intl.formatMessage({
+                  id: 'inferenceJobCreate.placeholder.engineVersion',
+                })}
                 onChange={(version) => handleEngineChange('version', version)}
               >
                 {engineVersionList.map((val) => (
@@ -280,7 +321,10 @@ const SubmitModelTraining = (props) => {
               </Select>
             </FormItem>
           </FormItem>
-          <FormItem label="作业参数" labelCol={{ span: 4 }}>
+          <FormItem
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.runningParams' })}
+            labelCol={{ span: 4 }}
+          >
             {runningParams.map((param, index) => {
               return (
                 <div>
@@ -329,17 +373,17 @@ const SubmitModelTraining = (props) => {
                 fill="#1890ff"
                 style={{ color: '#1890ff', marginRight: '10px' }}
               />
-              <a>点击增加参数</a>
+              <a>{intl.formatMessage({ id: 'centerInference.create.addParams' })}</a>
             </div>
           </FormItem>
           <FormItem
-            label="设备类型"
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.deviceType' })}
             name="deviceType"
             {...commonLayout}
             rules={[{ required: false }]}
           >
             <Select
-              placeholder="请选择"
+              placeholder={intl.formatMessage({ id: 'inferenceJobCreate.placeholder.select' })}
               style={{ width: '260px' }}
               onChange={() => setCurrentDeviceType(getFieldValue('deviceType'))}
             >
@@ -348,8 +392,16 @@ const SubmitModelTraining = (props) => {
               ))}
             </Select>
           </FormItem>
-          <FormItem label="设备数量" name="resourcegpu" {...commonLayout} initialValue={0}>
-            <Select placeholder="请选择" style={{ width: '260px' }}>
+          <FormItem
+            label={intl.formatMessage({ id: 'inferenceJobCreate.label.resourcegpu' })}
+            name="resourcegpu"
+            {...commonLayout}
+            initialValue={0}
+          >
+            <Select
+              placeholder={intl.formatMessage({ id: 'inferenceJobCreate.placeholder.select' })}
+              style={{ width: '260px' }}
+            >
               {[0, 1].map((val) => (
                 <Option value={val}>{val}</Option>
               ))}
@@ -362,7 +414,7 @@ const SubmitModelTraining = (props) => {
           style={{ float: 'right' }}
           onClick={handleSubmit}
         >
-          立即创建
+          {intl.formatMessage({ id: 'inferenceJobCreate.submit' })}
         </Button>
       </div>
       {selectModelPathModalVisible && (

@@ -1,8 +1,4 @@
 export default {
-  'visualizationList.add.createVisaulJob': 'Create Visual Job',
-
-  'visualizationList.placeholder.search': 'input name query',
-
   'visualizationList.table.column.name': 'Name',
   'visualizationList.table.column.status': 'Status',
   'visualizationList.table.column.logPath': 'Visual Log Path',

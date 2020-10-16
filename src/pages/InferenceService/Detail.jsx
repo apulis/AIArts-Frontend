@@ -11,6 +11,7 @@ import styles from './index.less';
 import { getJobStatus } from '@/utils/utils';
 import useInterval from '@/hooks/useInterval';
 import { connect } from 'dva';
+import { useIntl } from 'umi';
 
 export function getBase64(img, callback) {
   const reader = new FileReader();
@@ -19,6 +20,7 @@ export function getBase64(img, callback) {
 }
 
 const InferenceDetail = (props) => {
+  const intl = useIntl();
   const [imageUrl, setImageUrl] = useState('');
   const [tempImageUrl, setTempImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -45,11 +47,11 @@ const InferenceDetail = (props) => {
 
   const columns = [
     {
-      title: '识别结果',
+      title: intl.formatMessage({ id: 'centerInference.detail.recognition.result' }),
       dataIndex: 'key',
     },
     {
-      title: '识别准确率',
+      title: intl.formatMessage({ id: 'centerInference.detail.recognition.accuracy' }),
       dataIndex: 'value',
     },
   ];
@@ -107,7 +109,7 @@ const InferenceDetail = (props) => {
 
     if (info.file.status === 'error') {
       setLoading(false);
-      message.error('处理出错');
+      message.error(intl.formatMessage({ id: 'centerInference.detail.dealwith.error' }));
     }
   };
   const beforeUpload = (file) => {
@@ -120,11 +122,11 @@ const InferenceDetail = (props) => {
       'image/gif',
     ].includes(file.type);
     if (!isImage) {
-      message.error('只能上传图片');
+      message.error(intl.formatMessage({ id: 'centerInference.detail.upload.mediaLimit' }));
     }
     const isLt100M = file.size / 1024 / 1024 < 100;
     if (!isLt100M) {
-      message.error('图片不能大于 100M');
+      message.error(intl.formatMessage({ id: 'centerInference.detail.upload.sizeLimit' }));
     }
     return isImage && isLt100M;
   };
@@ -136,18 +138,22 @@ const InferenceDetail = (props) => {
     }, 1000);
   };
   const getLateastLogs = async () => {
-    const cancel = message.loading('获取日志中');
+    const cancel = message.loading(intl.formatMessage({ id: 'centerInference.detail.getLogging' }));
     const res = await getInferenceLog();
     cancel();
     if (res.code === 0) {
-      message.success('成功获取日志');
+      message.success(intl.formatMessage({ id: 'centerInference.detail.getLog.success' }));
     }
   };
   const jobRunning = jobDetail.jobStatus === 'running';
   const uploadButton = (
     <div style={{ height: '104px', width: '104px', paddingTop: '30px' }}>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div className="ant-upload-text">{loading ? '识别中' : '上传图片'}</div>
+      <div className="ant-upload-text">
+        {loading
+          ? intl.formatMessage({ id: 'centerInference.detail.recognzing' })
+          : intl.formatMessage({ id: 'centerInference.detail.upload.file' })}
+      </div>
     </div>
   );
 
@@ -176,7 +182,12 @@ const InferenceDetail = (props) => {
               onChange={handleChange}
             >
               {imageUrl ? (
-                <img src={imageUrl} alt="avatar" title="重新上传" style={{ width: '620px' }} />
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  title={intl.formatMessage({ id: 'centerInference.detail.upload.again' })}
+                  style={{ width: '620px' }}
+                />
               ) : (
                 uploadButton
               )}
@@ -196,42 +207,72 @@ const InferenceDetail = (props) => {
       </main>
       {recognizeResult.length !== 0 && (
         <Button type="primary" onClick={() => reUpload()} style={{ marginTop: '18px' }}>
-          清除数据
+          {intl.formatMessage({ id: 'centerInference.detail.clearData' })}
         </Button>
       )}
 
       <Descriptions style={{ marginTop: '20px' }} bordered={true} column={1}>
-        <Descriptions.Item label="作业名称">{jobDetail.jobName}</Descriptions.Item>
-        <Descriptions.Item label="作业状态">{getJobStatus(jobDetail.jobStatus)}</Descriptions.Item>
-        <Descriptions.Item label="引擎类型">{jobDetail.jobParams?.framework}</Descriptions.Item>
-        <Descriptions.Item label="ID">{jobDetail.jobId}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.jobName' })}
+        >
+          {jobDetail.jobName}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.jobStatus' })}
+        >
+          {getJobStatus(jobDetail.jobStatus)}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.engineType' })}
+        >
+          {jobDetail.jobParams?.framework}
+        </Descriptions.Item>
+        <Descriptions.Item label={intl.formatMessage({ id: 'centerInference.detail.label.id' })}>
+          {jobDetail.jobId}
+        </Descriptions.Item>
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.createTime' })}
+        >
           {moment(jobDetail.jobTime).format('YYYY-MM-DD HH:mm')}
         </Descriptions.Item>
         {jobDetail.jobParams?.device && (
-          <Descriptions.Item label="设备类型">{jobDetail.jobParams?.device}</Descriptions.Item>
+          <Descriptions.Item
+            label={intl.formatMessage({ id: 'centerInference.detail.label.deviceType' })}
+          >
+            {jobDetail.jobParams?.device}
+          </Descriptions.Item>
         )}
         {jobDetail.jobParams?.gpuType && (
-          <Descriptions.Item label="GPU 类型">{jobDetail.jobParams?.gpuType}</Descriptions.Item>
+          <Descriptions.Item
+            label={intl.formatMessage({ id: 'centerInference.detail.label.gpuType' })}
+          >
+            {jobDetail.jobParams?.gpuType}
+          </Descriptions.Item>
         )}
-        <Descriptions.Item label="使用模型">
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.useModel' })}
+        >
           {jobDetail.jobParams?.model_base_path}
         </Descriptions.Item>
-        <Descriptions.Item label="计算节点个数">
+        <Descriptions.Item
+          label={intl.formatMessage({ id: 'centerInference.detail.label.nodeCount' })}
+        >
           {jobDetail.jobParams?.resourcegpu}
         </Descriptions.Item>
         {/* <Descriptions.Item label="作业参数"></Descriptions.Item> */}
         {/* <Descriptions.Item label="服务地址">test</Descriptions.Item> */}
-        <Descriptions.Item label="描述">{jobDetail.jobParams?.desc}</Descriptions.Item>
+        <Descriptions.Item label={intl.formatMessage({ id: 'centerInference.detail.label.desc' })}>
+          {jobDetail.jobParams?.desc}
+        </Descriptions.Item>
       </Descriptions>
       {logs && (
         <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-          训练日志
+          {intl.formatMessage({ id: 'centerInference.detail.trainingLog' })}
         </div>
       )}
       {!(['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) || jobEnded) && (
         <Button type="primary" style={{ marginTop: '20px' }} onClick={getLateastLogs}>
-          点击获取最新日志
+          {intl.formatMessage({ id: 'centerInference.detail.clickGetLog' })}
         </Button>
       )}
       <div>
@@ -241,11 +282,13 @@ const InferenceDetail = (props) => {
           </pre>
         ) : (
           ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && (
-            <div>推理服务尚未开始运行</div>
+            <div>{intl.formatMessage({ id: 'centerInference.detail.notStart' })}</div>
           )
         )}
         {['failed'].includes(jobDetail.jobStatus) && (
-          <div style={{ marginTop: '20px' }}>当前训练任务已失败</div>
+          <div style={{ marginTop: '20px' }}>
+            {intl.formatMessage({ id: 'centerInference.detail.trainingError' })}
+          </div>
         )}
       </div>
     </PageHeaderWrapper>

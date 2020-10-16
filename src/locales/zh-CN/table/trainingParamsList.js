@@ -1,8 +1,4 @@
 export default {
-  'trainingParamsList.add.importParams': '导入参数',
-
-  'trainingParamsList.placeholder.search': '输入名称查询',
-
   'trainingParamsList.table.column.name': '参数配置名称',
   'trainingParamsList.table.column.engineType': '引擎类型',
   'trainingParamsList.table.column.createTime': '创建时间',

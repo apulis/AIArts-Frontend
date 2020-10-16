@@ -1,8 +1,4 @@
 export default {
-  'dataSetList.add.dataSet': 'Create Code Development',
-
-  'dataSetList.placeholder.search': 'input name query',
-
   'dataSetList.table.column.name': 'Name',
   'dataSetList.table.column.description': 'Description',
   'dataSetList.table.column.creator': 'Creator',

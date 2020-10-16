@@ -1,18 +1,17 @@
 import { GlobalOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
-import { getLocale, setLocale } from 'umi';
+import { getLocale, setLocale, connect } from 'umi';
 import React from 'react';
 import classNames from 'classnames';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { locales } from '@/models/common';
 
 const SelectLang = (props) => {
   const { className } = props;
   const selectedLang = getLocale();
+  const changeLang = ({ key }) => setLocale(key, true);
 
-  const changeLang = ({ key }) => setLocale(key, false);
-
-  const locales = ['zh-CN', 'en-US'];
   const languageLabels = {
     'zh-CN': '简体中文',
     'zh-TW': '繁体中文',
@@ -25,6 +24,9 @@ const SelectLang = (props) => {
     'en-US': '🇺🇸',
     'pt-BR': '🇧🇷',
   };
+  if (props.common.i18n !== true) {
+    return null;
+  }
   const langMenu = (
     <Menu className={styles.menu} selectedKeys={[selectedLang]} onClick={changeLang}>
       {locales.map((locale) => (
@@ -46,4 +48,4 @@ const SelectLang = (props) => {
   );
 };
 
-export default SelectLang;
+export default connect(({ common }) => ({ common }))(SelectLang);

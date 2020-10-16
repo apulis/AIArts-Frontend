@@ -10,6 +10,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getNameFromDockerImage } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
+import { useIntl } from 'umi';
 
 export const statusList = [
   { value: 'all', label: '全部' },
@@ -30,6 +31,7 @@ const { Search } = Input;
 const { Option } = Select;
 
 const List = (props) => {
+  const intl = useIntl();
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -175,7 +177,7 @@ const List = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '作业名称',
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.name' }),
       key: 'jobName',
       render(_text, item) {
         return (
@@ -189,19 +191,19 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.engineType' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
     },
     {
       dataIndex: 'createTime',
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -214,7 +216,7 @@ const List = (props) => {
     //   title: '描述'
     // },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -223,10 +225,10 @@ const List = (props) => {
               onClick={() => stopEvaluationJob(item.id)}
               disabled={!canStop(item)}
             >
-              停止
+              {intl.formatMessage({ id: 'modelEvaluationList.table.column.action.stop' })}
             </Button>
             <Button type="link" danger onClick={() => deleteEvaluationJob(item)}>
-              删除
+              {intl.formatMessage({ id: 'modelEvaluationList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -257,7 +259,7 @@ const List = (props) => {
           <Search
             ref={searchEl}
             style={{ width: '200px' }}
-            placeholder="输入作业名称查询"
+            placeholder={intl.formatMessage({ id: 'modelEvaluation.list.placeholder.search' })}
             onSearch={onSearchName}
             enterButton
           />
@@ -273,7 +275,12 @@ const List = (props) => {
           pagination={{
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'modelEvaluationList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'modelEvaluationList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

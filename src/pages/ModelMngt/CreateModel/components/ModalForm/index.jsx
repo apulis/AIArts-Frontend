@@ -5,8 +5,10 @@ import styles from './index.less';
 import { PAGEPARAMS } from '@/utils/const';
 import { connect } from 'umi';
 import { getNameFromDockerImage } from '@/utils/reg';
+import { useIntl } from 'umi';
 
 const TrainingJobModal = (props) => {
+  const intl = useIntl();
   const {
     loading,
     dispatch,
@@ -47,21 +49,21 @@ const TrainingJobModal = (props) => {
   };
 
   const modalFooter = {
-    okText: '确定',
+    okText: intl.formatMessage({ id: 'createModel.modalFooter.okText' }),
     onOk: handleSubmit,
-    cancelText: '取消',
+    cancelText: intl.formatMessage({ id: 'createModel.modalFooter.cancelText' }),
     onCancel,
   };
 
   const jobColumns = [
     {
-      title: '作业名称',
+      title: intl.formatMessage({ id: 'createModel.table.label.name' }),
       dataIndex: 'name',
       ellipsis: true,
       width: 100,
     },
     {
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'createModel.table.label.engine' }),
       dataIndex: 'engine',
       ellipsis: true,
       width: 100,
@@ -70,7 +72,7 @@ const TrainingJobModal = (props) => {
       },
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'createModel.table.label.desc' }),
       dataIndex: 'desc',
       ellipsis: true,
       width: 150,
@@ -114,7 +116,7 @@ const TrainingJobModal = (props) => {
 
   return (
     <Modal
-      title="请选择训练作业"
+      title={intl.formatMessage({ id: 'createModel.title' })}
       className={styles.standardListForm}
       width={640}
       bodyStyle={{

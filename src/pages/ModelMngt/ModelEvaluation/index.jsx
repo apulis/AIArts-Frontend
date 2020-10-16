@@ -27,11 +27,13 @@ import styles from '@/pages/ModelTraining/index.less';
 import curStyles from './index.less';
 import { connect } from 'dva';
 import { beforeSubmitJob } from '@/models/resource';
+import { useIntl } from 'umi';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 const ModelEvaluation = (props) => {
+  const intl = useIntl();
   const query = props.location.query;
   const modelId = decodeURIComponent(query.modelId);
 
@@ -198,16 +200,17 @@ const ModelEvaluation = (props) => {
     const submitJobInner = async () => {
       const { code, msg } = await addEvaluation(evalParams);
       if (code === 0) {
-        message.success(`创建评估成功`);
+        message.success(`${intl.formatMessage({ id: 'modelEvaluation.create.success' })}`);
         history.push('/ModelManagement/ModelEvaluation/List');
       } else {
-        msg && message.error(`创建评估失败:${msg}`);
+        msg &&
+          message.error(`${intl.formatMessage({ id: 'modelEvaluation.create.error' })}:${msg}`);
       }
     };
     if (!beforeSubmitJob(false, deviceType, deviceNum)) {
       Modal.confirm({
-        title: '当前暂无可用训练设备，继续提交将会进入等待队列',
-        content: '是否继续',
+        title: intl.formatMessage({ id: 'modelEvaluation.tips.noDeviceToWait' }),
+        content: intl.formatMessage({ id: 'modelEvaluation.isContinue' }),
         onOk() {
           submitJobInner();
         },
@@ -249,7 +252,7 @@ const ModelEvaluation = (props) => {
     const runningParams = await getFieldValue('params');
     runningParams.forEach((r, i) => {
       if (r[propertyName] === value && index !== i) {
-        callback('不能输入相同的参数名称');
+        callback(intl.formatMessage({ id: 'modelEvaluation.notInputEqualParam' }));
       }
     });
     callback();
@@ -322,7 +325,7 @@ const ModelEvaluation = (props) => {
 
   const handleClickDeviceNum = (e) => {
     if (!getFieldValue('deviceType')) {
-      message.error('需要先选择设备类型');
+      message.error(intl.formatMessage({ id: 'modelEvaluation.needSelectDeviceType' }));
     }
   };
 
@@ -336,7 +339,7 @@ const ModelEvaluation = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/ModelManagement/MyModels')}
-        title="模型评估"
+        title={intl.formatMessage({ id: 'modelEvaluation.evaluateModel' })}
       >
         <div
           style={{
@@ -351,32 +354,48 @@ const ModelEvaluation = (props) => {
             <Form.Item
               {...layout}
               name="name"
-              label="模型名称"
-              rules={[{ required: true, message: '名称不能为空!' }, { ...jobNameReg }]}
+              label={intl.formatMessage({ id: 'modelEvaluation.modelName' })}
+              rules={[
+                { required: true, message: intl.formatMessage({ id: 'modelEvaluation.needName' }) },
+                { ...jobNameReg },
+              ]}
             >
-              <Input placeholder="请输入模型名称" disabled />
+              <Input
+                placeholder={intl.formatMessage({ id: 'modelEvaluation.needInputModelName' })}
+                disabled
+              />
             </Form.Item>
             <Divider style={{ borderColor: '#cdcdcd' }} />
             {!isPublic ? (
-              <Form.Item {...layout} label="参数来源">
+              <Form.Item
+                {...layout}
+                label={intl.formatMessage({ id: 'modelEvaluation.paramSource' })}
+              >
                 <Radio.Group defaultValue={1} buttonStyle="solid">
-                  <Radio.Button value={1}>手动参数配置</Radio.Button>
+                  <Radio.Button value={1}>
+                    {intl.formatMessage({ id: 'modelEvaluation.manualParameterConfiguration' })}
+                  </Radio.Button>
                   <Radio.Button
                     value={2}
                     onClick={() => {
                       setPresetParamsVisible(true);
                     }}
                   >
-                    导入评估参数
+                    {intl.formatMessage({ id: 'modelEvaluation.importEvaluateParam' })}
                   </Radio.Button>
                 </Radio.Group>
               </Form.Item>
             ) : null}
             <Form.Item
               {...layout}
-              label="引擎"
+              label={intl.formatMessage({ id: 'modelEvaluation.engine' })}
               name="engine"
-              rules={[{ required: true, message: '请选择引擎' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'modelEvaluation.needSelectEngine' }),
+                },
+              ]}
             >
               <Select>
                 {engines &&
@@ -390,18 +409,28 @@ const ModelEvaluation = (props) => {
             {isPublic ? (
               <Form.Item
                 {...layout}
-                label="代码目录"
+                label={intl.formatMessage({ id: 'modelEvaluation.codePath' })}
                 name="codePath"
-                rules={[{ required: true, message: '需要填写代码目录' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'modelEvaluation.needInputCodePath' }),
+                  },
+                ]}
               >
                 <Input disabled />
               </Form.Item>
             ) : (
               <Form.Item
                 {...layout}
-                label="代码目录"
+                label={intl.formatMessage({ id: 'modelEvaluation.codePath' })}
                 name="codePath"
-                rules={[{ required: true, message: '需要填写代码目录' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'modelEvaluation.needInputCodePath' }),
+                  },
+                ]}
               >
                 <Input addonBefore={codePathPrefix} />
               </Form.Item>
@@ -409,25 +438,35 @@ const ModelEvaluation = (props) => {
             {isPublic ? (
               <Form.Item
                 {...layout}
-                label="启动文件"
+                label={intl.formatMessage({ id: 'modelEvaluation.startupFile' })}
                 name="startupFile"
-                rules={[{ required: true, message: '需要填写启动文件' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'modelEvaluation.needInputStartupFile' }),
+                  },
+                ]}
               >
                 <Input disabled />
               </Form.Item>
             ) : (
               <Form.Item
                 {...layout}
-                label="启动文件"
+                label={intl.formatMessage({ id: 'modelEvaluation.startupFile' })}
                 name="startupFile"
-                rules={[{ required: true, message: '需要填写启动文件' }]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'modelEvaluation.needInputStartupFile' }),
+                  },
+                ]}
               >
                 <Input addonBefore={codePathPrefix} />
               </Form.Item>
             )}
             <Form.Item
               {...layout}
-              label="输出路径"
+              label={intl.formatMessage({ id: 'modelEvaluation.outputPath' })}
               name="outputPath"
               // rules={[{ required: true, message: '需要填写输出路径' }]}
             >
@@ -435,17 +474,27 @@ const ModelEvaluation = (props) => {
             </Form.Item>
             <Form.Item
               {...layout}
-              label="模型权重文件"
+              label={intl.formatMessage({ id: 'modelEvaluation.modelWeightFile' })}
               name="argumentsFile"
-              rules={[{ required: true, message: '需要填写模型权重文件' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'modelEvaluation.needInputWeightFile' }),
+                },
+              ]}
             >
               <Input addonBefore={codePathPrefix} />
             </Form.Item>
             <Form.Item
               {...layout}
-              label="测试数据集"
+              label={intl.formatMessage({ id: 'modelEvaluation.testDataSet' })}
               name="datasetPath"
-              rules={[{ required: true, message: '请选择测试数据集' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'modelEvaluation.needSelectTestDataSet' }),
+                },
+              ]}
             >
               <Select onChange={handleDatasetChange}>
                 {datasets.map((d) => (
@@ -457,7 +506,7 @@ const ModelEvaluation = (props) => {
             </Form.Item>
             <Form.Item
               // {...layout}
-              label="运行参数"
+              label={intl.formatMessage({ id: 'modelEvaluation.runningParam' })}
               labelCol={{ span: 3 }}
             >
               {runningParams.map((param, index) => {
@@ -506,14 +555,19 @@ const ModelEvaluation = (props) => {
                   fill="#1890ff"
                   style={{ color: '#1890ff', marginRight: '10px' }}
                 />
-                <a>点击增加参数</a>
+                <a>{intl.formatMessage({ id: 'modelEvaluation.clickAddParam' })}</a>
               </div>
             </Form.Item>
             <Form.Item
               {...layout}
-              label="设备类型"
+              label={intl.formatMessage({ id: 'modelEvaluation.deviceType' })}
               name="deviceType"
-              rules={[{ required: true, message: '请选择设备类型' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'modelEvaluation.needSelectDeviceType' }),
+                },
+              ]}
             >
               <Select onChange={onDeviceTypeChange}>
                 {deviceTypes.map((item) => (
@@ -525,9 +579,14 @@ const ModelEvaluation = (props) => {
             </Form.Item>
             <Form.Item
               {...layout}
-              label="设备数量"
+              label={intl.formatMessage({ id: 'modelEvaluation.deviceNum' })}
               name="deviceNum"
-              rules={[{ required: true, message: '请选择设备数量' }]}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'modelEvaluation.needSelectDeviceNum' }),
+                },
+              ]}
             >
               <Select onClick={handleClickDeviceNum}>
                 {deviceNums.map((item) => (
@@ -539,7 +598,7 @@ const ModelEvaluation = (props) => {
             </Form.Item>
             <Form.Item style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit">
-                开始评估
+                {intl.formatMessage({ id: 'modelEvaluation.startEvaluate' })}
               </Button>
             </Form.Item>
           </Form>
@@ -549,7 +608,7 @@ const ModelEvaluation = (props) => {
         visible={presetParamsVisible}
         onCancel={() => setPresetParamsVisible(false)}
         onOk={handleConfirmPresetParams}
-        title="导入评估参数"
+        title={intl.formatMessage({ id: 'modelEvaluation.importEvaluateParam' })}
         forceRender
         width="80%"
       >
@@ -573,40 +632,44 @@ const ModelEvaluation = (props) => {
                     </Col>
                   </Row> */}
                   <Row>
-                    <Col span={5}>启动文件</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'modelEvaluation.startupFile' })}</Col>
                     <Col span={19}>{p.params.startupFile}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>代码目录</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'modelEvaluation.codePath' })}</Col>
                     <Col span={19}>{p.params.codePath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>训练数据集</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'modelEvaluation.trainingDataSet' })}
+                    </Col>
                     <Col span={19}>{p.params.datasetPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>输出路径</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'modelEvaluation.outputPath' })}</Col>
                     <Col span={19}>{p.params.outputPath}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>运行参数</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'modelEvaluation.runningParam' })}</Col>
                     <Col span={19}>
                       {p.params.params && formatParams(p.params.params).map((p) => <div>{p}</div>)}
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={5}>计算节点规格</Col>
+                    <Col span={5}>
+                      {intl.formatMessage({ id: 'modelEvaluation.computeNodeSpecification' })}
+                    </Col>
                     <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
                   <Row>
-                    <Col span={5}>引擎类型</Col>
+                    <Col span={5}>{intl.formatMessage({ id: 'modelEvaluation.engineType' })}</Col>
                     <Col span={19}>{getNameFromDockerImage(p.params.engine)}</Col>
                   </Row>
                 </TabPane>
               ))}
             </Tabs>
           ) : (
-            <div>暂无</div>
+            <div>{intl.formatMessage({ id: 'modelEvaluation.noData' })}</div>
           )}
         </Form>
       </Modal>

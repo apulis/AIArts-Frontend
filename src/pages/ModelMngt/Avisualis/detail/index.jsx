@@ -12,11 +12,14 @@ import {
 } from '@ant-design/icons';
 import { connect } from 'dva';
 import FlowChart from '../components/FlowChart';
+import _ from 'lodash';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const AvisualisDetail = (props) => {
+  const intl = useIntl();
   const { avisualis, location } = props;
   const { type, modelId } = location.query;
   const detailId = props.match.params.id;
@@ -81,9 +84,7 @@ const AvisualisDetail = (props) => {
       _data.length &&
       _data.forEach((i, idx) => {
         if (newData) {
-          const len = newData.nodes && newData.nodes.length ? newData.nodes.length : 0;
-          const _idx = len ? newData.nodes[len - 1].treeIdx : 0;
-          childrenDisabled = len > 0 ? !(_idx < idx) : false;
+          childrenDisabled = !(Math.max(...newData.nodes.map((i) => i.treeIdx)) < idx);
         }
         let _children = [];
         const { children, name } = i;
@@ -103,7 +104,7 @@ const AvisualisDetail = (props) => {
           });
         }
         _treeData.push({
-          title: `步骤${idx + 1}：${name}`,
+          title: `${intl.formatMessage({ id: 'detail.step' })}${idx + 1}：${name}`,
           key: name,
           children: _children,
           disabled: true,

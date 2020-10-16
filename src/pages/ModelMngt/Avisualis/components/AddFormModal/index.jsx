@@ -4,10 +4,12 @@ import { NameReg, NameErrorText } from '@/utils/const';
 import { fetchAvilableResource } from '../../../../../services/modelTraning';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 import _ from 'lodash';
+import { useIntl } from 'umi';
 
 const { Option } = Select;
 
 const AddFormModal = (props, ref) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const { getFieldValue, setFieldsValue } = form;
   const { detailData } = props;
@@ -65,15 +67,20 @@ const AddFormModal = (props, ref) => {
       initialValues={detailData || { jobTrainingType: jobTrainingType, numPsWorker: 1 }}
     >
       <Form.Item
-        label="模型名称"
+        label={intl.formatMessage({ id: 'avisualis.label.name' })}
         name="name"
         rules={[
-          { required: true, message: '请输入推理名称！' },
+          {
+            required: true,
+            message: intl.formatMessage({ id: 'avisualis.rule.needInferenceName' }),
+          },
           { pattern: NameReg, message: NameErrorText },
           { max: 30 },
         ]}
       >
-        <Input placeholder="请输入模型名称" />
+        <Input
+          placeholder={intl.formatMessage({ id: 'avisualis.placeholder.inputInferenceName' })}
+        />
       </Form.Item>
       {/* <Form.Item
         label="模型用途"
@@ -85,37 +92,50 @@ const AddFormModal = (props, ref) => {
         </Select>
       </Form.Item> */}
       <Form.Item
-        label="简介"
+        label={intl.formatMessage({ id: 'avisualis.label.description' })}
         name="description"
-        rules={[{ required: true, message: '请输入简介！' }, { max: 50 }]}
+        rules={[
+          { required: true, message: intl.formatMessage({ id: 'avisualis.rule.needDescription' }) },
+          { max: 50 },
+        ]}
       >
-        <Input.TextArea placeholder="请输入简介" autoSize={{ minRows: 4 }} />
+        <Input.TextArea
+          placeholder={intl.formatMessage({ id: 'avisualis.placeholder.inputDescription' })}
+          autoSize={{ minRows: 4 }}
+        />
       </Form.Item>
       <Form.Item
-        label="是否分布式训练"
+        label={intl.formatMessage({ id: 'avisualis.label.jobTrainingType' })}
         rules={[{ required: true }]}
         name="jobTrainingType"
         className="speItem"
       >
         <Radio.Group onChange={(e) => setJobtrainingtype(e.target.value)}>
-          <Radio value="PSDistJob">是</Radio>
-          <Radio value="RegularJob">否</Radio>
+          <Radio value="PSDistJob">{intl.formatMessage({ id: 'avisualis.value.yes' })}</Radio>
+          <Radio value="RegularJob">{intl.formatMessage({ id: 'avisualis.value.no' })}</Radio>
         </Radio.Group>
       </Form.Item>
       {jobTrainingType === 'PSDistJob' && (
         <Form.Item
-          label="节点数量"
+          label={intl.formatMessage({ id: 'avisualis.label.numPsWorker' })}
           name="numPsWorker"
           rules={[
-            { required: true, message: '请填写节点数量！' },
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'avisualis.rule.neednumPsWorker' }),
+            },
             {
               validator(rule, value, callback) {
                 if (Number(value) > nodeInfo.length) {
-                  callback(`当前只有 ${nodeInfo.length} 个节点`);
+                  callback(
+                    `${intl.formatMessage({ id: 'avisualis.curHave' })} ${
+                      nodeInfo.length
+                    } ${intl.formatMessage({ id: 'avisualis.nodes' })}`,
+                  );
                   return;
                 }
                 if (Number(value) < 1) {
-                  callback(`不能小于 1`);
+                  callback(`${intl.formatMessage({ id: 'avisualis.min1' })}`);
                   return;
                 }
                 callback();
@@ -131,7 +151,11 @@ const AddFormModal = (props, ref) => {
           />
         </Form.Item>
       )}
-      <Form.Item label="设备类型" name="deviceType" rules={[{ required: true }]}>
+      <Form.Item
+        label={intl.formatMessage({ id: 'avisualis.label.deviceNum' })}
+        name="deviceType"
+        rules={[{ required: true }]}
+      >
         <Select onChange={(v) => setDeviceType(v)}>
           {deviceList.map((d) => (
             <Option value={d.deviceType}>{d.deviceType}</Option>
@@ -140,9 +164,15 @@ const AddFormModal = (props, ref) => {
       </Form.Item>
       {deviceType && (
         <Form.Item
-          label={jobTrainingType === 'PSDistJob' ? '每个节点设备数量' : '设备数量'}
+          label={
+            jobTrainingType === 'PSDistJob'
+              ? intl.formatMessage({ id: 'avisualis.label.deviceNumPerNode' })
+              : intl.formatMessage({ id: 'avisualis.label.deviceNum' })
+          }
           name="deviceNum"
-          rules={[{ required: true, message: '请选择设备数量！' }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'avisualis.rule.needDeviceNum' }) },
+          ]}
         >
           <Select onChange={handleDeviceChange}>
             {availableDeviceNumList.map((i) => (
@@ -152,7 +182,10 @@ const AddFormModal = (props, ref) => {
         </Form.Item>
       )}
       {jobTrainingType === 'PSDistJob' && (
-        <Form.Item label="设备总数" name="deviceTotal">
+        <Form.Item
+          label={intl.formatMessage({ id: 'avisualis.label.deviceTotal' })}
+          name="deviceTotal"
+        >
           <Input value={deviceTotal} disabled />
         </Form.Item>
       )}
