@@ -39,7 +39,7 @@ const BasicLayout = (props) => {
     location = {
       pathname: '/',
     },
-    collapsed
+    collapsed,
   } = props;
   /**
    * constructor
