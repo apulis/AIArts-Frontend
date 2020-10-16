@@ -103,7 +103,9 @@ const ItemPanel = (props) => {
             name={key}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `${intl.formatMessage({ id: 'itemPanel.input'})}${key}` }]}
+            rules={[
+              { required: true, message: `${intl.formatMessage({ id: 'itemPanel.input' })}${key}` },
+            ]}
           >
             <Input
               placeholder={`${intl.formatMessage({ id: 'itemPanel.input' })}${key}`}
