@@ -1,7 +1,7 @@
 import { message, Form, Input, Button, Select, Descriptions, InputNumber, Modal } from 'antd';
 import React, { useState, useEffect, useRef, useForm } from 'react';
 import styles from './index.less';
-import { history, useDispatch } from 'umi';
+import { history, useDispatch, useIntl } from 'umi';
 import { submitAvisualis, patchAvisualis } from '../../service';
 import { connect } from 'dva';
 import { MODELSTYPES } from '@/utils/const';
@@ -21,6 +21,7 @@ const ItemPanel = (props) => {
   const [modalFlag, setModalFlag] = useState(false);
   const [changeNodeOptions, setChangeNodeOptions] = useState([]);
   const [changeNodeKey, setChangeNodeKey] = useState({});
+  const intl = useIntl();
   const hasSelectItem =
     selectItem &&
     selectItem._cfg &&
@@ -102,7 +103,7 @@ const ItemPanel = (props) => {
             name={key}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `${itemPanel.input}${key}` }]}
+            rules={[{ required: true, message: `${intl.formatMessage({ id: 'itemPanel.input'})}${key}` }]}
           >
             <Input
               placeholder={`${intl.formatMessage({ id: 'itemPanel.input' })}${key}`}
