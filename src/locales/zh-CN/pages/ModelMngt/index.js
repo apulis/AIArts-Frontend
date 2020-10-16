@@ -289,4 +289,14 @@ export default {
   'pretrainedModel.runningParam': '运行参数',
   'pretrainedModel.engineType': '引擎类型',
   'pretrainedModel.modelOutput': '模型输出',
+  
+  // List.js
+  'list.all':'全部',
+  'list.stop.success':'已成功停止',
+  'list.stop.not':'当前任务尚未停止',
+  'list.needStop':'请先停止该任务',
+  'list.ok':'确定',
+  'list.delete.success':'删除成功！',
+  'list.delete.error':'删除错误：',
+  'list.delete.evaluation.detail.view':'查看评估详情',
 };

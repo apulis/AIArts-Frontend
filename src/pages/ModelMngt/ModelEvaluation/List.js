@@ -10,21 +10,21 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { getNameFromDockerImage } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
-import { useIntl } from 'umi';
+import { useIntl, formatMessage } from 'umi';
 
 export const statusList = [
-  { value: 'all', label: '全部' },
-  { value: 'unapproved', label: '未批准' },
-  { value: 'queued', label: '队列中' },
-  { value: 'scheduling', label: '调度中' },
-  { value: 'running', label: '运行中' },
-  { value: 'finished', label: '已完成' },
-  { value: 'failed', label: '已失败' },
-  { value: 'pausing', label: '暂停中' },
-  { value: 'paused', label: '已暂停' },
-  { value: 'killing', label: '关闭中' },
-  { value: 'killed', label: '已关闭' },
-  { value: 'error', label: '错误' },
+  { value: 'all', label: formatMessage({id: 'service.status.all'}) },
+  { value: 'unapproved', label: formatMessage({id: 'service.status.unapproved'}) },
+  { value: 'queued', label: formatMessage({id: 'service.status.queued'}) },
+  { value: 'scheduling', label: formatMessage({id: 'service.status.scheduling'}) },
+  { value: 'running', label: formatMessage({id: 'service.status.running'}) },
+  { value: 'finished', label: formatMessage({id: 'service.status.finished'}) },
+  { value: 'failed', label: formatMessage({id: 'service.status.failed'}) },
+  { value: 'pausing', label: formatMessage({id: 'service.status.pausing'}) },
+  { value: 'paused', label: formatMessage({id: 'service.status.paused'}) },
+  { value: 'killing', label: formatMessage({id: 'service.status.killing'}) },
+  { value: 'killed', label: formatMessage({id: 'service.status.killed'}) },
+  { value: 'error', label: formatMessage({id: 'service.status.error'}) },
 ];
 
 const { Search } = Input;
@@ -78,7 +78,7 @@ const List = (props) => {
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
-      const jobSumary = [{ value: 'all', label: '全部' }];
+      const jobSumary = [{ value: 'all', label: intl.formatMessage({id: 'list.all'}) }];
       let total = 0;
       Object.keys(res.data).forEach((k) => {
         let count = res.data[k];
@@ -123,16 +123,16 @@ const List = (props) => {
   const stopEvaluationJob = async (id) => {
     const res = await stopEvaluation(id);
     if (res.code === 0) {
-      message.success('已成功停止');
+      message.success(intl.formatMessage({id: 'list.stop.success'}));
       handleSearch();
     }
   };
   const deleteEvaluationJob = async (item) => {
     if (canStop(item)) {
       Modal.warning({
-        title: '当前任务尚未停止',
-        content: '请先停止该任务',
-        okText: '确定',
+        title: intl.formatMessage({id: 'list.stop.not'}),
+        content: intl.formatMessage({id: 'list.needStop'}),
+        okText: intl.formatMessage({id: 'list.ok'}),
       });
       return;
     }
@@ -154,9 +154,9 @@ const List = (props) => {
         handleSearch();
       }
       getJobStatusSumary();
-      message.success(`删除成功！`);
+      message.success(`${intl.formatMessage({id: 'list.delete.success'})}`);
     } else {
-      message.error(`删除错误：${msg}。`);
+      message.error(`${intl.formatMessage({id: 'list.delete.error'})}${msg}。`);
     }
   };
   const onSearchName = (name) => {
@@ -177,11 +177,11 @@ const List = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.name' }),
+      title: formatMessage({ id: 'modelEvaluationList.table.column.name' }),
       key: 'jobName',
       render(_text, item) {
         return (
-          <Popover content="查看评估详情">
+          <Popover content={intl.formatMessage({id: 'list.delete.evaluation.detail.view'})}>
             <Link to={`/ModelManagement/ModelEvaluation/${item.id}/detail`}>{item.name}</Link>
           </Popover>
         );
@@ -191,19 +191,19 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.status' }),
+      title: formatMessage({ id: 'modelEvaluationList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
-      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.engineType' }),
+      title: formatMessage({ id: 'modelEvaluationList.table.column.engineType' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
     },
     {
       dataIndex: 'createTime',
-      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.createTime' }),
+      title: formatMessage({ id: 'modelEvaluationList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -216,7 +216,7 @@ const List = (props) => {
     //   title: '描述'
     // },
     {
-      title: intl.formatMessage({ id: 'modelEvaluationList.table.column.action' }),
+      title: formatMessage({ id: 'modelEvaluationList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -225,10 +225,10 @@ const List = (props) => {
               onClick={() => stopEvaluationJob(item.id)}
               disabled={!canStop(item)}
             >
-              {intl.formatMessage({ id: 'modelEvaluationList.table.column.action.stop' })}
+              {formatMessage({ id: 'modelEvaluationList.table.column.action.stop' })}
             </Button>
             <Button type="link" danger onClick={() => deleteEvaluationJob(item)}>
-              {intl.formatMessage({ id: 'modelEvaluationList.table.column.action.delete' })}
+              {formatMessage({ id: 'modelEvaluationList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -259,7 +259,7 @@ const List = (props) => {
           <Search
             ref={searchEl}
             style={{ width: '200px' }}
-            placeholder={intl.formatMessage({ id: 'modelEvaluation.list.placeholder.search' })}
+            placeholder={formatMessage({ id: 'modelEvaluation.list.placeholder.search' })}
             onSearch={onSearchName}
             enterButton
           />
@@ -276,9 +276,9 @@ const List = (props) => {
             total: total,
             showQuickJumper: true,
             showTotal: (total) =>
-              `${intl.formatMessage({
+              `${formatMessage({
                 id: 'modelEvaluationList.table.pagination.showTotal.prefix',
-              })} ${total} ${intl.formatMessage({
+              })} ${total} ${formatMessage({
                 id: 'modelEvaluationList.table.pagination.showTotal.suffix',
               })}`,
             showSizeChanger: true,
