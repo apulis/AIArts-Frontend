@@ -273,14 +273,18 @@ const Submit = () => {
                   <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
                   <Form.Item
                     name={`argVal-${time}`}
-                    rules={argKey === 'insert_op_conf' ? [] : [
-                      {
-                        pattern: ArgNameReg,
-                        message: intl.formatMessage({
-                          id: 'edgeInferenceJobCreate.rule.supportInput',
-                        }),
-                      },
-                    ]}
+                    rules={
+                      argKey === 'insert_op_conf'
+                        ? []
+                        : [
+                            {
+                              pattern: ArgNameReg,
+                              message: intl.formatMessage({
+                                id: 'edgeInferenceJobCreate.rule.supportInput',
+                              }),
+                            },
+                          ]
+                    }
                     style={{ display: 'inline-block' }}
                     className="speItem"
                   >
