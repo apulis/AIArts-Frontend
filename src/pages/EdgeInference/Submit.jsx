@@ -221,12 +221,16 @@ const Submit = () => {
                   <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
                   <Form.Item
                     name={`argVal-${time}`}
-                    rules={argKey === 'insert_op_conf' ? [] : [
-                      {
-                        pattern: ArgNameReg,
-                        message: '只支持字母，数字，下划线，横线，点，双引号和逗号！',
-                      },
-                    ]}
+                    rules={
+                      argKey === 'insert_op_conf'
+                        ? []
+                        : [
+                            {
+                              pattern: ArgNameReg,
+                              message: '只支持字母，数字，下划线，横线，点，双引号和逗号！',
+                            },
+                          ]
+                    }
                     style={{ display: 'inline-block' }}
                     className="speItem"
                   >
