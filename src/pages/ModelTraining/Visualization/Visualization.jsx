@@ -91,7 +91,7 @@ const Visualization = () => {
     if (res.code === 0) {
       const { path } = res.data;
       if (!path) {
-        message.info('服务正在准备中，请稍候再试');
+        message.info(intl.formatMessage({id: 'visualzation.server.ready'}));
         return;
       }
       window.open(path, '_blank');
@@ -104,19 +104,19 @@ const Visualization = () => {
   const handleDelete = (item) => {
     if (['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)) {
       Modal.warning({
-        title: '当前任务尚未停止',
-        content: '请先停止该任务',
-        okText: '确定',
+        title: intl.formatMessage({id: 'visualzation.notStop'}),
+        content: intl.formatMessage({id: 'visualzation.needStop'}),
+        okText: intl.formatMessage({id: 'visualzation.ok'}),
       });
       return;
     }
     confirm({
-      title: '删除可视化作业',
-      content: '删除操作无法恢复，是否继续？',
+      title: intl.formatMessage({id: 'visualzation.delete.job'}),
+      content: intl.formatMessage({id: 'visualzation.delete.isContinue'}),
       icon: <ExclamationCircleOutlined />,
-      okText: '确定',
+      okText: intl.formatMessage({id: 'visualzation.ok'}),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({id: 'visualzation.cancel'}),
       onOk: async () => {
         const res = await deleteVisualization(item.id);
         if (res.code === 0) {
@@ -126,9 +126,9 @@ const Visualization = () => {
           } else {
             getVisualizations();
           }
-          message.success('删除成功');
+          message.success(intl.formatMessage({id: 'visualzation.delete.success'}));
         } else {
-          message.error(`删除失败${error.msg}` || `删除失败`);
+          message.error(`${intl.formatMessage({id: 'visualzation.delete.error'})}${error.msg}` || `${intl.formatMessage({id: 'visualzation.delete.error'})}`);
         }
       },
       onCancel() {},
