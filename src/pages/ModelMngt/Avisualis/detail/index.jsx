@@ -45,18 +45,13 @@ const AvisualisDetail = (props) => {
     const { code, data } = await getAvisualisDetail(modelId || detailId);
     if (code === 0 && data) {
       const { model, training } = data;
-      const { nodes, edges, panel } = model.params;
+      const { nodes, edges, panel, combos } = model.params;
       const _panel = JSON.parse(panel);
       if (nodes && edges) {
-        const transformNodes = JSON.parse(nodes).map((i) => {
-          return {
-            ...i,
-            id: `${i.id}-${i.name}`,
-          };
-        });
         const _detailData = {
-          nodes: transformNodes,
+          nodes: JSON.parse(nodes),
           edges: JSON.parse(edges),
+          combos: JSON.parse(combos),
         };
         setDetailData(_detailData);
       }
@@ -72,6 +67,7 @@ const AvisualisDetail = (props) => {
           panelApiData: _panel,
         },
       });
+      console.log('------_panel', _panel);
     }
     setLoading(false);
   };
@@ -80,31 +76,36 @@ const AvisualisDetail = (props) => {
     let _treeData = [],
       _children = [],
       _data = data || panelApiData,
-      childrenDisabled = Boolean(Number(modelId)) || Boolean(Number(detailId)) ? true : false;
+      childrenDisabled =
+        Boolean(Number(detailId)) || Boolean(Number(modelId) && Object.keys(detailData).length)
+          ? true
+          : false;
     _data &&
       _data.length &&
       _data.forEach((i, idx) => {
         if (newData) {
-          const len = newData && newData.nodes ? newData.nodes.length : 0;
-          childrenDisabled = len > 0 && !(len < idx + 1);
+          childrenDisabled = !(Math.max(...newData.nodes.map((i) => i.treeIdx)) < idx);
         }
         let _children = [];
         const { children, name } = i;
         if (children && children.length) {
-          children.forEach((c, cdx) => {
-            const key = Object.keys(c)[0];
+          children.forEach((c) => {
+            const { children, config } = c;
+            const childName = c.name;
             _children.push({
-              title: key,
-              key: `${name}-${key}`,
-              config: c[key],
+              title: childName,
+              key: childName,
+              config: config,
               disabled: childrenDisabled,
-              idx: idx,
+              treeIdx: idx,
+              child: children || [],
+              fName: name,
             });
           });
         }
         _treeData.push({
           title: `${intl.formatMessage({ id: 'detail.step' })}${idx + 1}：${name}`,
-          key: `${name}`,
+          key: name,
           children: _children,
           disabled: true,
           icon: <FolderOpenTwoTone />,
@@ -132,7 +133,7 @@ const AvisualisDetail = (props) => {
 
   return (
     <PageHeaderWrapper title={false}>
-      <div className={styles.avisualisWrap}>
+      <div className={styles.avisualisDetailWrap}>
         <Card className="treeCard">
           {panelData.length ? (
             <Tree
@@ -151,7 +152,6 @@ const AvisualisDetail = (props) => {
           transformData={transformData}
           detailId={detailId}
           detailData={detailData || {}}
-          detailId={detailId}
         />
       </div>
     </PageHeaderWrapper>

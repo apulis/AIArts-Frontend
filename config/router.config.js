@@ -171,11 +171,11 @@ export default [
                 path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
                 component: './ModelMngt/EvalMetricsMngt/component/EditMetrics',
               },
-              // {
-              //   path: '/ModelManagement/avisualis',
-              //   component: './ModelMngt/Avisualis',
-              //   name: 'avisualis',
-              // },
+              {
+                path: '/ModelManagement/avisualis',
+                component: './ModelMngt/Avisualis',
+                name: 'avisualis',
+              },
               {
                 path: '/ModelManagement/avisualis/templateList',
                 component: './ModelMngt/Avisualis/templateList',

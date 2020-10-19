@@ -8,7 +8,7 @@
 export default {
   dev: {
     '/ai_arts/api/': {
-      // target: 'http://10.31.3.120:9000/',
+      target: 'http://10.31.3.70/',
       // target: 'http://sandbox2-master.sigsus.cn:56511/',
       target: 'http://10.31.3.70/',
       // target: 'http://10.31.3.220:9999/',  //xu.ky
@@ -23,6 +23,7 @@ export default {
     '/custom-user-dashboard-backend/': {
       target: 'http://10.31.3.70/',
       // target: 'http://121.46.18.83:50088/',
+      // target: 'http://10.31.3.63/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
