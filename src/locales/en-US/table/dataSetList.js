@@ -4,7 +4,7 @@ export default {
   'dataSetList.table.column.creator': 'Creator',
   'dataSetList.table.column.updatedAt': 'UpdatedAt',
   'dataSetList.table.column.version': 'Version',
-  'dataSetList.table.column.isTranslated': 'IsTranslated',
+  'dataSetList.table.column.isTranslated': 'Translated',
   'dataSetList.table.column.action': 'Action',
   'dataSetList.table.column.action.edit': 'Edit',
   'dataSetList.table.column.action.download': 'Download',

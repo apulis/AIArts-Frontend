@@ -269,6 +269,7 @@ const CodeList = (props) => {
       title: intl.formatMessage({ id: 'codeList.table.column.name' }),
       dataIndex: 'name',
       ellipsis: true,
+      width: '10%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'], // name与createTime非复合排序，各自独立排序
     },
@@ -276,13 +277,14 @@ const CodeList = (props) => {
       title: intl.formatMessage({ id: 'codeList.table.column.status' }),
       dataIndex: 'status',
       ellipsis: true,
-      width: '80px',
+      width: '10%',
       render: (status) => statusMap[status]?.local,
     },
     {
       title: intl.formatMessage({ id: 'codeList.table.column.engineType' }),
       dataIndex: 'engine',
       ellipsis: true,
+      width: '12%',
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
@@ -292,6 +294,7 @@ const CodeList = (props) => {
       dataIndex: 'createTime',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
+      width: '12%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
@@ -299,16 +302,19 @@ const CodeList = (props) => {
       title: intl.formatMessage({ id: 'codeList.table.column.storePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
-      width: '120px',
+      width: '12%',
     },
     {
       title: intl.formatMessage({ id: 'codeList.table.column.description' }),
       dataIndex: 'desc',
       ellipsis: true,
+      align: 'center',
+      width: '14%',
     },
     {
       title: intl.formatMessage({ id: 'codeList.table.column.action' }),
       align: 'center',
+      width: '20%',
       render: (codeItem) => {
         return (
           <Space size="middle">

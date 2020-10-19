@@ -1,5 +1,5 @@
 export default {
-  'trainingParamsList.table.column.name': 'Params Config Name',
+  'trainingParamsList.table.column.name': 'Name',
   'trainingParamsList.table.column.engineType': 'Engine Type',
   'trainingParamsList.table.column.createTime': 'Create Time',
   'trainingParamsList.table.column.description': 'Description',

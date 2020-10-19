@@ -1,5 +1,5 @@
 export default {
-  'modelEvaluationList.table.column.name': 'Job Name',
+  'modelEvaluationList.table.column.name': 'Name',
   'modelEvaluationList.table.column.status': 'Status',
   'modelEvaluationList.table.column.engineType': 'Engine Type',
   'modelEvaluationList.table.column.createTime': 'Create Time',

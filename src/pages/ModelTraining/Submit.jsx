@@ -394,7 +394,7 @@ const ModelTraining = (props) => {
 
   const commonLayout = {
     labelCol: { span: 4 },
-    wrapperCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
 
   const handleDistributedJob = (e) => {

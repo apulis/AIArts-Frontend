@@ -1,6 +1,6 @@
 export default {
-  'visualJobCreate.label.jobName': 'Visual Job Name',
-  'visualJobCreate.label.selectModel': 'Select Model',
+  'visualJobCreate.label.jobName': 'Name',
+  'visualJobCreate.label.selectModel': 'Model',
   'visualJobCreate.label.tensorboardLogDir': 'Visual Path',
   'visualJobCreate.label.description': 'Description',
 

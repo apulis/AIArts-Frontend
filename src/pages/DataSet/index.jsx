@@ -95,8 +95,11 @@ const DataSetList = () => {
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.name' }),
       key: 'name',
+      ellipsis: true,
       sorter: true,
+      width: '10%',
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
+
       render: (item) => (
         <Link to={{ pathname: '/dataManage/dataSet/detail', query: { id: item.id } }}>
           {item.name}
@@ -107,27 +110,33 @@ const DataSetList = () => {
       title: intl.formatMessage({ id: 'dataSetList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
-      width: 350,
+      align:'center',
+      width: '20%',
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.creator' }),
       dataIndex: 'creator',
+      align:'center',
+      width: '10%',
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.updatedAt' }),
       key: 'updatedAt',
       dataIndex: 'updatedAt',
       sorter: true,
+      width: '20%',
       sortOrder: sortedInfo.columnKey === 'updatedAt' && sortedInfo.order,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.version' }),
+      width: '9%',
       dataIndex: 'version',
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.isTranslated' }),
       dataIndex: 'isTranslated',
+      width: '11%',
       render: (i) => (
         <span>
           {i === true
@@ -138,6 +147,7 @@ const DataSetList = () => {
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.action' }),
+      width: '20%',
       render: (item) => {
         const { id } = item;
         return (
@@ -146,12 +156,12 @@ const DataSetList = () => {
               {intl.formatMessage({ id: 'dataSetList.table.column.action.edit' })}
             </a>
             <a
-              style={{ margin: '0 16px' }}
+              style={{ margin: '0 16px', whiteSpace:'nowrap' }}
               onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}
             >
               {intl.formatMessage({ id: 'dataSetList.table.column.action.download' })}
             </a>
-            <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
+            <a style={{ color: 'red', whiteSpace:'nowrap'}} onClick={() => onDelete(id)}>
               {intl.formatMessage({ id: 'dataSetList.table.column.action.delete' })}
             </a>
           </>

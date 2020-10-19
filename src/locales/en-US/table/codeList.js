@@ -7,7 +7,7 @@ export default {
   'codeList.table.column.description': 'Description',
   'codeList.table.column.action': 'Action',
   'codeList.table.column.action.open': 'Open',
-  'codeList.table.column.action.upload': 'Upload Code',
+  'codeList.table.column.action.upload': 'Upload',
   'codeList.table.column.action.stop': 'Stop',
   'codeList.table.column.action.delete': 'Delete',
   'codeList.table.column.action.save': 'Save Image',

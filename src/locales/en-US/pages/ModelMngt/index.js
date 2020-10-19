@@ -53,7 +53,7 @@ export default {
   'createModel.modalFooter.okText': 'Ok',
   'createModel.modalFooter.cancelText': 'Cancel',
 
-  'createModel.table.label.name': 'Job Name',
+  'createModel.table.label.name': 'Name',
   'createModel.table.label.engine': 'Engine Type',
   'createModel.table.label.desc': 'Description',
 
@@ -71,7 +71,7 @@ export default {
   'CreatePretrained.modalFooter.okText': 'Ok',
   'CreatePretrained.modalFooter.cancelText': 'Cancel',
 
-  'CreatePretrained.table.label.name': 'Job Name',
+  'CreatePretrained.table.label.name': 'Name',
   'CreatePretrained.table.label.engine': 'Engine Type',
   'CreatePretrained.table.label.desc': 'Description',
   'CreatePretrained.title': 'Please select a training assignment',
