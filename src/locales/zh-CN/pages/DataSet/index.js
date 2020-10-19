@@ -1,5 +1,5 @@
 export default {
-  'dataSet.list.modal.title.dataSet':'数据集',
+  'dataSet.list.modal.title.dataSet': '数据集',
 
   'dataSet.list.add.dataSet': '新增数据集',
   'dataSet.list.placeholder.search': '输入名称查询',

@@ -110,13 +110,13 @@ const DataSetList = () => {
       title: intl.formatMessage({ id: 'dataSetList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
-      align:'center',
+      align: 'center',
       width: '20%',
     },
     {
       title: intl.formatMessage({ id: 'dataSetList.table.column.creator' }),
       dataIndex: 'creator',
-      align:'center',
+      align: 'center',
       width: '10%',
     },
     {
@@ -156,12 +156,12 @@ const DataSetList = () => {
               {intl.formatMessage({ id: 'dataSetList.table.column.action.edit' })}
             </a>
             <a
-              style={{ margin: '0 16px', whiteSpace:'nowrap' }}
+              style={{ margin: '0 16px', whiteSpace: 'nowrap' }}
               onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}
             >
               {intl.formatMessage({ id: 'dataSetList.table.column.action.download' })}
             </a>
-            <a style={{ color: 'red', whiteSpace:'nowrap'}} onClick={() => onDelete(id)}>
+            <a style={{ color: 'red', whiteSpace: 'nowrap' }} onClick={() => onDelete(id)}>
               {intl.formatMessage({ id: 'dataSetList.table.column.action.delete' })}
             </a>
           </>

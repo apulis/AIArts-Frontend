@@ -1,5 +1,5 @@
 export default {
-  'dataSet.list.modal.title.dataSet':'Data Set',
+  'dataSet.list.modal.title.dataSet': 'Data Set',
 
   'dataSet.list.add.dataSet': 'Create DataSet',
   'dataSet.list.placeholder.search': 'input name query',
