@@ -9,10 +9,12 @@ import { SyncOutlined } from '@ant-design/icons';
 import { stringify } from 'querystring';
 import moment from 'moment';
 import { getNameFromDockerImage } from '@/utils/reg';
+import { useIntl } from 'umi';
 
 const { Search } = Input;
 
 const ExpandDetails = (item) => {
+  const { formatMessage } = useIntl();
   // 转换运行参数格式
   let runArguments = [];
 
@@ -38,22 +40,31 @@ const ExpandDetails = (item) => {
 
   return (
     <Descriptions>
-      <Descriptions.Item label="训练数据集">{item.datasetName}</Descriptions.Item>
-      <Descriptions.Item label="数据格式">{item.dataFormat}</Descriptions.Item>
-      <Descriptions.Item label="运行参数">
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.datasetName' })}>
+        {item.datasetName}
+      </Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.dataFormat' })}>
+        {item.dataFormat}
+      </Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.runningParams' })}>
         <Popover content={argumentsContent}>
           {runArguments && runArguments.length > 0 && (
             <div>{runArguments[0].key + '=' + runArguments[0].value + argsSuffix}</div>
           )}
         </Popover>
       </Descriptions.Item>
-      <Descriptions.Item label="引擎类型">{getNameFromDockerImage(item.engine)}</Descriptions.Item>
-      <Descriptions.Item label="模型输出">{item.outputPath}</Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.engine' })}>
+        {getNameFromDockerImage(item.engine)}
+      </Descriptions.Item>
+      <Descriptions.Item label={formatMessage({ id: 'pretrainedModel.outputModel' })}>
+        {item.outputPath}
+      </Descriptions.Item>
     </Descriptions>
   );
 };
 
 const PretrainedModelList = (props) => {
+  const { formatMessage } = useIntl();
   const {
     loading,
     dispatch,
@@ -84,7 +95,7 @@ const PretrainedModelList = (props) => {
 
   const columns = [
     {
-      title: '模型名称',
+      title: formatMessage({ id: 'presetModelList.table.column.name' }),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -93,26 +104,26 @@ const PretrainedModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
-      title: '模型用途',
+      title: formatMessage({ id: 'presetModelList.table.column.use' }),
       dataIndex: 'use',
       ellipsis: true,
       width: 100,
     },
     {
-      title: '模型精度',
+      title: formatMessage({ id: 'presetModelList.table.column.precision' }),
       dataIndex: 'precision',
       ellipsis: true,
       width: 100,
     },
     {
-      title: '模型大小',
+      title: formatMessage({ id: 'presetModelList.table.column.size' }),
       // dataIndex: 'size',
       ellipsis: true,
       width: 150,
       render: (item) => bytesToSize(item.size),
     },
     {
-      title: '创建时间',
+      title: formatMessage({ id: 'presetModelList.table.column.createdAt' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -122,10 +133,14 @@ const PretrainedModelList = (props) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: '操作',
+      title: formatMessage({ id: 'presetModelList.table.column.action' }),
       width: 220,
       render: (item) => {
-        return <a onClick={() => createInference(item)}>创建训练作业</a>;
+        return (
+          <a onClick={() => createInference(item)}>
+            {formatMessage({ id: 'presetModelList.table.column.action.createTrainingJob' })}
+          </a>
+        );
       },
     },
   ];
@@ -190,7 +205,7 @@ const PretrainedModelList = (props) => {
           >
             <Search
               style={{ width: '200px', marginRight: '20px' }}
-              placeholder="请输入模型名称"
+              placeholder={formatMessage({ id: 'presetModelList.placeholder.search' })}
               onSearch={handleNameSearch}
               enterButton
               ref={searchEl}
@@ -206,7 +221,12 @@ const PretrainedModelList = (props) => {
           pagination={{
             total: data.pagination.total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) =>
+              `${formatMessage({
+                id: 'presetModelList.table.pagination.showTotal.prefix',
+              })} ${total} ${formatMessage({
+                id: 'presetModelList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,

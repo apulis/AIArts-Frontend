@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
+import { useIntl } from 'umi';
 
 const { Dragger } = Upload;
 const CodeUpload = (props) => {
+  const intl = useIntl();
   console.log(props);
   const modalData = props.modalData;
   const { codePath } = modalData;
@@ -21,9 +23,17 @@ const CodeUpload = (props) => {
       if (status !== 'uploading') {
       }
       if (status === 'done') {
-        message.success(`${info.file.name}文件上传成功！`);
+        message.success(
+          `${info.file.name} ${intl.formatMessage({
+            id: 'codeList.modal.upload.tips.uploadSuccess',
+          })}`,
+        );
       } else if (status === 'error') {
-        message.error(`${info.file.name} 文件上传失败！`);
+        message.error(
+          `${info.file.name} ${intl.formatMessage({
+            id: 'codeList.modal.upload.tips.uploadError',
+          })}`,
+        );
       }
     },
     beforeUpload(file) {
@@ -40,7 +50,9 @@ const CodeUpload = (props) => {
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
-        <p className="ant-upload-text">请点击或拖入文件上传（支持多文件）</p>
+        <p className="ant-upload-text">
+          {intl.formatMessage({ id: 'codeList.modal.upload.content.uploadTips' })}
+        </p>
       </Dragger>
     </>
   );

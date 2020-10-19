@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 export async function getModels(params) {
   return await request(`/models`, {
-    params
+    params,
   });
 }
 

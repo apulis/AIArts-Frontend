@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link } from 'umi';
 import moment from 'moment';
-import { getJobStatus, checkIfCanStop, checkIfCanDelete } from '@/utils/utils';
+import { getJobStatus, checkIfCanStop, checkIfCanDelete, getStatusList } from '@/utils/utils';
 import { sortText } from '@/utils/const';
 import {
   fetchTrainingList,
@@ -16,26 +16,14 @@ import style from './index.less';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
-
-export const statusList = [
-  { value: 'all', label: '全部' },
-  { value: 'unapproved', label: '未批准' },
-  { value: 'queued', label: '队列中' },
-  { value: 'scheduling', label: '调度中' },
-  { value: 'running', label: '运行中' },
-  { value: 'finished', label: '已完成' },
-  { value: 'failed', label: '已失败' },
-  { value: 'pausing', label: '暂停中' },
-  { value: 'paused', label: '已暂停' },
-  { value: 'killing', label: '关闭中' },
-  { value: 'killed', label: '已关闭' },
-  { value: 'error', label: '错误' },
-];
+import { useIntl } from 'umi';
 
 const { Search } = Input;
 const { Option } = Select;
 
 const List = (props) => {
+  const intl = useIntl();
+  const { formatMessage } = intl;
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -86,13 +74,13 @@ const List = (props) => {
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary();
     if (res.code === 0) {
-      const jobSumary = [{ value: 'all', label: '全部' }];
+      const jobSumary = [{ value: 'all', label: intl.formatMessage({ id: 'service.status.all' }) }];
       let total = 0;
       Object.keys(res.data).forEach((k) => {
         let count = res.data[k];
         total += count;
         jobSumary.push({
-          label: statusList.find((status) => status.value === k)?.label + `（${count}）`,
+          label: getStatusList().find((status) => status.value === k)?.label + `（${count}）`,
           value: k,
         });
       });
@@ -138,7 +126,7 @@ const List = (props) => {
   const stopTraining = async (id) => {
     const res = await removeTrainings(id);
     if (res.code === 0) {
-      message.success('已成功操作');
+      message.success(formatMessage({ id: 'modelTraining.list.message.delete.success' }));
       getTrainingList();
     }
   };
@@ -157,7 +145,7 @@ const List = (props) => {
     const handleDelete = async () => {
       const res = await deleteJob(jobId);
       if (res.code === 0) {
-        message.success('删除成功');
+        message.success(formatMessage({ id: 'modelTraining.list.message.handle.success' }));
         if (trainingWorkList.length === 1) {
           setPageNum(pageNum - 1);
           getTrainingList(false, { pageNo: pageNum - 1 });
@@ -169,8 +157,8 @@ const List = (props) => {
     };
     if (['unapproved', 'queued', 'scheduling', 'running'].includes(status)) {
       Modal.confirm({
-        title: '当前任务尚未停止',
-        content: '请先停止该任务',
+        title: formatMessage({ id: 'modelTraining.list.modal.title.current.task.dont.stopped' }),
+        content: formatMessage({ id: 'modelTraining.list.modal.content.please.stop.task' }),
         cancelButtonProps: { hidden: true },
         onCancel() {},
         onOk() {},
@@ -186,7 +174,7 @@ const List = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '作业名称',
+      title: intl.formatMessage({ id: 'modelList.table.column.name' }),
       key: 'jobName',
       render(_text, item) {
         return <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>;
@@ -196,19 +184,19 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: intl.formatMessage({ id: 'modelList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'modelList.table.column.engine' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
     },
     {
       dataIndex: 'createTime',
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'modelList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -218,7 +206,7 @@ const List = (props) => {
     },
     {
       dataIndex: 'desc',
-      title: '描述',
+      title: intl.formatMessage({ id: 'modelList.table.column.description' }),
       width: '100px',
       render(_text) {
         return (
@@ -229,7 +217,7 @@ const List = (props) => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'modelList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -239,7 +227,7 @@ const List = (props) => {
                   style={{ marginRight: '16px', display: 'block' }}
                   onClick={() => stopTraining(item.id)}
                 >
-                  停止
+                  {intl.formatMessage({ id: 'modelList.table.column.action.stop' })}
                 </a>
                 <Button
                   type="link"
@@ -247,13 +235,13 @@ const List = (props) => {
                   disabled={!checkIfCanDelete(item.status)}
                   onClick={() => handleDeleteJob(item.id, item.status)}
                 >
-                  删除
+                  {intl.formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ marginRight: '16px' }} className="disabled">
-                  已停止
+                  {intl.formatMessage({ id: 'modelList.table.column.action.hasStopped' })}
                 </div>
                 <Button
                   danger
@@ -261,7 +249,7 @@ const List = (props) => {
                   disabled={!checkIfCanDelete(item.status)}
                   onClick={() => handleDeleteJob(item.id, item.status)}
                 >
-                  删除
+                  {intl.formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
               </div>
             )}
@@ -286,7 +274,7 @@ const List = (props) => {
       >
         <Link to="/model-training/submit">
           <Button type="primary" href="">
-            创建训练作业
+            {intl.formatMessage({ id: 'modelList.add.modelTraining' })}
           </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
@@ -301,7 +289,7 @@ const List = (props) => {
           </Select>
           <Search
             style={{ width: '200px' }}
-            placeholder="输入作业名称查询"
+            placeholder={intl.formatMessage({ id: 'modelList.placeholder.search' })}
             onChange={onSearchInput}
             onSearch={searchList}
             enterButton

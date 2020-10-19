@@ -5,7 +5,7 @@ import { history, connect } from 'umi';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { avatar } from '@/utils/const';
-
+import { formatMessage } from 'umi';
 class AvatarDropdown extends React.Component {
   onMenuClick = (event) => {
     const { key } = event;
@@ -50,7 +50,7 @@ class AvatarDropdown extends React.Component {
 
         <Menu.Item key="logout">
           <LogoutOutlined />
-          退出登录
+          {formatMessage({ id: 'component.globalHeader.avatarDropdown.logout' })}
         </Menu.Item>
       </Menu>
     );

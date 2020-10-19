@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Table, Input, Button, Select, Card, message, Upload, Tooltip } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {
   fetchTemplates,
@@ -21,10 +21,12 @@ const { Option } = Select;
 const { Search } = Input;
 
 const ParamsManage = () => {
+  const { formatMessage } = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const [total, setTotal] = useState(0);
   const uploadRef = useRef(null);
   const [importedParamsModalVisible, setImportedParamsModalVisible] = useState(false);
@@ -53,12 +55,10 @@ const ParamsManage = () => {
 
   const handleDelete = async (id) => {
     confirm({
-      title: '删除参数配置',
+      title: formatMessage({ id: 'paramsManage.modal.confirm.delete.title' }),
       icon: <ExclamationCircleOutlined />,
-      content: '删除操作无法恢复，是否继续？',
-      okText: '确定',
+      content: formatMessage({ id: 'paramsManage.modal.confirm.delete.content' }),
       okType: 'danger',
-      cancelText: '取消',
       onOk: async () => {
         const res = await removeTemplate(id);
         if (res.code === 0) {
@@ -68,9 +68,9 @@ const ParamsManage = () => {
           } else {
             handleSearch();
           }
-          message.success('删除成功');
+          message.success(formatMessage({ id: 'paramsManage.modal.confirm.delete.success' }));
         } else {
-          message.error(`删除失败${error.msg}` || `删除失败`);
+          message.error(`${paramsManage.modal.confirm.delete.fail}${error.msg}`);
         }
       },
       onCancel() {},
@@ -96,7 +96,7 @@ const ParamsManage = () => {
 
   const columns = [
     {
-      title: '参数配置名称',
+      title: formatMessage({ id: 'trainingParamsList.table.column.name' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
       dataIndex: ['params', 'name'],
@@ -110,7 +110,7 @@ const ParamsManage = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: '引擎类型',
+      title: formatMessage({ id: 'trainingParamsList.table.column.engineType' }),
       dataIndex: ['params', 'engine'],
       key: 'engine',
       render(val) {
@@ -118,7 +118,7 @@ const ParamsManage = () => {
       },
     },
     {
-      title: '创建时间',
+      title: formatMessage({ id: 'trainingParamsList.table.column.createTime' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -126,27 +126,31 @@ const ParamsManage = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '描述',
+      title: formatMessage({ id: 'trainingParamsList.table.column.description' }),
       width: '25%',
       ellipsis: true,
       dataIndex: ['params', 'desc'],
     },
     {
-      title: '操作',
+      title: formatMessage({ id: 'trainingParamsList.table.column.action' }),
       render: (item) => {
         const id = item.metaData.id;
         const name = item.params.name;
         return (
           <>
-            <a onClick={() => handleCreateTrainJob(id)}>创建训练作业</a>
+            <a onClick={() => handleCreateTrainJob(id)}>
+              {formatMessage({
+                id: 'trainingParamsList.table.column.action.createTrainingJob',
+              })}
+            </a>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              编辑
+              {formatMessage({ id: 'trainingParamsList.table.column.action.edit' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              删除
+              {formatMessage({ id: 'trainingParamsList.table.column.action.delete' })}
             </a>
             <a style={{ marginLeft: '12px' }} onClick={() => saveTemplateAsFile(id, name)}>
-              导出参数
+              {formatMessage({ id: 'trainingParamsList.table.column.action.exportParams' })}
             </a>
           </>
         );
@@ -247,7 +251,7 @@ const ParamsManage = () => {
             }}
             type="primary"
           >
-            导入参数
+            {formatMessage({ id: 'trainingParamsList.add.importParams' })}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -258,7 +262,7 @@ const ParamsManage = () => {
               }
             </Select> */}
             <Search
-              placeholder="输入参数配置名称"
+              placeholder={formatMessage({ id: 'trainingParamsList.placeholder.search' })}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -283,7 +287,12 @@ const ParamsManage = () => {
             pageSize: pageParams.pageSize,
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) =>
+              `${formatMessage({
+                id: 'trainingParamsList.table.pagination.showTotal.prefix',
+              })} ${total} ${formatMessage({
+                id: 'trainingParamsList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
@@ -305,15 +314,17 @@ const ParamsManage = () => {
           }}
           onOk={saveFileAsTemplate}
         >
-          <Upload ref={uploadRef} beforeUpload={beforeUpload} action="/">
+          <Upload
+            ref={uploadRef}
+            beforeUpload={beforeUpload}
+            action="/"
+            onChange={(info) => setFileList(info.fileList)}
+          >
             <Tooltip
-              title={uploadRef.current?.state.fileList.length >= 1 ? '每次只能上传一个文件' : ''}
+              title={fileList.length >= 1 ? formatMessage({ id: 'paramsManage.upload.tip' }) : ''}
             >
-              <Button
-                disabled={uploadRef.current?.state.fileList.length >= 1}
-                icon={<UploadOutlined />}
-              >
-                上传 json 文件
+              <Button disabled={fileList.length >= 1} icon={<UploadOutlined />}>
+                {formatMessage({ id: 'paramsManage.upload.button' })}
               </Button>
             </Tooltip>
           </Upload>

@@ -102,7 +102,7 @@ const CodeCreate = (props) => {
     const obj = await postCode1(values);
     const { code, data, msg } = obj;
     if (code === 0) {
-      message.success(intl.formatMessage({id: 'codeCreate.tips.submit.success'}));
+      message.success(intl.formatMessage({ id: 'codeCreate.tips.submit.success' }));
       history.push('/codeDevelopment');
     }
   };
@@ -130,8 +130,8 @@ const CodeCreate = (props) => {
       )
     ) {
       Modal.confirm({
-        title: intl.formatMessage({id: 'codeCreate.modal.noDevice.title'}),
-        content: intl.formatMessage({id: 'codeCreate.modal.noDevice.content'}),
+        title: intl.formatMessage({ id: 'codeCreate.modal.noDevice.title' }),
+        content: intl.formatMessage({ id: 'codeCreate.modal.noDevice.content' }),
         onOk() {
           apiPostCode(values);
         },
@@ -169,7 +169,7 @@ const CodeCreate = (props) => {
   };
 
   const validateMessages = {
-    required: '${label} '+ intl.formatMessage({id: 'codeCreate.tips.needInput'}),
+    required: '${label} ' + intl.formatMessage({ id: 'codeCreate.rule.needInput' }),
     types: {},
   };
 
@@ -222,7 +222,7 @@ const CodeCreate = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/codeDevelopment')}
-        title={intl.formatMessage({id: 'codeCreate.pageHeader.backCodeCreate'})}
+        title={intl.formatMessage({ id: 'codeCreate.pageHeader.backCodeCreate' })}
       ></PageHeader>
       <Card>
         <Form
@@ -233,20 +233,31 @@ const CodeCreate = (props) => {
           initialValues={{ jobTrainingType: 'RegularJob' }}
           form={form}
         >
-          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.devEnvName'})} name="name" rules={[{ required: true }, jobNameReg]}>
-            <Input placeholder={intl.formatMessage({id: 'codeCreate.placeholder.devEnvName'})} />
+          <Form.Item
+            label={intl.formatMessage({ id: 'codeCreate.label.devEnvName' })}
+            name="name"
+            rules={[{ required: true }, jobNameReg]}
+          >
+            <Input placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.devEnvName' })} />
           </Form.Item>
-          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.description'})}  name="desc">
+          <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.description' })} name="desc">
             <TextArea
-              placeholder={intl.formatMessage({id: 'codeCreate.placeholder.description'})}
+              placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.description' })}
               autoSize={{ minRows: 2, maxRows: 6 }}
               maxLength={256}
             />
           </Form.Item>
-          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.storePath'})}  name="codePath" rules={[{ required: true }]}>
-            <Input addonBefore={codePathPrefix} placeholder={intl.formatMessage({id: 'codeCreate.placeholder.storePath'})}/>
+          <Form.Item
+            label={intl.formatMessage({ id: 'codeCreate.label.storePath' })}
+            name="codePath"
+            rules={[{ required: true }]}
+          >
+            <Input
+              addonBefore={codePathPrefix}
+              placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.storePath' })}
+            />
           </Form.Item>
-          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.engineSource'})}>
+          <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.engineSource' })}>
             <Radio.Group
               value={engineSource}
               onChange={(e) => {
@@ -254,15 +265,20 @@ const CodeCreate = (props) => {
               }}
               style={{ width: '300px' }}
             >
-              <Radio value={1}>{intl.formatMessage({id: 'codeCreate.value.presetEngine'})}</Radio>
-              <Radio value={2}>{intl.formatMessage({id: 'codeCreate.value.savedEngine'})}</Radio>
+              <Radio value={1}>{intl.formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
+              <Radio value={2}>{intl.formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
             </Radio.Group>
           </Form.Item>
           {engineSource === 1 && (
-            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.engineType'})}  required>
+            <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.engineType' })} required>
               <Form.Item
                 name="engineType"
-                rules={[{ required: true, message: intl.formatMessage({id: 'codeCreate.tips.selectEngineType'})}]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineType' }),
+                  },
+                ]}
                 style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
               >
                 <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
@@ -276,7 +292,12 @@ const CodeCreate = (props) => {
               </Form.Item>
               <Form.Item
                 name="engine"
-                rules={[{ required: true, message: intl.formatMessage({id: 'codeCreate.tips.selectEngineName'})}]}
+                rules={[
+                  {
+                    required: true,
+                    message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                  },
+                ]}
                 style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
               >
                 <Select>
@@ -292,8 +313,13 @@ const CodeCreate = (props) => {
           {engineSource === 2 && (
             <Form.Item
               name="engine"
-              label={intl.formatMessage({id: 'codeCreate.label.engineType'})} 
-              rules={[{ required: true, message: intl.formatMessage({id: 'codeCreate.tips.selectEngineName'})}]}
+              label={intl.formatMessage({ id: 'codeCreate.label.engineType' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                },
+              ]}
             >
               <Select showSearch>
                 {userFrameWorks.map((item, key) => (
@@ -305,13 +331,25 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
 
-          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.jobType'})} name="jobTrainingType" rules={[{ required: true }]}>
+          <Form.Item
+            label={intl.formatMessage({ id: 'codeCreate.label.jobType' })}
+            name="jobTrainingType"
+            rules={[{ required: true }]}
+          >
             <Radio.Group onChange={(e) => setJobTrainingType(e.target.value)}>
-              <Radio value="RegularJob">{intl.formatMessage({id: 'codeCreate.value.regularJob'})}</Radio>
-              <Radio value="PSDistJob">{intl.formatMessage({id: 'codeCreate.value.PSDistJob'})}</Radio>
+              <Radio value="RegularJob">
+                {intl.formatMessage({ id: 'codeCreate.value.regularJob' })}
+              </Radio>
+              <Radio value="PSDistJob">
+                {intl.formatMessage({ id: 'codeCreate.value.PSDistJob' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label={intl.formatMessage({id: 'codeCreate.label.deviceType'})}  name="deviceType" rules={[{ required: true }]}>
+          <Form.Item
+            label={intl.formatMessage({ id: 'codeCreate.label.deviceType' })}
+            name="deviceType"
+            rules={[{ required: true }]}
+          >
             <Select style={{ width: '50%' }} onChange={(type) => handleDeviceTypeChange(type)}>
               {deviceTypeArr.map((item, index) => (
                 <Option key={index} value={item} index={index}>
@@ -321,7 +359,11 @@ const CodeCreate = (props) => {
             </Select>
           </Form.Item>
           {jobTrainingType == 'RegularJob' && (
-            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.deviceNum'})}  name="deviceNum" rules={[{ required: true }]}>
+            <Form.Item
+              label={intl.formatMessage({ id: 'codeCreate.label.deviceNum' })}
+              name="deviceNum"
+              rules={[{ required: true }]}
+            >
               <Select style={{ width: '50%' }}>
                 {deviceNumArr.map((item, key) => (
                   <Option key={key} value={item}>
@@ -332,12 +374,16 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           {jobTrainingType == 'PSDistJob' && (
-            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.nodeNum'})}  name="numPs" rules={[{ required: true }]}>
+            <Form.Item
+              label={intl.formatMessage({ id: 'codeCreate.label.nodeNum' })}
+              name="numPs"
+              rules={[{ required: true }]}
+            >
               <InputNumber
                 style={{ width: '50%' }}
                 min={1}
                 max={maxNodeNum}
-                placeholder={intl.formatMessage({id: 'codeCreate.placeholder.nodeNum'})}
+                placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.nodeNum' })}
                 onChange={() =>
                   handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
                 }
@@ -345,7 +391,11 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           {jobTrainingType == 'PSDistJob' && (
-            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.perNodeNum'})}  name="numPsWorker" rules={[{ required: true }]}>
+            <Form.Item
+              label={intl.formatMessage({ id: 'codeCreate.label.perNodeNum' })}
+              name="numPsWorker"
+              rules={[{ required: true }]}
+            >
               <Select
                 style={{ width: '50%' }}
                 onChange={() =>
@@ -361,13 +411,16 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           {jobTrainingType == 'PSDistJob' && (
-            <Form.Item label={intl.formatMessage({id: 'codeCreate.label.totalDeviceNum'})}  name="deviceNum">
+            <Form.Item
+              label={intl.formatMessage({ id: 'codeCreate.label.totalDeviceNum' })}
+              name="deviceNum"
+            >
               <Input style={{ width: '50%' }} disabled></Input>
             </Form.Item>
           )}
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit">
-            {intl.formatMessage({id: 'codeCreate.submit'})}
+              {intl.formatMessage({ id: 'codeCreate.submit' })}
             </Button>
           </Form.Item>
         </Form>

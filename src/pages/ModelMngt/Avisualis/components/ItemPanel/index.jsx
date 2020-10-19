@@ -34,7 +34,7 @@ const ItemPanel = (props) => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
       const { nodes, edges } = flowChartData;
       if (nodes.length !== treeData.length) {
-        message.warning('请完成剩余步骤！');
+        message.warning(intl.formatMessage({ id: 'itemPanel.onSubmit.tips' }));
         return;
       }
       setBtnLoading(true);
@@ -71,7 +71,13 @@ const ItemPanel = (props) => {
         ? await patchAvisualis(detailId, submitData)
         : await submitAvisualis(submitData);
       if (code === 0) {
-        message.success(`${detailId ? '保存' : '创建'}成功！`);
+        message.success(
+          `${
+            detailId
+              ? intl.formatMessage({ id: 'itemPanel.save' })
+              : intl.formatMessage({ id: 'itemPanel.create' })
+          }intl.formatMessage({id: 'itemPanel.success'})！`,
+        );
         dispatch({
           type: 'avisualis/saveData',
           payload: {
@@ -95,9 +101,13 @@ const ItemPanel = (props) => {
             name={`${id}-${key}`}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `请输入${key}` }]}
+            rules={[{ required: true, message: `${itemPanel.input}${key}` }]}
           >
-            <Input placeholder={`请输入${key}`} disabled={type === 'disabled'} value={value} />
+            <Input
+              placeholder={`${intl.formatMessage({ id: 'itemPanel.input' })}${key}`}
+              disabled={type === 'disabled'}
+              value={value}
+            />
           </Form.Item>
         );
       } else if (type === 'number') {
@@ -107,7 +117,9 @@ const ItemPanel = (props) => {
             name={`${id}-${key}`}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `请输入${key}` }]}
+            rules={[
+              { required: true, message: `${intl.formatMessage({ id: 'itemPanel.input' })}${key}` },
+            ]}
           >
             <InputNumber style={{ width: '100%' }} value={value} />
           </Form.Item>
@@ -119,9 +131,14 @@ const ItemPanel = (props) => {
             name={`${id}-${key}`}
             label={key}
             initialValue={value}
-            rules={[{ required: true, message: `请选择${key}！` }]}
+            rules={[
+              {
+                required: true,
+                message: `${intl.formatMessage({ id: 'itemPanel.select' })}${key}！`,
+              },
+            ]}
           >
-            <Select placeholder="请选择" value={value}>
+            <Select placeholder={intl.formatMessage({ id: 'itemPanel.select' })} value={value}>
               {options.map((o) => (
                 <Option key={o} value={o}>
                   {o}
@@ -143,36 +160,42 @@ const ItemPanel = (props) => {
         m.value = newValues[n];
       });
       setFlowChartData(cloneData);
-      message.success('保存成功！');
+      message.success(intl.formatMessage({ id: 'itemPanel.save.success' }));
     });
   };
 
   const selectChangeNode = () => {
     if (!changeNodeKey) {
-      message.warning('请选择更换节点');
+      message.warning(intl.formatMessage({ id: 'itemPanel.node.change' }));
       return;
     }
     const success = onChangeNode(changeNodeKey);
     if (success) {
       setModalFlag(false);
-      message.success('更换成功！');
+      message.success(intl.formatMessage({ id: 'itemPanel.node.change.success' }));
     }
   };
 
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
-        <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
+        <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>
+          {intl.formatMessage({ id: 'itemPanel.return' })}
+        </Button>
         <Button type="primary" loading={btnLoading} onClick={onSubmit}>
-          {detailId ? '保存模型' : '创建模型'}
+          {detailId
+            ? intl.formatMessage({ id: 'itemPanel.model.save' })
+            : intl.formatMessage({ id: 'itemPanel.model.create' })}
         </Button>
       </div>
-      <Descriptions title="模型详情"></Descriptions>
+      <Descriptions title={intl.formatMessage({ id: 'itemPanel.model.deatil' })}></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
       {hasSelectItem && (
         <>
           <div className="ant-descriptions-title">{`${
-            hasSelectItem ? '节点配置' : '该节点无配置项'
+            hasSelectItem
+              ? intl.formatMessage({ id: 'itemPanel.node.config' })
+              : intl.formatMessage({ id: 'itemPanel.node.config.tips' })
           }`}</div>
           <Form form={form}>{getConfig()}</Form>
         </>
@@ -180,31 +203,33 @@ const ItemPanel = (props) => {
       <div style={{ float: 'right', textAlign: 'right' }}>
         {hasSelectItem && (
           <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>
-            保存配置
+            {intl.formatMessage({ id: 'itemPanel.config.save' })}
           </Button>
         )}
         {changeNodeOptions.length > 0 && (
           <Button type="primary" onClick={() => setModalFlag(true)}>
-            更换节点
+            {intl.formatMessage({ id: 'itemPanel.node.change' })}
           </Button>
         )}
       </div>
       {modalFlag && (
         <Modal
-          title="更换节点"
+          title={intl.formatMessage({ id: 'itemPanel.node.change' })}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
           maskClosable={false}
           footer={[
-            <Button onClick={() => setModalFlag(false)}>取消</Button>,
+            <Button onClick={() => setModalFlag(false)}>
+              {intl.formatMessage({ id: 'itemPanel.cancel' })}
+            </Button>,
             <Button type="primary" onClick={selectChangeNode}>
-              更换
+              {intl.formatMessage({ id: 'itemPanel.change' })}
             </Button>,
           ]}
         >
           <Select
-            placeholder="请选择节点"
+            placeholder={intl.formatMessage({ id: 'itemPanel.node.select' })}
             style={{ width: '100%' }}
             onChange={(v) => setChangeNodeKey(v)}
           >

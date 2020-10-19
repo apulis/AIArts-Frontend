@@ -2,6 +2,7 @@ import React, { useEffect, forwardRef } from 'react';
 // import moment from 'moment';
 import { Modal, Form, DatePicker, Input } from 'antd';
 import styles from './index.less';
+import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 const formLayout = {
@@ -14,6 +15,7 @@ const formLayout = {
 };
 
 const ModalForm = (props) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const { visible = true, current, onCancel, onSubmit } = props;
   useEffect(() => {
@@ -42,7 +44,7 @@ const ModalForm = (props) => {
   };
 
   const modalFooter = {
-    okText: '提交',
+    okText: intl.formatMessage({ id: 'modelForm.submit' }),
     onOk: handleSubmit,
     onCancel,
   };
@@ -52,7 +54,7 @@ const ModalForm = (props) => {
       <Form {...formLayout} form={form} onFinish={handleFinish}>
         <Form.Item
           name="name"
-          label="模型名称"
+          label={intl.formatMessage({ id: 'modelForm.modelName' })}
           // rules={[
           //   {
           //     required: true,
@@ -60,7 +62,7 @@ const ModalForm = (props) => {
           //   },
           // ]}
         >
-          <Input placeholder="请输入模型名称" disabled />
+          <Input placeholder={intl.formatMessage({ id: 'Item' })} disabled />
         </Form.Item>
         {/* <Form.Item
           name="latestTime"
@@ -97,15 +99,15 @@ const ModalForm = (props) => {
         </Form.Item> */}
         <Form.Item
           name="description"
-          label="描述"
+          label={intl.formatMessage({ id: 'modelForm.desc' })}
           rules={[
             {
-              message: '最多256个字！',
+              message: intl.formatMessage({ id: 'modelForm.desc.limit' }),
               max: 256,
             },
           ]}
         >
-          <TextArea rows={4} placeholder="输入最多256个字！" />
+          <TextArea rows={4} placeholder={intl.formatMessage({ id: 'modelForm.desc.tips' })} />
         </Form.Item>
       </Form>
     );
@@ -113,7 +115,7 @@ const ModalForm = (props) => {
 
   return (
     <Modal
-      title="修改模型"
+      title={intl.formatMessage({ id: 'modelForm.updateModel' })}
       className={styles.standardListForm}
       width={640}
       bodyStyle={{

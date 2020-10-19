@@ -4,9 +4,25 @@ import menu from './en-US/menu';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
-import codeCreate from './en-US/pages/codeDevelopment/codeCreate'
-import codeList from './en-US/pages/codeDevelopment/codeList'
-import codeUpload from './en-US/pages/codeDevelopment/codeUpload'
+import service from './en-US/service';
+import codeDevelopment from './en-US/pages/codeDevelopment';
+import dataSet from './en-US/pages/DataSet';
+import edgeInference from './en-US/pages/EdgeInference';
+import imageManage from './en-US/pages/ImageManage';
+import inferenceService from './en-US/pages/InferenceService';
+import modelTraining from './en-US/pages/ModelTraining';
+import modelMngt from './en-US/pages/ModelMngt';
+import overView from './en-US/pages/OverView';
+import resourceMonitoring from './en-US/pages/ResourceMonitoring';
+import setting from './en-US/pages/Setting';
+import visualOperation from './en-US/pages/VisualOperation';
+import table from './en-US/table';
+import form from './en-US/form';
+import ModelList from './en-US/pages/ModelTraining/List';
+import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit';
+import SubmitTrainingJobDetail from './en-US/pages/ModelTraining/Detail';
+import ParamsManage from './en-US/pages/ModelTraining/ParamsManage';
+import PretrainedModel from './en-US/pages/ModelMngt/PretrainedModel';
 
 export default {
   'navBar.lang': 'Languages',
@@ -19,10 +35,26 @@ export default {
   ...globalHeader,
   ...menu,
   ...settingDrawer,
+  ...service,
   ...settings,
   ...pwa,
   ...component,
-  ...codeCreate,
-  ...codeList,
-  ...codeUpload,
+  ...codeDevelopment,
+  ...dataSet,
+  ...edgeInference,
+  ...imageManage,
+  ...inferenceService,
+  ...modelTraining,
+  ...overView,
+  ...resourceMonitoring,
+  ...setting,
+  ...visualOperation,
+  ...modelMngt,
+  ...table,
+  ...form,
+  ...ModelList,
+  ...SubmitTrainingJob,
+  ...SubmitTrainingJobDetail,
+  ...ParamsManage,
+  ...PretrainedModel,
 };

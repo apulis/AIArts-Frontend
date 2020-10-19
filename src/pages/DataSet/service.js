@@ -18,7 +18,7 @@ export async function edit(id, data) {
 }
 
 export async function deleteDataSet(id) {
-  return await request(`/datasets/${id}`, { method: 'DELETE' })
+  return await request(`/datasets/${id}`, { method: 'DELETE' });
 }
 
 export async function upload(data) {

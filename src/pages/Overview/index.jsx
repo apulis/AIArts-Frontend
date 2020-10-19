@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import { getPieData } from './service';
 import { getJobStatus, getStatusColor } from '@/utils/utils';
-import { Link, history } from 'umi';
+import { Link, history, FormattedMessage } from 'umi';
 import noDataImg from '../../assets/no_data.png';
 import { connect } from 'dva';
 
@@ -27,22 +27,22 @@ const OverView = ({ user }) => {
   const [pieData, setPieData] = useState([
     {
       params: 'codeEnv',
-      name: '代码开发',
+      name: <FormattedMessage id="overview.codeDevelop" />,
       value: [],
     },
     {
       params: 'artsTraining',
-      name: '模型训练',
+      name: <FormattedMessage id="overview.modelTraining" />,
       value: [],
     },
     {
       params: 'artsEvaluation',
-      name: '模型评估',
+      name: <FormattedMessage id="overview.modelEvaluation" />,
       value: [],
     },
     {
       params: 'Inferencejob',
-      name: '推理服务',
+      name: <FormattedMessage id="overview.inference" />,
       value: [],
     },
   ]);
@@ -81,7 +81,9 @@ const OverView = ({ user }) => {
           ) : (
             <div className={styles.noData}>
               <img src={noDataImg} />
-              <p>暂无数据</p>
+              <p>
+                <FormattedMessage id="overview.noData" />
+              </p>
             </div>
           )}
         </Card>
@@ -93,31 +95,53 @@ const OverView = ({ user }) => {
     <PageHeaderWrapper style={{ overflowY: 'hidden' }}>
       {permissionList.includes('AI_ARTS_ALL') ? (
         <div className={styles.resourceMonitoringWrap}>
-          <h3>使用流程</h3>
+          <h3>
+            <FormattedMessage id="overview.use.manual" />
+          </h3>
           <Steps>
             <Step
               status="finish"
-              title={<Link to="/codeDevelopment">代码开发</Link>}
+              title={
+                <Link to="/codeDevelopment">
+                  <FormattedMessage id="overview.codeDevelop" />
+                </Link>
+              }
               icon={<EditOutlined onClick={() => history.push('/codeDevelopment')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/dataManage/dataSet">数据管理</Link>}
+              title={
+                <Link to="/dataManage/dataSet">
+                  <FormattedMessage id="overview.datesets" />
+                </Link>
+              }
               icon={<ReadOutlined onClick={() => history.push('/dataManage/dataSet')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/model-training/modelTraining">模型训练</Link>}
+              title={
+                <Link to="/model-training/modelTraining">
+                  <FormattedMessage id="overview.modelTraining" />
+                </Link>
+              }
               icon={<FireOutlined onClick={() => history.push('/model-training/modelTraining')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/ModelManagement/MyModels">模型管理</Link>}
+              title={
+                <Link to="/ModelManagement/MyModels">
+                  <FormattedMessage id="overview.modelManagement" />
+                </Link>
+              }
               icon={<CodepenOutlined onClick={() => history.push('/ModelManagement/MyModels')} />}
             />
             <Step
               status="finish"
-              title={<Link to="/Inference/central">推理服务</Link>}
+              title={
+                <Link to="/Inference/central">
+                  <FormattedMessage id="overview.inference" />
+                </Link>
+              }
               icon={<BulbOutlined onClick={() => history.push('/Inference/central')} />}
             />
           </Steps>
@@ -125,7 +149,7 @@ const OverView = ({ user }) => {
         </div>
       ) : permissionList.includes('LABELING_IMAGE') ? (
         <Button type="primary" href="/image_label">
-          去标注图片
+          <FormattedMessage id="overview.to.label.image" />
         </Button>
       ) : null}
     </PageHeaderWrapper>

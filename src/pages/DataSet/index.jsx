@@ -8,11 +8,13 @@ import { Link } from 'umi';
 import AddModalForm from './components/AddModalForm';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;
 
 const DataSetList = () => {
+  const intl = useIntl();
   const [dataSets, setDataSets] = useState({ data: [], total: 0 });
   const [editData, setEditData] = useState({});
   const [modalFlag, setModalFlag] = useState(false);
@@ -70,19 +72,19 @@ const DataSetList = () => {
       const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
-        text = '编辑';
+        text = intl.formatMessage({ id: 'dataSet.list.edit' });
         res = await edit(editData.id, values);
       } else {
         values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
         delete values.fileLists;
         delete values.sourceType;
-        text = '新增';
+        text = intl.formatMessage({ id: 'dataSet.list.add' });
         res = await add(values);
       }
       const { code } = res;
       if (code === 0) {
         getData();
-        message.success(`${text}成功！`);
+        message.success(`${text}${intl.formatMessage({ id: 'dataSet.list.success' })}`);
         setModalFlag(false);
       }
       setBtnLoading(false);
@@ -91,7 +93,7 @@ const DataSetList = () => {
 
   const columns = [
     {
-      title: '数据集名称',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.name' }),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -102,17 +104,17 @@ const DataSetList = () => {
       ),
     },
     {
-      title: '简介',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.description' }),
       dataIndex: 'description',
       ellipsis: true,
       width: 350,
     },
     {
-      title: '创建者',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.creator' }),
       dataIndex: 'creator',
     },
     {
-      title: '更新时间',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.updatedAt' }),
       key: 'updatedAt',
       dataIndex: 'updatedAt',
       sorter: true,
@@ -120,29 +122,37 @@ const DataSetList = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '更新版本',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.version' }),
       dataIndex: 'version',
     },
     {
-      title: '是否已标注',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.isTranslated' }),
       dataIndex: 'isTranslated',
-      render: (i) => <span>{i === true ? '是' : '否'}</span>,
+      render: (i) => (
+        <span>
+          {i === true
+            ? intl.formatMessage({ id: 'dataSet.list.yes' })
+            : intl.formatMessage({ id: 'dataSet.list.no' })}
+        </span>
+      ),
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'dataSetList.table.column.action' }),
       render: (item) => {
         const { id } = item;
         return (
           <>
-            <a onClick={() => onEditClick(item)}>编辑</a>
+            <a onClick={() => onEditClick(item)}>
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.edit' })}
+            </a>
             <a
               style={{ margin: '0 16px' }}
               onClick={() => window.open(`/ai_arts/api/files/download/dataset/${id}`)}
             >
-              下载
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.download' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => onDelete(id)}>
-              删除
+              {intl.formatMessage({ id: 'dataSetList.table.column.action.delete' })}
             </a>
           </>
         );
@@ -157,11 +167,11 @@ const DataSetList = () => {
 
   const onDelete = (id) => {
     confirm({
-      title: '确定要删除该数据集吗？',
+      title: intl.formatMessage({ id: 'dataSet.list.onDelete.title' }),
       icon: <ExclamationCircleOutlined />,
-      okText: '删除',
+      okText: intl.formatMessage({ id: 'dataSet.list.onDelete.okText' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'dataSet.list.onDelete.cancelText' }),
       onOk: async () => {
         const { code } = await deleteDataSet(id);
         if (code === 0) {
@@ -171,7 +181,7 @@ const DataSetList = () => {
           } else {
             getData();
           }
-          message.success('删除成功！');
+          message.success(intl.formatMessage({ id: 'dataSet.list.onDelete.success' }));
         }
       },
       onCancel() {},
@@ -189,16 +199,19 @@ const DataSetList = () => {
       <Card>
         <div className={styles.datasetWrap}>
           <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal(0)}>
-            新增数据集
+            {intl.formatMessage({ id: 'dataSet.list.add.dataSet' })}
           </Button>
           <div className={styles.searchWrap}>
             <Search
-              placeholder="请输入数据集名称查询"
+              placeholder={intl.formatMessage({ id: 'dataSet.list.placeholder.search' })}
               enterButton
               onSearch={() => setPageParams({ ...pageParams, pageNum: 1 })}
               onChange={(e) => setName(e.target.value)}
             />
-            <Button onClick={() => getData('刷新成功！')} icon={<SyncOutlined />} />
+            <Button
+              onClick={() => getData(intl.formatMessage({ id: 'dataSet.list.fresh.success' }))}
+              icon={<SyncOutlined />}
+            />
           </div>
           <Table
             columns={columns}
@@ -208,7 +221,12 @@ const DataSetList = () => {
             pagination={{
               total: dataSets.total,
               showQuickJumper: true,
-              showTotal: (total) => `总共 ${total} 条`,
+              showTotal: (total) =>
+                `${intl.formatMessage({
+                  id: 'dataSetList.table.pagination.showTotal.prefix',
+                })} ${total} ${intl.formatMessage({
+                  id: 'dataSetList.table.pagination.showTotal.suffix',
+                })}`,
               showSizeChanger: true,
               onChange: pageParamsChange,
               onShowSizeChange: pageParamsChange,
@@ -221,7 +239,11 @@ const DataSetList = () => {
       </Card>
       {modalFlag && (
         <Modal
-          title={`${modalType ? '编辑' : '新增'} 数据集`}
+          title={`${
+            modalType
+              ? intl.formatMessage({ id: 'dataSet.list.modal.title.edit' })
+              : intl.formatMessage({ id: 'dataSet.list.modal.title.add' })
+          } ${intl.formatMessage({ id: 'dataSet.list.modal.title.dataSet' })}`}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
@@ -229,9 +251,11 @@ const DataSetList = () => {
           width={600}
           className={styles.dataSetModal}
           footer={[
-            <Button onClick={() => setModalFlag(false)}>取消</Button>,
+            <Button onClick={() => setModalFlag(false)}>
+              {intl.formatMessage({ id: 'dataSetCreate.cancel' })}
+            </Button>,
             <Button type="primary" disabled={btnDisabled} loading={btnLoading} onClick={onSubmit}>
-              提交
+              {intl.formatMessage({ id: 'dataSetCreate.submit' })}
             </Button>,
           ]}
         >

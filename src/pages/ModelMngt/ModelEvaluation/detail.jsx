@@ -9,8 +9,10 @@ import { modelEvaluationType, REFRESH_INTERVAL } from '@/utils/const';
 
 import styles from './index.less';
 import { getNameFromDockerImage } from '@/utils/reg';
+import { useIntl } from 'umi';
 
 const EvaluationDetail = (props) => {
+  const intl = useIntl();
   const params = useParams();
   const modelId = params.id;
 
@@ -35,8 +37,8 @@ const EvaluationDetail = (props) => {
       const {
         data: { evaluation, log, indicator, confusion },
       } = res;
-      if ('visualPath' in evaluation.params) {
-        evaluation.visualPath = evaluation.params.visualPath;
+      if (evaluation.params && 'visualPath' in evaluation.params) {
+        evaluation.visualPath = evaluation.params?.visualPath;
         delete evaluation.params['visualPath'];
       }
       setEvaluationJob(evaluation);
@@ -71,7 +73,9 @@ const EvaluationDetail = (props) => {
   };
 
   const getLateastLogs = async () => {
-    const cancel = message.loading('获取结果中');
+    const cancel = message.loading(
+      intl.formatMessage({ id: 'modelMngt.detail.getLateastLogs.tips.loading' }),
+    );
     const res = await fetchEvaluationDetail(modelId);
     cancel();
     const { code, msg } = res;
@@ -79,9 +83,9 @@ const EvaluationDetail = (props) => {
       const {
         data: { evaluation, log, indicator, confusion },
       } = res;
-      message.success('成功获取结果');
+      message.success(intl.formatMessage({ id: 'modelMngt.detail.getLateastLogs.tips.success' }));
       if ('visualPath' in evaluation.params) {
-        evaluation.visualPath = evaluation.params.visualPath;
+        evaluation.visualPath = evaluation.params?.visualPath;
         delete evaluation.params['visualPath'];
       }
       setEvaluationJob(evaluation);
@@ -103,7 +107,9 @@ const EvaluationDetail = (props) => {
     delete submitData.templateData.id;
     const res = await saveEvaluationParams(submitData);
     if (res.code === 0) {
-      message.success('保存成功');
+      message.success(
+        intl.formatMessage({ id: 'modelMngt.detail.saveTrainingDetail.tips.success' }),
+      );
       setModalVisible(false);
     }
   };
@@ -128,48 +134,72 @@ const EvaluationDetail = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/ModelManagement/ModelEvaluation/List')}
-        title="评估详情"
+        title={intl.formatMessage({ id: 'modelMngt.detail.evaluation.detail' })}
       >
         <div className={styles.saveEvalParams}>
           {isPublic ? (
-            <Tooltip placement="bottomLeft" title="公有模板，不可保存" arrowPointAtCenter>
+            <Tooltip
+              placement="bottomLeft"
+              title={intl.formatMessage({ id: 'modelMngt.detail.template' })}
+              arrowPointAtCenter
+            >
               <Button type="primary" disabled onClick={() => setModalVisible(true)}>
-                保存评估参数
+                {intl.formatMessage({ id: 'modelMngt.detail.evaluation.saveParam' })}
               </Button>
             </Tooltip>
           ) : (
             <Button type="primary" onClick={() => setModalVisible(true)}>
-              保存评估参数
+              {intl.formatMessage({ id: 'modelMngt.detail.evaluation.saveParam' })}
             </Button>
           )}
         </div>
         <Descriptions style={{ marginTop: '20px' }} bordered={true} column={2}>
-          <Descriptions.Item label="模型名称">{evaluationJob?.name}</Descriptions.Item>
-          <Descriptions.Item label="创建时间">
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.modelName' })}>
+            {evaluationJob?.name}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.createTime' })}>
             {evaluationJob && evaluationJob.createTime
               ? moment(evaluationJob.createTime).format('YYYY-MM-DD HH:mm:ss')
               : ''}
           </Descriptions.Item>
-          <Descriptions.Item label="评估状态">
+          <Descriptions.Item
+            label={intl.formatMessage({ id: 'modelMngt.detail.evaluationStatus' })}
+          >
             {evaluationJob ? getJobStatus(evaluationJob.status) : ''}
           </Descriptions.Item>
-          <Descriptions.Item label="引擎类型">
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.engineType' })}>
             {getNameFromDockerImage(evaluationJob?.engine)}
           </Descriptions.Item>
-          <Descriptions.Item label="测试数据集">
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.testDataSet' })}>
             {evaluationJob &&
               (evaluationJob.datasetName ? evaluationJob.datasetName : evaluationJob.datasetPath)}
           </Descriptions.Item>
-          <Descriptions.Item label="代码目录">{evaluationJob?.codePath}</Descriptions.Item>
-          <Descriptions.Item label="启动文件">{evaluationJob?.startupFile}</Descriptions.Item>
-          <Descriptions.Item label="可视化路径">{evaluationJob?.visualPath}</Descriptions.Item>
-          <Descriptions.Item label="输出路径">{evaluationJob?.outputPath}</Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.codePath' })}>
+            {evaluationJob?.codePath}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.startupFile' })}>
+            {evaluationJob?.startupFile}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.visualPath' })}>
+            {evaluationJob?.visualPath}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.outputPath' })}>
+            {evaluationJob?.outputPath}
+          </Descriptions.Item>
           {evaluationJob && evaluationJob.paramPath ? (
-            <Descriptions.Item label="模型权重文件">{evaluationJob?.paramPath}</Descriptions.Item>
+            <Descriptions.Item
+              label={intl.formatMessage({ id: 'modelMngt.detail.modelWeightFile' })}
+            >
+              {evaluationJob?.paramPath}
+            </Descriptions.Item>
           ) : null}
-          <Descriptions.Item label="设备类型">{evaluationJob?.deviceType}</Descriptions.Item>
-          <Descriptions.Item label="设备数量">{evaluationJob?.deviceNum}</Descriptions.Item>
-          <Descriptions.Item label="运行参数">
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.deviceType' })}>
+            {evaluationJob?.deviceType}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.deviceNum' })}>
+            {evaluationJob?.deviceNum}
+          </Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'modelMngt.detail.runningParam' })}>
             {evaluationJob &&
               evaluationJob.params &&
               formatParams(evaluationJob.params).map((p) => <div>{p}</div>)}
@@ -178,10 +208,10 @@ const EvaluationDetail = (props) => {
         {!['unapproved', 'queued', 'scheduling', 'error'].includes(evaluationJob?.status) && (
           <>
             <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-              评估结果
+              {intl.formatMessage({ id: 'modelMngt.detail.evaluationResult' })}
             </div>
             <Button type="primary" onClick={getLateastLogs} style={{ marginTop: '16px' }}>
-              获取评估结果
+              {intl.formatMessage({ id: 'modelMngt.detail.getEvaluationResult' })}
             </Button>
           </>
         )}
@@ -231,17 +261,26 @@ const EvaluationDetail = (props) => {
           visible={modalVisible}
           onCancel={() => setModalVisible(false)}
           onOk={saveTrainingDetail}
-          title="保存至"
+          title={intl.formatMessage({ id: 'modelMngt.detail.save' })}
         >
           <Form form={form}>
-            <Form.Item {...commonLayout} name="name" label="配置名称" rules={[{ required: true }]}>
-              <Input placeholder="请输入配置名称" />
+            <Form.Item
+              {...commonLayout}
+              name="name"
+              label={intl.formatMessage({ id: 'modelMngt.detail.configName' })}
+              rules={[{ required: true }]}
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'modelMngt.detail.placeholder.needConfigName',
+                })}
+              />
             </Form.Item>
             <Form.Item
               {...commonLayout}
               name="jobType"
-              label="类型"
-              initialValue="模型评估"
+              label={intl.formatMessage({ id: 'modelMngt.detail.type' })}
+              initialValue={intl.formatMessage({ id: 'modelMngt.detail.modelEvaluation' })}
               rules={[{ required: true }]}
             >
               <Input disabled />
@@ -249,13 +288,18 @@ const EvaluationDetail = (props) => {
             <Form.Item
               {...commonLayout}
               name="engine"
-              label="引擎类型"
+              label={intl.formatMessage({ id: 'modelMngt.detail.engineType' })}
               initialValue={evaluationJob.engine}
               rules={[{ required: true }]}
             >
               <Input disabled />
             </Form.Item>
-            <Form.Item {...commonLayout} name="desc" label="描述" rules={[{ required: true }]}>
+            <Form.Item
+              {...commonLayout}
+              name="desc"
+              label={intl.formatMessage({ id: 'modelMngt.detail.description' })}
+              rules={[{ required: true }]}
+            >
               <Input.TextArea />
             </Form.Item>
             {/* <Form.Item

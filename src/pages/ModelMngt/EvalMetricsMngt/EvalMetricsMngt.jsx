@@ -11,16 +11,19 @@ import ExpandDetail from '@/pages/ModelTraining/ParamsManage/ExpandDetail';
 import styles from '@/global.less';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { downloadStringAsFile } from '@/utils/utils';
+import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Option } = Select;
 const { Search } = Input;
 
 const EvalMetricsMngt = () => {
+  const intl = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ scope: 2, searchWord: '' });
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [paramList, setParamList] = useState([]);
+  const [fileList, setFileList] = useState([]);
   const [total, setTotal] = useState(0);
   const uploadRef = useRef(null);
   const [sortedInfo, setSortedInfo] = useState({
@@ -31,9 +34,9 @@ const EvalMetricsMngt = () => {
   const [importedParamsModalVisible, setImportedParamsModalVisible] = useState(false);
   const [uploadParamsObj, setUploadParamsObj] = useState(undefined);
   const scopeList = [
-    { value: 3, label: '全部' },
-    { value: 1, label: '公有' },
-    { value: 2, label: '私有' },
+    { value: 3, label: intl.formatMessage({ id: 'evalMetricsMngt.all' }) },
+    { value: 1, label: intl.formatMessage({ id: 'evalMetricsMngt.public' }) },
+    { value: 2, label: intl.formatMessage({ id: 'evalMetricsMngt.private' }) },
   ];
 
   const pageParamsChange = (page, size) => {
@@ -46,12 +49,12 @@ const EvalMetricsMngt = () => {
 
   const handleDelete = async (id) => {
     confirm({
-      title: '删除参数配置',
+      title: intl.formatMessage({ id: 'evalMetricsMngt.deleteParamConfig' }),
       icon: <ExclamationCircleOutlined />,
-      content: '删除操作无法恢复，是否继续？',
-      okText: '确定',
+      content: intl.formatMessage({ id: 'evalMetricsMngt.delete.tips' }),
+      okText: intl.formatMessage({ id: 'evalMetricsMngt.ok' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'evalMetricsMngt.cancel' }),
       onOk: async () => {
         const res = await removeTemplate(id);
         if (res.code === 0) {
@@ -61,9 +64,12 @@ const EvalMetricsMngt = () => {
           } else {
             handleSearch();
           }
-          message.success('删除成功');
+          message.success(intl.formatMessage({ id: 'evalMetricsMngt.delete.success' }));
         } else {
-          message.error(`删除失败${error.msg}` || `删除失败`);
+          message.error(
+            `${intl.formatMessage({ id: 'evalMetricsMngt.delete.error' })}${error.msg}` ||
+              `${intl.formatMessage({ id: 'xxx' })}`,
+          );
         }
       },
       onCancel() {},
@@ -83,7 +89,7 @@ const EvalMetricsMngt = () => {
 
   const columns = [
     {
-      title: '评估参数名称',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.name' }),
       sorter: true,
       width: '16%',
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
@@ -98,7 +104,7 @@ const EvalMetricsMngt = () => {
     //   render: item => scopeList.find(scope => scope.value === item)?.label
     // },
     {
-      title: '引擎类型',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.engineType' }),
       dataIndex: ['params', 'engine'],
       width: '16%',
       key: 'engine',
@@ -107,7 +113,7 @@ const EvalMetricsMngt = () => {
       },
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.createTime' }),
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'created_at' && sortedInfo.order,
       dataIndex: ['metaData', 'createdAt'],
@@ -115,26 +121,28 @@ const EvalMetricsMngt = () => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.description' }),
       ellipsis: true,
       width: '16%',
       dataIndex: ['params', 'desc'],
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action' }),
       align: 'center',
       render: (item) => {
         const id = item.metaData.id;
         return (
           <>
             <a style={{ margin: '0 16px' }} onClick={() => handleEdit(id)}>
-              编辑
+              {intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action.edit' })}
             </a>
             <a style={{ color: 'red' }} onClick={() => handleDelete(id)}>
-              删除
+              {intl.formatMessage({ id: 'modelEvaluationMetricsList.table.column.action.delete' })}
             </a>
             <a style={{ marginLeft: '16px' }} onClick={() => handleSaveAsFile(item)}>
-              导出参数
+              {intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.column.action.exportParams',
+              })}
             </a>
           </>
         );
@@ -189,7 +197,7 @@ const EvalMetricsMngt = () => {
 
   const saveFileAsTemplate = async () => {
     if (!uploadParamsObj) {
-      message.error('没有可用的内容');
+      message.error(intl.formatMessage({ id: 'evalMetricsMngt.noContent' }));
       return;
     }
     const submitData = {};
@@ -252,7 +260,7 @@ const EvalMetricsMngt = () => {
               setImportedParamsModalVisible(true);
             }}
           >
-            导入参数
+            {intl.formatMessage({ id: 'modelEvaluationMetrics.list.add.importParams' })}
           </Button>
           <div className={styles.searchWrap}>
             {/* <Select style={{ width: 180, marginRight:'20px' }} defaultValue={currentScope} onChange={handleScopeChange}>
@@ -263,7 +271,9 @@ const EvalMetricsMngt = () => {
               }
             </Select>             */}
             <Search
-              placeholder="输入评估参数名称"
+              placeholder={intl.formatMessage({
+                id: 'modelEvaluationMetrics.list.placeholder.search',
+              })}
               onSearch={() => {
                 setPageParams({ ...pageParams, ...{ pageNum: 1 } });
                 handleSearch();
@@ -288,7 +298,12 @@ const EvalMetricsMngt = () => {
           pagination={{
             total: total,
             showQuickJumper: true,
-            showTotal: (total) => `总共 ${total} 条`,
+            showTotal: (total) =>
+              `${intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.pagination.showTotal.prefix',
+              })} ${total} ${intl.formatMessage({
+                id: 'modelEvaluationMetricsList.table.pagination.showTotal.suffix',
+              })}`,
             showSizeChanger: true,
             onChange: pageParamsChange,
             onShowSizeChange: pageParamsChange,
@@ -310,15 +325,21 @@ const EvalMetricsMngt = () => {
           }}
           onOk={saveFileAsTemplate}
         >
-          <Upload beforeUpload={beforeUpload} action="/" ref={uploadRef}>
+          <Upload
+            beforeUpload={beforeUpload}
+            action="/"
+            ref={uploadRef}
+            onChange={(info) => setFileList(info.fileList)}
+          >
             <Tooltip
-              title={uploadRef.current?.state.fileList.length >= 1 ? '每次只能上传一个文件' : ''}
+              title={
+                fileList.length >= 1
+                  ? intl.formatMessage({ id: 'evalMetricsMngt.upload.tips' })
+                  : ''
+              }
             >
-              <Button
-                disabled={uploadRef.current?.state.fileList.length >= 1}
-                icon={<UploadOutlined />}
-              >
-                上传 json 文件
+              <Button disabled={fileList.length >= 1} icon={<UploadOutlined />}>
+                {intl.formatMessage({ id: 'evalMetricsMngt.upload' })}
               </Button>
             </Tooltip>
           </Upload>
