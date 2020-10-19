@@ -37,9 +37,9 @@ const ParamsManage = () => {
   const [currentScope, setCurrentScope] = useState(3);
   const [uploadParamsObj, setUploadParamsObj] = useState(undefined);
   const scopeList = [
-    { value: 3, label: formatMessage({id: 'paramsManager.all'}) },
-    { value: 1, label: formatMessage({id: 'paramsManager.public'}) },
-    { value: 2, label: formatMessage({id: 'paramsManager.private'}) },
+    { value: 3, label: formatMessage({ id: 'paramsManager.all' }) },
+    { value: 1, label: formatMessage({ id: 'paramsManager.public' }) },
+    { value: 2, label: formatMessage({ id: 'paramsManager.private' }) },
   ];
 
   const pageParamsChange = (page, size) => {
@@ -222,7 +222,7 @@ const ParamsManage = () => {
 
   const saveFileAsTemplate = async () => {
     if (!uploadParamsObj) {
-      message.error(formatMessage({id: 'paramsManager.noContent'}));
+      message.error(formatMessage({ id: 'paramsManager.noContent' }));
       return;
     }
     const res = await saveTrainingParams(uploadParamsObj);

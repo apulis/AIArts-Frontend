@@ -91,7 +91,7 @@ const Visualization = () => {
     if (res.code === 0) {
       const { path } = res.data;
       if (!path) {
-        message.info(intl.formatMessage({id: 'visualzation.server.ready'}));
+        message.info(intl.formatMessage({ id: 'visualzation.server.ready' }));
         return;
       }
       window.open(path, '_blank');
@@ -104,19 +104,19 @@ const Visualization = () => {
   const handleDelete = (item) => {
     if (['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)) {
       Modal.warning({
-        title: intl.formatMessage({id: 'visualzation.notStop'}),
-        content: intl.formatMessage({id: 'visualzation.needStop'}),
-        okText: intl.formatMessage({id: 'visualzation.ok'}),
+        title: intl.formatMessage({ id: 'visualzation.notStop' }),
+        content: intl.formatMessage({ id: 'visualzation.needStop' }),
+        okText: intl.formatMessage({ id: 'visualzation.ok' }),
       });
       return;
     }
     confirm({
-      title: intl.formatMessage({id: 'visualzation.delete.job'}),
-      content: intl.formatMessage({id: 'visualzation.delete.isContinue'}),
+      title: intl.formatMessage({ id: 'visualzation.delete.job' }),
+      content: intl.formatMessage({ id: 'visualzation.delete.isContinue' }),
       icon: <ExclamationCircleOutlined />,
-      okText: intl.formatMessage({id: 'visualzation.ok'}),
+      okText: intl.formatMessage({ id: 'visualzation.ok' }),
       okType: 'danger',
-      cancelText: intl.formatMessage({id: 'visualzation.cancel'}),
+      cancelText: intl.formatMessage({ id: 'visualzation.cancel' }),
       onOk: async () => {
         const res = await deleteVisualization(item.id);
         if (res.code === 0) {
@@ -126,9 +126,12 @@ const Visualization = () => {
           } else {
             getVisualizations();
           }
-          message.success(intl.formatMessage({id: 'visualzation.delete.success'}));
+          message.success(intl.formatMessage({ id: 'visualzation.delete.success' }));
         } else {
-          message.error(`${intl.formatMessage({id: 'visualzation.delete.error'})}${error.msg}` || `${intl.formatMessage({id: 'visualzation.delete.error'})}`);
+          message.error(
+            `${intl.formatMessage({ id: 'visualzation.delete.error' })}${error.msg}` ||
+              `${intl.formatMessage({ id: 'visualzation.delete.error' })}`,
+          );
         }
       },
       onCancel() {},
