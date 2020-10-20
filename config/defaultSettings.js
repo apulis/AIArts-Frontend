@@ -11,7 +11,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '',
+  title: 'AI Arts',
   pwa: false,
   iconfontUrl: '',
 };
