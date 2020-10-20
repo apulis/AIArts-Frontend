@@ -32,7 +32,10 @@ const menuDataRender = (menuList, enableAvisuals) =>
         return null;
       }
     }
-    const localItem = { ...item, children: item.children ? menuDataRender(item.children, enableAvisuals) : [] };
+    const localItem = {
+      ...item,
+      children: item.children ? menuDataRender(item.children, enableAvisuals) : [],
+    };
     return Authorized.check(item.authority, localItem, null);
   });
 
@@ -63,7 +66,7 @@ const BasicLayout = (props) => {
   }; // get children authority
   const authorized = getRouteAuthority(location.pathname || '/', props.route.routes) || '';
   const { formatMessage } = useIntl();
-  console.log('common', props.common)
+  console.log('common', props.common);
   return (
     <>
       <ProLayout
@@ -72,9 +75,7 @@ const BasicLayout = (props) => {
         menuHeaderRender={(logoDom, titleDom) => (
           <Link to="/">
             {logoDom}
-            {
-              !props.collapsed && <h1>{props.common.platformName}</h1>
-            }
+            {!props.collapsed && <h1>{props.common.platformName}</h1>}
           </Link>
         )}
         onCollapse={handleMenuCollapse}
@@ -89,7 +90,7 @@ const BasicLayout = (props) => {
               </a>
             );
           }
-          
+
           return <Link to={menuItemProps.path}>{defaultDom}</Link>;
         }}
         breadcrumbRender={(routers = []) => [
