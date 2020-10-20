@@ -47,6 +47,7 @@ const BasicLayout = (props) => {
     location = {
       pathname: '/',
     },
+    collapsed,
   } = props;
   /**
    * constructor
@@ -75,7 +76,7 @@ const BasicLayout = (props) => {
         menuHeaderRender={(logoDom, titleDom) => (
           <Link to="/">
             {logoDom}
-            {!props.collapsed && <h1>{props.common.platformName}</h1>}
+            {!collapsed && <h1>{props.common.platformName}</h1>}
           </Link>
         )}
         onCollapse={handleMenuCollapse}

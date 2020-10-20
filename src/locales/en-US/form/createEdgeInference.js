@@ -1,5 +1,5 @@
 export default {
-  'edgeInferenceJobCreate.label.jobName': 'Inference Job Name',
+  'edgeInferenceJobCreate.label.jobName': 'Name',
   'edgeInferenceJobCreate.label.conversionType': 'Type',
   'edgeInferenceJobCreate.label.inputPath': 'Input Path',
   'edgeInferenceJobCreate.label.outputPath': 'Output Path',

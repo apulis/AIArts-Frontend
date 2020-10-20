@@ -88,12 +88,10 @@ const VersionMngt = (props) => {
         if (upgradeInfo.canUpgrade) {
           if (upgradeInfo.isLowerVersion) {
             Modal.confirm({
-              title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
-              okText: <FormattedMessage id="visualOperation.version.modal.upgrade.confirm" />,
-              cancelText: <FormattedMessage id="visualOperation.version.modal.upgrade.cancel" />,
-              content: (
-                <FormattedMessage id="visualOperation.version.modal.upgrade.check.content" />
-              ),
+              title: formatMessage({ id: 'visualOperation.version.modal.upgrade.title' }),
+              okText: formatMessage({ id: 'visualOperation.version.modal.upgrade.confirm' }),
+              cancelText: formatMessage({ id: 'visualOperation.version.modal.upgrade.cancel' }),
+              content: formatMessage({ id: 'visualOperation.version.modal.upgrade.check.content' }),
               onOk() {
                 upgradeManager('begin');
               },
@@ -103,8 +101,8 @@ const VersionMngt = (props) => {
           }
         } else {
           Modal.error({
-            title: <FormattedMessage id="visualOperation.version.modal.error.title" />,
-            content: <FormattedMessage id="visualOperation.version.modal.error.content" />,
+            title: formatMessage({ id: 'visualOperation.version.modal.error.title' }),
+            content: formatMessage({ id: 'visualOperation.version.modal.error.content' }),
           });
         }
         setCheckingFlag(false);
@@ -174,20 +172,20 @@ const VersionMngt = (props) => {
         return true;
       case 30501:
         Modal.error({
-          title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
-          content: <FormattedMessage id="visualOperation.version.modal.upgrade.30501.content" />,
+          title: formatMessage({ id: 'visualOperation.version.modal.upgrade.title' }),
+          content: formatMessage({ id: 'visualOperation.version.modal.upgrade.30501.content' }),
         });
         break;
       case 30502:
         Modal.error({
-          title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
-          content: <FormattedMessage id="visualOperation.version.modal.upgrade.30502.content" />,
+          title: formatMessage({ id: 'visualOperation.version.modal.upgrade.title' }),
+          content: formatMessage({ id: 'visualOperation.version.modal.upgrade.30502.content' }),
         });
         break;
       case 30503:
         Modal.error({
-          title: <FormattedMessage id="visualOperation.version.modal.upgrade.title" />,
-          content: <FormattedMessage id="visualOperation.version.modal.upgrade.30503.content" />,
+          title: formatMessage({ id: 'visualOperation.version.modal.upgrade.title' }),
+          content: formatMessage({ id: 'visualOperation.version.modal.upgrade.30503.content' }),
         });
         break;
     }
@@ -215,12 +213,10 @@ const VersionMngt = (props) => {
       setVHistoryNum(newNum);
     } else {
       Modal.info({
-        title: <FormattedMessage id="visualOperation.version.modal.tip" />,
+        title: formatMessage({ id: 'visualOperation.version.modal.tip' }),
         content: (
           <div>
-            <p>
-              <FormattedMessage id="visualOperation.version.modal.content.no.more.history" />
-            </p>
+            <p>{formatMessage({ id: 'visualOperation.version.modal.content.no.more.history' })}</p>
           </div>
         ),
       });

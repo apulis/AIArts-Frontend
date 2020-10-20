@@ -175,7 +175,10 @@ export default [
                 path: '/ModelManagement/avisualis',
                 component: './ModelMngt/Avisualis',
                 name: 'avisualis',
+<<<<<<< HEAD
                 enableKey: 'AVISUALIS',
+=======
+>>>>>>> 237442ff941f55e07275683b5f672846247157d6
               },
               {
                 path: '/ModelManagement/avisualis/templateList',

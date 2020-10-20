@@ -12,23 +12,23 @@ import {
 } from '@/services/modelTraning';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { useIntl } from 'umi';
+import { useIntl, formatMessage } from 'umi';
 
 const { confirm } = Modal;
 
 const statusList = [
-  { value: 'all', label: '全部' },
-  { value: 'unapproved', label: '未批准' },
-  { value: 'queued', label: '队列中' },
-  { value: 'scheduling', label: '调度中' },
-  { value: 'running', label: '运行中' },
-  { value: 'finished', label: '已完成' },
-  { value: 'failed', label: '已失败' },
-  { value: 'pausing', label: '暂停中' },
-  { value: 'paused', label: '已暂停' },
-  { value: 'killing', label: '关闭中' },
-  { value: 'killed', label: '已关闭' },
-  { value: 'error', label: '错误' },
+  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
+  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
+  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
+  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
+  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
+  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
+  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
+  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
+  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
+  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
+  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
 const { Search } = Input;
@@ -91,7 +91,7 @@ const Visualization = () => {
     if (res.code === 0) {
       const { path } = res.data;
       if (!path) {
-        message.info('服务正在准备中，请稍候再试');
+        message.info(intl.formatMessage({ id: 'visualzation.server.ready' }));
         return;
       }
       window.open(path, '_blank');
@@ -104,19 +104,19 @@ const Visualization = () => {
   const handleDelete = (item) => {
     if (['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)) {
       Modal.warning({
-        title: '当前任务尚未停止',
-        content: '请先停止该任务',
-        okText: '确定',
+        title: intl.formatMessage({ id: 'visualzation.notStop' }),
+        content: intl.formatMessage({ id: 'visualzation.needStop' }),
+        okText: intl.formatMessage({ id: 'visualzation.ok' }),
       });
       return;
     }
     confirm({
-      title: '删除可视化作业',
-      content: '删除操作无法恢复，是否继续？',
+      title: intl.formatMessage({ id: 'visualzation.delete.job' }),
+      content: intl.formatMessage({ id: 'visualzation.delete.isContinue' }),
       icon: <ExclamationCircleOutlined />,
-      okText: '确定',
+      okText: intl.formatMessage({ id: 'visualzation.ok' }),
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: intl.formatMessage({ id: 'visualzation.cancel' }),
       onOk: async () => {
         const res = await deleteVisualization(item.id);
         if (res.code === 0) {
@@ -126,9 +126,12 @@ const Visualization = () => {
           } else {
             getVisualizations();
           }
-          message.success('删除成功');
+          message.success(intl.formatMessage({ id: 'visualzation.delete.success' }));
         } else {
-          message.error(`删除失败${error.msg}` || `删除失败`);
+          message.error(
+            `${intl.formatMessage({ id: 'visualzation.delete.error' })}${error.msg}` ||
+              `${intl.formatMessage({ id: 'visualzation.delete.error' })}`,
+          );
         }
       },
       onCancel() {},
@@ -138,23 +141,23 @@ const Visualization = () => {
   const columns = [
     {
       dataIndex: 'jobName',
-      title: intl.formatMessage({ id: 'visualizationList.table.column.name' }),
+      title: formatMessage({ id: 'visualizationList.table.column.name' }),
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
-      title: intl.formatMessage({ id: 'visualizationList.table.column.status' }),
+      title: formatMessage({ id: 'visualizationList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'TensorboardLogDir',
-      title: intl.formatMessage({ id: 'visualizationList.table.column.logPath' }),
+      title: formatMessage({ id: 'visualizationList.table.column.logPath' }),
     },
     {
       dataIndex: 'createTime',
-      title: intl.formatMessage({ id: 'visualizationList.table.column.createTime' }),
+      title: formatMessage({ id: 'visualizationList.table.column.createTime' }),
       key: 'createTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
@@ -164,10 +167,10 @@ const Visualization = () => {
     },
     {
       dataIndex: 'description',
-      title: intl.formatMessage({ id: 'visualizationList.table.column.description' }),
+      title: formatMessage({ id: 'visualizationList.table.column.description' }),
     },
     {
-      title: intl.formatMessage({ id: 'visualizationList.table.column.action' }),
+      title: formatMessage({ id: 'visualizationList.table.column.action' }),
       render(_text, item) {
         return (
           <>
@@ -178,7 +181,7 @@ const Visualization = () => {
               }}
               disabled={!['running'].includes(item.status)}
             >
-              {intl.formatMessage({ id: 'visualizationList.table.column.action.open' })}
+              {formatMessage({ id: 'visualizationList.table.column.action.open' })}
             </Button>
             {['unapproved', 'queued', 'scheduling', 'running'].includes(item.status) ? (
               <Button
@@ -186,7 +189,7 @@ const Visualization = () => {
                 onClick={() => changeJobStatus(item.id, 'pause')}
                 disabled={!['unapproved', 'queued', 'scheduling', 'running'].includes(item.status)}
               >
-                {intl.formatMessage({ id: 'visualizationList.table.column.action.stop' })}
+                {formatMessage({ id: 'visualizationList.table.column.action.stop' })}
               </Button>
             ) : (
               <Button
@@ -194,11 +197,11 @@ const Visualization = () => {
                 onClick={() => changeJobStatus(item.id, 'running')}
                 disabled={!['paused', 'killed'].includes(item.status)}
               >
-                {intl.formatMessage({ id: 'visualizationList.table.column.action.run' })}
+                {formatMessage({ id: 'visualizationList.table.column.action.run' })}
               </Button>
             )}
             <Button type="link" onClick={() => handleDelete(item)} style={{ color: 'red' }}>
-              {intl.formatMessage({ id: 'visualizationList.table.column.action.delete' })}
+              {formatMessage({ id: 'visualizationList.table.column.action.delete' })}
             </Button>
           </>
         );
@@ -216,7 +219,7 @@ const Visualization = () => {
       >
         <Link to="/model-training/createVisualization">
           <Button type="primary" href="">
-            {intl.formatMessage({ id: 'visualizationList.add.createVisaulJob' })}
+            {formatMessage({ id: 'visualizationList.add.createVisaulJob' })}
           </Button>
         </Link>
         <div style={{ float: 'right', paddingRight: '20px' }}>
@@ -233,7 +236,7 @@ const Visualization = () => {
           </Select>
           <Search
             style={{ width: '200px' }}
-            placeholder={intl.formatMessage({ id: 'visualizationList.placeholder.search' })}
+            placeholder={formatMessage({ id: 'visualizationList.placeholder.search' })}
             onSearch={() => {
               setPageParams({ ...pageParams, ...{ pageNum: 1 } });
               getVisualizations();
@@ -258,9 +261,9 @@ const Visualization = () => {
             total: total,
             showQuickJumper: true,
             showTotal: (total) =>
-              `${intl.formatMessage({
+              `${formatMessage({
                 id: 'visualizationList.table.pagination.showTotal.prefix',
-              })} ${total} ${intl.formatMessage({
+              })} ${total} ${formatMessage({
                 id: 'visualizationList.table.pagination.showTotal.suffix',
               })}`,
             showSizeChanger: true,

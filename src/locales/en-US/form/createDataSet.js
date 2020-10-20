@@ -1,8 +1,8 @@
 export default {
-  'dataSetCreate.label.name': 'DataSet Name',
+  'dataSetCreate.label.name': 'Name',
   'dataSetCreate.label.description': 'Description',
-  'dataSetCreate.label.isTranslated': 'IsTranslated',
-  'dataSetCreate.label.isPrivate': 'IsPrivate',
+  'dataSetCreate.label.isTranslated': 'Translated',
+  'dataSetCreate.label.isPrivate': 'Permission',
   'dataSetCreate.label.sourceType': 'Source Type',
   'dataSetCreate.label.fileLists': 'Upload File',
   'dataSetCreate.label.path': 'Store Path',

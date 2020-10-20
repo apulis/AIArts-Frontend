@@ -37,9 +37,9 @@ const ParamsManage = () => {
   const [currentScope, setCurrentScope] = useState(3);
   const [uploadParamsObj, setUploadParamsObj] = useState(undefined);
   const scopeList = [
-    { value: 3, label: '全部' },
-    { value: 1, label: '公有' },
-    { value: 2, label: '私有' },
+    { value: 3, label: formatMessage({ id: 'paramsManager.all' }) },
+    { value: 1, label: formatMessage({ id: 'paramsManager.public' }) },
+    { value: 2, label: formatMessage({ id: 'paramsManager.private' }) },
   ];
 
   const pageParamsChange = (page, size) => {
@@ -222,7 +222,7 @@ const ParamsManage = () => {
 
   const saveFileAsTemplate = async () => {
     if (!uploadParamsObj) {
-      message.error('没有可用的内容');
+      message.error(formatMessage({ id: 'paramsManager.noContent' }));
       return;
     }
     const res = await saveTrainingParams(uploadParamsObj);

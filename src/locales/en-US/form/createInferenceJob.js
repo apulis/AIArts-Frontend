@@ -1,5 +1,5 @@
 export default {
-  'inferenceJobCreate.label.workName': 'Job Name',
+  'inferenceJobCreate.label.workName': 'Name',
   'inferenceJobCreate.label.desc': 'Description',
   'inferenceJobCreate.label.modelPath': 'Inference Model Path',
   'inferenceJobCreate.label.engineName': 'Engine',

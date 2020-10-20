@@ -14,7 +14,7 @@ export default {
   'codeCreate.value.presetEngine': 'Preset Engine',
   'codeCreate.value.savedEngine': 'Saved Engine',
   'codeCreate.value.regularJob': 'Regular Job',
-  'codeCreate.value.PSDistJob': 'PSDist Job',
+  'codeCreate.value.PSDistJob': 'Distributed Job',
 
   'codeCreate.placeholder.devEnvName': 'Please enter a development environment name',
   'codeCreate.placeholder.description': 'Please enter a description message',

@@ -1,7 +1,7 @@
 export default {
-  'avisualis.label.name': 'Model Name',
+  'avisualis.label.name': 'Name',
   'avisualis.label.description': 'Description',
-  'avisualis.label.jobTrainingType': 'Is Distributed Training',
+  'avisualis.label.jobTrainingType': 'Distributed',
   'avisualis.label.numPsWorker': 'Node Number',
   'avisualis.label.deviceNum': 'Device Type',
   'avisualis.label.deviceNumPerNode': 'Device Number Per Node',
