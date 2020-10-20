@@ -53,7 +53,7 @@ export default {
   'createModel.modalFooter.okText': 'Ok',
   'createModel.modalFooter.cancelText': 'Cancel',
 
-  'createModel.table.label.name': 'Job Name',
+  'createModel.table.label.name': 'Name',
   'createModel.table.label.engine': 'Engine Type',
   'createModel.table.label.desc': 'Description',
 
@@ -71,7 +71,7 @@ export default {
   'CreatePretrained.modalFooter.okText': 'Ok',
   'CreatePretrained.modalFooter.cancelText': 'Cancel',
 
-  'CreatePretrained.table.label.name': 'Job Name',
+  'CreatePretrained.table.label.name': 'Name',
   'CreatePretrained.table.label.engine': 'Engine Type',
   'CreatePretrained.table.label.desc': 'Description',
   'CreatePretrained.title': 'Please select a training assignment',
@@ -292,4 +292,14 @@ export default {
   'pretrainedModel.runningParam': 'Operating parameters',
   'pretrainedModel.engineType': 'Engine type',
   'pretrainedModel.modelOutput': 'Model output',
+
+  // List.js
+  'list.all': '全部',
+  'list.stop.success': '已成功停止',
+  'list.stop.not': '当前任务尚未停止',
+  'list.needStop': '请先停止该任务',
+  'list.ok': '确定',
+  'list.delete.success': '删除成功！',
+  'list.delete.error': '删除错误：',
+  'list.delete.evaluation.detail.view': '查看评估详情',
 };

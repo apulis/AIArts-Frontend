@@ -1,5 +1,5 @@
 export default {
-  'centerInferenceList.table.column.jobName': 'Job Name',
+  'centerInferenceList.table.column.jobName': 'Name',
   'centerInferenceList.table.column.useModel': 'Use Model',
   'centerInferenceList.table.column.status': 'Status',
   'centerInferenceList.table.column.engineType': 'Engine Type',

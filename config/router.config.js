@@ -171,18 +171,21 @@ export default [
                 path: '/ModelManagement/EvaluationMetricsManage/editMetrics/:id',
                 component: './ModelMngt/EvalMetricsMngt/component/EditMetrics',
               },
-              // {
-              //   path: '/ModelManagement/avisualis',
-              //   component: './ModelMngt/Avisualis',
-              //   name: 'avisualis',
-              // },
+              {
+                path: '/ModelManagement/avisualis',
+                component: './ModelMngt/Avisualis',
+                name: 'avisualis',
+                enableKey: 'AVISUALIS',
+              },
               {
                 path: '/ModelManagement/avisualis/templateList',
                 component: './ModelMngt/Avisualis/templateList',
+                enableKey: 'AVISUALIS',
               },
               {
                 path: '/ModelManagement/avisualis/detail/:id',
                 component: './ModelMngt/Avisualis/detail',
+                enableKey: 'AVISUALIS',
               },
             ],
           },

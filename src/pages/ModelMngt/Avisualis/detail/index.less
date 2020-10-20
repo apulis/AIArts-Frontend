@@ -1,17 +1,20 @@
-.avisualisWrap {
+.avisualisDetailWrap {
   min-width: 1500px !important;
-  height: calc(85vh);
+  height: 1000px;
+  white-space: nowrap;
+  // overflow-x: auto;
+  // overflow-y: hidden;
   :global {
     .ant-card {
       display: inline-block;
-      height: calc(100vh);
-      width: 330px;
+      height: 1000px;
+      width: 20%;
       vertical-align: top;
       background: #f8f8f8;
+      overflow-y: auto;
       .ant-card-body {
         padding: 24px 16px;
-        overflow-y: scroll;
-        height: calc(~'100vh - 100px');
+        // height: calc(~'100vh - 100px');
       }
     }
     .ant-tree {

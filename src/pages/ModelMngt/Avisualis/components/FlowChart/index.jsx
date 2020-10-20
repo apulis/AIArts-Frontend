@@ -18,6 +18,33 @@ insertCss(`
   }
 `);
 
+const collapseIcon = (x, y, r) => {
+  return [
+    ['M', x - r, y],
+    ['a', r, r, 0, 1, 0, r * 2, 0],
+    ['a', r, r, 0, 1, 0, -r * 2, 0],
+    ['M', x - r + 4, y],
+    ['L', x - r + 2 * r - 4, y],
+  ];
+};
+
+const expandIcon = (x, y, r) => {
+  return [
+    ['M', x - r, y],
+    ['a', r, r, 0, 1, 0, r * 2, 0],
+    ['a', r, r, 0, 1, 0, -r * 2, 0],
+    ['M', x - r + 4, y],
+    ['L', x - r + 2 * r - 4, y],
+    ['M', x - r + r, y - r + 4],
+    ['L', x, y + r - 4],
+  ];
+};
+
+const anchorPoints = [
+  [0.5, 0],
+  [0.5, 1],
+];
+
 const FlowChart = forwardRef((props, ref) => {
   const intl = useIntl();
   const { transformData, detailData, avisualis, detailId } = props;
@@ -26,6 +53,21 @@ const FlowChart = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
   const { panelApiData, treeData } = avisualis;
+  // const data = {
+  //   nodes: [
+  //     { id: "mnist", name: "mnist", treeIdx: 0, anchorPoints: anchorPoints },
+  //     { id: 'DevResNet', name: 'DevResNet',treeIdx: 1, comboId: 'SEResNet', anchorPoints: anchorPoints },
+  //     { id: 'MaxNet',name: 'MaxNet', comboId: "SEResNet", treeIdx: 1, anchorPoints: anchorPoints },
+  //   ],
+
+  //   combos: [
+  //     { id: 'Backbone', label: 'Backbone', anchorPoints: anchorPoints },
+  //     { id: 'SEResNet', label: 'SEResNet', parentId: "Backbone", anchorPoints: anchorPoints, },
+  //   ],
+  //   edges: [
+  //     { source: 'mnist', target: 'DevResNet' },
+  //   ],
+  // };
 
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd,
@@ -37,26 +79,73 @@ const FlowChart = forwardRef((props, ref) => {
 
   const getData = async () => {
     setLoading(true);
+    G6.registerCombo(
+      'cRect',
+      {
+        drawShape: function drawShape(cfg, group) {
+          const self = this;
+          cfg.padding = cfg.padding || [50, 20, 20, 20];
+          const style = self.getShapeStyle(cfg);
+          const rect = group.addShape('rect', {
+            attrs: {
+              ...style,
+              x: -style.width / 2 - (cfg.padding[3] - cfg.padding[1]) / 2,
+              y: -style.height / 2 - (cfg.padding[0] - cfg.padding[2]) / 2,
+              width: style.width,
+              height: style.height,
+            },
+            draggable: false,
+            name: 'combo-keyShape',
+          });
+          group.addShape('marker', {
+            attrs: {
+              ...style,
+              fill: '#fff',
+              opacity: 1,
+              x: cfg.style.width / 2 + cfg.padding[1],
+              y: (cfg.padding[2] - cfg.padding[0]) / 2,
+              r: 10,
+              symbol: collapseIcon,
+            },
+            draggable: true,
+            name: 'combo-marker-shape',
+          });
+          return rect;
+        },
+        afterUpdate: function afterUpdate(cfg, combo) {
+          const group = combo.get('group');
+          const marker = group.find((ele) => ele.get('name') === 'combo-marker-shape');
+          marker.attr({
+            x: cfg.style.width / 2 + cfg.padding[1],
+            y: (cfg.padding[2] - cfg.padding[0]) / 2,
+            symbol: cfg.collapsed ? expandIcon : collapseIcon,
+          });
+        },
+      },
+      'rect',
+    );
+
     G6.registerNode(
       'flowChart',
       {
         drawShape(cfg, group) {
+          const { name } = cfg;
           const rect = group.addShape('rect', {
             attrs: {
-              x: -140,
-              y: -25,
-              width: 280,
-              height: 50,
+              x: -(name.length * 6 + 10),
+              y: -20,
+              width: 12 * name.length + 20,
+              height: 40,
               radius: 10,
               stroke: '#1890ff',
               lineWidth: 3,
             },
             name: 'rect-shape',
           });
-          if (cfg.name) {
+          if (name) {
             group.addShape('text', {
               attrs: {
-                text: cfg.name,
+                text: name,
                 x: 0,
                 y: 0,
                 fill: 'black',
@@ -74,7 +163,10 @@ const FlowChart = forwardRef((props, ref) => {
       },
       'single-node',
     );
+
     const height = document.getElementById('container').scrollHeight || 500;
+    const width = document.getElementById('container').scrollWidth || 800;
+
     const minimap = new G6.Minimap({
       size: [150, 100],
     });
@@ -115,28 +207,40 @@ const FlowChart = forwardRef((props, ref) => {
         }
       },
     });
+
     let _graph = new G6.Graph({
       container: 'container',
-      width: 800,
+      width: width,
       height,
-
       layout: {
         type: 'dagre',
-        ranksep: 30,
         controlPoints: true,
+        sortByCombo: true,
       },
       defaultNode: {
         type: 'flowChart',
       },
       defaultEdge: {
-        type: 'cubic-vertical',
         style: {
           radius: 20,
-          offset: 45,
           endArrow: true,
           lineAppendWidth: 10,
           lineWidth: 2,
           stroke: '#C2C8D5',
+        },
+      },
+      groupByTypes: false,
+      defaultCombo: {
+        type: 'cRect',
+        labelCfg: {
+          style: {
+            fontSize: 16,
+          },
+        },
+      },
+      comboStateStyles: {
+        hover: {
+          cursor: 'pointer',
         },
       },
       nodeStateStyles: {
@@ -145,23 +249,60 @@ const FlowChart = forwardRef((props, ref) => {
           fill: '#5394ef',
         },
         hover: {
-          cursor: 'move',
+          cursor: 'pointer',
           fill: 'lightsteelblue',
         },
       },
       modes: {
         default: [
-          'drag-canvas',
           'zoom-canvas',
+          'drag-canvas',
           {
             type: 'click-select',
             multiple: false,
           },
-          'drag-node',
           'customer-events',
         ],
       },
       plugins: [minimap, toolbar],
+    });
+
+    _graph.on('afterlayout', (e) => {
+      const allNodes = _graph.findAll('node', (n) => {
+        return n;
+      });
+      let comboIdObj = { one: { num: 0, treeIdx: 0 } };
+      allNodes &&
+        allNodes.length &&
+        allNodes.forEach((i, idx) => {
+          const { id, comboId, treeIdx, edges } = i._cfg.model;
+          const thisNode = _graph.findById(id);
+          const key = comboId ? comboId : id;
+          let broNum = 0;
+          if (idx === 0) {
+            _graph.updateItem(thisNode, { x: 0, y: 0 });
+            return;
+          }
+          Object.keys(comboIdObj).forEach((b) => {
+            if (comboIdObj[b].treeIdx === treeIdx && b !== comboId) broNum++;
+          });
+          if (comboIdObj[key]) {
+            comboIdObj[key] = { num: comboIdObj[key].num + 1, treeIdx: treeIdx };
+          } else {
+            comboIdObj[key] = { num: 0, treeIdx: treeIdx };
+          }
+          let Y = 200 * treeIdx + 50 * comboIdObj[key].num;
+          if (treeIdx === panelApiData.length - 1) {
+            const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+            Y = preNodeY + 100;
+          }
+
+          _graph.updateItem(thisNode, {
+            x: 250 * broNum,
+            y: Y,
+            anchorPoints: anchorPoints,
+          });
+        });
     });
     _graph.data(flowChartData);
     _graph.render();
@@ -170,12 +311,10 @@ const FlowChart = forwardRef((props, ref) => {
       _graph.setItemState(e.item, 'hover', true); // 设置当前节点的 hover 状态为 true
     });
 
-    // 鼠标离开节点
     _graph.on('node:mouseleave', (e) => {
       _graph.setItemState(e.item, 'hover', false); // 设置当前节点的 hover 状态为 false
     });
 
-    // Click a node
     _graph.on('node:click', (e) => {
       const clickNodes = _graph.findAllByState('node', 'click');
       clickNodes.forEach((cn) => {
@@ -192,7 +331,28 @@ const FlowChart = forwardRef((props, ref) => {
 
     _graph.on('keydown', (e) => {
       const { keyCode } = e;
-      if (keyCode === 8 || keyCode === 46) deleteNode(_graph);
+      if (keyCode === 46) deleteNode(_graph);
+    });
+
+    _graph.on('combo:click', (e) => {
+      const nodeItem = e.item;
+      const clickNodes = _graph.findAllByState('node', 'click');
+      clickNodes.forEach((cn) => {
+        _graph.setItemState(cn, 'selected', false);
+      });
+      if (e.target.get('name') === 'combo-marker-shape') {
+        _graph.collapseExpandCombo(nodeItem);
+        _graph.refreshPositions();
+      }
+      setSelectItem(nodeItem);
+    });
+
+    _graph.on('combo:mouseenter', (e) => {
+      _graph.setItemState(e.item, 'hover', true);
+    });
+
+    _graph.on('combo:mouseleave', (e) => {
+      _graph.setItemState(e.item, 'hover', false);
     });
 
     _graph.fitCenter();
@@ -200,115 +360,177 @@ const FlowChart = forwardRef((props, ref) => {
     setLoading(false);
   };
 
-  const handleDragEnd = (node) => {
-    const { title, key, config, idx } = node;
+  const handleDragEnd = (node, isChangeNode) => {
+    const { title, key, config, treeIdx, child } = node;
     const hasNodes =
       Object.keys(flowChartData).length && flowChartData.nodes && flowChartData.nodes.length;
+    if (
+      (!isChangeNode &&
+        hasNodes &&
+        treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) ||
+      (!hasNodes && treeIdx > 0)
+    ) {
+      message.warning('只能按照步骤顺序依次拖拽！');
+      return;
+    }
     let newData = {},
+      nodeArr = [],
+      combosArr = [],
       newNodes = {
         id: key,
         name: title,
         config: config,
-        idx: idx,
+        treeIdx: treeIdx,
       };
-    if ((hasNodes && idx > flowChartData.nodes.length) || (!hasNodes && idx > 0)) {
-      message.warning(intl.formatMessage({ id: 'flowChart.tips.drag' }));
-      return;
+    if (child && child.length) {
+      combosArr.push({
+        id: key,
+        label: title,
+        config: config,
+        treeIdx: treeIdx,
+      });
+      getChilds(child, nodeArr, combosArr, key, treeIdx);
     }
     if (hasNodes) {
       newData = _.cloneDeep(flowChartData);
-      const { edges, nodes } = newData;
-      const edgesLen = edges.length;
-      const nodesLen = nodes.length;
-      const temp = {
-        source: nodes[nodesLen - 1].id,
-        target: key,
-      };
-      if (edgesLen) {
-        edges.push(temp);
-      } else {
-        edges[0] = temp;
+      let thisId = '';
+      if (isChangeNode) {
+        newData.nodes = newData.nodes.filter((i) => i.treeIdx !== treeIdx);
+        newData.edges = newData.edges.filter((i) => i.treeIdx !== treeIdx);
+        newData.combos = newData.combos.filter((i) => i.treeIdx !== treeIdx);
       }
-      nodes.push(newNodes);
+      const { edges, nodes, combos } = newData;
+      const edgesLen = edges.length;
+      if (child && child.length) {
+        nodeArr.forEach((i) => {
+          newData.nodes.push(i);
+        });
+        if (!combos) newData.combos = [];
+        combosArr.forEach((i) => {
+          newData.combos.push(i);
+        });
+      } else {
+        newData.nodes.push(newNodes);
+      }
+      let edgesTemp = [];
+      edgesTemp.push({
+        source: newData.nodes.find((o) => o.treeIdx === treeIdx - 1).id,
+        target: newData.nodes.find((o) => o.treeIdx === treeIdx).id,
+        treeIdx: treeIdx,
+      });
+      if (isChangeNode && treeIdx !== Math.max(...newData.nodes.map((i) => i.treeIdx))) {
+        edgesTemp.push({
+          source: newData.nodes.find((o) => o.treeIdx === treeIdx).id,
+          target: newData.nodes.find((o) => o.treeIdx === treeIdx + 1).id,
+          treeIdx: treeIdx + 1,
+        });
+      }
+      if (edges && edgesLen) {
+        newData.edges.push(...edgesTemp);
+      } else {
+        newData.edges = edgesTemp;
+      }
     } else {
-      newData = {
-        nodes: [newNodes],
-        edges: [],
-      };
+      newData.nodes = [newNodes];
+      if (child && child.length) {
+        newData.nodes.push(nodeArr);
+        newData.combos = combosArr;
+      }
+      newData.edges = [];
     }
+    Object.keys(newData).forEach((i) => {
+      if (i === 'edges') {
+        newData[i].forEach((m) => {
+          m.sourceAnchor = 1;
+          m.targetAnchor = 0;
+        });
+      } else {
+        newData[i].forEach((m) => (m.anchorPoints = anchorPoints));
+      }
+    });
+
     setFlowChartData(newData);
-    graph.changeData(newData);
-    graph.fitCenter();
     transformData(null, newData);
+    graph.read(newData);
+    graph.fitCenter();
     setSelectItem(null);
+  };
+
+  const getChilds = (data, nodeArr, combosArr, fName, treeIdx) => {
+    data.forEach((i) => {
+      const { name, config, children } = i;
+      if (children && children.length) {
+        combosArr.push({
+          id: name,
+          label: name,
+          parentId: fName,
+          config: config,
+          treeIdx: treeIdx,
+        });
+        getChilds(children, nodeArr, combosArr, name, treeIdx);
+      } else {
+        nodeArr.push({
+          id: name,
+          config: config,
+          name: name,
+          comboId: fName,
+          treeIdx: treeIdx,
+        });
+      }
+    });
   };
 
   const deleteNode = (graph) => {
     const allNodes = graph.get('nodes');
     const selectedItem = graph.findAllByState('node', 'selected');
     if (selectedItem && selectedItem.length) {
-      const _id = selectedItem[0]._cfg.id;
-      if (_id !== allNodes[allNodes.length - 1]._cfg.id) {
-        message.warning(intl.formatMessage({ id: 'flowChart.tips.delete' }));
+      const { treeIdx } = selectedItem[0]._cfg.model;
+      if (treeIdx !== allNodes[allNodes.length - 1]._cfg.model.treeIdx) {
+        message.warning('只能按照模型顺序依次删除！');
         return;
       }
-      allNodes.forEach((i) => {
-        if (i._cfg.id === _id) {
-          let newData = _.cloneDeep(graph);
-          const { nodes, edges } = newData.cfg;
-          nodes && nodes.length && nodes.pop();
-          edges && edges.length && edges.pop();
-          const newNodes = nodes.map((i) => {
-            const { id, name, config } = i._cfg.model;
-            return {
-              id: id,
-              name: name,
-              config: config,
-            };
-          });
-          const newEdges = edges.map((i) => {
-            const { source, target } = i._cfg.model;
-            return {
-              source: source,
-              target: target,
-            };
-          });
-          const temp = {
-            nodes: newNodes,
-            edges: newEdges,
-          };
-          setFlowChartData(temp);
-          graph.changeData(temp);
-          graph.fitCenter();
-          transformData(panelApiData, temp);
-          setSelectItem(null);
-          return;
-        }
+      let newData = _.cloneDeep(graph);
+      const { nodes, edges, combos } = newData.cfg;
+      edges && edges.length && edges.pop();
+      const newEdges = edges.map((i) => {
+        const { source, target } = i._cfg.model;
+        return {
+          source: source,
+          target: target,
+          sourceAnchor: 1,
+          targetAnchor: 0,
+        };
       });
+      const temp = {
+        nodes: nodes
+          .filter((n) => n._cfg.model.treeIdx !== treeIdx)
+          .map((i) => {
+            return { ...i._cfg.model };
+          }),
+        edges: newEdges,
+        combos: combos
+          .filter((c) => c._cfg.model.treeIdx !== treeIdx)
+          .map((i) => {
+            return { ...i._cfg.model };
+          }),
+      };
+      setFlowChartData(temp);
+      transformData(panelApiData, temp);
+      graph.read(temp);
+      graph.fitCenter();
+      setSelectItem(null);
     }
   };
 
-  const onChangeNode = (id) => {
-    const fId = id.split('-')[0];
-    const fIdx = treeData.findIndex((i) => fId === i.key);
-    const changeChildTemp = treeData[fIdx].children;
-    const changeNode = changeChildTemp.find((i) => i.key === id);
-    const cloneData = _.cloneDeep(flowChartData);
-    const { title, key, config } = changeNode;
-    cloneData.nodes[fIdx] = {
-      id: key,
-      name: title,
-      config: config,
-      idx: fIdx,
-    };
-    cloneData.edges[fIdx].source = id;
-    if (fIdx !== 0) cloneData.edges[fIdx - 1].target = id;
-    setSelectItem(null);
-    setFlowChartData(cloneData);
-    graph.changeData(cloneData);
-    graph.fitCenter();
-    return true;
+  const onChangeNode = (key) => {
+    const treeIdx = key.split('-')[0];
+    const id = key.split('-')[1];
+    // const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
+    // handleDragEnd(changeNodeData, true);
+    // return true;
   };
+
+  // console.log('-------selectItem', selectItem)
 
   return (
     <>

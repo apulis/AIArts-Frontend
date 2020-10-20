@@ -25,9 +25,17 @@ const noMatch = (
 /**
  * use Authorized check all menu item
  */
-const menuDataRender = (menuList) =>
+const menuDataRender = (menuList, enableAvisuals) =>
   menuList.map((item) => {
-    const localItem = { ...item, children: item.children ? menuDataRender(item.children) : [] };
+    if (item.enableKey === 'AVISUALIS') {
+      if (enableAvisuals === false) {
+        return null;
+      }
+    }
+    const localItem = {
+      ...item,
+      children: item.children ? menuDataRender(item.children, enableAvisuals) : [],
+    };
     return Authorized.check(item.authority, localItem, null);
   });
 
@@ -39,6 +47,7 @@ const BasicLayout = (props) => {
     location = {
       pathname: '/',
     },
+    collapsed,
   } = props;
   /**
    * constructor
@@ -58,6 +67,7 @@ const BasicLayout = (props) => {
   }; // get children authority
   const authorized = getRouteAuthority(location.pathname || '/', props.route.routes) || '';
   const { formatMessage } = useIntl();
+  console.log('common', props.common);
   return (
     <>
       <ProLayout
@@ -66,7 +76,7 @@ const BasicLayout = (props) => {
         menuHeaderRender={(logoDom, titleDom) => (
           <Link to="/">
             {logoDom}
-            <h1>{props.common.platformName}</h1>
+            {!collapsed && <h1>{props.common.platformName}</h1>}
           </Link>
         )}
         onCollapse={handleMenuCollapse}
@@ -81,6 +91,7 @@ const BasicLayout = (props) => {
               </a>
             );
           }
+
           return <Link to={menuItemProps.path}>{defaultDom}</Link>;
         }}
         breadcrumbRender={(routers = []) => [
@@ -101,7 +112,7 @@ const BasicLayout = (props) => {
           );
         }}
         // footerRender={() => defaultFooterDom}
-        menuDataRender={menuDataRender}
+        menuDataRender={(menuData) => menuDataRender(menuData, props.common.enableAvisuals)}
         rightContentRender={() => <RightContent />}
         {...props}
         {...settings}

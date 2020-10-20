@@ -205,7 +205,7 @@ const EvaluationDetail = (props) => {
               formatParams(evaluationJob.params).map((p) => <div>{p}</div>)}
           </Descriptions.Item>
         </Descriptions>
-        {!['unapproved', 'queued', 'scheduling', 'error'].includes(evaluationJob?.status) && (
+        {['finished', 'running'].includes(evaluationJob?.status) && (
           <>
             <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
               {intl.formatMessage({ id: 'modelMngt.detail.evaluationResult' })}

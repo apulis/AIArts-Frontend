@@ -10,6 +10,7 @@ const common = {
     platformName: '',
     i18n: locales.includes(localStorage.language) ? localStorage.language : navigator.language,
     enableVC: false,
+    enableAvisuals: false,
   },
   effects: {
     *changeInterval({ payload }, { put }) {
@@ -54,6 +55,7 @@ const common = {
             platformName: res.platformName,
             i18n: res.i18n,
             enableVC: res.enableVC,
+            enableAvisuals: res.enableAvisuals,
           },
         });
       }

@@ -61,7 +61,7 @@ export default function CreateVisualization() {
     values.tensorboardLogDir = codePathPrefix + values.tensorboardLogDir;
     const res = await createVisualization(values);
     if (res.code === 0) {
-      message.success('创建成功');
+      message.success(intl.formatMessage({ id: 'createVisualization.create.success' }));
       history.push(goBackPath);
     }
   };
@@ -86,7 +86,7 @@ export default function CreateVisualization() {
       <PageHeader
         className="site-page-header"
         onBack={() => history.push(goBackPath)}
-        title="创建可视化作业"
+        title={intl.formatMessage({ id: 'createVisualization.create.title.visualJob' })}
       />
       <Form form={form}>
         <Form.Item
