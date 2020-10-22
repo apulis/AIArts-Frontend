@@ -265,6 +265,8 @@ const FlowChart = forwardRef((props, ref) => {
         ],
       },
       plugins: [minimap, toolbar],
+      maxZoom: 3,
+      minZoom: 0.5
     });
 
     _graph.on('afterlayout', (e) => {
@@ -359,6 +361,8 @@ const FlowChart = forwardRef((props, ref) => {
     setGraph(_graph);
     setLoading(false);
   };
+
+  console.log('--------gr', graph)
 
   const handleDragEnd = (node, isChangeNode) => {
     const { title, key, config, treeIdx, child } = node;
