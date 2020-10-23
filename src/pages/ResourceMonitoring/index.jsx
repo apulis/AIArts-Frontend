@@ -13,8 +13,8 @@ const ResourceMonitoring = () => {
     const host = window.location.host;
     grafana = protocol + '//' + host + '/endpoints/grafana_zh/';
   }
-  const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic-zh?_=${Date.now()}&kiosk=tv`;
-  const clusterUsageUrl = `${grafana}dashboard/db/device-usage-zh?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
+  const VCUsageUrl = `${grafana}d/per-vc-gpu-statistic-zh/mei-ge-vcshe-bei-tong-ji-xin-xi?_=${Date.now()}&kiosk=tv`;
+  const clusterUsageUrl = `${grafana}d/device-usage-history-zh/she-bei-shi-yong-liang?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
   return (
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '0px 0px' }}>
