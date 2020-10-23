@@ -59,7 +59,6 @@ const Submit = () => {
   const [argArr, setArgArr] = useState([{ ...initArg, time: new Date().getTime() }]);
   const [btnLoading, setBtnLoading] = useState(false);
   const [selectModelPathVisible, setSelectModelPathVisible] = useState(false);
-  const [argKey, setArgKey] = useState('');
   const [form] = Form.useForm();
 
   const getTypesData = async () => {
@@ -76,7 +75,6 @@ const Submit = () => {
       newArr.push({ ...initArg, time: new Date().getTime() });
     } else if (type === 2) {
       newArr[idx].key = v;
-      setArgKey(v);
     } else if (type === 3) {
       newArr[idx].val = v;
     } else {
@@ -274,7 +272,7 @@ const Submit = () => {
                   <Form.Item
                     name={`argVal-${time}`}
                     rules={
-                      argKey === 'insert_op_conf'
+                      key === 'insert_op_conf'
                         ? []
                         : [
                             {
