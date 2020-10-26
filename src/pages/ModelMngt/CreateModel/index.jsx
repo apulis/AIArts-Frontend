@@ -67,7 +67,7 @@ const CreateModel = (props) => {
       message.success(formatMessage({ id: `createModel.onFinish.success` }));
       history.push('/ModelManagement/MyModels');
     } else {
-      msg && message.error(formatMessage({ id: `createModel.onFinish.error `}) + msg);
+      msg && message.error(formatMessage({ id: `createModel.onFinish.error ` }) + msg);
     }
   };
 
