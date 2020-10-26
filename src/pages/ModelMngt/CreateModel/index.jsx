@@ -64,10 +64,10 @@ const CreateModel = (props) => {
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
-      message.success(`${createModel.onFinish.success}`);
+      message.success(formatMessage({ id: `createModel.onFinish.success` }));
       history.push('/ModelManagement/MyModels');
     } else {
-      msg && message.error(`${createModel.onFinish.error}${msg}`);
+      msg && message.error(formatMessage({ id: `createModel.onFinish.error `}) + msg);
     }
   };
 
