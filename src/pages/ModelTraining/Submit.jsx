@@ -56,8 +56,6 @@ export const subCodePathPrefix = (s) => {
   return s.replace(/\/home\/.+?\//, '');
 };
 
-
-
 const ModelTraining = (props) => {
   let haveSetedParamsDetail = false;
   const intl = useIntl();
@@ -158,7 +156,6 @@ const ModelTraining = (props) => {
   }, [distributedJob, nodeInfo, currentDeviceType]);
 
   useEffect(() => {
-    console.log(codePathPrefix, Object.keys(paramsDetailedData).length)
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
       haveSetedParamsDetail = true;
       const newParams = {
