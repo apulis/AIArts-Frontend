@@ -5,7 +5,8 @@ import Iframe from 'react-iframe';
 import { FormattedMessage, getLocale } from 'umi';
 
 const ResourceMonitoring = () => {
-  console.log('getLocale', getLocale());
+  // const language = getLocale();
+  const language = 'en-US';
   const domainName = window.location.protocol + '//' + window.location.host;
   const grafanaLinks = {
     'zh-CN': domainName + '/endpoints/grafana_zh/',
@@ -15,7 +16,7 @@ const ResourceMonitoring = () => {
   if (process.env.NODE_ENV === 'development') {
     grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
   } else {
-    grafana = grafanaLinks + grafanaLinks[getLocale()];
+    grafana = grafanaLinks[language];
   }
   const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}&kiosk=tv`;
   const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
