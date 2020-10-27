@@ -56,9 +56,10 @@ export const subCodePathPrefix = (s) => {
   return s.replace(/\/home\/.+?\//, '');
 };
 
-let haveSetedParamsDetail = false;
+
 
 const ModelTraining = (props) => {
+  let haveSetedParamsDetail = false;
   const intl = useIntl();
   const { formatMessage } = intl;
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
@@ -157,6 +158,7 @@ const ModelTraining = (props) => {
   }, [distributedJob, nodeInfo, currentDeviceType]);
 
   useEffect(() => {
+    console.log(codePathPrefix, Object.keys(paramsDetailedData).length)
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
       haveSetedParamsDetail = true;
       const newParams = {
@@ -165,7 +167,6 @@ const ModelTraining = (props) => {
         codePath: subCodePathPrefix(paramsDetailedData.params.codePath),
         startupFile: subCodePathPrefix(paramsDetailedData.params.startupFile),
       };
-      console.log('newParams', newParams)
       setParamsDetailedData({
         ...paramsDetailedData,
         params: newParams,
