@@ -165,6 +165,7 @@ const ModelTraining = (props) => {
         codePath: subCodePathPrefix(paramsDetailedData.params.codePath),
         startupFile: subCodePathPrefix(paramsDetailedData.params.startupFile),
       };
+      console.log('newParams', newParams)
       setParamsDetailedData({
         ...paramsDetailedData,
         params: newParams,
