@@ -1,13 +1,13 @@
 export default {
-  'codeCreate.label.url': 'URL',
-  'codeCreate.label.username': 'Username',
-  'codeCreate.label.password': 'Password',
+  'confirmEdgeInferencePush.label.url': 'URL',
+  'confirmEdgeInferencePush.label.username': 'Username',
+  'confirmEdgeInferencePush.label.password': 'Password',
 
-  'codeCreate.placeholder.inputUrl': 'Please enter inference name！',
-  'codeCreate.placeholder.inputUsername': 'Please enter user name！',
-  'codeCreate.placeholder.inputPassword': 'Please enter password!',
+  'confirmEdgeInferencePush.placeholder.inputUrl': 'Please enter inference name！',
+  'confirmEdgeInferencePush.placeholder.inputUsername': 'Please enter user name！',
+  'confirmEdgeInferencePush.placeholder.inputPassword': 'Please enter password!',
 
-  'codeCreate.rule.needUrl': 'Please enter inference name!',
-  'codeCreate.rule.needUsername': 'Please enter user name!',
-  'codeCreate.rule.needPassword': 'Please enter password!',
+  'confirmEdgeInferencePush.rule.needUrl': 'Please enter inference name!',
+  'confirmEdgeInferencePush.rule.needUsername': 'Please enter user name!',
+  'confirmEdgeInferencePush.rule.needPassword': 'Please enter password!',
 };
