@@ -6,41 +6,46 @@ import { extend } from 'umi-request';
 import { notification, message } from 'antd';
 import { stringify } from 'querystring';
 import { USER_LOGIN_URL } from '@/utils/const';
+import { formatMessage } from 'umi';
 
 const prefix = '/ai_arts/api';
-
-export const codeMessage = {
-  200: '服务器成功返回请求的数据。',
-  201: '新建或修改数据成功。',
-  202: '一个请求已经进入后台排队（异步任务）。',
-  204: '删除数据成功。',
-  400: '查询参数错误，请检查输入。',
-  401: '用户没有权限，请重新登录。',
-  403: '没有权限进行该项操作，请联系系统管理员。',
-  404: '发出的请求针对的是不存在的记录，服务器没有进行操作。',
-  406: '请求的格式不可得。',
-  410: '请求的资源被永久删除，且不会再得到的。',
-  422: '当创建一个对象时，发生一个验证错误。',
-  500: '服务器发生错误，请联系系统管理员。',
-  502: '网关错误。',
-  503: '服务不可用，服务器暂时过载或维护。',
-  504: '网关超时。',
-};
-
-export const bizCodeMessage = {
-  30005: '文件或路径不存在！',
-  30007: '该数据集路径不符合规则！',
-  20001: '请求参数错误！',
-  30010: '该数据集正在使用，不能删除！',
-  30603: '推送失败！',
-  30012: '已经有相同名称的数据集，请更改数据集名称！',
-};
+let codeMessage = undefined;
+let bizCodeMessage = undefined;
 
 /**
  * 异常处理程序
  */
 
 export const errorHandler = async (error) => {
+  if (!codeMessage) {
+    codeMessage = {
+      200: formatMessage({id: 'codeMessage.200'}),
+      201: formatMessage({id: 'codeMessage.201'}),
+      202: formatMessage({id: 'codeMessage.202'}),
+      204: formatMessage({id: 'codeMessage.204'}),
+      400: formatMessage({id: 'codeMessage.400'}),
+      401: formatMessage({id: 'codeMessage.401'}),
+      403: formatMessage({id: 'codeMessage.403'}),
+      404: formatMessage({id: 'codeMessage.404'}),
+      406: formatMessage({id: 'codeMessage.406'}),
+      410: formatMessage({id: 'codeMessage.410'}),
+      422: formatMessage({id: 'codeMessage.422'}),
+      500: formatMessage({id: 'codeMessage.500'}),
+      502: formatMessage({id: 'codeMessage.502'}),
+      503: formatMessage({id: 'codeMessage.503'}),
+      504: formatMessage({id: 'codeMessage.504'}),
+    };
+  }
+  if (!bizCodeMessage) {
+    bizCodeMessage = {
+      30005: formatMessage({id: 'bizCodeMessage.30005'}),
+      30007: formatMessage({id: 'bizCodeMessage.30007'}),
+      20001: formatMessage({id: 'bizCodeMessage.20001'}),
+      30010: formatMessage({id: 'bizCodeMessage.30010'}),
+      30603: formatMessage({id: 'bizCodeMessage.30603'}),
+      30012: formatMessage({id: 'bizCodeMessage.30012'}),
+    };
+  }
   const { response } = error;
   let _response;
   try {
@@ -76,7 +81,7 @@ export const errorHandler = async (error) => {
     }
     !hasMessage &&
       notification.error({
-        message: `请求错误 ${status}: ${url}`,
+        message: `${formatMessage({id: 'request.error.tips'})} ${status}: ${url}`,
         description: errorText,
       });
   }

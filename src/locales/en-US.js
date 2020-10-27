@@ -23,6 +23,7 @@ import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit';
 import SubmitTrainingJobDetail from './en-US/pages/ModelTraining/Detail';
 import ParamsManage from './en-US/pages/ModelTraining/ParamsManage';
 import PretrainedModel from './en-US/pages/ModelMngt/PretrainedModel';
+import request from './en-US/request';
 
 export default {
   'navBar.lang': 'Languages',
@@ -32,6 +33,7 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   'app.welcome.link.fetch-blocks': 'Get all block',
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
+  ...request,
   ...globalHeader,
   ...menu,
   ...settingDrawer,

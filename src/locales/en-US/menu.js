@@ -5,7 +5,7 @@ export default {
   'menu.codeDevelopment': 'Code Development',
   'menu.dataManage': 'Data Management',
   'menu.dataManage.dataSet': 'DataSet',
-  'menu.dataManage.imageLabel': 'Data Annotation',
+  'menu.dataManage.imageLabel': 'Data Annotations',
   'menu.modelTraining': 'Model Training',
   'menu.modelTraining.modelTraining': 'Model List',
   'menu.modelTraining.visualization': 'Training Visualization',
