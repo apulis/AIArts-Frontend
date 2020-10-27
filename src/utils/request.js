@@ -19,31 +19,31 @@ let bizCodeMessage = undefined;
 export const errorHandler = async (error) => {
   if (!codeMessage) {
     codeMessage = {
-      200: formatMessage({id: 'codeMessage.200'}),
-      201: formatMessage({id: 'codeMessage.201'}),
-      202: formatMessage({id: 'codeMessage.202'}),
-      204: formatMessage({id: 'codeMessage.204'}),
-      400: formatMessage({id: 'codeMessage.400'}),
-      401: formatMessage({id: 'codeMessage.401'}),
-      403: formatMessage({id: 'codeMessage.403'}),
-      404: formatMessage({id: 'codeMessage.404'}),
-      406: formatMessage({id: 'codeMessage.406'}),
-      410: formatMessage({id: 'codeMessage.410'}),
-      422: formatMessage({id: 'codeMessage.422'}),
-      500: formatMessage({id: 'codeMessage.500'}),
-      502: formatMessage({id: 'codeMessage.502'}),
-      503: formatMessage({id: 'codeMessage.503'}),
-      504: formatMessage({id: 'codeMessage.504'}),
+      200: formatMessage({ id: 'codeMessage.200' }),
+      201: formatMessage({ id: 'codeMessage.201' }),
+      202: formatMessage({ id: 'codeMessage.202' }),
+      204: formatMessage({ id: 'codeMessage.204' }),
+      400: formatMessage({ id: 'codeMessage.400' }),
+      401: formatMessage({ id: 'codeMessage.401' }),
+      403: formatMessage({ id: 'codeMessage.403' }),
+      404: formatMessage({ id: 'codeMessage.404' }),
+      406: formatMessage({ id: 'codeMessage.406' }),
+      410: formatMessage({ id: 'codeMessage.410' }),
+      422: formatMessage({ id: 'codeMessage.422' }),
+      500: formatMessage({ id: 'codeMessage.500' }),
+      502: formatMessage({ id: 'codeMessage.502' }),
+      503: formatMessage({ id: 'codeMessage.503' }),
+      504: formatMessage({ id: 'codeMessage.504' }),
     };
   }
   if (!bizCodeMessage) {
     bizCodeMessage = {
-      30005: formatMessage({id: 'bizCodeMessage.30005'}),
-      30007: formatMessage({id: 'bizCodeMessage.30007'}),
-      20001: formatMessage({id: 'bizCodeMessage.20001'}),
-      30010: formatMessage({id: 'bizCodeMessage.30010'}),
-      30603: formatMessage({id: 'bizCodeMessage.30603'}),
-      30012: formatMessage({id: 'bizCodeMessage.30012'}),
+      30005: formatMessage({ id: 'bizCodeMessage.30005' }),
+      30007: formatMessage({ id: 'bizCodeMessage.30007' }),
+      20001: formatMessage({ id: 'bizCodeMessage.20001' }),
+      30010: formatMessage({ id: 'bizCodeMessage.30010' }),
+      30603: formatMessage({ id: 'bizCodeMessage.30603' }),
+      30012: formatMessage({ id: 'bizCodeMessage.30012' }),
     };
   }
   const { response } = error;
@@ -81,7 +81,7 @@ export const errorHandler = async (error) => {
     }
     !hasMessage &&
       notification.error({
-        message: `${formatMessage({id: 'request.error.tips'})} ${status}: ${url}`,
+        message: `${formatMessage({ id: 'request.error.tips' })} ${status}: ${url}`,
         description: errorText,
       });
   }
