@@ -1,28 +1,30 @@
-# AIArts Platform
+ # Apulis AIArts Frontend
 
-## Docker 部署方式
+## Quick Start
 
-在当前目录，确定为最新代码后
+1. Be sure to update the lastest code 
+   
+   `git pull origin master `
 
-```
-// 编译镜像
-docker build -t apulistech/ai-arts-frontend .
-// 上线服务
-docker-compose up -d
-// 下线服务
-docker-compose down
-```
+2. Buid the docker images
+    
+   ```
+   docker build -t apulistech/ai-arts-frontend .
+   # Turn up the compose services 
+   docker-compose up -d
+   # Turn down services
+   docker-compose down
+   ```
 
-## master nginx 配置
+## Update the kubenates domain nginx configuration
 
-如果 nginx 的配置没有更新，需要在 nginx 增加一条
-
-```
-location /AIarts {
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_buffers 16 16k;
-    proxy_buffer_size 32k;
-    proxy_pass http://localhost:3084/;
-}
-```
+   Add the services port into nginx conf
+   ```
+   location /AIarts {
+       proxy_set_header Host $host;
+       proxy_set_header X-Real-IP $remote_addr;
+       proxy_buffers 16 16k;
+       proxy_buffer_size 32k;
+       proxy_pass http://localhost:3084/;
+   }
+   ```
