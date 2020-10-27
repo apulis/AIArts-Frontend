@@ -4,7 +4,8 @@ export default {
   'codeList.placeholder.search': 'Search for names',
 
   'codeList.modal.upload.title.uploadCode': 'Upload Code',
-  'codeList.modal.upload.content.uploadTips': 'Please click or drag files to upload (multi-file support)',
+  'codeList.modal.upload.content.uploadTips':
+    'Please click or drag files to upload (multi-file support)',
   'codeList.modal.upload.tips.uploadSuccess': 'File Upload Success!',
   'codeList.modal.upload.tips.uploadError': 'File Upload Error!',
   'codeList.modal.upload.footer.close': 'Close',
@@ -26,7 +27,6 @@ export default {
   'codeList.tips.saveImage.success': 'Save Image Success',
 
   'codeCreate.pageHeader.backCodeCreate': 'Back To CodeDevelopment',
-
 
   'codeCreate.tips.needInput': 'Required!',
   'codeCreate.tips.selectEngineType': 'Please choose a engine type',
