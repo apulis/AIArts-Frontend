@@ -5,15 +5,15 @@ import Iframe from 'react-iframe';
 import { FormattedMessage, getLocale } from 'umi';
 
 const ResourceMonitoring = () => {
-  console.log('getLocale', getLocale())
+  console.log('getLocale', getLocale());
   const domainName = window.location.protocol + '//' + window.location.host;
   const grafanaLinks = {
     'zh-CN': domainName + '/endpoints/grafana_zh/',
-    'en-US': domainName + '/endpoints/grafana/'
-  }
+    'en-US': domainName + '/endpoints/grafana/',
+  };
   let grafana;
   if (process.env.NODE_ENV === 'development') {
-    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana_zh/';
+    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
   } else {
     grafana = grafanaLinks + grafanaLinks[getLocale()];
   }
