@@ -4,7 +4,7 @@ export default {
   'modelCreate.label.modelFileType': 'Model File',
   'modelCreate.label.job': 'Training Job',
   'modelCreate.label.file': 'Upload Model File',
-  'modelCreate.label.argumentPath': 'Weight File',
+  'modelCreate.label.argumentPath': 'Model Weight File',
 
   'modelCreate.value.selectModelFile': 'Select Model File',
   'modelCreate.value.uploadModelFile': 'Upload Model File',

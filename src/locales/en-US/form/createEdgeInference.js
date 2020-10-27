@@ -18,7 +18,7 @@ export default {
   'edgeInferenceJobCreate.rule.needOutputPath': 'Please Input Output Path！',
   'edgeInferenceJobCreate.rule.needParamsType': 'Please Select Params Type！',
   'edgeInferenceJobCreate.rule.supportInput':
-    'Only files uploaded in.zip,.tar, and.tar.gz are supported with letters, Numbers, underscores, lines, dots, double quotes, and commas！',
+    "only letters, numbers, '_',  '-', periods, commas and double quotes are allowed!",
 
   'edgeInferenceJobCreate.submit': 'Submit',
 };

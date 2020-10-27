@@ -1,9 +1,9 @@
 export default {
   'dataSetCreate.label.name': 'Name',
   'dataSetCreate.label.description': 'Description',
-  'dataSetCreate.label.isTranslated': 'Translated',
+  'dataSetCreate.label.isTranslated': 'Annotated',
   'dataSetCreate.label.isPrivate': 'Permission',
-  'dataSetCreate.label.sourceType': 'Source Type',
+  'dataSetCreate.label.sourceType': 'Data source',
   'dataSetCreate.label.fileLists': 'Upload File',
   'dataSetCreate.label.path': 'Store Path',
 
@@ -11,8 +11,8 @@ export default {
   'dataSetCreate.value.yes': 'Yes',
   'dataSetCreate.value.private': 'Private',
   'dataSetCreate.value.public': 'Public',
-  'dataSetCreate.value.uploadDataSource': 'Upload new data sources by web pages',
-  'dataSetCreate.value.otherDataSource': 'Upload new data sources by other way',
+  'dataSetCreate.value.uploadDataSource': 'Upload new dataset from computer',
+  'dataSetCreate.value.otherDataSource': 'Upload new dataset from other sources',
   'dataSetCreate.value.tips': 'Please click or drag the file to upload',
   'dataSetCreate.value.tips.desc': '(Only files uploaded in.zip,.tar and.tar.gz are supported)',
 

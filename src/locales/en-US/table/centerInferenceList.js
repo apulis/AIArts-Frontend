@@ -5,7 +5,7 @@ export default {
   'centerInferenceList.table.column.engineType': 'Engine Type',
   'centerInferenceList.table.column.createTime': 'Create Time',
   'centerInferenceList.table.column.runningTime': 'Running Time',
-  'centerInferenceList.table.column.serviceAddr': 'Serve Address',
+  'centerInferenceList.table.column.serviceAddr': 'Service Address',
   'centerInferenceList.table.column.description': 'Description',
   'centerInferenceList.table.column.action': 'Action',
   'centerInferenceList.table.column.action.stop': 'Stop',

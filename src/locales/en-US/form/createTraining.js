@@ -3,13 +3,13 @@ export default {
   'trainingCreate.label.jobName': 'Job Name',
   'trainingCreate.label.desc': 'Description',
   'trainingCreate.label.paramsSource': 'Params Source',
-  'trainingCreate.label.engineSource': 'Engine Source',
+  'trainingCreate.label.engineSource': 'Select Engine Source',
   'trainingCreate.label.engine': 'Engine',
   'trainingCreate.label.codePath': 'Code Path',
   'trainingCreate.label.startupFile': 'Startup file',
   'trainingCreate.label.visualPath': 'Visual Path',
   'trainingCreate.label.outputPath': 'Output Path',
-  'trainingCreate.label.datasetPath': 'Training Data Set',
+  'trainingCreate.label.datasetPath': 'Training Dataset',
   'trainingCreate.label.runningParams': 'Running Params',
   'trainingCreate.label.jobTrainingType': 'Distributed Training',
   'trainingCreate.label.numPsWorker': 'Node Num',
@@ -33,6 +33,6 @@ export default {
 
   'trainingCreate.save': 'Save',
   'trainingCreate.submit': 'Submit',
-  'trainingCreate.npmPsWorker.validator.max': 'Currently only {num} nodes',
+  'trainingCreate.npmPsWorker.validator.max': 'Currently only have {num} nodes',
   'trainingCreate.npmPsWorker.validator.min': 'Cannot be less than 1',
 };

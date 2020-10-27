@@ -1,3 +1,3 @@
 export default {
-  'imageList.placeholder.search': 'Input Name Query',
+  'imageList.placeholder.search': 'Search for names',
 };

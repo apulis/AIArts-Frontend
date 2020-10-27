@@ -8,7 +8,7 @@ export default {
   'codeCreate.label.deviceType': 'Device Type',
   'codeCreate.label.deviceNum': 'Device Number',
   'codeCreate.label.nodeNum': 'Node Number',
-  'codeCreate.label.perNodeNum': 'Per Node Number',
+  'codeCreate.label.perNodeNum': 'Single Node Number',
   'codeCreate.label.totalDeviceNum': 'Total Device Number',
 
   'codeCreate.value.presetEngine': 'Preset Engine',
@@ -17,9 +17,9 @@ export default {
   'codeCreate.value.PSDistJob': 'Distributed Job',
 
   'codeCreate.placeholder.devEnvName': 'Please enter a development environment name',
-  'codeCreate.placeholder.description': 'Please enter a description message',
+  'codeCreate.placeholder.description': 'Please enter a description',
   'codeCreate.placeholder.storePath': 'Please enter a store path',
-  'codeCreate.placeholder.nodeNum': 'Please enter a node num',
+  'codeCreate.placeholder.nodeNum': 'Please enter the number of nodes',
 
   'codeCreate.rule.needInput': 'is required!',
   'codeCreate.rule.selectEngineType': 'Please select a engine type',
