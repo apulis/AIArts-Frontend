@@ -56,9 +56,8 @@ export const subCodePathPrefix = (s) => {
   return s.replace(/\/home\/.+?\//, '');
 };
 
-let haveSetedParamsDetail = false;
-
 const ModelTraining = (props) => {
+  let haveSetedParamsDetail = false;
   const intl = useIntl();
   const { formatMessage } = intl;
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam

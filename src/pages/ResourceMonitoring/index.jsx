@@ -2,19 +2,24 @@ import { Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React from 'react';
 import Iframe from 'react-iframe';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, getLocale } from 'umi';
 
 const ResourceMonitoring = () => {
+  // const language = getLocale();
+  const language = 'en-US';
+  const domainName = window.location.protocol + '//' + window.location.host;
+  const grafanaLinks = {
+    'zh-CN': domainName + '/endpoints/grafana_zh/',
+    'en-US': domainName + '/endpoints/grafana/',
+  };
   let grafana;
   if (process.env.NODE_ENV === 'development') {
-    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana_zh/';
+    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
   } else {
-    const protocol = window.location.protocol;
-    const host = window.location.host;
-    grafana = protocol + '//' + host + '/endpoints/grafana_zh/';
+    grafana = grafanaLinks[language];
   }
-  const VCUsageUrl = `${grafana}d/per-vc-gpu-statistic-zh/mei-ge-vcshe-bei-tong-ji-xin-xi?_=${Date.now()}&kiosk=tv`;
-  const clusterUsageUrl = `${grafana}d/device-usage-history-zh/she-bei-shi-yong-liang?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
+  const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}&kiosk=tv`;
+  const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
   return (
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '0px 0px' }}>

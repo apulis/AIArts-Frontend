@@ -9,7 +9,14 @@ const WarningLog = () => {
   } else {
     const protocol = window.location.protocol;
     const host = window.location.host;
-    grafana = protocol + '//' + host + '/endpoints/grafana_zh/';
+    // const language = getLocale();
+    const language = 'en-US';
+    const domainName = protocol + '//' + host;
+    const grafanaLinks = {
+      'zh-CN': domainName + '/endpoints/grafana_zh/',
+      'en-US': domainName + '/endpoints/grafana/',
+    };
+    grafana = grafanaLinks[language];
   }
   const url = `${grafana}alerting/list?kiosk=tv`;
   return (

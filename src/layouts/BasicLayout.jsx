@@ -67,7 +67,16 @@ const BasicLayout = (props) => {
   }; // get children authority
   const authorized = getRouteAuthority(location.pathname || '/', props.route.routes) || '';
   const { formatMessage } = useIntl();
-  console.log('common', props.common);
+  useEffect(() => {
+    if (!props.common.platformName) return;
+    dispatch({
+      type: 'settings/changeSetting',
+      payload: {
+        ...settings,
+        title: props.common.platformName,
+      },
+    });
+  }, [props.common]);
   return (
     <>
       <ProLayout
@@ -76,7 +85,7 @@ const BasicLayout = (props) => {
         menuHeaderRender={(logoDom, titleDom) => (
           <Link to="/">
             {logoDom}
-            {!collapsed && <h1>{props.common.platformName}</h1>}
+            {titleDom}
           </Link>
         )}
         onCollapse={handleMenuCollapse}
