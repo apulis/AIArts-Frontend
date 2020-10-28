@@ -171,7 +171,7 @@ const SubmitModelTraining = (props) => {
   };
 
   const commonLayout = {
-    labelCol: { span: 4 }, 
+    labelCol: { span: 4 },
     wrapperCol: { span: 8 },
   };
 
