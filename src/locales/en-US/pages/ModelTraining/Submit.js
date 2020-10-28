@@ -10,7 +10,7 @@ export default {
   'model.submit.pageTitle.edit': 'Edit training params',
   'model.submit.pageTitle.submit': 'Create training job',
   'model.submit.params.config': 'Params configuration',
-  'model.submit.button.create.params': 'Click to add params',
+  'model.submit.button.create.params': 'Click to add parameter',
   'model.submit.import.training.params': 'Import training params config',
   'model.submit.modal.save.params.deviceNum': 'Number of compute nodes',
   'model.params.item.startupFile': 'Startup file',

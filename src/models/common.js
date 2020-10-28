@@ -46,12 +46,13 @@ const common = {
         //     }
         //   })
         // }
+        // res.i18n = 'en-US'; // 开发
         if (locales.includes(res.i18n)) {
           setI18n(res.i18n);
         }
         yield put({
           type: 'savePlatform',
-          payload: {
+          payload: { 
             platformName: res.platformName,
             i18n: res.i18n,
             enableVC: res.enableVC,

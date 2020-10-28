@@ -7,7 +7,7 @@ export default {
   'edgeInference.list.typeText.push.success': 'Push Succeeded!',
   'edgeInference.list.typeText.push.failed': 'Push Faied',
 
-  'edgeInference.list.onDelete.title': 'Are you sure you want to delete this reasoning?',
+  'edgeInference.list.onDelete.title': 'Are you sure you want to delete this inference job?',
   'edgeInference.list.onDelete.okText': 'Delete',
   'edgeInference.list.onDelete.cancelText': 'Cancel',
   'edgeInference.list.onDelete.ok.tips': 'Delete Succeeded!',

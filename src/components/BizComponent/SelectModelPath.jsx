@@ -4,10 +4,12 @@ import moment from 'moment';
 
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { getModels } from '@/pages/ModelMngt/PretrainedModel/services';
+import { useIntl } from 'umi';
 
 const { Search } = Input;
 
 const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
+  const intl = useIntl();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
     order: '',
@@ -60,7 +62,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
 
   const columns = [
     {
-      title: '模型名称',
+      title: intl.formatMessage({id: 'bizComponent.table.column.name'}),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -69,12 +71,12 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
-      title: '存储路径',
+      title: intl.formatMessage({id: 'bizComponent.table.column.storePath'}),
       dataIndex: 'codePath',
       ellipsis: true,
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({id: 'bizComponent.table.column.createTime'}),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -84,7 +86,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({id: 'bizComponent.table.column.desc'}),
       dataIndex: 'description',
       ellipsis: true,
       width: 150,
@@ -114,7 +116,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       <div style={{ marginTop: '20px', paddingBottom: '10px', overflow: 'hidden' }}>
         <Search
           style={{ width: '200px', marginRight: '20px', float: 'right' }}
-          placeholder="请输入模型名称"
+          placeholder={intl.formatMessage({id: 'bizComponent.table.placeholder'})}
           onSearch={onSearch}
           onChange={(e) => setFormValues({ name: e.target.value })}
           enterButton
@@ -133,7 +135,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
         pagination={{
           total: modelPaths.total,
           showQuickJumper: true,
-          showTotal: (total) => `总共 ${total} 条`,
+          showTotal: (total) => `${intl.formatMessage({id: 'bizComponent.table.pagination.showTotal.suffix'})} ${total} ${intl.formatMessage({id: 'bizComponent.table.pagination.showTotal.suffix'})}`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,
