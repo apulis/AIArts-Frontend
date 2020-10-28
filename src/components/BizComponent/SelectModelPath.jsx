@@ -62,7 +62,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
 
   const columns = [
     {
-      title: intl.formatMessage({id: 'bizComponent.table.column.name'}),
+      title: intl.formatMessage({ id: 'bizComponent.table.column.name' }),
       dataIndex: 'name',
       key: 'name',
       ellipsis: true,
@@ -71,12 +71,12 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'bizComponent.table.column.storePath'}),
+      title: intl.formatMessage({ id: 'bizComponent.table.column.storePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
     },
     {
-      title: intl.formatMessage({id: 'bizComponent.table.column.createTime'}),
+      title: intl.formatMessage({ id: 'bizComponent.table.column.createTime' }),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
@@ -86,7 +86,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       sortOrder: sortedInfo.columnKey === 'createdAt' && sortedInfo.order,
     },
     {
-      title: intl.formatMessage({id: 'bizComponent.table.column.desc'}),
+      title: intl.formatMessage({ id: 'bizComponent.table.column.desc' }),
       dataIndex: 'description',
       ellipsis: true,
       width: 150,
@@ -116,7 +116,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       <div style={{ marginTop: '20px', paddingBottom: '10px', overflow: 'hidden' }}>
         <Search
           style={{ width: '200px', marginRight: '20px', float: 'right' }}
-          placeholder={intl.formatMessage({id: 'bizComponent.table.placeholder'})}
+          placeholder={intl.formatMessage({ id: 'bizComponent.table.placeholder' })}
           onSearch={onSearch}
           onChange={(e) => setFormValues({ name: e.target.value })}
           enterButton
@@ -135,7 +135,12 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
         pagination={{
           total: modelPaths.total,
           showQuickJumper: true,
-          showTotal: (total) => `${intl.formatMessage({id: 'bizComponent.table.pagination.showTotal.suffix'})} ${total} ${intl.formatMessage({id: 'bizComponent.table.pagination.showTotal.suffix'})}`,
+          showTotal: (total) =>
+            `${intl.formatMessage({
+              id: 'bizComponent.table.pagination.showTotal.suffix',
+            })} ${total} ${intl.formatMessage({
+              id: 'bizComponent.table.pagination.showTotal.suffix',
+            })}`,
           showSizeChanger: true,
           onChange: pageParamsChange,
           onShowSizeChange: pageParamsChange,

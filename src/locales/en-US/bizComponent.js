@@ -6,4 +6,4 @@ export default {
   'bizComponent.table.placeholder': 'Please enter model name',
   'bizComponent.table.pagination.showTotal.suffix': 'Total',
   'bizComponent.table.pagination.showTotal.suffix': 'items',
-}
+};

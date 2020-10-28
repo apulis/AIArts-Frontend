@@ -52,7 +52,7 @@ const common = {
         }
         yield put({
           type: 'savePlatform',
-          payload: { 
+          payload: {
             platformName: res.platformName,
             i18n: res.i18n,
             enableVC: res.enableVC,

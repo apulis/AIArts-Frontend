@@ -6,4 +6,4 @@ export default {
   'bizComponent.table.placeholder': '请输入模型名称',
   'bizComponent.table.pagination.showTotal.suffix': '总共',
   'bizComponent.table.pagination.showTotal.suffix': 'ite条ms',
-}
+};
