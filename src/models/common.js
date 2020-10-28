@@ -46,6 +46,7 @@ const common = {
         //     }
         //   })
         // }
+        // res.i18n = 'en-US'; // 开发
         if (locales.includes(res.i18n)) {
           setI18n(res.i18n);
         }
