@@ -20,11 +20,14 @@ import { FormattedMessage, formatMessage } from 'umi';
 import { getInitData, getUpgradeInfo, getUpgradeLog, upgrade } from '../../service.js';
 import { isEmptyString } from '../../../../utils/utils.js';
 import styles from './index.less';
+import { useIntl } from 'umi';
+
 const { TabPane } = Tabs;
 const { Paragraph } = Typography;
 let logTimer = null;
 const VersionMngt = (props) => {
   // let logTimer = null // 放这访问不到
+  const intl = useIntl();
   const { Title, Paragraph, Text } = Typography;
   const [initData, setInitData] = useState({});
   const [vHistoryNum, setVHistoryNum] = useState(10);
@@ -302,7 +305,7 @@ const VersionMngt = (props) => {
           >
             <Timeline>
               {versionLogs.map((item, key) => (
-                <Timeline.Item key={key}>{item}</Timeline.Item>
+                <Timeline.Item key={key}>{`${item.time}，${item.user} ${intl.formatMessage({id: 'visualOperation.upgrade.to'})} ${item.version}`}</Timeline.Item>
               ))}
             </Timeline>
             <div

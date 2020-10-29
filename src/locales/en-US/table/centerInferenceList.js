@@ -7,9 +7,9 @@ export default {
   'centerInferenceList.table.column.runningTime': 'Running Time',
   'centerInferenceList.table.column.serviceAddr': 'Service address',
   'centerInferenceList.table.column.description': 'Description',
-  'centerInferenceList.table.column.Operation': 'Operation',
-  'centerInferenceList.table.column.Operation.stop': 'Stop',
-  'centerInferenceList.table.column.Operation.delete': 'Delete',
+  'centerInferenceList.table.column.action': 'Operation',
+  'centerInferenceList.table.column.action.stop': 'Stop',
+  'centerInferenceList.table.column.action.delete': 'Delete',
   'centerInferenceList.table.pagination.showTotal.prefix': 'Total',
   'centerInferenceList.table.pagination.showTotal.suffix': 'items',
 };

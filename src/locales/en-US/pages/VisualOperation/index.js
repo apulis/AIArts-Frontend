@@ -25,6 +25,7 @@ export default {
   'visualOperation.version.modal.tip': 'tips',
   'visualOperation.version.modal.content.no.more.history': 'No more history',
   'visualOperation.upgrade.history': 'Upgrade history',
+  'visualOperation.upgrade.to': 'Update version to',
   'visualOperation.version.info': 'Version Information',
   'visualOperation.version.code': 'Version Code',
   'visualOperation.upgraded.person': 'Operator',
