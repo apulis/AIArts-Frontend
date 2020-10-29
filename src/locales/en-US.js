@@ -25,6 +25,7 @@ import ParamsManage from './en-US/pages/ModelTraining/ParamsManage';
 import PretrainedModel from './en-US/pages/ModelMngt/PretrainedModel';
 import request from './en-US/request';
 import bizComponent from './en-US/bizComponent';
+import reg from './en-US/reg';
 
 export default {
   'navBar.lang': 'Languages',
@@ -61,4 +62,5 @@ export default {
   ...SubmitTrainingJobDetail,
   ...ParamsManage,
   ...PretrainedModel,
+  ...reg
 };
