@@ -1,15 +1,15 @@
 export default {
-  'codeCreate.label.devEnvName': 'Name',
+  'codeCreate.label.devEnvName': 'Development environment name',
   'codeCreate.label.description': 'Description',
-  'codeCreate.label.storePath': 'Store Path',
+  'codeCreate.label.storePath': 'Code storage path',
   'codeCreate.label.engineSource': 'Engine Source',
   'codeCreate.label.engineType': 'Engine Type',
-  'codeCreate.label.jobType': 'Job Type',
+  'codeCreate.label.jobType': 'Task type',
   'codeCreate.label.deviceType': 'Device Type',
-  'codeCreate.label.deviceNum': 'Device Number',
-  'codeCreate.label.nodeNum': 'Node Number',
-  'codeCreate.label.perNodeNum': 'Single Node Number',
-  'codeCreate.label.totalDeviceNum': 'Total Device Number',
+  'codeCreate.label.deviceNum': 'Number of devices',
+  'codeCreate.label.nodeNum': 'Number of nodes',
+  'codeCreate.label.perNodeNum': 'Number of devices on a single node',
+  'codeCreate.label.totalDeviceNum': 'Total number of devices',
 
   'codeCreate.value.presetEngine': 'Preset Engine',
   'codeCreate.value.savedEngine': 'Saved Engine',
@@ -18,7 +18,7 @@ export default {
 
   'codeCreate.placeholder.devEnvName': 'Please enter a development environment name',
   'codeCreate.placeholder.description': 'Please enter a description',
-  'codeCreate.placeholder.storePath': 'Please enter a store path',
+  'codeCreate.placeholder.storePath': 'Please enter a storage path',
   'codeCreate.placeholder.nodeNum': 'Please enter the number of nodes',
 
   'codeCreate.rule.needInput': 'is required!',

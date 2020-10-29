@@ -1,10 +1,10 @@
 export default {
-  'modelCreate.label.name': 'Name',
+  'modelCreate.label.name': 'Model Name',
   'modelCreate.label.description': 'Description',
   'modelCreate.label.modelFileType': 'Model File',
   'modelCreate.label.job': 'Training Job',
   'modelCreate.label.file': 'Upload Model File',
-  'modelCreate.label.argumentPath': 'Model Weight File',
+  'modelCreate.label.argumentPath': 'Model Parameter File',
 
   'modelCreate.value.selectModelFile': 'Select Model File',
   'modelCreate.value.uploadModelFile': 'Upload Model File',
@@ -13,13 +13,13 @@ export default {
 
   'modelCreate.placeholder.inputModelName': 'Please Input Model Name',
   'modelCreate.placeholder.inputDescription': 'Please Input Description',
-  'modelCreate.placeholder.selectTrainingJobName': 'Please Select Training Job Name',
-  'modelCreate.placeholder.inputArgumentPath': 'please input model weight file path',
+  'modelCreate.placeholder.selectTrainingJobName': 'Please Select Training Job',
+  'modelCreate.placeholder.inputArgumentPath': 'please input model parameter file path',
 
   'modelCreate.rule.needName': 'Please Input Model Name！',
-  'modelCreate.rule.needJob': 'Please Select Training Job Name！',
+  'modelCreate.rule.needJob': 'Please Select Training Job！',
   'modelCreate.rule.needFile': 'please Upload File！',
-  'modelCreate.rule.needWeight': 'please input model weight file path！',
+  'modelCreate.rule.needWeight': 'please input model parameter file path！',
 
-  'modelCreate.submit': 'Submit',
+  'modelCreate.submit': 'Create Now',
 };
