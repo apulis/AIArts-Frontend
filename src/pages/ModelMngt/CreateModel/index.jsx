@@ -113,9 +113,7 @@ const CreateModel = (props) => {
         console.log(111, info.fileList);
         setFileList(info.fileList);
         setBtnDisabled(false);
-        message.success(
-          `${info.file.name}${formatMessage({ id: 'createModel.upload.success' })}`,
-        );
+        message.success(`${info.file.name}${formatMessage({ id: 'createModel.upload.success' })}`);
 
         // 获取上传路径
         const {
@@ -123,9 +121,7 @@ const CreateModel = (props) => {
         } = info.fileList[0].response;
         form.setFieldsValue({ modelPath: path });
       } else if (status === 'error') {
-        message.error(
-          `${info.file.name} ${formatMessage({ id: 'createModel.upload.error' })}`,
-        );
+        message.error(`${info.file.name} ${formatMessage({ id: 'createModel.upload.error' })}`);
         setBtnDisabled(false);
       }
     },
