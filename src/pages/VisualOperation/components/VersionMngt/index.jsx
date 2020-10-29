@@ -305,7 +305,9 @@ const VersionMngt = (props) => {
           >
             <Timeline>
               {versionLogs.map((item, key) => (
-                <Timeline.Item key={key}>{`${item.time}，${item.user} ${intl.formatMessage({id: 'visualOperation.upgrade.to'})} ${item.version}`}</Timeline.Item>
+                <Timeline.Item key={key}>{`${item.time}，${item.user} ${intl.formatMessage({
+                  id: 'visualOperation.upgrade.to',
+                })} ${item.version}`}</Timeline.Item>
               ))}
             </Timeline>
             <div

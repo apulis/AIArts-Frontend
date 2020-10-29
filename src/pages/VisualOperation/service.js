@@ -19,8 +19,8 @@ export async function getInitData() {
         return {
           time: moment(item.updatedAt).format('YYYY/MM/DD HH:mm'),
           user: item.creator,
-          version: item.version
-        }
+          version: item.version,
+        };
       }),
       isUpgrading: data.isUpgrading,
     };
