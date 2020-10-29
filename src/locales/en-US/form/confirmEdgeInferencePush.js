@@ -3,11 +3,11 @@ export default {
   'confirmEdgeInferencePush.label.username': 'Username',
   'confirmEdgeInferencePush.label.password': 'Password',
 
-  'confirmEdgeInferencePush.placeholder.inputUrl': 'Please enter inference name！',
-  'confirmEdgeInferencePush.placeholder.inputUsername': 'Please enter user name！',
-  'confirmEdgeInferencePush.placeholder.inputPassword': 'Please enter password!',
+  'confirmEdgeInferencePush.placeholder.inputUrl': 'Please enter url',
+  'confirmEdgeInferencePush.placeholder.inputUsername': 'Please enter username',
+  'confirmEdgeInferencePush.placeholder.inputPassword': 'Please enter password',
 
-  'confirmEdgeInferencePush.rule.needUrl': 'Please enter inference name!',
-  'confirmEdgeInferencePush.rule.needUsername': 'Please enter user name!',
+  'confirmEdgeInferencePush.rule.needUrl': 'Please enter url!',
+  'confirmEdgeInferencePush.rule.needUsername': 'Please enter username!',
   'confirmEdgeInferencePush.rule.needPassword': 'Please enter password!',
 };
