@@ -1,7 +1,7 @@
 export default {
   'dataSet.list.modal.title.dataSet': 'Datasets',
 
-  'dataSet.list.add.dataSet': 'Create DataSet',
+  'dataSet.list.add.dataSet': 'Add Data Set',
   'dataSet.list.placeholder.search': 'Search for names',
   'dataSet.list.modal.title.edit': 'Edit',
   'dataSet.list.modal.title.add': 'Create',
@@ -28,7 +28,7 @@ export default {
   'dataSet.detail.curVersion': 'Current Version',
   'dataSet.detail.label.creater': 'Creater',
   'dataSet.detail.label.storePath': 'Save Path',
-  'dataSet.detail.label.createTime': 'Create Time',
+  'dataSet.detail.label.createTime': 'Creation time',
   'dataSet.detail.label.updateTime': 'Update Time',
   'dataSet.detail.label.description': 'Description',
 };

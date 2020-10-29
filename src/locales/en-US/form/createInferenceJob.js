@@ -1,9 +1,9 @@
 export default {
-  'inferenceJobCreate.label.workName': 'Name',
+  'inferenceJobCreate.label.workName': 'Job name',
   'inferenceJobCreate.label.desc': 'Description',
-  'inferenceJobCreate.label.modelPath': 'Inference Model Path',
+  'inferenceJobCreate.label.modelPath': 'model',
   'inferenceJobCreate.label.engineName': 'Engine',
-  'inferenceJobCreate.label.runningParams': 'Job Params',
+  'inferenceJobCreate.label.runningParams': 'Job parameters',
   'inferenceJobCreate.label.deviceType': 'Device Type',
   'inferenceJobCreate.label.resourcegpu': 'Device Num',
 

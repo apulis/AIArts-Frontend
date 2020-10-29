@@ -27,7 +27,7 @@ export default {
   'centerInference.detail.label.jobStatus': 'Job status',
   'centerInference.detail.label.engineType': 'Engine Type',
   'centerInference.detail.label.id': 'ID',
-  'centerInference.detail.label.createTime': 'Create Time',
+  'centerInference.detail.label.createTime': 'Creation time',
   'centerInference.detail.label.deviceType': 'Device Type',
   'centerInference.detail.label.gpuType': 'GPU Type',
   'centerInference.detail.label.useModel': 'Use Model',

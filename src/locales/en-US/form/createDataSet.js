@@ -5,7 +5,7 @@ export default {
   'dataSetCreate.label.isPrivate': 'Permission',
   'dataSetCreate.label.sourceType': 'Data source',
   'dataSetCreate.label.fileLists': 'Upload File',
-  'dataSetCreate.label.path': 'Store Path',
+  'dataSetCreate.label.path': 'Storage Path',
 
   'dataSetCreate.value.no': 'No',
   'dataSetCreate.value.yes': 'Yes',
@@ -18,12 +18,12 @@ export default {
 
   'dataSetCreate.placeholder.inputName': 'Please Input DataSet Name',
   'dataSetCreate.placeholder.inputDescription': 'Please Input Description',
-  'dataSetCreate.placeholder.inputStorePath': 'Please Input Store Path',
+  'dataSetCreate.placeholder.inputStorePath': 'Please Input Storage Path',
 
   'dataSetCreate.rule.needName': 'Please Input DataSet Name！',
   'dataSetCreate.rule.needDesc': 'Please Input Description！',
   'dataSetCreate.rule.needFile': 'Please Upload File！',
-  'dataSetCreate.rule.needStorePath': 'Please Input Store Path！',
+  'dataSetCreate.rule.needStorePath': 'Please Input Storage Path！',
 
   'dataSetCreate.cancel': 'Cancel',
   'dataSetCreate.submit': 'Submit',

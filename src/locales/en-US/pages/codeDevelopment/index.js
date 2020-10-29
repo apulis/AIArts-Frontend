@@ -1,5 +1,5 @@
 export default {
-  'codeList.add.codeDevelopment': 'Create Code Development',
+  'codeList.add.codeDevelopment': 'Create Development Environment',
 
   'codeList.placeholder.search': 'Search for names',
 

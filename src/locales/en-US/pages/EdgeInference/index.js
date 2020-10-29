@@ -1,5 +1,5 @@
 export default {
-  'edgeInference.list.add.inference': 'Create EdgeInference Job',
+  'edgeInference.list.add.inference': 'New Inference Job',
   'edgeInference.list.setting': 'Setting',
   'edgeInference.list.placeholder.search': 'Search for names',
   'edgeInference.list.typeText.converting': 'Converting',
