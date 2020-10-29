@@ -7,7 +7,7 @@ export default {
   'menu.dataManage.dataSet': 'Data Set Management',
   'menu.dataManage.imageLabel': 'Data Annotations',
   'menu.modelTraining': 'Model Training',
-  'menu.modelTraining.modelTraining': 'model trainging',
+  'menu.modelTraining.modelTraining': 'Model training',
   'menu.modelTraining.visualization': 'Training Visualization',
   'menu.modelTraining.paramsManage': 'Training template management',
   'menu.modelTraining.pretraindedModels': 'Preset Model',
