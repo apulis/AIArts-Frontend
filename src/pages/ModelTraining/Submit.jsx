@@ -57,7 +57,7 @@ export const subCodePathPrefix = (s) => {
 };
 
 const ModelTraining = (props) => {
-  let haveSetedParamsDetail = false;
+  const [haveSetedParamsDetail, setHaveSetedParamsDetail] = useState(false);
   const intl = useIntl();
   const { formatMessage } = intl;
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
@@ -157,7 +157,7 @@ const ModelTraining = (props) => {
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
-      haveSetedParamsDetail = true;
+      setHaveSetedParamsDetail(true);
       const newParams = {
         ...paramsDetailedData.params,
         outputPath: subCodePathPrefix(paramsDetailedData.params.outputPath),
@@ -171,7 +171,7 @@ const ModelTraining = (props) => {
       setCurrentDeviceType(newParams.deviceType);
       setFieldsValue(newParams);
     }
-  }, [codePathPrefix, paramsDetailedData]);
+  }, [codePathPrefix]);
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 9999 });
