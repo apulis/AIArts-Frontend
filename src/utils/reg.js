@@ -23,4 +23,7 @@ export const getNameFromDockerImage = (tag) => {
   return tag.replace(/(.+\/)/, '');
 };
 
-export const startUpFileReg = { pattern: /\.py|\.sh$/, message: formatMessage({ id: 'reg.input.limit.fileType' }) };
+export const startUpFileReg = {
+  pattern: /\.py|\.sh$/,
+  message: formatMessage({ id: 'reg.input.limit.fileType' }),
+};

@@ -62,5 +62,5 @@ export default {
   ...SubmitTrainingJobDetail,
   ...ParamsManage,
   ...PretrainedModel,
-  ...reg
+  ...reg,
 };
