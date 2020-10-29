@@ -44,5 +44,5 @@ export default {
   'centerInference.create.curTrainingEngine': 'Current training engine:',
   'centerInference.create.job': 'Create Inference jobs',
   'centerInference.create.paramsConfig': 'Parameter Configuration',
-  'centerInference.create.addParams': 'Click to add parameter',
+  'centerInference.create.addParams': 'Add Params',
 };

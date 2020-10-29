@@ -8,9 +8,8 @@
 export default {
   dev: {
     '/ai_arts/api/': {
-      target: 'http://219.133.167.42:30000/',
+      target: 'http://10.31.3.208/',
       // target: 'http://sandbox2-master.sigsus.cn:56511/',
-      target: 'http://219.133.167.42:30000/',
       // target: 'http://10.31.3.220:9999/',  //xu.ky
       // target: 'http://121.46.18.83:50088/',
       // target: 'http://10.31.3.231:9000/',
@@ -21,7 +20,7 @@ export default {
       },
     },
     '/custom-user-dashboard-backend/': {
-      target: 'http://219.133.167.42:30000/',
+      target: 'http://10.31.3.208/',
       // target: 'http://121.46.18.83:50088/',
       // target: 'http://10.31.3.63/',
       changeOrigin: true,
@@ -29,8 +28,8 @@ export default {
         '^': '',
       },
     },
-    '/endpoints_zh/api/datasources/proxy/1/api/v1': {
-      target: 'https://atlas02.sigsus.cn/',
+    '/endpoints/api/datasources/proxy/1/api/v1': {
+      target: 'http://10.31.3.208',
       changeOrigin: true,
       pathRewrite: {
         '^': '',

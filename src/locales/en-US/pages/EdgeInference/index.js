@@ -36,5 +36,5 @@ export default {
 
   'edgeInference.create.submit.success': 'Submit Succeeded!',
   'edgeInference.create.title': 'Submit EdgeInference',
-  'edgeInference.create.clickForAddParams': 'Click to add parameter',
+  'edgeInference.create.clickForAddParams': 'Add Params',
 };

@@ -133,7 +133,7 @@ export default {
   'createPretrained.placeholder.inputOutputPath': 'Please input output path!',
   'createPretrained.placeholder.inputModelParamPath': 'Please input Model Param Path!',
 
-  'createPretrained.clickAddParam': 'Click to add parameter',
+  'createPretrained.clickAddParam': 'Add Params',
   'createPretrained.Submit': 'Submit',
   'createPretrained.importEvaluationParam': 'Import evaluation param',
 
@@ -163,7 +163,7 @@ export default {
   'editMetrics.label.modelParamPath': 'Model parameter path',
   'editMetrics.label.trainingDataSet': 'Training data set',
   'editMetrics.label.runningParam': 'Running Param',
-  'editMetrics.clickAddParam': 'Click to add parameters',
+  'editMetrics.clickAddParam': 'Add Params',
   'editMetrics.label.deviceType': 'Device Type',
   'editMetrics.label.deviceNum': 'Device Number',
   'editMetrics.importTrainingParamConfig': 'Import training parameter configuration',
