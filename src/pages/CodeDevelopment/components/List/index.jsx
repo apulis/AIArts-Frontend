@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Button, Row, Col, Input, message, Modal, Form } from 'antd';
+import { Table, Select, Space, Row, Col, Input, message, Modal, Form } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
 import {
   getCodes,
@@ -29,6 +29,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import { checkIfCanDelete } from '@/utils/utils.js';
 import { jobNameReg } from '@/utils/reg';
 import { useIntl } from 'umi';
+import Button from '@/components/locales/Button';
 
 const { Search } = Input;
 const { Option } = Select;
