@@ -48,6 +48,7 @@ const CodeList = (props) => {
   const [modalData, setModalData] = useState({});
   const [currentHandledJobId, setCurrentHandledJobId] = useState('');
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
+  const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
     order: '',
@@ -255,7 +256,7 @@ const CodeList = (props) => {
   };
 
   const commonLayout = {
-    labelCol: { span: 4 },
+    labelCol: { span: 5 },
     wrapperCol: { span: 12 },
   };
 
@@ -411,9 +412,13 @@ const CodeList = (props) => {
       const values = await form.validateFields();
       values.isPrivate = true;
       values.jobId = currentHandledJobId;
+      const cancel = message.loading('Submitting', 12000);
+      setSaveImageButtonLoading(true);
       const res = await createSaveImage(values);
       if (res.code === 0) {
         renderTable();
+        cancel();
+        setSaveImageButtonLoading(false);
         message.success(intl.formatMessage({ id: 'codeList.tips.saveImage.success' }));
         setSaveImageModalVisible(false);
       }
@@ -507,15 +512,18 @@ const CodeList = (props) => {
       <Modal
         title={intl.formatMessage({ id: 'codeList.modal.saveImage.title.saveImage' })}
         visible={saveImageModalVisible}
-        okText={intl.formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
-        cancelText={intl.formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
         onCancel={() => {
           setSaveImageModalVisible(false);
           setCurrentHandledJobId('');
         }}
-        onOk={() => {
-          handleSaveImage();
-        }}
+        footer={[
+          <Button key="back" onClick={() => {setSaveImageModalVisible(false);setCurrentHandledJobId('');}}>
+            {intl.formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
+          </Button>,
+          <Button key="submit" type="primary" loading={saveImageButtonLoading} onClick={() => handleSaveImage()}>
+            {intl.formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
+          </Button>,
+        ]}
       >
         <Form form={form}>
           <Form.Item
