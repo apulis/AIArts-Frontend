@@ -517,10 +517,21 @@ const CodeList = (props) => {
           setCurrentHandledJobId('');
         }}
         footer={[
-          <Button key="back" onClick={() => {setSaveImageModalVisible(false);setCurrentHandledJobId('');}}>
+          <Button
+            key="back"
+            onClick={() => {
+              setSaveImageModalVisible(false);
+              setCurrentHandledJobId('');
+            }}
+          >
             {intl.formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
           </Button>,
-          <Button key="submit" type="primary" loading={saveImageButtonLoading} onClick={() => handleSaveImage()}>
+          <Button
+            key="submit"
+            type="primary"
+            loading={saveImageButtonLoading}
+            onClick={() => handleSaveImage()}
+          >
             {intl.formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
           </Button>,
         ]}
