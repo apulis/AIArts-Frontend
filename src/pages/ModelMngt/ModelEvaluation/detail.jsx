@@ -1,5 +1,15 @@
 import { history } from 'umi';
-import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Tooltip, Pagination } from 'antd';
+import {
+  PageHeader,
+  Descriptions,
+  Button,
+  message,
+  Modal,
+  Form,
+  Input,
+  Tooltip,
+  Pagination,
+} from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
@@ -25,7 +35,6 @@ const EvaluationDetail = (props) => {
   const [isPublic, setIsPublic] = useState(false);
   const [logCurrentPage, setLogCurrentPage] = useState(1);
   const [logMaxPage, setLogMaxPage] = useState(1);
-
 
   const [form] = Form.useForm();
   const { validateFields } = form;
@@ -260,7 +269,13 @@ const EvaluationDetail = (props) => {
             {logs}
           </pre>
         )}
-        <Pagination onChange={(page) => setLogCurrentPage(page)} defaultCurrent={logCurrentPage} total={logMaxPage} pageSize={1} showSizeChanger={false} />
+        <Pagination
+          onChange={(page) => setLogCurrentPage(page)}
+          defaultCurrent={logCurrentPage}
+          total={logMaxPage}
+          pageSize={1}
+          showSizeChanger={false}
+        />
       </PageHeader>
       {modalVisible && (
         <Modal
