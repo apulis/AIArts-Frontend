@@ -1,7 +1,7 @@
 export default {
   'modelEvaluationMetricsList.table.column.name': 'Evaluation Params Name',
   'modelEvaluationMetricsList.table.column.engineType': 'Engine Type',
-  'modelEvaluationMetricsList.table.column.createTime': 'Creation time',
+  'modelEvaluationMetricsList.table.column.createTime': 'Creation Time',
   'modelEvaluationMetricsList.table.column.description': 'Description',
   'modelEvaluationMetricsList.table.column.action': 'Operation',
   'modelEvaluationMetricsList.table.column.action.edit': 'Edit',

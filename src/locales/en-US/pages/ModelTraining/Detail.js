@@ -9,7 +9,7 @@ export default {
   'model.training.detail.jobStatus': 'Job Status',
   'model.training.detail.engine': 'Engine',
   'model.training.detail.ID': 'ID',
-  'model.training.detail.createTime': 'Creation time',
+  'model.training.detail.createTime': 'Creation Time',
   'model.training.detail.runningParams': 'Running parameters',
   'model.training.detail.codePath': 'Code directory',
   'model.training.detail.deviceNum': 'Device Num',

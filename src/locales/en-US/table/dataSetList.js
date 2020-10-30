@@ -1,5 +1,5 @@
 export default {
-  'dataSetList.table.column.name': 'Dataset name',
+  'dataSetList.table.column.name': 'Name',
   'dataSetList.table.column.description': 'Introduction',
   'dataSetList.table.column.creator': 'Creator',
   'dataSetList.table.column.updatedAt': 'Update time',

@@ -3,7 +3,7 @@ export default {
   'centerInferenceList.table.column.useModel': 'model',
   'centerInferenceList.table.column.status': 'Status',
   'centerInferenceList.table.column.engineType': 'Engine Type',
-  'centerInferenceList.table.column.createTime': 'Creation time',
+  'centerInferenceList.table.column.createTime': 'Creation Time',
   'centerInferenceList.table.column.runningTime': 'Running Time',
   'centerInferenceList.table.column.serviceAddr': 'Service address',
   'centerInferenceList.table.column.description': 'Description',

@@ -1,8 +1,8 @@
 export default {
-  'modelList.table.column.name': 'Name',
+  'modelList.table.column.name': 'Model Name',
   'modelList.table.column.status': 'Status',
   'modelList.table.column.engine': 'Engine Type',
-  'modelList.table.column.createTime': 'Creation time',
+  'modelList.table.column.createTime': 'Creation Time',
   'modelList.table.column.description': 'Description',
   'modelList.table.column.action': 'Operation',
   'modelList.table.column.action.stop': 'Stop',

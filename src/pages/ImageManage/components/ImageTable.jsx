@@ -18,12 +18,12 @@ const ImageTable = (props) => {
 
   const handleDeleteImage = async (id) => {
     Modal.confirm({
-      title: '将会删除该镜像',
-      content: '是否确认删除',
+      title: intl.formatMessage({ id: 'imageList.modal.tips.delete' }),
+      content: intl.formatMessage({ id: 'imageList.modal.tips.delete.confirm' }),
       async onOk() {
         const res = await deleteImages(id);
         if (res.code === 0) {
-          message.success('成功删除');
+          message.success(intl.formatMessage({ id: 'imageList.modal.tips.delete.success' }));
           fetchImages({ pageParams, search });
         }
       },

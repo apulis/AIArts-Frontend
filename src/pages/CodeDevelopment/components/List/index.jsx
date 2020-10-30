@@ -269,7 +269,7 @@ const CodeList = (props) => {
       title: intl.formatMessage({ id: 'codeList.table.column.name' }),
       dataIndex: 'name',
       ellipsis: true,
-      width: '10%',
+      width: '12%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'], // name与createTime非复合排序，各自独立排序
     },
@@ -284,7 +284,7 @@ const CodeList = (props) => {
       title: intl.formatMessage({ id: 'codeList.table.column.engineType' }),
       dataIndex: 'engine',
       ellipsis: true,
-      width: '12%',
+      width: '10%',
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },

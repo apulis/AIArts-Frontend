@@ -1,9 +1,9 @@
 export default {
-  'codeList.table.column.name': 'Development enviroment name',
+  'codeList.table.column.name': 'Name',
   'codeList.table.column.status': 'Status',
   'codeList.table.column.engineType': 'Engine Type',
-  'codeList.table.column.createTime': 'Creation time',
-  'codeList.table.column.storePath': 'Creation time',
+  'codeList.table.column.createTime': 'Creation Time',
+  'codeList.table.column.storePath': 'Code Storage Path',
   'codeList.table.column.description': 'Description',
   'codeList.table.column.action': 'Operation',
   'codeList.table.column.action.open': 'Open',
