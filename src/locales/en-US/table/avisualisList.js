@@ -3,7 +3,7 @@ export default {
   'avisualis.table.column.status': 'Status',
   'avisualis.table.column.use': 'Model USES',
   'avisualis.table.column.description': 'Description',
-  'avisualis.table.column.createdAt': 'Creation time',
+  'avisualis.table.column.createdAt': 'Creation Time',
   'avisualis.table.column.action': 'Operation',
   'avisualis.table.column.action.modelEvaluation': 'Model Evaluate',
   'avisualis.table.column.action.delete': 'Delete',

@@ -201,7 +201,7 @@ export default {
   'modelMngt.detail.template': 'Public template, cannot be saved',
   'modelMngt.detail.evaluation.saveParam': 'Save evaluation parameters',
   'modelMngt.detail.modelName': 'Model name',
-  'modelMngt.detail.createTime': 'Creation time',
+  'modelMngt.detail.createTime': 'Creation Time',
   'modelMngt.detail.evaluationStatus': 'Evaluation status',
   'modelMngt.detail.engineType': 'Engine type',
   'modelMngt.detail.testDataSet': 'Test data set',

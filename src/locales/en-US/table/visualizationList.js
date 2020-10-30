@@ -2,7 +2,7 @@ export default {
   'visualizationList.table.column.name': 'Name',
   'visualizationList.table.column.status': 'Status',
   'visualizationList.table.column.logPath': 'Visual Log Path',
-  'visualizationList.table.column.createTime': 'Creation time',
+  'visualizationList.table.column.createTime': 'Creation Time',
   'visualizationList.table.column.description': 'Description',
   'visualizationList.table.column.action': 'Operation',
   'visualizationList.table.column.action.open': 'open',

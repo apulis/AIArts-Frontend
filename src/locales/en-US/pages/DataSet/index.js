@@ -28,7 +28,7 @@ export default {
   'dataSet.detail.curVersion': 'Current Version',
   'dataSet.detail.label.creater': 'Creater',
   'dataSet.detail.label.storePath': 'Save Path',
-  'dataSet.detail.label.createTime': 'Creation time',
+  'dataSet.detail.label.createTime': 'Creation Time',
   'dataSet.detail.label.updateTime': 'Update Time',
   'dataSet.detail.label.description': 'Description',
 };
