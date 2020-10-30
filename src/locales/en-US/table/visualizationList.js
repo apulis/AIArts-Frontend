@@ -5,7 +5,7 @@ export default {
   'visualizationList.table.column.createTime': 'Creation Time',
   'visualizationList.table.column.description': 'Description',
   'visualizationList.table.column.action': 'Operation',
-  'visualizationList.table.column.action.open': 'open',
+  'visualizationList.table.column.action.open': 'Open',
   'visualizationList.table.column.action.stop': 'Stop',
   'visualizationList.table.column.action.run': 'Run',
   'visualizationList.table.column.action.delete': 'Delete',
