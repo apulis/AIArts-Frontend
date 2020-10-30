@@ -1,5 +1,5 @@
 export default {
-  'paramsManage.modal.confirm.delete.title': 'Delete params config',
+  'paramsManage.modal.confirm.delete.title': 'Delete parameters config',
   'paramsManage.modal.confirm.delete.content':
     'The delete operation cannot be restored. Do you want to continue?',
   'paramsManage.modal.confirm.delete.success': 'Successfully deleted',

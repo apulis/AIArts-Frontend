@@ -4,7 +4,7 @@ export default {
   'model.training.detail.message.save.success': 'Save successfully',
   'model.training.detail.title': 'Model training',
   'model.training.detail.tooltip.cannot.save': 'Public template, cannot be saved',
-  'model.training.detail.button.save.params': 'Save Training params',
+  'model.training.detail.button.save.params': 'Save Training parameters',
   'model.training.detail.jobName': 'Job Name',
   'model.training.detail.jobStatus': 'Job Status',
   'model.training.detail.engine': 'Engine',

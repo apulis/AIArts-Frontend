@@ -1,9 +1,9 @@
 export default {
-  'myModels.list.add.createModel': 'Creating Model',
+  'myModels.list.add.createModel': 'Create Model',
   'myModels.list.placeholder.search': 'Search for names',
   'modelEvaluation.list.placeholder.search': 'Search for names',
   'modelEvaluationMetrics.list.placeholder.search': 'Search for names',
-  'modelEvaluationMetrics.list.add.importParams': 'Import parameters',
+  'modelEvaluationMetrics.list.add.importParams': 'Import Evaluation Parameters',
   // avisualis
   'avisualis.curHave': 'Current Have',
   'avisualis.nodes': 'nodes',
@@ -13,7 +13,7 @@ export default {
   'avisualis.delete': 'Delete',
   'avisualis.cancel': 'Cancel',
   'avisualis.delete.success': 'Successfully Deleted!',
-  'avisualis.model.create': 'Creating Model',
+  'avisualis.model.create': 'Create Model',
   'avisualis.queryModel': 'Please enter the model name query',
   'avisualis.fresh.success': 'Successfully Refreshed!',
 
@@ -31,7 +31,7 @@ export default {
   'itemPanel.node.change.success': 'Successfully changed',
   'itemPanel.return': 'Return',
   'itemPanel.model.save': 'Save Model',
-  'itemPanel.model.create': 'Creating Model',
+  'itemPanel.model.create': 'Create Model',
   'itemPanel.model.deatil': 'Model Detail',
   'itemPanel.node.config': 'Node configuration',
   'itemPanel.node.config.tips': 'This node has no configuration items',
@@ -65,7 +65,7 @@ export default {
   'createModel.upload.error': 'Failed to Upload File',
   'createModel.upload.tips': 'Cannot upload the same file！',
   'createModel.upload.tips.desc': 'Only files in .zip, .tar and .tar.gz format can be uploaded.',
-  'createModel.model.create': 'Creating Model',
+  'createModel.model.create': 'Create Model',
 
   // CreatePretrained
   'CreatePretrained.modalFooter.okText': 'Ok',
@@ -92,7 +92,7 @@ export default {
 
   'createPretrained.label.modelName': 'Model Name',
   'createPretrained.label.modelUseful': 'Model Purpose',
-  'createPretrained.label.paramsSource': 'Param Source',
+  'createPretrained.label.paramsSource': 'Parameters Source',
   'createPretrained.label.engineType': 'Engine Type',
   'createPretrained.label.precision': 'Model accuracy',
   'createPretrained.label.modelSize': 'Model Size',
@@ -135,7 +135,7 @@ export default {
 
   'createPretrained.clickAddParam': 'Add Params',
   'createPretrained.Submit': 'Submit',
-  'createPretrained.importEvaluationParam': 'Import evaluation param',
+  'createPretrained.importEvaluationParam': 'Import evaluation parameters',
 
   'createPretrained.tab.startUpFile': 'Startup File',
   'createPretrained.tab.codePath': 'Code directory',

@@ -6,7 +6,7 @@ export default {
 
   'modelList.placeholder.search': 'Search for names',
   'presetModelList.placeholder.search': 'Search for names',
-  'trainingParamsList.add.importParams': 'Import Evaluation parameters',
+  'trainingParamsList.add.importParams': 'Import Training Parameters',
 
   'trainingParamsList.placeholder.search': 'Search for names',
   'visualizationList.add.createVisaulJob': 'Create Visualization Job',

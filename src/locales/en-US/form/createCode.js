@@ -1,5 +1,5 @@
 export default {
-  'codeCreate.label.devEnvName': 'Development Environment Name',
+  'codeCreate.label.devEnvName': 'Name',
   'codeCreate.label.description': 'Description',
   'codeCreate.label.storePath': 'Code Storage Path',
   'codeCreate.label.engineSource': 'Engine Source',
