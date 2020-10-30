@@ -307,7 +307,7 @@ export function setI18n(lang) {
 }
 
 export function capFirstLetter(s = '') {
-  return s.replace(/\b(\w)(\w*)/g, function(_$0, $1, $2) {
+  return s.replace(/\b(\w)(\w*)/g, function (_$0, $1, $2) {
     return $1.toUpperCase() + $2.toLowerCase();
   });
 }
