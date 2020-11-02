@@ -17,7 +17,7 @@ export default {
   'dataSet.list.onDelete.success': 'Successfully Deleted!',
   'dataSet.list.fresh.success': 'Successfully refreshed!',
 
-  'dataSet.create.tips.upload.success': 'File Upload Success！',
+  'dataSet.create.tips.upload.success': 'File Upload Successfully',
   'dataSet.create.tips.upload.error': 'File Upload Error！',
   'dataSet.create.tips.upload.equalFile': 'Cannot upload the same file！',
   'dataSet.create.tips.upload.supportFile':

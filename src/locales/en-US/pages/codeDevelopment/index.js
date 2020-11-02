@@ -6,7 +6,7 @@ export default {
   'codeList.modal.upload.title.uploadCode': 'Upload Code',
   'codeList.modal.upload.content.uploadTips':
     'Please click or drag files to upload (multi-file support)',
-  'codeList.modal.upload.tips.uploadSuccess': 'File Upload Success!',
+  'codeList.modal.upload.tips.uploadSuccess': 'File Uploaded Successfully!',
   'codeList.modal.upload.tips.uploadError': 'File Upload Error!',
   'codeList.modal.upload.footer.close': 'Close',
 
@@ -17,14 +17,14 @@ export default {
   'codeList.modal.saveImage.footer.ok': 'Ok',
   'codeList.modal.saveImage.footer.cancel': 'Cancel',
 
-  'codeList.tips.fresh.success': 'Refresh Succeeded!',
+  'codeList.tips.fresh.success': 'Successfully Refresh!',
   'codeList.tips.open.error': 'The service is under preparation, please try again later',
   'codeList.tips.stop.success': 'Stop Succeeded',
   'codeList.tips.delete.success': 'Delete Succeeded',
   'codeList.tips.delete.modal.title': 'The current job has not been stopped',
   'codeList.tips.delete.modal.content': 'Please stop the job first',
   'codeList.tips.delete.modal.okText': 'ok',
-  'codeList.tips.saveImage.success': 'Save Image Success',
+  'codeList.tips.saveImage.success': 'Successfully Saved Image',
 
   'codeCreate.pageHeader.backCodeCreate': 'Back To CodeDevelopment',
 

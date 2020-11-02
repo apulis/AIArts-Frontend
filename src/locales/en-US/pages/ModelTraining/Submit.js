@@ -5,7 +5,8 @@ export default {
   'model.submit.resource.not.enough.title':
     'No trainning device is available right now. Submitted jobs will wait in queue.',
   'model.submit.resource.not.enough.content': 'Whether to continue',
-  'model.submit.validate.running.params.validator.same.name': 'Cannot enter the same parameters name',
+  'model.submit.validate.running.params.validator.same.name':
+    'Cannot enter the same parameters name',
   'model.submit.message.device.error': 'Need to select the device type first',
   'model.submit.pageTitle.edit': 'Edit training parameters',
   'model.submit.pageTitle.submit': 'Create training job',

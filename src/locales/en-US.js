@@ -26,6 +26,7 @@ import PretrainedModel from './en-US/pages/ModelMngt/PretrainedModel';
 import request from './en-US/request';
 import bizComponent from './en-US/bizComponent';
 import reg from './en-US/reg';
+import layout from './en-US/layout';
 import { capFirstLetter } from '@/utils/utils';
 
 for (const item in menu) {
@@ -40,6 +41,7 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   'app.welcome.link.fetch-blocks': 'Get all block',
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
+  ...layout,
   ...bizComponent,
   ...request,
   ...globalHeader,

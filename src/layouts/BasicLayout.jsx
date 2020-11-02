@@ -12,13 +12,14 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import { getRouteAuthority } from '@/utils/utils';
 import logo from '../assets/logo.svg';
 import CommonLayout from './CommonLayout';
+import { formatMessage } from 'umi';
 
 const noMatch = (
   <Result
     status={403}
     title="403"
-    subTitle="抱歉，您无权限访问此页面."
-    extra={<p>请联系管理员添加权限</p>}
+    subTitle={formatMessage({id: '403.tips.error'})}
+    extra={<p>{formatMessage({id: '403.tips.concat'})}</p>}
   />
 );
 
