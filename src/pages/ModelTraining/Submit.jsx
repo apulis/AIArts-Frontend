@@ -287,7 +287,7 @@ const ModelTraining = (props) => {
     } else if (importedTrainingParams) {
       //
     } else {
-      values.codePath = codePathPrefix + values.codePath;
+      values.codePath = values.codePath ? codePathPrefix + values.codePath : undefined;
       values.startupFile = codePathPrefix + values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
