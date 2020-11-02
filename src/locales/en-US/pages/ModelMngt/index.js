@@ -209,7 +209,7 @@ export default {
   'modelMngt.detail.startupFile': 'Startup File',
   'modelMngt.detail.visualPath': 'Visualization path',
   'modelMngt.detail.outputPath': 'Output Path',
-  'modelMngt.detail.modelWeightFile': 'model parameter file',
+  'modelMngt.detail.modelWeightFile': 'Model Parameter File',
   'modelMngt.detail.deviceType': 'Device Type',
   'modelMngt.detail.deviceNum': 'Number of devices',
   'modelMngt.detail.runningParam': 'Running parameters',
