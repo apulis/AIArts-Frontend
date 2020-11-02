@@ -73,17 +73,6 @@ const EvaluationDetail = (props) => {
     }
   };
 
-  const isFinished = (status) => {
-    // let status = evaluationJob.status;
-
-    if (
-      ['finished', 'failed', 'pausing', 'paused', 'killing', 'killed', 'error'].includes(status)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
 
   const getLateastLogs = async (page) => {
     const cancel = message.loading(
