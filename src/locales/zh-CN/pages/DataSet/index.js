@@ -15,6 +15,7 @@ export default {
   'dataSet.list.onDelete.okText': '删除',
   'dataSet.list.onDelete.cancelText': '取消',
   'dataSet.list.onDelete.success': '删除成功!',
+  'dataSet.list.onDelete.still.using': '该数据集仍在使用中！',
   'dataSet.list.fresh.success': '刷新成功!',
 
   'dataSet.create.tips.upload.success': '文件上传成功！',

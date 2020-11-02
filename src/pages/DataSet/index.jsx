@@ -192,6 +192,8 @@ const DataSetList = () => {
             getData();
           }
           message.success(intl.formatMessage({ id: 'dataSet.list.onDelete.success' }));
+        } else if (code === 30010) {
+          message.error(intl.formatMessage({ id: 'dataSet.list.onDelete.still.using' }))
         }
       },
       onCancel() {},

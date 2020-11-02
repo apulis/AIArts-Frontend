@@ -15,6 +15,7 @@ export default {
   'dataSet.list.onDelete.okText': 'Delete',
   'dataSet.list.onDelete.cancelText': 'Cancel',
   'dataSet.list.onDelete.success': 'Successfully Deleted!',
+  'dataSet.list.onDelete.still.using': 'Current data set is still using!',
   'dataSet.list.fresh.success': 'Successfully refreshed!',
 
   'dataSet.create.tips.upload.success': 'File Upload Success！',
