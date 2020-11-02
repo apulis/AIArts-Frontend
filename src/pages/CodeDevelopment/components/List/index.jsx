@@ -412,7 +412,10 @@ const CodeList = (props) => {
       const values = await form.validateFields();
       values.isPrivate = true;
       values.jobId = currentHandledJobId;
-      const cancel = message.loading(formatMessage({ id: 'codeCreate.message.loading.processing' }), 12000);
+      const cancel = message.loading(
+        formatMessage({ id: 'codeCreate.message.loading.processing' }),
+        12000,
+      );
       setSaveImageButtonLoading(true);
       const res = await createSaveImage(values);
       if (res.code === 0) {
