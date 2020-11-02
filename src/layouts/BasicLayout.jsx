@@ -18,8 +18,8 @@ const noMatch = (
   <Result
     status={403}
     title="403"
-    subTitle={formatMessage({id: '403.tips.error'})}
-    extra={<p>{formatMessage({id: '403.tips.concat'})}</p>}
+    subTitle={formatMessage({ id: '403.tips.error' })}
+    extra={<p>{formatMessage({ id: '403.tips.concat' })}</p>}
   />
 );
 
