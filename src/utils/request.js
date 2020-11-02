@@ -17,6 +17,7 @@ let bizCodeMessage = undefined;
  */
 
 export const errorHandler = async (error) => {
+  console.log(123123)
   if (!codeMessage) {
     codeMessage = {
       200: formatMessage({ id: 'codeMessage.200' }),
@@ -51,6 +52,7 @@ export const errorHandler = async (error) => {
   try {
     _response = await response.json();
   } catch (e) {
+    console.log('request error', e)
     // notification.error({
     //   message: '请求错误',
     //   description: '请稍后再试',
@@ -61,8 +63,9 @@ export const errorHandler = async (error) => {
   }
   const CODE = _response.code;
   const hasMessage = bizCodeMessage[CODE] || _response.msg;
+  console.log(123, hasMessage)
   if (CODE !== 0 && hasMessage) {
-    if (hasMessage.length < 30) {
+    if (hasMessage.length < 200) {
       message.error(hasMessage);
     }
   }
