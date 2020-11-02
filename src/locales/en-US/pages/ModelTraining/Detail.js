@@ -27,5 +27,5 @@ export default {
   'model.training.detail.form.name.placeholder': 'Please enter the config name',
   'model.training.detail.form.jobType.label': 'Job Type',
   'model.training.detail.form.jobType.initValue': 'Model Training',
-  'model.training.detail.desc': 'description',
+  'model.training.detail.desc': 'Description',
 };
