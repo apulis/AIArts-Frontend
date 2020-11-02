@@ -56,8 +56,6 @@ export const subCodePathPrefix = (s) => {
   return s.replace(/\/home\/.+?\//, '');
 };
 
-let haveSetedParamsDetail = false;
-
 const ModelTraining = (props) => {
   const intl = useIntl();
   const { formatMessage } = intl;
@@ -157,8 +155,7 @@ const ModelTraining = (props) => {
   }, [distributedJob, nodeInfo, currentDeviceType]);
 
   useEffect(() => {
-    if (codePathPrefix && Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
-      haveSetedParamsDetail = true;
+    if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
       const newParams = {
         ...paramsDetailedData.params,
         outputPath: subCodePathPrefix(paramsDetailedData.params.outputPath),
@@ -172,7 +169,7 @@ const ModelTraining = (props) => {
       setCurrentDeviceType(newParams.deviceType);
       setFieldsValue(newParams);
     }
-  }, [codePathPrefix, paramsDetailedData]);
+  }, [codePathPrefix]);
 
   const fetchDataSets = async () => {
     const res = await getLabeledDatasets({ pageNum: 1, pageSize: 9999 });
@@ -187,6 +184,7 @@ const ModelTraining = (props) => {
     if (res.code === 0) {
       const data = res.data;
       setParamsDetailedData(data);
+      setCodePathPrefix(codePathPrefix);
       // check null
       data.params.params = data.params.params || [];
       // replace path prefix
@@ -289,7 +287,7 @@ const ModelTraining = (props) => {
     } else if (importedTrainingParams) {
       //
     } else {
-      values.codePath = codePathPrefix + values.codePath;
+      values.codePath = values.codePath ? codePathPrefix + values.codePath : undefined;
       values.startupFile = codePathPrefix + values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
@@ -394,7 +392,7 @@ const ModelTraining = (props) => {
 
   const commonLayout = {
     labelCol: { span: 4 },
-    wrapperCol: { span: 8 },
+    wrapperCol: { span: 12 },
   };
 
   const handleDistributedJob = (e) => {

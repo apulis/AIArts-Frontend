@@ -67,7 +67,6 @@ class SecurityLayout extends React.Component {
   }
 
   render() {
-    console.log('render securityLayout');
     const { isReady } = this.state;
     const { children, loading } = this.props;
     const token = localStorage.token;

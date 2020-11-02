@@ -41,7 +41,11 @@ const Setting = ({ common, dispatch }) => {
               {[0, 3, 5, 10, 30]
                 .map((val) => val * 1000)
                 .map((val) => (
-                  <Option value={val}>{(val || 0) / 1000}秒</Option>
+                  <Option value={val}>
+                    {(val || 0) / 1000}
+                    {}
+                    {<FormattedMessage id="setting.second" />}
+                  </Option>
                 ))}
             </Select>
           </FormItem>

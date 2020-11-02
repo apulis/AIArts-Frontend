@@ -103,12 +103,6 @@ const SubmitModelTraining = (props) => {
 
   useEffect(() => {
     if (currentEngineName) {
-      console.log(
-        'supportedInference[currentEngineName]',
-        supportedInference[currentEngineName],
-        supportedInference,
-        currentEngineName,
-      );
       const currentEngineVersionList = Object.keys(supportedInference[currentEngineName]);
       setEngineVersionList(currentEngineVersionList);
       setFieldsValue({
@@ -184,6 +178,12 @@ const SubmitModelTraining = (props) => {
   const handleEngineChange = (type, val) => {
     if (type === 'name') {
       setCurrentEngineName(val);
+      const availVersions = Object.keys(supportedInference[val]);
+      const deviceList = Object.keys(supportedInference[val][availVersions[0]]);
+      setDeviceList(deviceList);
+      setFieldsValue({
+        deviceType: deviceList[0],
+      });
     } else if (type === 'version') {
       setCurrentVersion(val);
     }
@@ -203,14 +203,14 @@ const SubmitModelTraining = (props) => {
   };
 
   useEffect(() => {
-    if (currentEngineName && currentVersion) {
+    if (currentVersion) {
       const deviceList = Object.keys(supportedInference[currentEngineName][currentVersion]);
       setDeviceList(deviceList);
       setFieldsValue({
         deviceType: deviceList[0],
       });
     }
-  }, [currentEngineName, currentVersion]);
+  }, [currentVersion]);
 
   return (
     <PageHeader

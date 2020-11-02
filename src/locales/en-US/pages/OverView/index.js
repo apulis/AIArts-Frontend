@@ -7,5 +7,5 @@ export default {
   'overview.inference': 'Inference',
   'overview.noData': 'No data',
   'overview.use.manual': 'Manual',
-  'overview.to.label.image': 'To Labeling Image',
+  'overview.to.label.image': 'Label Image',
 };

@@ -23,6 +23,9 @@ import SubmitTrainingJob from './zh-CN/pages/ModelTraining/Submit';
 import SubmitTrainingJobDetail from './zh-CN/pages/ModelTraining/Detail';
 import ParamsManage from './zh-CN/pages/ModelTraining/ParamsManage';
 import PretrainedModel from './zh-CN/pages/ModelMngt/PretrainedModel';
+import request from './zh-CN/request';
+import bizComponent from './zh-CN/bizComponent';
+import reg from './zh-CN/reg';
 
 export default {
   'navBar.lang': '语言',
@@ -32,6 +35,9 @@ export default {
   'app.preview.down.block': '下载此页面到本地项目',
   'app.welcome.link.fetch-blocks': '获取全部区块',
   'app.welcome.link.block-list': '基于 block 开发，快速构建标准页面',
+  ...reg,
+  ...request,
+  ...bizComponent,
   ...globalHeader,
   ...menu,
   ...settingDrawer,

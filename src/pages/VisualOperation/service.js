@@ -16,9 +16,11 @@ export async function getInitData() {
         desc: info.description,
       },
       versionLogs: logs.map((item) => {
-        return `${moment(item.updatedAt).format('YYYY/MM/DD HH:mm')}，${
-          item.creator
-        } 将版本更新为 ${item.version}`;
+        return {
+          time: moment(item.updatedAt).format('YYYY/MM/DD HH:mm'),
+          user: item.creator,
+          version: item.version,
+        };
       }),
       isUpgrading: data.isUpgrading,
     };

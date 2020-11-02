@@ -23,6 +23,14 @@ import SubmitTrainingJob from './en-US/pages/ModelTraining/Submit';
 import SubmitTrainingJobDetail from './en-US/pages/ModelTraining/Detail';
 import ParamsManage from './en-US/pages/ModelTraining/ParamsManage';
 import PretrainedModel from './en-US/pages/ModelMngt/PretrainedModel';
+import request from './en-US/request';
+import bizComponent from './en-US/bizComponent';
+import reg from './en-US/reg';
+import { capFirstLetter } from '@/utils/utils';
+
+for (const item in menu) {
+  menu[item] = capFirstLetter(menu[item]);
+}
 
 export default {
   'navBar.lang': 'Languages',
@@ -32,6 +40,8 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   'app.welcome.link.fetch-blocks': 'Get all block',
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
+  ...bizComponent,
+  ...request,
   ...globalHeader,
   ...menu,
   ...settingDrawer,
@@ -57,4 +67,5 @@ export default {
   ...SubmitTrainingJobDetail,
   ...ParamsManage,
   ...PretrainedModel,
+  ...reg,
 };

@@ -23,7 +23,7 @@ const { TextArea } = Input;
 const { Dragger } = Upload;
 
 const CreateModel = (props) => {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [visible, setVisible] = useState(false);
   const [form] = Form.useForm();
@@ -64,10 +64,10 @@ const CreateModel = (props) => {
     const { code, msg } = await addModel(data);
 
     if (code === 0) {
-      message.success(`${createModel.onFinish.success}`);
+      message.success(formatMessage({ id: `createModel.onFinish.success` }));
       history.push('/ModelManagement/MyModels');
     } else {
-      msg && message.error(`${createModel.onFinish.error}${msg}`);
+      msg && message.error(formatMessage({ id: `createModel.onFinish.error ` }) + msg);
     }
   };
 
@@ -113,9 +113,7 @@ const CreateModel = (props) => {
         console.log(111, info.fileList);
         setFileList(info.fileList);
         setBtnDisabled(false);
-        message.success(
-          `${info.file.name}${intl.formatMessage({ id: 'createModel.upload.success' })}`,
-        );
+        message.success(`${info.file.name}${formatMessage({ id: 'createModel.upload.success' })}`);
 
         // 获取上传路径
         const {
@@ -123,9 +121,7 @@ const CreateModel = (props) => {
         } = info.fileList[0].response;
         form.setFieldsValue({ modelPath: path });
       } else if (status === 'error') {
-        message.error(
-          `${info.file.name} ${intl.formatMessage({ id: 'createModel.upload.error' })}`,
-        );
+        message.error(`${info.file.name} ${formatMessage({ id: 'createModel.upload.error' })}`);
         setBtnDisabled(false);
       }
     },
@@ -133,7 +129,7 @@ const CreateModel = (props) => {
       const { type, size } = file;
       return new Promise((resolve, reject) => {
         if (fileList.length && fileList.findIndex((i) => i.name === name && i.type === type) > -1) {
-          message.warning(`${intl.formatMessage({ id: 'createModel.upload.tips.desc' })}`);
+          message.warning(`${formatMessage({ id: 'createModel.upload.tips.desc' })}`);
           reject(file);
         }
         if (
@@ -145,7 +141,7 @@ const CreateModel = (props) => {
             type === 'application/gzip'
           )
         ) {
-          message.warning(`${intl.formatMessage({ id: 'createModel.upload.tips' })}`);
+          message.warning(`${formatMessage({ id: 'createModel.upload.tips' })}`);
           reject(file);
         }
         resolve(file);
@@ -166,7 +162,7 @@ const CreateModel = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/ModelManagement/MyModels')}
-        title={intl.formatMessage({ id: 'createModel.model.create' })}
+        title={formatMessage({ id: 'createModel.model.create' })}
       >
         <div
           style={{
@@ -182,50 +178,50 @@ const CreateModel = (props) => {
             <Form.Item
               {...layout}
               name="name"
-              label={intl.formatMessage({ id: 'modelCreate.label.name' })}
+              label={formatMessage({ id: 'modelCreate.label.name' })}
               rules={[
                 {
                   required: true,
-                  message: intl.formatMessage({ id: 'modelCreate.rule.needName' }),
+                  message: formatMessage({ id: 'modelCreate.rule.needName' }),
                 },
                 { ...modelNameReg },
                 { ...jobNameReg },
               ]}
             >
               <Input
-                placeholder={intl.formatMessage({ id: 'modelCreate.placeholder.inputModelName' })}
+                placeholder={formatMessage({ id: 'modelCreate.placeholder.inputModelName' })}
               />
             </Form.Item>
             <Form.Item
               {...layout}
               name="description"
-              label={intl.formatMessage({ id: 'modelCreate.label.description' })}
+              label={formatMessage({ id: 'modelCreate.label.description' })}
               rules={[{ max: 256 }]}
             >
               <TextArea
                 rows={4}
-                placeholder={intl.formatMessage({ id: 'modelCreate.placeholder.inputDescription' })}
+                placeholder={formatMessage({ id: 'modelCreate.placeholder.inputDescription' })}
               />
             </Form.Item>
             <Form.Item
               {...layout}
-              label={intl.formatMessage({ id: 'modelCreate.label.modelFileType' })}
+              label={formatMessage({ id: 'modelCreate.label.modelFileType' })}
               name="modelFileType"
               rules={[{ required: true }]}
             >
               <Radio.Group onChange={(e) => setModelFileType(e.target.value)}>
                 <Radio value={'1'}>
-                  {intl.formatMessage({ id: 'modelCreate.value.selectModelFile' })}
+                  {formatMessage({ id: 'modelCreate.value.selectModelFile' })}
                 </Radio>
                 <Radio value={'2'}>
-                  {intl.formatMessage({ id: 'modelCreate.value.uploadModelFile' })}
+                  {formatMessage({ id: 'modelCreate.value.uploadModelFile' })}
                 </Radio>
               </Radio.Group>
             </Form.Item>
             {modelFileType == '1' && (
               <Form.Item
                 {...layout}
-                label={intl.formatMessage({ id: 'modelCreate.label.job' })}
+                label={formatMessage({ id: 'modelCreate.label.job' })}
                 required
               >
                 <Form.Item
@@ -233,13 +229,13 @@ const CreateModel = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: intl.formatMessage({ id: 'modelCreate.rule.needJob' }),
+                      message: formatMessage({ id: 'modelCreate.rule.needJob' }),
                     },
                   ]}
                   style={{ display: 'inline-block', width: 'calc(90% - 4px)' }}
                 >
                   <Input
-                    placeholder={intl.formatMessage({
+                    placeholder={formatMessage({
                       id: 'modelCreate.placeholder.selectTrainingJobName',
                     })}
                     disabled
@@ -256,12 +252,12 @@ const CreateModel = (props) => {
               <Form.Item
                 labelCol={{ span: 3 }}
                 wrapperCol={{ span: 14 }}
-                label={intl.formatMessage({ id: 'modelCreate.label.file' })}
+                label={formatMessage({ id: 'modelCreate.label.file' })}
                 name="file"
                 rules={[
                   {
                     required: true,
-                    message: intl.formatMessage({ id: 'modelCreate.rule.needFile' }),
+                    message: formatMessage({ id: 'modelCreate.rule.needFile' }),
                   },
                 ]}
                 valuePropName="file"
@@ -271,10 +267,10 @@ const CreateModel = (props) => {
                     <InboxOutlined />
                   </p>
                   <p className="ant-upload-text">
-                    {intl.formatMessage({ id: 'modelCreate.value.upload.tips' })}
+                    {formatMessage({ id: 'modelCreate.value.upload.tips' })}
                   </p>
                   <p className="ant-upload-hint">
-                    {intl.formatMessage({ id: 'modelCreate.value.upload.tips.desc' })}
+                    {formatMessage({ id: 'modelCreate.value.upload.tips.desc' })}
                   </p>
                 </Dragger>
               </Form.Item>
@@ -283,17 +279,17 @@ const CreateModel = (props) => {
               <Form.Item
                 {...layout}
                 name="argumentPath"
-                label={intl.formatMessage({ id: 'modelCreate.label.argumentPath' })}
+                label={formatMessage({ id: 'modelCreate.label.argumentPath' })}
                 rules={[
                   {
                     required: true,
-                    message: intl.formatMessage({ id: 'modelCreate.rule.needWeight' }),
+                    message: formatMessage({ id: 'modelCreate.rule.needWeight' }),
                   },
                 ]}
               >
                 <Input
                   addonBefore={codePathPrefix}
-                  placeholder={intl.formatMessage({
+                  placeholder={formatMessage({
                     id: 'modelCreate.placeholder.inputArgumentPath',
                   })}
                 />
@@ -307,7 +303,7 @@ const CreateModel = (props) => {
             </Form.Item>
             <Form.Item style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit" disabled={btnDisabled}>
-                {intl.formatMessage({ id: 'modelCreate.submit' })}
+                {formatMessage({ id: 'modelCreate.submit' })}
               </Button>
             </Form.Item>
           </Form>

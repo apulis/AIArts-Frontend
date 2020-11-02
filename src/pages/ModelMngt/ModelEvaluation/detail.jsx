@@ -1,5 +1,15 @@
 import { history } from 'umi';
-import { PageHeader, Descriptions, Button, message, Modal, Form, Input, Tooltip } from 'antd';
+import {
+  PageHeader,
+  Descriptions,
+  Button,
+  message,
+  Modal,
+  Form,
+  Input,
+  Tooltip,
+  Pagination,
+} from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
@@ -23,13 +33,15 @@ const EvaluationDetail = (props) => {
   const [confusion, setConfusion] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
+  const [logCurrentPage, setLogCurrentPage] = useState(1);
+  const [logMaxPage, setLogMaxPage] = useState(1);
 
   const [form] = Form.useForm();
   const { validateFields } = form;
 
   const getEvaluationDetail = async () => {
     // const cancel = message.loading('获取结果中');
-    const res = await fetchEvaluationDetail(modelId);
+    const res = await fetchEvaluationDetail(modelId, logCurrentPage);
     // cancel();
     const { code, msg } = res;
     if (code === 0) {
@@ -42,7 +54,8 @@ const EvaluationDetail = (props) => {
         delete evaluation.params['visualPath'];
       }
       setEvaluationJob(evaluation);
-      setLogs(log);
+      setLogs(log?.log);
+      setLogMaxPage(log?.maxPage || 0);
       setIndicator(indicator);
       setConfusion(confusion);
 
@@ -60,23 +73,11 @@ const EvaluationDetail = (props) => {
     }
   };
 
-  const isFinished = (status) => {
-    // let status = evaluationJob.status;
-
-    if (
-      ['finished', 'failed', 'pausing', 'paused', 'killing', 'killed', 'error'].includes(status)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  const getLateastLogs = async () => {
+  const getLateastLogs = async (page) => {
     const cancel = message.loading(
       intl.formatMessage({ id: 'modelMngt.detail.getLateastLogs.tips.loading' }),
     );
-    const res = await fetchEvaluationDetail(modelId);
+    const res = await fetchEvaluationDetail(modelId, page);
     cancel();
     const { code, msg } = res;
     if (code === 0) {
@@ -89,7 +90,8 @@ const EvaluationDetail = (props) => {
         delete evaluation.params['visualPath'];
       }
       setEvaluationJob(evaluation);
-      setLogs(log);
+      setLogs(log?.log);
+      setLogMaxPage(log?.maxPage || 0);
       setIndicator(indicator);
       setConfusion(confusion);
     }
@@ -115,14 +117,14 @@ const EvaluationDetail = (props) => {
   };
 
   useEffect(() => {
-    getEvaluationDetail();
+    getEvaluationDetail(logCurrentPage);
     let timer = setInterval(() => {
-      getEvaluationDetail();
+      getEvaluationDetail(logCurrentPage);
     }, REFRESH_INTERVAL);
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [logCurrentPage]);
 
   const commonLayout = {
     labelCol: { span: 6 },
@@ -205,7 +207,7 @@ const EvaluationDetail = (props) => {
               formatParams(evaluationJob.params).map((p) => <div>{p}</div>)}
           </Descriptions.Item>
         </Descriptions>
-        {!['unapproved', 'queued', 'scheduling', 'error'].includes(evaluationJob?.status) && (
+        {['finished', 'running'].includes(evaluationJob?.status) && (
           <>
             <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
               {intl.formatMessage({ id: 'modelMngt.detail.evaluationResult' })}
@@ -255,6 +257,13 @@ const EvaluationDetail = (props) => {
             {logs}
           </pre>
         )}
+        <Pagination
+          onChange={(page) => setLogCurrentPage(page)}
+          defaultCurrent={logCurrentPage}
+          total={logMaxPage}
+          pageSize={1}
+          showSizeChanger={false}
+        />
       </PageHeader>
       {modalVisible && (
         <Modal

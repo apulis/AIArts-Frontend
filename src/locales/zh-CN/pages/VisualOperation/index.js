@@ -22,6 +22,7 @@ export default {
   'visualOperation.version.modal.tip': '提示',
   'visualOperation.version.modal.content.no.more.history': '没有更多历史记录',
   'visualOperation.upgrade.history': '升级历史',
+  'visualOperation.upgrade.to': '将版本更新为',
   'visualOperation.version.info': '版本信息',
   'visualOperation.version.code': '版本号',
   'visualOperation.upgraded.person': '操作人',

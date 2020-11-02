@@ -6,7 +6,7 @@ export default {
 
   'modelList.placeholder.search': '输入名称查询',
   'presetModelList.placeholder.search': '输入名称查询',
-  'trainingParamsList.add.importParams': '导入参数',
+  'trainingParamsList.add.importParams': '导入评估参数',
 
   'trainingParamsList.placeholder.search': '输入名称查询',
   'visualizationList.add.createVisaulJob': '创建可视化作业',

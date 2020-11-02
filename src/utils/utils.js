@@ -305,3 +305,9 @@ export function setI18n(lang) {
   requestUser('/language/' + lang);
   setLocale(lang, false);
 }
+
+export function capFirstLetter(s = '') {
+  return s.replace(/\b(\w)(\w*)/g, function (_$0, $1, $2) {
+    return $1.toUpperCase() + $2.toLowerCase();
+  });
+}

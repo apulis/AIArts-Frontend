@@ -1,9 +1,9 @@
 export default {
-  'trainingParamsList.table.column.name': 'Params Config Name',
+  'trainingParamsList.table.column.name': 'Name',
   'trainingParamsList.table.column.engineType': 'Engine Type',
-  'trainingParamsList.table.column.createTime': 'Create Time',
+  'trainingParamsList.table.column.createTime': 'Creation Time',
   'trainingParamsList.table.column.description': 'Description',
-  'trainingParamsList.table.column.action': 'Action',
+  'trainingParamsList.table.column.action': 'Operation',
   'trainingParamsList.table.column.action.createTrainingJob': 'Create Training Job',
   'trainingParamsList.table.column.action.edit': 'Edit',
   'trainingParamsList.table.column.action.delete': 'Delete',

@@ -10,6 +10,7 @@ const common = {
     platformName: '',
     i18n: locales.includes(localStorage.language) ? localStorage.language : navigator.language,
     enableVC: false,
+    enableAvisuals: false,
   },
   effects: {
     *changeInterval({ payload }, { put }) {
@@ -45,6 +46,7 @@ const common = {
         //     }
         //   })
         // }
+        // res.i18n = 'en-US'; // 开发
         if (locales.includes(res.i18n)) {
           setI18n(res.i18n);
         }
@@ -54,6 +56,7 @@ const common = {
             platformName: res.platformName,
             i18n: res.i18n,
             enableVC: res.enableVC,
+            enableAvisuals: res.enableAvisuals,
           },
         });
       }

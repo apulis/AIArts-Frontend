@@ -39,10 +39,10 @@ const AddModalForm = (props, ref) => {
       if (status === 'done') {
         setBtn(false);
         message.success(
-          `${name} ${intl.formatMessage({ id: 'dataset.create.tips.upload.success' })}！`,
+          `${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.success' })}！`,
         );
       } else if (status === 'error') {
-        message.error(`${name} ${intl.formatMessage({ id: 'dataset.create.tips.upload.error' })}`);
+        message.error(`${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.error' })}`);
         setBtn(false);
       }
       form.setFieldsValue({ fileLists: info.fileList });
@@ -63,12 +63,12 @@ const AddModalForm = (props, ref) => {
         // }
 
         if (fileLists.length && fileLists.findIndex((i) => i.name === name) > -1) {
-          message.warning(`${intl.formatMessage({ id: 'dataset.create.tips.upload.equalFile' })}`);
+          message.warning(`${intl.formatMessage({ id: 'dataSet.create.tips.upload.equalFile' })}`);
           reject(file);
         }
         if (!typeReg.test(name)) {
           message.warning(
-            `${intl.formatMessage({ id: 'dataset.create.tips.upload.supportFile' })}`,
+            `${intl.formatMessage({ id: 'dataSet.create.tips.upload.supportFile' })}`,
           );
           reject(file);
         }

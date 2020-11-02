@@ -44,9 +44,13 @@ export async function fetchEvaluationLog(id) {
   });
 }
 
-export async function fetchEvaluationDetail(id) {
+export async function fetchEvaluationDetail(id, page) {
   // return request(`/models/${id}/evaluation`);
-  return await request(`/evaluations/${id}`);
+  return await request(`/evaluations/${id}`, {
+    params: {
+      pageNum: page || 1,
+    },
+  });
 }
 
 export async function fetchJobStatusSumary() {
