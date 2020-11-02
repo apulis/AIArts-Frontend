@@ -73,7 +73,6 @@ const EvaluationDetail = (props) => {
     }
   };
 
-
   const getLateastLogs = async (page) => {
     const cancel = message.loading(
       intl.formatMessage({ id: 'modelMngt.detail.getLateastLogs.tips.loading' }),
