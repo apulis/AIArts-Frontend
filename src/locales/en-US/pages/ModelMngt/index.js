@@ -214,7 +214,7 @@ export default {
   'modelMngt.detail.deviceNum': 'Number of devices',
   'modelMngt.detail.runningParam': 'Running parameters',
   'modelMngt.detail.evaluationResult': 'Evaluation Result',
-  'modelMngt.detail.getEvaluationResult': 'Get evaluation results',
+  'modelMngt.detail.getEvaluationResult': 'Get Evaluation Results',
   'modelMngt.detail.save': 'Save To',
   'modelMngt.detail.configName': 'Name',
   'modelMngt.detail.placeholder.needConfigName': 'Please enter the configuration name',
