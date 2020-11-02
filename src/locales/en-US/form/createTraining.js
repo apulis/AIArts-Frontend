@@ -2,7 +2,7 @@ export default {
   'trainingCreate.label.paramConfigName': 'Name',
   'trainingCreate.label.jobName': 'Job Name',
   'trainingCreate.label.desc': 'Description',
-  'trainingCreate.label.paramsSource': 'Params Source',
+  'trainingCreate.label.paramsSource': 'Parameters Source',
   'trainingCreate.label.engineSource': 'Select Engine Source',
   'trainingCreate.label.engine': 'Engine',
   'trainingCreate.label.codePath': 'Code Directory',
