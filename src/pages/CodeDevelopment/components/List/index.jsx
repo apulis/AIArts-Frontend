@@ -34,7 +34,7 @@ const { Search } = Input;
 const { Option } = Select;
 
 const CodeList = (props) => {
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const searchRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [form] = Form.useForm();
@@ -175,7 +175,7 @@ const CodeList = (props) => {
       if (data.name === 'ipython' && data.status === 'running' && data.accessPoint) {
         window.open(data.accessPoint);
       } else {
-        message.info(intl.formatMessage({ id: 'codeList.tips.open.error' }));
+        message.info(formatMessage({ id: 'codeList.tips.open.error' }));
       }
     }
   };
@@ -185,7 +185,7 @@ const CodeList = (props) => {
     const { code, data, msg } = obj;
     if (code === 0) {
       renderTable('update');
-      message.success(intl.formatMessage({ id: 'codeList.tips.stop.success' }));
+      message.success(formatMessage({ id: 'codeList.tips.stop.success' }));
     }
   };
 
@@ -199,7 +199,7 @@ const CodeList = (props) => {
         setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
       }
       renderStatusSelect('update');
-      message.success(intl.formatMessage({ id: 'codeList.tips.delete.success' }));
+      message.success(formatMessage({ id: 'codeList.tips.delete.success' }));
     }
   };
 
@@ -215,9 +215,9 @@ const CodeList = (props) => {
     const status = item.status;
     if (canStopStatus.has(status)) {
       Modal.warning({
-        title: intl.formatMessage({ id: 'codeList.tips.delete.modal.title' }),
-        content: intl.formatMessage({ id: 'codeList.tips.delete.modal.content' }),
-        okText: intl.formatMessage({ id: 'codeList.tips.delete.modal.okText' }),
+        title: formatMessage({ id: 'codeList.tips.delete.modal.title' }),
+        content: formatMessage({ id: 'codeList.tips.delete.modal.content' }),
+        okText: formatMessage({ id: 'codeList.tips.delete.modal.okText' }),
       });
     } else {
       apiDeleteCode(item.id);
@@ -267,7 +267,7 @@ const CodeList = (props) => {
 
   const columns = [
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.name' }),
+      title: formatMessage({ id: 'codeList.table.column.name' }),
       dataIndex: 'name',
       ellipsis: true,
       width: '12%',
@@ -275,14 +275,14 @@ const CodeList = (props) => {
       sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'], // name与createTime非复合排序，各自独立排序
     },
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.status' }),
+      title: formatMessage({ id: 'codeList.table.column.status' }),
       dataIndex: 'status',
       ellipsis: true,
       width: '10%',
       render: (status) => statusMap[status]?.local,
     },
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.engineType' }),
+      title: formatMessage({ id: 'codeList.table.column.engineType' }),
       dataIndex: 'engine',
       ellipsis: true,
       width: '10%',
@@ -291,7 +291,7 @@ const CodeList = (props) => {
       },
     },
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.createTime' }),
+      title: formatMessage({ id: 'codeList.table.column.createTime' }),
       dataIndex: 'createTime',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
@@ -300,54 +300,54 @@ const CodeList = (props) => {
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.storePath' }),
+      title: formatMessage({ id: 'codeList.table.column.storePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
       width: '12%',
     },
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.description' }),
+      title: formatMessage({ id: 'codeList.table.column.description' }),
       dataIndex: 'desc',
       ellipsis: true,
       align: 'center',
       width: '14%',
     },
     {
-      title: intl.formatMessage({ id: 'codeList.table.column.action' }),
+      title: formatMessage({ id: 'codeList.table.column.action' }),
       align: 'center',
       width: '20%',
       render: (codeItem) => {
         return (
           <Space size="middle">
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
-              {intl.formatMessage({ id: 'codeList.table.column.action.open' })}
+              {formatMessage({ id: 'codeList.table.column.action.open' })}
             </a>
             <a
               onClick={() => handleOpenModal(codeItem)}
               disabled={!canUploadStatus.has(codeItem.status)}
             >
-              {intl.formatMessage({ id: 'codeList.table.column.action.upload' })}
+              {formatMessage({ id: 'codeList.table.column.action.upload' })}
             </a>
             <a
               onClick={() => handleStop(codeItem)}
               disabled={!canStopStatus.has(codeItem.status)}
               style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
             >
-              {intl.formatMessage({ id: 'codeList.table.column.action.stop' })}
+              {formatMessage({ id: 'codeList.table.column.action.stop' })}
             </a>
             {checkIfCanDelete(codeItem.status) ? (
               <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
-                {intl.formatMessage({ id: 'codeList.table.column.action.delete' })}
+                {formatMessage({ id: 'codeList.table.column.action.delete' })}
               </a>
             ) : (
               <span style={{ color: '#333' }}>
-                {intl.formatMessage({ id: 'codeList.table.column.action.delete' })}
+                {formatMessage({ id: 'codeList.table.column.action.delete' })}
               </span>
             )}
 
             {codeItem.status === 'running' && (
               <a onClick={() => toSaveImage(codeItem.id)}>
-                {intl.formatMessage({ id: 'codeList.table.column.action.save' })}
+                {formatMessage({ id: 'codeList.table.column.action.save' })}
               </a>
             )}
           </Space>
@@ -399,7 +399,7 @@ const CodeList = (props) => {
         } else if (type === 'fresh') {
           renderTable('fresh', {
             callback: () => {
-              message.success(intl.formatMessage({ id: 'codeList.tips.fresh.success' }));
+              message.success(formatMessage({ id: 'codeList.tips.fresh.success' }));
             },
           });
         }
@@ -412,14 +412,14 @@ const CodeList = (props) => {
       const values = await form.validateFields();
       values.isPrivate = true;
       values.jobId = currentHandledJobId;
-      const cancel = message.loading('Submitting', 12000);
+      const cancel = message.loading(formatMessage({ id: 'codeCreate.message.loading.processing' }), 12000);
       setSaveImageButtonLoading(true);
       const res = await createSaveImage(values);
       if (res.code === 0) {
         renderTable();
         cancel();
         setSaveImageButtonLoading(false);
-        message.success(intl.formatMessage({ id: 'codeList.tips.saveImage.success' }));
+        message.success(formatMessage({ id: 'codeList.tips.saveImage.success' }));
         setSaveImageModalVisible(false);
       }
     }
@@ -436,7 +436,7 @@ const CodeList = (props) => {
                 handleCreateCodeDev();
               }}
             >
-              {intl.formatMessage({ id: 'codeList.add.codeDevelopment' })}
+              {formatMessage({ id: 'codeList.add.codeDevelopment' })}
             </Button>
           </div>
         </Col>
@@ -456,7 +456,7 @@ const CodeList = (props) => {
               </Select>
             </div>
             <Search
-              placeholder={intl.formatMessage({ id: 'codeList.placeholder.search' })}
+              placeholder={formatMessage({ id: 'codeList.placeholder.search' })}
               ref={searchRef}
               onSearch={(value) => handleSearch(value)}
               // onChange
@@ -479,9 +479,9 @@ const CodeList = (props) => {
         pagination={{
           total: codes.total,
           showTotal: (total) =>
-            `${intl.formatMessage({
+            `${formatMessage({
               id: 'codeList.table.pagination.showTotal.prefix',
-            })} ${total} ${intl.formatMessage({
+            })} ${total} ${formatMessage({
               id: 'codeList.table.pagination.showTotal.suffix',
             })}`,
           showQuickJumper: true,
@@ -494,7 +494,7 @@ const CodeList = (props) => {
       />
       {modalFlag && (
         <Modal
-          title={intl.formatMessage({ id: 'codeList.modal.upload.title.uploadCode' })}
+          title={formatMessage({ id: 'codeList.modal.upload.title.uploadCode' })}
           visible={modalFlag}
           onCancel={() => setModalFlag(false)}
           destroyOnClose
@@ -502,7 +502,7 @@ const CodeList = (props) => {
           width={480}
           footer={[
             <Button onClick={() => setModalFlag(false)}>
-              {intl.formatMessage({ id: 'codeList.modal.upload.footer.close' })}
+              {formatMessage({ id: 'codeList.modal.upload.footer.close' })}
             </Button>,
           ]}
         >
@@ -510,7 +510,7 @@ const CodeList = (props) => {
         </Modal>
       )}
       <Modal
-        title={intl.formatMessage({ id: 'codeList.modal.saveImage.title.saveImage' })}
+        title={formatMessage({ id: 'codeList.modal.saveImage.title.saveImage' })}
         visible={saveImageModalVisible}
         onCancel={() => {
           setSaveImageModalVisible(false);
@@ -524,7 +524,7 @@ const CodeList = (props) => {
               setCurrentHandledJobId('');
             }}
           >
-            {intl.formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
+            {formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
           </Button>,
           <Button
             key="submit"
@@ -532,14 +532,14 @@ const CodeList = (props) => {
             loading={saveImageButtonLoading}
             onClick={() => handleSaveImage()}
           >
-            {intl.formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
+            {formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
           </Button>,
         ]}
       >
         <Form form={form}>
           <Form.Item
             {...commonLayout}
-            label={intl.formatMessage({ id: 'codeList.modal.saveImage.label.name' })}
+            label={formatMessage({ id: 'codeList.modal.saveImage.label.name' })}
             name="name"
             rules={[{ required: true }, jobNameReg]}
           >
@@ -547,7 +547,7 @@ const CodeList = (props) => {
           </Form.Item>
           <Form.Item
             {...commonLayout}
-            label={intl.formatMessage({ id: 'codeList.modal.saveImage.label.version' })}
+            label={formatMessage({ id: 'codeList.modal.saveImage.label.version' })}
             name="version"
             rules={[
               { required: true },
@@ -558,7 +558,7 @@ const CodeList = (props) => {
           </Form.Item>
           <Form.Item
             {...commonLayout}
-            label={intl.formatMessage({ id: 'codeList.modal.saveImage.label.description' })}
+            label={formatMessage({ id: 'codeList.modal.saveImage.label.description' })}
             name="description"
             rules={[{ required: true }]}
           >

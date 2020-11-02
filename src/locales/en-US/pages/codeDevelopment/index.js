@@ -36,4 +36,5 @@ export default {
   'codeCreate.modal.noDevice.title':
     'No trainning device is available right now. Submitted jobs will wait in queue.',
   'codeCreate.modal.noDevice.content': 'Continue or Not',
+  'codeCreate.message.loading.processing': 'Processing...',
 };
