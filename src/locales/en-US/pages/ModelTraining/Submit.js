@@ -8,7 +8,7 @@ export default {
   'model.submit.validate.running.params.validator.same.name': 'Cannot enter the same params name',
   'model.submit.message.device.error': 'Need to select the device type first',
   'model.submit.pageTitle.edit': 'Edit training params',
-  'model.submit.pageTitle.submit': 'Create training job',
+  'model.submit.pageTitle.submit': 'Create Training Job',
   'model.submit.params.config': 'Params config',
   'model.submit.button.create.params': 'Add Params',
   'model.submit.import.training.params': 'Import training params config',
