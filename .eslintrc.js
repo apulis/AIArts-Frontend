@@ -21,6 +21,15 @@ module.exports = {
   plugins: [
     'react',
   ],
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@', './src']
+        ]
+      }
+    },
+  },
   rules: {
     'object-curly-newline': 'off',
     'object-shorthand': 'off',

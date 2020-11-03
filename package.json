@@ -34,8 +34,7 @@
     "pre-commit": "lint-staged"
   },
   "husky": {
-    "hooks": {
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -44,7 +43,7 @@
       "prettier --write"
     ]
   },
-  "browserslist": [  
+  "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 10"
@@ -124,6 +123,7 @@
     "detect-installer": "^1.0.1",
     "enzyme": "^3.11.0",
     "eslint": "^6.8.0",
+    "eslint-import-resolver-alias": "^1.1.2",
     "express": "^4.17.1",
     "gh-pages": "^2.0.1",
     "husky": "^4.0.7",
