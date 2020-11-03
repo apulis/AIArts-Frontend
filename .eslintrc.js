@@ -33,6 +33,11 @@ module.exports = {
   rules: {
     'object-curly-newline': 'off',
     'object-shorthand': 'off',
-    'no-unused-expressions': ["error", { "allowShortCircuit": true }]
+    'no-unused-expressions': ["error", { "allowShortCircuit": true }],
+    'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'no-param-reassign': 'off',
   },
 };
