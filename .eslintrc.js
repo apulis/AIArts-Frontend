@@ -22,5 +22,7 @@ module.exports = {
     'react',
   ],
   rules: {
+    'object-curly-newline': 'off',
+    'object-shorthand': 'off',
   },
 };
