@@ -1,15 +1,26 @@
 module.exports = {
-  extends: [require.resolve('@umijs/fabric/dist/eslint'), 'standard'],
-  globals: {
-    ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: true,
-    page: true,
-    REACT_APP_ENV: true,
+  env: {
+    browser: true,
+    es6: true,
   },
+  extends: [
+    'plugin:react/recommended',
+    'airbnb',
+  ],
+  globals: {
+    Atomics: 'readonly',
+    SharedArrayBuffer: 'readonly',
+  },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2018,
+    sourceType: 'module',
+  },
+  plugins: [
+    'react',
+  ],
   rules: {
-    'no-console': 'off',
-    'no-shadow': 'off',
-    'prefer-destructuring': 'off',
-    'no-return-await': 'off',
-    'space-before-blocks': 'on',
   },
 };
