@@ -33,5 +33,6 @@ module.exports = {
   rules: {
     'object-curly-newline': 'off',
     'object-shorthand': 'off',
+    'no-unused-expressions': ["error", { "allowShortCircuit": true }]
   },
 };
