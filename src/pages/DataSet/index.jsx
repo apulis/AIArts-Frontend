@@ -1,14 +1,13 @@
-import { message, Table, Modal, Form, Input, Button, Card } from 'antd';
+import { message, Table, Modal, Input, Button, Card } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import React, { useState, useEffect, useRef } from 'react';
-import { getDatasets, edit, deleteDataSet, add, download } from './service';
-import { PAGEPARAMS, sortText } from '@/utils/const';
-import styles from './index.less';
-import { Link } from 'umi';
-import AddModalForm from './components/AddModalForm';
+import { Link, useIntl } from 'umi';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { useIntl } from 'umi';
+import { PAGEPARAMS, sortText } from '@/utils/const';
+import { getDatasets, edit, deleteDataSet, add } from './service';
+import styles from './index.less';
+import AddModalForm from './components/AddModalForm';
 
 const { confirm } = Modal;
 const { Search } = Input;
@@ -31,10 +30,6 @@ const DataSetList = () => {
     order: '',
   });
 
-  useEffect(() => {
-    getData();
-  }, [pageParams, sortedInfo]);
-
   const getData = async (text) => {
     setLoading(true);
     const params = {
@@ -55,6 +50,10 @@ const DataSetList = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    getData();
+  }, [pageParams, sortedInfo]);
+
   const pageParamsChange = (page, count) => {
     setPageParams({ pageNum: page, pageSize: count });
   };
@@ -67,8 +66,8 @@ const DataSetList = () => {
 
   const onSubmit = () => {
     addModalFormRef.current.form.validateFields().then(async (values) => {
-      let res = null,
-        text = '';
+      let res = null;
+      let text = '';
       const { sourceType, path, fileLists } = values;
       setBtnLoading(true);
       if (modalType) {
@@ -88,6 +87,42 @@ const DataSetList = () => {
         setModalFlag(false);
       }
       setBtnLoading(false);
+    });
+  };
+
+  const showModal = (type) => {
+    setModalType(type);
+    !type && setPathId(new Date().valueOf());
+    setModalFlag(true);
+  };
+
+  const onEditClick = (item) => {
+    setEditData(item);
+    showModal(1);
+  };
+
+  const onDelete = (id) => {
+    confirm({
+      title: intl.formatMessage({ id: 'dataSet.list.onDelete.title' }),
+      icon: <ExclamationCircleOutlined />,
+      okText: intl.formatMessage({ id: 'dataSet.list.onDelete.okText' }),
+      okType: 'danger',
+      cancelText: intl.formatMessage({ id: 'dataSet.list.onDelete.cancelText' }),
+      onOk: async () => {
+        const { code } = await deleteDataSet(id);
+        if (code === 0) {
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (dataSets.data.length === 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            getData();
+          }
+          message.success(intl.formatMessage({ id: 'dataSet.list.onDelete.success' }));
+        } else if (code === 30010) {
+          message.error(intl.formatMessage({ id: 'dataSet.list.onDelete.still.using' }))
+        }
+      },
+      onCancel() {},
     });
   };
 
@@ -169,42 +204,6 @@ const DataSetList = () => {
       },
     },
   ];
-
-  const onEditClick = (item) => {
-    setEditData(item);
-    showModal(1);
-  };
-
-  const onDelete = (id) => {
-    confirm({
-      title: intl.formatMessage({ id: 'dataSet.list.onDelete.title' }),
-      icon: <ExclamationCircleOutlined />,
-      okText: intl.formatMessage({ id: 'dataSet.list.onDelete.okText' }),
-      okType: 'danger',
-      cancelText: intl.formatMessage({ id: 'dataSet.list.onDelete.cancelText' }),
-      onOk: async () => {
-        const { code } = await deleteDataSet(id);
-        if (code === 0) {
-          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
-          if (dataSets.data.length == 1 && pageParams.pageNum > 1) {
-            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
-          } else {
-            getData();
-          }
-          message.success(intl.formatMessage({ id: 'dataSet.list.onDelete.success' }));
-        } else if (code === 30010) {
-          message.error(intl.formatMessage({ id: 'dataSet.list.onDelete.still.using' }))
-        }
-      },
-      onCancel() {},
-    });
-  };
-
-  const showModal = (type) => {
-    setModalType(type);
-    !type && setPathId(new Date().valueOf());
-    setModalFlag(true);
-  };
 
   return (
     <PageHeaderWrapper>
