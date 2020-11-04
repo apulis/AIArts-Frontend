@@ -158,7 +158,7 @@ const AddFormModal = (props, ref) => {
       >
         <Select onChange={(v) => setDeviceType(v)}>
           {deviceList.map((d) => (
-            <Option value={d.deviceType}>{d.deviceType}</Option>
+            <Option key={d.deviceType} value={d.deviceType}>{d.deviceType}</Option>
           ))}
         </Select>
       </Form.Item>
@@ -176,7 +176,7 @@ const AddFormModal = (props, ref) => {
         >
           <Select onChange={handleDeviceChange}>
             {availableDeviceNumList.map((i) => (
-              <Option value={i}>{i}</Option>
+              <Option key={i} value={i}>{i}</Option>
             ))}
           </Select>
         </Form.Item>

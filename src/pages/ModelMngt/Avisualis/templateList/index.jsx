@@ -97,7 +97,7 @@ const TemplateList = () => {
               >
                 {intl.formatMessage({ id: 'templateList.createFromTemplate' })}
               </div>,
-              <EllipsisOutlined key="ellipsis" />,
+              // <EllipsisOutlined key="ellipsis" />,
             ]}
           >
             <Meta title={name} description={description} />

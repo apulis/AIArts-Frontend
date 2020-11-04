@@ -13,8 +13,9 @@ const { Option } = Select;
 const ItemPanel = (props) => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
+  const { setFieldsValue } = form;
   const addFormModalRef = useRef();
-  const { avisualis, flowChartData, selectItem, setFlowChartData, detailId, onChangeNode } = props;
+  const { avisualis, flowChartData, selectItem, detailId, onChangeNode, setSelectItem, resetGraph } = props;
   const { addFormData, treeData } = avisualis;
   const [btnLoading1, setBtnLoading1] = useState(false);
   const [btnLoading2, setBtnLoading2] = useState(false);
@@ -96,13 +97,14 @@ const ItemPanel = (props) => {
     const { config, id } = selectItem._cfg.model;
     return config.map((i) => {
       const { type, value, key, options } = i;
+      setFieldsValue({ [key]: value });
       if (type === 'string' || type === 'disabled') {
         return (
           <Form.Item
-            key={key}
+            key={`${key}-${value}`}
             name={key}
             label={key}
-            initialValue={value}
+            // initialValue={value}
             rules={[
               { required: true, message: `${intl.formatMessage({ id: 'itemPanel.input' })}${key}` },
             ]}
@@ -110,31 +112,30 @@ const ItemPanel = (props) => {
             <Input
               placeholder={`${intl.formatMessage({ id: 'itemPanel.input' })}${key}`}
               disabled={type === 'disabled'}
-              value={value}
             />
           </Form.Item>
         );
       } else if (type === 'number') {
         return (
           <Form.Item
-            key={key}
+            key={`${key}-${value}`}
             name={key}
             label={key}
-            initialValue={value}
+            // initialValue={value}
             rules={[
               { required: true, message: `${intl.formatMessage({ id: 'itemPanel.input' })}${key}` },
             ]}
           >
-            <InputNumber style={{ width: '100%' }} value={value} />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
         );
       } else if (type === 'select') {
         return (
           <Form.Item
-            key={key}
+            key={`${key}-${value}`}
             name={key}
             label={key}
-            initialValue={value}
+            // initialValue={value}
             rules={[
               {
                 required: true,
@@ -142,7 +143,7 @@ const ItemPanel = (props) => {
               },
             ]}
           >
-            <Select placeholder={intl.formatMessage({ id: 'itemPanel.select' })} value={value}>
+            <Select placeholder={intl.formatMessage({ id: 'itemPanel.select' })}>
               {options.map((o) => (
                 <Option key={o} value={o}>
                   {o}
@@ -166,7 +167,12 @@ const ItemPanel = (props) => {
       findData[findData.findIndex((i) => i.id === selectId)].config.forEach((m, n) => {
         m.value = newValues[n];
       });
-      setFlowChartData(cloneData);
+
+      // let newSelectItem = _.cloneDeep(selectItem);
+      // const newSelectItemConfig = cloneData.nodes.find(i => i.id === selectId).config;
+      // newSelectItem._cfg.model.config = newSelectItemConfig;
+
+      resetGraph(cloneData, null);
       message.success(intl.formatMessage({ id: 'itemPanel.save.success' }));
     });
   };
@@ -202,7 +208,7 @@ const ItemPanel = (props) => {
         hasSelectItem ? `节点配置(${selectItem._cfg.id})` : '该节点无配置项'
       }`}</div>
       {hasSelectItem && <Form form={form}>{getConfig()}</Form>}
-      <div style={{ float: 'right', textAlign: 'right' }}>
+      <div style={{ float: 'right', marginTop: 24 }}>
         {hasSelectItem && (
           <Button type="primary" onClick={onSaveConfig} style={{ marginRight: 16 }}>
             {intl.formatMessage({ id: 'itemPanel.config.save' })}
@@ -236,7 +242,7 @@ const ItemPanel = (props) => {
             onChange={(v) => setChangeNodeKey(v)}
           >
             {changeNodeOptions.map((i) => (
-              <Option value={`${i.treeIdx}-${i.key}`}>{i.title}</Option>
+              <Option value={`${i.treeIdx}&${i.key}`}>{i.title}</Option>
             ))}
           </Select>
         </Modal>

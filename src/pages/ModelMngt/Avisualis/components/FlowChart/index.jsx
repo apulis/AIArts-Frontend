@@ -281,7 +281,7 @@ const FlowChart = forwardRef((props, ref) => {
           const thisNode = _graph.findById(id);
           const key = comboId ? comboId : id;
           let broNum = 0;
-          if (idx === 0) {
+          if (treeIdx === 0) {
             _graph.updateItem(thisNode, { x: 0, y: 0 });
             return;
           }
@@ -298,7 +298,6 @@ const FlowChart = forwardRef((props, ref) => {
             const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
             Y = preNodeY + 100;
           }
-
           _graph.updateItem(thisNode, {
             x: 250 * broNum,
             y: Y,
@@ -324,6 +323,7 @@ const FlowChart = forwardRef((props, ref) => {
       });
       const nodeItem = e.item;
       _graph.setItemState(nodeItem, 'click', true); // Set the state 'click' of the item to be true
+      console.log('------173555', nodeItem)
       setSelectItem(nodeItem);
     });
 
@@ -362,8 +362,6 @@ const FlowChart = forwardRef((props, ref) => {
     setLoading(false);
   };
 
-  console.log('--------gr', graph);
-
   const handleDragEnd = (node, isChangeNode) => {
     const { title, key, config, treeIdx, child } = node;
     const hasNodes =
@@ -400,8 +398,8 @@ const FlowChart = forwardRef((props, ref) => {
       let thisId = '';
       if (isChangeNode) {
         newData.nodes = newData.nodes.filter((i) => i.treeIdx !== treeIdx);
-        newData.edges = newData.edges.filter((i) => i.treeIdx !== treeIdx);
-        newData.combos = newData.combos.filter((i) => i.treeIdx !== treeIdx);
+        newData.edges = newData.edges ? newData.edges.filter((i) => i.treeIdx !== treeIdx) : [];
+        newData.combos = newData.combos ? newData.combos.filter((i) => i.treeIdx !== treeIdx) : [];
       }
       const { edges, nodes, combos } = newData;
       const edgesLen = edges.length;
@@ -418,7 +416,7 @@ const FlowChart = forwardRef((props, ref) => {
       }
       let edgesTemp = [];
       edgesTemp.push({
-        source: newData.nodes.find((o) => o.treeIdx === treeIdx - 1).id,
+        source: treeIdx > 0 ? newData.nodes.find((o) => o.treeIdx === treeIdx - 1).id : null,
         target: newData.nodes.find((o) => o.treeIdx === treeIdx).id,
         treeIdx: treeIdx,
       });
@@ -453,11 +451,7 @@ const FlowChart = forwardRef((props, ref) => {
       }
     });
 
-    setFlowChartData(newData);
-    transformData(null, newData);
-    graph.read(newData);
-    graph.fitCenter();
-    setSelectItem(null);
+    resetGraph(newData, null);
   };
 
   const getChilds = (data, nodeArr, combosArr, fName, treeIdx) => {
@@ -518,23 +512,35 @@ const FlowChart = forwardRef((props, ref) => {
             return { ...i._cfg.model };
           }),
       };
-      setFlowChartData(temp);
-      transformData(panelApiData, temp);
-      graph.read(temp);
-      graph.fitCenter();
-      setSelectItem(null);
+      
+      resetGraph(temp, panelApiData);
     }
   };
 
+  const resetGraph = (newData, tfData) => {
+    setFlowChartData(newData);
+    transformData(tfData, newData);
+    graph.read(newData);
+    // graph.fitCenter();
+    if (newData.edges.length > 4) {
+      graph.fitView();
+      graph.zoomTo(0.8);
+    } else {
+      graph.fitCenter();
+    }
+
+    setSelectItem(null);
+  }
+
   const onChangeNode = (key) => {
-    const treeIdx = key.split('-')[0];
-    const id = key.split('-')[1];
-    // const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
-    // handleDragEnd(changeNodeData, true);
-    // return true;
+    const treeIdx = key.split('&')[0];
+    const id = key.split('&')[1];
+    const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
+    handleDragEnd(changeNodeData, true);
+    return true;
   };
 
-  // console.log('-------selectItem', selectItem)
+  console.log('-------selectItem', selectItem)
 
   return (
     <>
@@ -545,9 +551,11 @@ const FlowChart = forwardRef((props, ref) => {
         <ItemPanel
           flowChartData={flowChartData}
           selectItem={selectItem}
-          setFlowChartData={setFlowChartData}
+          // setFlowChartData={setFlowChartData}
           detailId={Number(detailId)}
           onChangeNode={onChangeNode}
+          // setSelectItem={setSelectItem}
+          resetGraph={resetGraph}
         />
       </Card>
     </>
