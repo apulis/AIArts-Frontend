@@ -295,7 +295,10 @@ const FlowChart = forwardRef((props, ref) => {
           }
           let Y = 200 * treeIdx + 50 * comboIdObj[key].num;
           if (treeIdx === panelApiData.length - 1) {
-            const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+            // const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+            const preNodeArr = allNodes.filter((i) => i._cfg.model.treeIdx === treeIdx - 1);
+            const preNodeYArr = preNodeArr.map(i => { return i._cfg.model.y });
+            const preNodeY = Math.max(...preNodeYArr);
             Y = preNodeY + 100;
           }
           _graph.updateItem(thisNode, {
@@ -323,7 +326,6 @@ const FlowChart = forwardRef((props, ref) => {
       });
       const nodeItem = e.item;
       _graph.setItemState(nodeItem, 'click', true); // Set the state 'click' of the item to be true
-      console.log('------173555', nodeItem)
       setSelectItem(nodeItem);
     });
 
@@ -357,7 +359,7 @@ const FlowChart = forwardRef((props, ref) => {
       _graph.setItemState(e.item, 'hover', false);
     });
 
-    _graph.fitCenter();
+    _graph.fitView();
     setGraph(_graph);
     setLoading(false);
   };
@@ -528,7 +530,6 @@ const FlowChart = forwardRef((props, ref) => {
     } else {
       graph.fitCenter();
     }
-
     setSelectItem(null);
   }
 
@@ -551,10 +552,8 @@ const FlowChart = forwardRef((props, ref) => {
         <ItemPanel
           flowChartData={flowChartData}
           selectItem={selectItem}
-          // setFlowChartData={setFlowChartData}
           detailId={Number(detailId)}
           onChangeNode={onChangeNode}
-          // setSelectItem={setSelectItem}
           resetGraph={resetGraph}
         />
       </Card>

@@ -167,11 +167,6 @@ const ItemPanel = (props) => {
       findData[findData.findIndex((i) => i.id === selectId)].config.forEach((m, n) => {
         m.value = newValues[n];
       });
-
-      // let newSelectItem = _.cloneDeep(selectItem);
-      // const newSelectItemConfig = cloneData.nodes.find(i => i.id === selectId).config;
-      // newSelectItem._cfg.model.config = newSelectItemConfig;
-
       resetGraph(cloneData, null);
       message.success(intl.formatMessage({ id: 'itemPanel.save.success' }));
     });
