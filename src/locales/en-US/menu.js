@@ -19,6 +19,7 @@ export default {
   'menu.inferenceService': 'Inference Service',
   'menu.inferenceService.center': 'Cloud Inference Mode',
   'menu.inferenceService.edgeInference': 'Edge Inference',
+  'menu.virtualCluster': 'Virtual Cluster',
   'menu.resourceMonitoring': 'Resource Monitoring',
   'menu.visualOperation': 'Visual Maintenance',
   'menu.setting': 'Settings',
