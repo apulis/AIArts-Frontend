@@ -515,20 +515,21 @@ const FlowChart = forwardRef((props, ref) => {
           }),
       };
       
-      resetGraph(temp, panelApiData);
+      resetGraph(temp, panelApiData, graph);
     }
   };
 
-  const resetGraph = (newData, tfData) => {
+  const resetGraph = (newData, tfData, _graph) => {
+    const thisGraph = _graph || graph;
     setFlowChartData(newData);
     transformData(tfData, newData);
-    graph.read(newData);
-    // graph.fitCenter();
+    thisGraph.read(newData);
+    // thisGraph.fitCenter();
     if (newData.edges.length > 4) {
-      graph.fitView();
-      graph.zoomTo(0.8);
+      thisGraph.fitView();
+      thisGraph.zoomTo(0.8);
     } else {
-      graph.fitCenter();
+      thisGraph.fitCenter();
     }
     setSelectItem(null);
   }
