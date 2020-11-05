@@ -1,5 +1,5 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
-import { Select, Form, Button } from 'antd';
+import { Select, Form, Button, message } from 'antd';
 import { connect } from 'dva'; 
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { VCStateType } from '@/models/vc';
@@ -12,24 +12,37 @@ interface IUserVirtualClusterProps extends Partial<ConnectProps> {
 const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, style }) => {
   const [form] = Form.useForm();
 
-  const commonLayout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 16 },
-  };
+  useEffect(() => {
+    dispatch({
+      type: 'vc/fetchUserAvailVC',
+    })
+  }, [])
+  
+  const onFinish = async () => {
+    const { vcName } = await form.validateFields(['vcName']);
+    if (vcName) {
+      dispatch({
+        type: 'vc/userSelectVC',
+        payload: {
+          vcName,
+        }
+      })
+      message.success('Success set default virtual cluster');
+    }
+  }
 
   return (
     <Form
       form={form}
-      // onFinish={onFinish}
+      onFinish={onFinish}
       layout="inline"
       style={{ paddingTop: '10px', paddingBlock: '10px', ...style }}
     >
-      <Form.Item 
-        label="Virtual Cluster"
-        name="vcName"     
+      <Form.Item
+        label="Default Virtual Cluster"
+        name="vcName"
       >
-        
-        <Select style={{ width: '200px' }} />
+        <Select showSearch style={{ width: '200px' }} />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{ marginLeft: '40px' }}>

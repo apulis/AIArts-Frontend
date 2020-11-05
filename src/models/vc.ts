@@ -11,6 +11,7 @@ export interface VCModelType {
   state: VCStateType;
   effects: {
     fetchUserAvailVC: Effect;
+    userSelectVC: Effect;
   };
   reducers: {
     saveCurrentSelectedVC: Reducer;
@@ -26,6 +27,10 @@ const VCModel: VCModelType = {
   },
   effects: {
     * fetchUserAvailVC({ payload }, { call, put }) {
+      //
+    },
+    * userSelectVC({ payload }, { call, put }) {
+      localStorage.vc = payload.vcName;
     },
   },
 
