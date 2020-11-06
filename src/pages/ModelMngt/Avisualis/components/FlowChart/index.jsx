@@ -281,7 +281,7 @@ const FlowChart = forwardRef((props, ref) => {
           const thisNode = _graph.findById(id);
           const key = comboId ? comboId : id;
           let broNum = 0;
-          if (idx === 0) {
+          if (treeIdx === 0) {
             _graph.updateItem(thisNode, { x: 0, y: 0 });
             return;
           }
@@ -295,10 +295,12 @@ const FlowChart = forwardRef((props, ref) => {
           }
           let Y = 200 * treeIdx + 50 * comboIdObj[key].num;
           if (treeIdx === panelApiData.length - 1) {
-            const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+            // const preNodeY = _graph.findById(allNodes[idx - 1]._cfg.model.id)._cfg.model.y;
+            const preNodeArr = allNodes.filter((i) => i._cfg.model.treeIdx === treeIdx - 1);
+            const preNodeYArr = preNodeArr.map(i => { return i._cfg.model.y });
+            const preNodeY = Math.max(...preNodeYArr);
             Y = preNodeY + 100;
           }
-
           _graph.updateItem(thisNode, {
             x: 250 * broNum,
             y: Y,
@@ -357,12 +359,10 @@ const FlowChart = forwardRef((props, ref) => {
       _graph.setItemState(e.item, 'hover', false);
     });
 
-    _graph.fitCenter();
+    _graph.fitView();
     setGraph(_graph);
     setLoading(false);
   };
-
-  console.log('--------gr', graph);
 
   const handleDragEnd = (node, isChangeNode) => {
     const { title, key, config, treeIdx, child } = node;
@@ -400,8 +400,8 @@ const FlowChart = forwardRef((props, ref) => {
       let thisId = '';
       if (isChangeNode) {
         newData.nodes = newData.nodes.filter((i) => i.treeIdx !== treeIdx);
-        newData.edges = newData.edges.filter((i) => i.treeIdx !== treeIdx);
-        newData.combos = newData.combos.filter((i) => i.treeIdx !== treeIdx);
+        newData.edges = newData.edges ? newData.edges.filter((i) => i.treeIdx !== treeIdx) : [];
+        newData.combos = newData.combos ? newData.combos.filter((i) => i.treeIdx !== treeIdx) : [];
       }
       const { edges, nodes, combos } = newData;
       const edgesLen = edges.length;
@@ -418,7 +418,7 @@ const FlowChart = forwardRef((props, ref) => {
       }
       let edgesTemp = [];
       edgesTemp.push({
-        source: newData.nodes.find((o) => o.treeIdx === treeIdx - 1).id,
+        source: treeIdx > 0 ? newData.nodes.find((o) => o.treeIdx === treeIdx - 1).id : null,
         target: newData.nodes.find((o) => o.treeIdx === treeIdx).id,
         treeIdx: treeIdx,
       });
@@ -453,11 +453,7 @@ const FlowChart = forwardRef((props, ref) => {
       }
     });
 
-    setFlowChartData(newData);
-    transformData(null, newData);
-    graph.read(newData);
-    graph.fitCenter();
-    setSelectItem(null);
+    resetGraph(newData, null);
   };
 
   const getChilds = (data, nodeArr, combosArr, fName, treeIdx) => {
@@ -518,23 +514,35 @@ const FlowChart = forwardRef((props, ref) => {
             return { ...i._cfg.model };
           }),
       };
-      setFlowChartData(temp);
-      transformData(panelApiData, temp);
-      graph.read(temp);
-      graph.fitCenter();
-      setSelectItem(null);
+      
+      resetGraph(temp, panelApiData, graph);
     }
   };
 
+  const resetGraph = (newData, tfData, _graph) => {
+    const thisGraph = _graph || graph;
+    setFlowChartData(newData);
+    transformData(tfData, newData);
+    thisGraph.read(newData);
+    // thisGraph.fitCenter();
+    if (newData.edges.length > 4) {
+      thisGraph.fitView();
+      thisGraph.zoomTo(0.8);
+    } else {
+      thisGraph.fitCenter();
+    }
+    setSelectItem(null);
+  }
+
   const onChangeNode = (key) => {
-    const treeIdx = key.split('-')[0];
-    const id = key.split('-')[1];
-    // const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
-    // handleDragEnd(changeNodeData, true);
-    // return true;
+    const treeIdx = key.split('&')[0];
+    const id = key.split('&')[1];
+    const changeNodeData = treeData[treeIdx].children.find((i) => i.key === id);
+    handleDragEnd(changeNodeData, true);
+    return true;
   };
 
-  // console.log('-------selectItem', selectItem)
+  console.log('-------selectItem', selectItem)
 
   return (
     <>
@@ -545,9 +553,9 @@ const FlowChart = forwardRef((props, ref) => {
         <ItemPanel
           flowChartData={flowChartData}
           selectItem={selectItem}
-          setFlowChartData={setFlowChartData}
           detailId={Number(detailId)}
           onChangeNode={onChangeNode}
+          resetGraph={resetGraph}
         />
       </Card>
     </>

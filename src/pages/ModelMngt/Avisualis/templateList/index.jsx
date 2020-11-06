@@ -97,7 +97,7 @@ const TemplateList = () => {
               >
                 {intl.formatMessage({ id: 'templateList.createFromTemplate' })}
               </div>,
-              <EllipsisOutlined key="ellipsis" />,
+              // <EllipsisOutlined key="ellipsis" />,
             ]}
           >
             <Meta title={name} description={description} />
@@ -127,9 +127,9 @@ const TemplateList = () => {
             <Panel header={intl.formatMessage({ id: 'templateList.modelRepo' })} key="1">
               {getCardList(1)}
             </Panel>
-            <Panel header={intl.formatMessage({ id: 'templateList.applicationRepo' })} key="2">
+            {/* <Panel header={intl.formatMessage({ id: 'templateList.applicationRepo' })} key="2">
               {getCardList(2)}
-            </Panel>
+            </Panel> */}
           </Collapse>
         </div>
       </PageHeader>

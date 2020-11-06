@@ -20,7 +20,7 @@ export default {
       },
     },
     '/custom-user-dashboard-backend/': {
-      target: 'http://10.31.3.208/',
+      target: 'http://219.133.167.42:6688/',
       // target: 'http://121.46.18.83:50088/',
       // target: 'http://10.31.3.63/',
       changeOrigin: true,
