@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, message } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { ColumnProps } from 'antd/lib/table';
 import { useIntl } from 'umi';
@@ -9,8 +9,20 @@ import { jobNameReg } from '@/utils/reg';
 import EqualIcon from '@/components/Icon/Equal';
 const FormItem = Form.Item;
 
+interface IVCMeta {
+  [props: string]: {
+    user_quota: number;
+  }
+}
+
+interface IVCQuota {
+  [props: string]: number;
+}
 interface IVCColumnsProps {
-  name: string;
+  vcName: string;
+  meta: IVCMeta;
+  quota: IVCQuota;
+  userNum: number;
 }
 
 interface IPaginationParams {
@@ -34,11 +46,7 @@ export const vcNumbersPrefix = {
 const { Search } = Input;
 
 const VirtualCluster: React.FC = ({ resource }) => {
-  const [vcList, setVCList] = useState([
-    {
-      name: 'aaa',
-    },
-  ]);
+  const [vcList, setVCList] = useState<IVCColumnsProps[]>([]);
   const [createVCModalVisible, setCreateVCModalVisible] = useState<boolean>(false);
   const [modifyVCModalVisible, setModifyVCModalVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
@@ -58,26 +66,44 @@ const VirtualCluster: React.FC = ({ resource }) => {
 
   const handleCreateVC = async () => {
     const result = await validateFields();
-    console.log('result', result);
   };
 
-  const handleModifyVC = () => {
-    //
+  const handleModifyVC = async () => {
+    
+    
   };
 
-  const getVCList = () => {
-    // const res =
+  const getVCList = async () => {
+    const res = await fetchVCList<{code: number, data: { result: { vcName: string, quota: string, meta: string, userNum: number }[] }}>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
+    if (res.code === 0) {
+      const vcList: IVCColumnsProps[] = res.data.result.map(vc => {
+        return {
+          ...vc,
+          meta: JSON.parse(vc.meta || '{}') as IVCMeta,
+          quota: JSON.parse(vc.quota || '{}') as IVCQuota,
+        };
+      });
+      setVCList(vcList)
+    }
   };
 
   const handleDeleteVC = (vcName: string) => {
     Modal.confirm({
-      title: formatMessage({ id: '' }),
-      content: formatMessage({ id: '' }),
+      title: formatMessage({ id: 'xxxx' }),
+      content: formatMessage({ id: 'xxx' }),
       onCancel() {
 
       },
-      onOk() {
-
+      async onOk() {
+        const res = await checkActiveJob(vcName);
+        if (res.code === 0 && res.data.jobCount > 0) {
+          const res = await deleteVC(vcName);
+          if (res.code === 0) {
+            message.success('success');
+          }
+        } else {
+          message.warn('当前VC有JOB正在运行');
+        }
       }
     })
   };
@@ -96,21 +122,50 @@ const VirtualCluster: React.FC = ({ resource }) => {
       title: formatMessage({
         id: 'vc.page.table.device.type',
       }),
+      render(_text, item) {
+        return Object.keys(item.quota).map(val => (
+          <div>{val}</div>
+        ))
+      }
     },
     {
       title: formatMessage({
         id: 'vc.page.table.device.number',
       }),
+      align: 'center',
+      render(_text, item) {
+        return Object.keys(item.quota).map(val => (
+          <div>{(item.quota)[val]}</div>
+        ))
+      }
     },
     {
       title: formatMessage({
         id: 'vc.page.table.max.avail',
       }),
+      align: 'center',
+      render(_text, item) {
+        const metas = Object.keys(item.meta)
+        if (metas.length === 0) {
+          return Object.keys(item.quota).map(val => (
+            <div>{(item.quota)[val]}</div>
+          ))
+        }
+        return metas.map(val => (
+          <div>{(item.meta)[val].user_quota || '-'}</div>
+        ))
+      }
     },
     {
       title: formatMessage({
         id: 'vc.page.table.user.amount',
       }),
+      align: 'center',
+      render(_text, item) {
+        return (
+          <div>{item.userNum || 0}</div>
+        )
+      }
     },
     {
       title: formatMessage({
