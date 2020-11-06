@@ -27,6 +27,8 @@ import request from './en-US/request';
 import bizComponent from './en-US/bizComponent';
 import reg from './en-US/reg';
 import layout from './en-US/layout';
+import vc from './en-US/pages/vc';
+
 import { capFirstLetter } from '@/utils/utils';
 
 for (const item in menu) {
@@ -70,4 +72,5 @@ export default {
   ...ParamsManage,
   ...PretrainedModel,
   ...reg,
+  ...vc
 };

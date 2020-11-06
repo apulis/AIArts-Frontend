@@ -7,7 +7,6 @@ export const createVC = () => {
 
 
 export const deleteVC = (vcName: string) => {
-
 }
 
 export const modifyVC = () => {
