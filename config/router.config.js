@@ -250,10 +250,17 @@ export default [
           //   component: './ResourceMonitoring'
           // },
           {
+            path: '/vc',
+            name: 'virtualCluster',
+            icon: 'CloudServerOutlined',
+            component: './VirtualCluster',
+            authority: ['AI_ARTS_ALL'],
+          },
+          {
             path: '/VisualOperation',
             name: 'visualOperation',
             icon: 'CloudUploadOutlined',
-            component: './VisualOperation',
+            component: './VisualOperation',   
             authority: ['AI_ARTS_ALL'],
           },
 
