@@ -8,4 +8,6 @@ export default {
   'vc.page.table.max.Operation': 'Operation',
   'vc.page.table.button.modify': 'Modify',
   'vc.page.table.button.delete': 'Delete',
+  'vc.page.create.vc.modal.title': 'Create Virtual Cluster',
+  
 }
