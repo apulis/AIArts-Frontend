@@ -9,5 +9,8 @@ export default {
   'vc.page.table.button.modify': '编辑',
   'vc.page.table.button.delete': '删除',
   'vc.page.create.vc.modal.title': '创建虚拟集群',
-  
+  'vc.page.form.vc.name': '虚拟集群名称',
+  'vc.page.form.vc.device.number': '设备数量',
+  'vc.page.form.vc.per.user.max.availble.number': '用户可以使用最大设备数量',
+  'vc.page.form.max.avail.rule.error': '用户最大可用数量不得大于当前设备总数'
 }

@@ -54,7 +54,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
   const { formatMessage } = useIntl();
   const { devices } = resource;
   const deviceArray = Object.keys(devices);
-  const { validateFields } = form;
+  const { validateFields, getFieldValue } = form;
 
   const handleCreateVC = async () => {
     const result = await validateFields();
@@ -69,8 +69,17 @@ const VirtualCluster: React.FC = ({ resource }) => {
     // const res =
   };
 
-  const handleDeleteVC = () => {
-    //
+  const handleDeleteVC = (vcName: string) => {
+    Modal.confirm({
+      title: formatMessage({ id: '' }),
+      content: formatMessage({ id: '' }),
+      onCancel() {
+
+      },
+      onOk() {
+
+      }
+    })
   };
 
   useEffect(() => {
@@ -108,8 +117,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
         id: 'vc.page.table.max.Operation',
       }),
       align: 'center',
-
-      render() {
+      render(_text, item) {
         return (
           <>
             <Button type="link" onClick={() => setModifyVCModalVisible(true)}>
@@ -117,7 +125,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
                 id: 'vc.page.table.button.modify',
               })}
             </Button>
-            <Button danger type="link" onClick={handleDeleteVC}>
+            <Button danger type="link" onClick={() => handleDeleteVC(item.name)}>
               {formatMessage({
                 id: 'vc.page.table.button.delete',
               })}
@@ -150,7 +158,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
           })}
         </Button>
         <Search
-          style={{ width: '160px'}}
+          style={{ width: '160px' }}
           onSearch={(s) => setPaginationState({
             ...paginationState,
             search: s,
@@ -180,12 +188,13 @@ const VirtualCluster: React.FC = ({ resource }) => {
           visible={createVCModalVisible}
           onCancel={() => setCreateVCModalVisible(false)}
           onOk={handleCreateVC}
+          width="800px"
           title={formatMessage({ id: 'vc.page.create.vc.modal.title' })}
         >
           <Form form={form}>
             <FormItem
               name="vcName"
-              label="VC Name"
+              label={formatMessage({ id: 'vc.page.form.vc.name' })}
               rules={[
                 {
                   required: true,
@@ -200,7 +209,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
                 }}
               />
             </FormItem>
-            <FormItem label="Device Number" required {...modalFormLayout}>
+            <FormItem label={formatMessage({ id: 'vc.page.form.vc.device.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
                 <>
                   <FormItem style={{ display: 'inline-block' }}>
@@ -213,17 +222,28 @@ const VirtualCluster: React.FC = ({ resource }) => {
                 </>
               ))}
             </FormItem>
-            <FormItem label="Per User Max Availble" required {...modalFormLayout}>
+            <FormItem label={formatMessage({ id: 'vc.page.form.vc.per.user.max.availble.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
                 <>
-                <FormItem style={{ display: 'inline-block' }}>
-                  <Input style={{ width: '165px' }} value={val} disabled />
-                </FormItem>
-                <EqualIcon />
-                <FormItem style={{ display: 'inline-block' }} name={vcNumbersPrefix.maxAvailble + val} initialValue={0}>
-                  <InputNumber min={0} />
-                </FormItem>
-              </>
+                  <FormItem style={{ display: 'inline-block' }}>
+                    <Input style={{ width: '165px' }} value={val} disabled />
+                  </FormItem>
+                  <EqualIcon />
+                  <FormItem
+                    style={{ display: 'inline-block' }}
+                    name={vcNumbersPrefix.maxAvailble + val}
+                    initialValue={0}
+                    rules={[
+                      {async validator() {
+                        if (getFieldValue(vcNumbersPrefix.maxAvailble + val) > getFieldValue(vcNumbersPrefix.deviceNumber + val)) {
+                          throw new Error(formatMessage({ id: 'vc.page.form.max.avail.rule.error' }));
+                        }
+                      }}
+                    ]}
+                  >
+                    <InputNumber min={0} />
+                  </FormItem>
+                </>
               ))}
             </FormItem>
           </Form>
@@ -235,18 +255,63 @@ const VirtualCluster: React.FC = ({ resource }) => {
         visible={modifyVCModalVisible}
         onCancel={() => setModifyVCModalVisible(false)}
         onOk={handleModifyVC}
+        width="800px"
       >
         <Form form={form}>
           <FormItem
             name="vcName"
-            label="vcName"
+            label={formatMessage({ id: 'vc.page.form.vc.name' })}
             rules={[
               {
                 required: true,
               },
               { ...jobNameReg },
             ]}
-          ></FormItem>
+            {...modalFormLayout}
+          >
+            <Input
+              style={{
+                width: '180px',
+              }}
+            />
+          </FormItem>
+          <FormItem label={formatMessage({ id: 'vc.page.form.vc.device.number' })} required {...modalFormLayout}>
+            {deviceArray.map(val => (
+              <>
+                <FormItem style={{ display: 'inline-block' }}>
+                  <Input style={{ width: '165px' }} value={val} disabled />
+                </FormItem>
+                <EqualIcon />
+                <FormItem style={{ display: 'inline-block' }} name={vcNumbersPrefix.deviceNumber + val} initialValue={0}>
+                  <InputNumber min={0} />
+                </FormItem>
+              </>
+            ))}
+          </FormItem>
+          <FormItem label={formatMessage({ id: 'vc.page.form.vc.per.user.max.availble.number' })} required {...modalFormLayout}>
+            {deviceArray.map(val => (
+              <>
+                <FormItem style={{ display: 'inline-block' }}>
+                  <Input style={{ width: '165px' }} value={val} disabled />
+                </FormItem>
+                <EqualIcon />
+                <FormItem
+                  style={{ display: 'inline-block' }}
+                  name={vcNumbersPrefix.maxAvailble + val}
+                  initialValue={0}
+                  rules={[
+                    {async validator() {
+                      if (getFieldValue(vcNumbersPrefix.maxAvailble + val) > getFieldValue(vcNumbersPrefix.deviceNumber + val)) {
+                        throw new Error(formatMessage({ id: 'vc.page.form.max.avail.rule.error' }));
+                      }
+                    }}
+                  ]}
+                >
+                  <InputNumber min={0} max={getFieldValue(vcNumbersPrefix.maxAvailble + val)} />
+                </FormItem>
+              </>
+            ))}
+          </FormItem>
         </Form>
       </Modal>
     </PageHeaderWrapper>
