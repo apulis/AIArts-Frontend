@@ -18,4 +18,7 @@ export default {
   'vc.page.confirm.delete.vc.content': '是否继续？',
   'vc.result.empty.vc': '当前账户没有可用的虚拟集群',
   'vc.need.add.to.vc': '请联系管理员',
+  'vc.page.create.vc.success': '成功创建虚拟集群',
+  'vc.page.message.current.vc.busy': '当前虚拟集群有正在运行的 Job',
+  'vc.page.message.success.delete.vc': '成功删除当前虚拟集群',
 }

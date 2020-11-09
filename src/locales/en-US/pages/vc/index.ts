@@ -18,4 +18,8 @@ export default {
   'vc.page.confirm.delete.vc.content': 'Continue?',
   'vc.result.empty.vc': 'The current account has no available virtual cluster',
   'vc.need.add.to.vc': 'Please contact your administer',
+  'vc.page.create.vc.success': 'Sucessfully created virtual cluster',
+  'vc.page.message.current.vc.busy': 'There are active job in current virtual cluster',
+  'vc.page.message.success.delete.vc': 'Sucessfully delete current virtual cluster',
+  
 }

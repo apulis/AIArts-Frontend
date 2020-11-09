@@ -1,8 +1,11 @@
 import request from '@/utils/request';
 
 
-export const createVC = () => {
-
+export const createVC = (data: { vcName: string, quota: string, metadata: string }) => {
+  return request('/vc', {
+    method: 'POST',
+    data,
+  })
 }
 
 

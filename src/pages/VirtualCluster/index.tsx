@@ -70,7 +70,27 @@ const VirtualCluster: React.FC = ({ resource }) => {
 
   const handleCreateVC = async () => {
     const result = await validateFields();
-    console.log('result', result);
+    console.log(123, result)
+    const deviceNumbers = {};
+    const metaUserQuotas = {};
+    Object.keys(result).forEach(val => {
+      if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
+        deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
+      } else if (val.startsWith(vcNumbersPrefix.maxAvailble)) {
+        metaUserQuotas[val.replace(new RegExp(vcNumbersPrefix.maxAvailble), '')] = {user_quota: result[val]}
+      }
+    })
+    const data = {
+      vcName: result.vcName,
+      quota: JSON.stringify(deviceNumbers),
+      metadata: JSON.stringify(metaUserQuotas),
+    };
+    const res = await createVC(data);
+    if (res.code === 0) {
+      message.success(formatMessage({ id: 'vc.page.create.vc.success' }));
+      setCreateVCModalVisible(true);
+      getVCList();
+    }
   };
 
   const handleModifyVC = async () => {
@@ -103,11 +123,11 @@ const VirtualCluster: React.FC = ({ resource }) => {
       async onOk() {
         const res = await checkActiveJob(vcName);
         if (res.code === 0 && res.data.jobCount > 0) {
-          message.warn('当前VC有JOB正在运行');
+          message.warn(formatMessage({ id: 'vc.page.message.current.vc.busy' }));
         } else {
           const res = await deleteVC(vcName);
           if (res.code === 0) {
-            message.success('success');
+            message.success(formatMessage({ id: 'vc.page.message.success.delete.vc' }));
             getVCList();
           }
         }
