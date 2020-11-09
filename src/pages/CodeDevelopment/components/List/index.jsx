@@ -151,7 +151,7 @@ const CodeList = (props) => {
   };
 
   const apiGetCodeCount = async () => {
-    const obj = await getCodeCount();
+    const obj = await getCodeCount(props.vc.currentSelectedVC);
     const { code, data, msg } = obj;
     if (code === 0) {
       return data;
@@ -161,7 +161,7 @@ const CodeList = (props) => {
   };
 
   const apiGetCodes = async (params) => {
-    const obj = await getCodes(params);
+    const obj = await getCodes({ ...params, vcName: props.vc.currentSelectedVC });
     const { code, data, msg } = obj;
     if (code === 0) {
       return data;
@@ -574,4 +574,4 @@ const CodeList = (props) => {
   );
 };
 
-export default connect(({ common }) => ({ common }))(CodeList);
+export default connect(({ common, vc }) => ({ common, vc }))(CodeList);

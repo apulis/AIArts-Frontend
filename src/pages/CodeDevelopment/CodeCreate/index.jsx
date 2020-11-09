@@ -99,7 +99,7 @@ const CodeCreate = (props) => {
   };
 
   const apiPostCode = async (values) => {
-    const obj = await postCode1(values);
+    const obj = await postCode1({ ...values, vcName: props.vc.currentSelectedVC  });
     const { code, data, msg } = obj;
     if (code === 0) {
       message.success(intl.formatMessage({ id: 'codeCreate.tips.submit.success' }));
@@ -429,6 +429,7 @@ const CodeCreate = (props) => {
   );
 };
 
-export default connect(({ resource }) => ({
+export default connect(({ resource, vc }) => ({
   devices: resource.devices,
+  vc
 }))(CodeCreate);
