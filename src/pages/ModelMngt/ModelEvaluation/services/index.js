@@ -14,9 +14,9 @@ export async function getTrainingJobs(params) {
 export async function getEvaluations(params) {
   return await request(`/evaluations`, {
     params,
-    cancelToken: new CancelToken(function (c) {
+    cancelToken: new CancelToken(((c) => {
       getEvaluations.cancel = c;
-    }),
+    })),
   });
 }
 

@@ -58,6 +58,8 @@ const ModelEvaluation = (props) => {
 
   const [form2] = Form.useForm();
 
+  const { currentSelectedVC } = props.vc;
+
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
@@ -198,7 +200,7 @@ const ModelEvaluation = (props) => {
       paramPath: codePathPrefix + argumentsFile,
     };
     const submitJobInner = async () => {
-      const { code, msg } = await addEvaluation(evalParams);
+      const { code, msg } = await addEvaluation({ ...evalParams, vcName: currentSelectedVC });
       if (code === 0) {
         message.success(`${intl.formatMessage({ id: 'modelEvaluation.create.success' })}`);
         history.push('/ModelManagement/ModelEvaluation/List');
@@ -677,4 +679,4 @@ const ModelEvaluation = (props) => {
   );
 };
 
-export default connect(() => ({}))(ModelEvaluation);
+export default connect(({ vc }) => ({ vc }))(ModelEvaluation);

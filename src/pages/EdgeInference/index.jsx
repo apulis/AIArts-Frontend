@@ -39,6 +39,7 @@ const EdgeInference = (props) => {
     orderBy: '',
     order: '',
   });
+  const { currentSelectedVC } = props.vc;
 
   useEffect(() => {
     getData();
@@ -66,7 +67,7 @@ const EdgeInference = (props) => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
     };
-    const { code, data } = await getEdgeInferences(params);
+    const { code, data } = await getEdgeInferences({ ...params, vcName: currentSelectedVC });
     if (code === 0 && data) {
       const { total, edgeInferences } = data;
       setJobs(edgeInferences);
@@ -384,4 +385,4 @@ const EdgeInference = (props) => {
   );
 };
 
-export default connect(({ common }) => ({ common }))(EdgeInference);
+export default connect(({ common, vc }) => ({ common, vc }))(EdgeInference);

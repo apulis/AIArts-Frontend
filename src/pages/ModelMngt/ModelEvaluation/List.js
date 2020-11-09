@@ -44,6 +44,7 @@ const List = (props) => {
     order: '',
   });
   const searchEl = useRef(null);
+  const { currentSelectedVC } = props.vc;
   const handleSearch = async (withLoading = true) => {
     const params = {
       ...pageParams,
@@ -60,7 +61,7 @@ const List = (props) => {
     }
 
     if (withLoading) setTableLoading(true);
-    const res = await getEvaluations(params);
+    const res = await getEvaluations({ ...params, vcName: currentSelectedVC });
     if (res.code === 0) {
       const trainings = (res.data && res.data.evaluations) || [];
       const total = res.data?.total;
@@ -293,4 +294,4 @@ const List = (props) => {
   );
 };
 
-export default connect(({ common }) => ({ common }))(List);
+export default connect(({ common, vc }) => ({ common, vc }))(List);

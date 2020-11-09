@@ -5,11 +5,12 @@ const prefix = 'edge_inferences';
 const CancelToken = Request.CancelToken;
 
 export async function getEdgeInferences(params) {
+  console.log('params', params)
   return await request(`/${prefix}`, {
     params: params,
-    cancelToken: new CancelToken(function (c) {
+    cancelToken: new CancelToken(((c) => {
       getEdgeInferences.cancel = c;
-    }),
+    })),
   });
 }
 
