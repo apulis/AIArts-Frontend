@@ -182,7 +182,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
         if (type === 'modify') {
           setModifyVCModalVisible(true);
         } else if (type === 'delete') {
-          handleDeleteVC(true);
+          handleDeleteVC(vcName);
         }
       } else {
         message.warning(formatMessage({ id: 'vc.page.message.current.vc.active' }))
