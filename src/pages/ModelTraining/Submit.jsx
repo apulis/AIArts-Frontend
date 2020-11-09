@@ -59,6 +59,7 @@ export const subCodePathPrefix = (s) => {
 const ModelTraining = (props) => {
   const intl = useIntl();
   const { formatMessage } = intl;
+  const { currentSelectedVC } = props.vc;
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
@@ -310,7 +311,7 @@ const ModelTraining = (props) => {
       }
       const submitJobInner = async () => {
         const cancel = message.loading(formatMessage({ id: 'model.submit.message.uploading' }));
-        const res = await submitModelTraining(values);
+        const res = await submitModelTraining({ ...values, vcName: currentSelectedVC });
         cancel();
         if (res.code === 0) {
           message.success(formatMessage({ id: 'model.submit.message.create.success' }));
@@ -886,4 +887,4 @@ const ModelTraining = (props) => {
   );
 };
 
-export default connect(({ resource }) => ({ resource }))(ModelTraining);
+export default connect(({ resource, vc }) => ({ resource, vc }))(ModelTraining);
