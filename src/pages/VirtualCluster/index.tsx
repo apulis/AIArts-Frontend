@@ -90,10 +90,10 @@ const VirtualCluster: React.FC = ({ resource }) => {
 
   const handleDeleteVC = (vcName: string) => {
     Modal.confirm({
-      title: formatMessage({ id: 'xxxx' }),
-      content: formatMessage({ id: 'xxx' }),
+      title: formatMessage({ id: 'vc.page.confirm.delete.vc.title' }),
+      content: formatMessage({ id: 'vc.page.confirm.delete.vc.content' }),
       onCancel() {
-
+        //
       },
       async onOk() {
         const res = await checkActiveJob(vcName);

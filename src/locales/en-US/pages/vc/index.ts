@@ -13,6 +13,8 @@ export default {
   'vc.page.form.vc.device.number': 'Device Number',
   'vc.page.form.vc.per.user.max.availble.number': 'Per User Max Availble',
   'vc.page.form.max.avail.rule.error': 'Can\'t greater than device number',
+  'vc.page.confirm.delete.vc.title': 'Will delete current virtual cluster',
+  'vc.page.confirm.delete.vc.content': 'Continue?',
   'vc.result.empty.vc': 'The current account has no available virtual cluster',
   'vc.need.add.to.vc': 'Please contact your administer',
 }
