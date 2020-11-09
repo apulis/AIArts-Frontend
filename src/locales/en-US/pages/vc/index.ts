@@ -16,6 +16,7 @@ export default {
   'vc.page.form.device.max.error': 'Max avail device is: ',
   'vc.page.confirm.delete.vc.title': 'Will delete current virtual cluster',
   'vc.page.confirm.delete.vc.content': 'Continue?',
+  'vc.page.message.current.vc.active': 'The are active in current virtual cluster',
   'vc.result.empty.vc': 'The current account has no available virtual cluster',
   'vc.need.add.to.vc': 'Please contact your administer',
   'vc.page.create.vc.success': 'Sucessfully created virtual cluster',

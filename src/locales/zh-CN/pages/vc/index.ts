@@ -16,6 +16,7 @@ export default {
   'vc.page.form.device.max.error': '最大可用数量为：',
   'vc.page.confirm.delete.vc.title': '将会删除选中的虚拟集群',
   'vc.page.confirm.delete.vc.content': '是否继续？',
+  'vc.page.message.current.vc.active': '当前虚拟集群仍有在运行的任务',
   'vc.result.empty.vc': '当前账户没有可用的虚拟集群',
   'vc.need.add.to.vc': '请联系管理员',
   'vc.page.create.vc.success': '成功创建虚拟集群',

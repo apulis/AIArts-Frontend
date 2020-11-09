@@ -175,6 +175,22 @@ const VirtualCluster: React.FC = ({ resource }) => {
     }
   }, [createVCModalVisible, modifyVCModalVisible])
 
+  const readyToModifyVC = async (vcName: string, type: 'modify' | 'delete') => {
+    const activeJob = await checkActiveJob(vcName);
+    if (activeJob.code === 0) {
+      if (activeJob.data.jobCount === 0) {
+        if (type === 'modify') {
+          setModifyVCModalVisible(true);
+        } else if (type === 'delete') {
+          handleDeleteVC(true);
+        }
+      } else {
+        message.warning(formatMessage({ id: 'vc.page.message.current.vc.active' }))
+      }
+    }
+    
+  }
+
   const columns: ColumnProps<IVCColumnsProps>[] = [
     {
       title: formatMessage({
@@ -237,12 +253,12 @@ const VirtualCluster: React.FC = ({ resource }) => {
       render(_text, item) {
         return (
           <>
-            <Button type="link" onClick={() => { setModifyVCModalVisible(true); setCurrentHandledVC(item) }}>
+            <Button type="link" onClick={() => { readyToModifyVC(item.vcName, 'modify'); setCurrentHandledVC(item) }}>
               {formatMessage({
                 id: 'vc.page.table.button.modify',
               })}
             </Button>
-            <Button danger type="link" onClick={() => handleDeleteVC(item.vcName)}>
+            <Button danger type="link" onClick={() => readyToModifyVC(item.vcName, 'delete')}>
               {formatMessage({
                 id: 'vc.page.table.button.delete',
               })}
