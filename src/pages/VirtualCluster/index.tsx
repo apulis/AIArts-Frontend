@@ -7,6 +7,7 @@ import { connect } from 'dva';
 import { createVC, checkActiveJob, fetchVCList, deleteVC, fetchAvailDevice } from '@/services/vc';
 import { jobNameReg } from '@/utils/reg';
 import EqualIcon from '@/components/Icon/Equal';
+import table from '@/locales/en-US/table';
 const FormItem = Form.Item;
 
 interface IVCMeta {
@@ -47,6 +48,7 @@ const { Search } = Input;
 
 const VirtualCluster: React.FC = ({ resource }) => {
   const [vcList, setVCList] = useState<IVCColumnsProps[]>([]);
+  const [tableLoading, setTableLoading] = useState<boolean>(false);
   const [createVCModalVisible, setCreateVCModalVisible] = useState<boolean>(false);
   const [modifyVCModalVisible, setModifyVCModalVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
@@ -75,7 +77,9 @@ const VirtualCluster: React.FC = ({ resource }) => {
   };
 
   const getVCList = async () => {
+    setTableLoading(true);
     const res = await fetchVCList<{code: number, data: { result: { vcName: string, quota: string, meta: string, userNum: number }[] }}>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
+    setTableLoading(false);
     if (res.code === 0) {
       const vcList: IVCColumnsProps[] = res.data.result.map(vc => {
         return {
@@ -98,12 +102,12 @@ const VirtualCluster: React.FC = ({ resource }) => {
       async onOk() {
         const res = await checkActiveJob(vcName);
         if (res.code === 0 && res.data.jobCount > 0) {
+          message.warn('当前VC有JOB正在运行');
+        } else {
           const res = await deleteVC(vcName);
           if (res.code === 0) {
             message.success('success');
           }
-        } else {
-          message.warn('当前VC有JOB正在运行');
         }
       }
     })
@@ -238,6 +242,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
       <Table
         columns={columns}
         dataSource={vcList}
+        loading={tableLoading}
         pagination={{
           total: paginationState.total,
           pageSize: paginationState.pageSize,
