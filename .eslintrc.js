@@ -40,5 +40,6 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     'no-param-reassign': 'off',
     'no-return-await': 'off',
+    'prefer-destructuring': 'off',
   },
 };
