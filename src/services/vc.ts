@@ -9,7 +9,7 @@ export const createVC = () => {
 export const deleteVC = (vcName: string) => {
   return request('/vc', {
     method: 'DELETE',
-    params: {
+    data: {
       vcName,
     }
   })

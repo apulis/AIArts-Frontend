@@ -107,6 +107,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
           const res = await deleteVC(vcName);
           if (res.code === 0) {
             message.success('success');
+            getVCList();
           }
         }
       }
