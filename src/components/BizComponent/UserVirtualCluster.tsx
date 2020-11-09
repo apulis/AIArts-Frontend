@@ -1,28 +1,30 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
 import { Select, Form, Button, message } from 'antd';
 import { connect } from 'dva'; 
-import { ConnectProps, ConnectState } from '@/models/connect';
+import { ConnectProps, ConnectState, UserStateType } from '@/models/connect';
 import { VCStateType } from '@/models/vc';
+
+const { Option } = Select;
 
 interface IUserVirtualClusterProps extends Partial<ConnectProps> {
   vc: VCStateType;
   style?: CSSProperties;
+  user: UserStateType;
 }
 
-const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, style }) => {
+const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, user, style }) => {
   const [form] = Form.useForm();
+  const { currentVC } = user.currentUser;
 
   useEffect(() => {
-    dispatch({
-      type: 'vc/fetchUserAvailVC',
-    })
-  }, [])
-
-  useEffect(() => {
-    if (vc.currentSelectedVC) {
+    if (vc.currentSelectedVC && currentVC.includes(vc.currentSelectedVC)) {
       form.setFieldsValue({
         vcName: vc.currentSelectedVC,
-      })
+      });
+    } else if (currentVC.length > 0) {
+      form.setFieldsValue({
+        vcName: currentVC[0],
+      });
     }
   }, [vc])
   
@@ -50,7 +52,13 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
         label="Default Virtual Cluster"
         name="vcName"
       >
-        <Select showSearch style={{ width: '200px' }} />
+        <Select showSearch style={{ width: '200px' }}>
+          {
+            currentVC.map(val => (
+              <Option value={val}>{val}</Option>
+            ))
+          }
+        </Select>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{ marginLeft: '40px' }}>
@@ -64,4 +72,4 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
 
 
 
-export default connect(({ vc }: ConnectState) => ({ vc }))(UserVirtualCluster);
+export default connect(({ vc, user }: ConnectState) => ({ vc, user }))(UserVirtualCluster);

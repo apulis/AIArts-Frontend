@@ -4,10 +4,22 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 import { VCStateType } from "./vc";
 import { CommonStateType } from './common';
 
+export interface UserStateType {
+  currentUser: {
+    userName: string,
+    id?: number,
+    permissionList: string[],
+    nickName?: string,
+    phone?: string,
+    email?: string,
+    currentVC: string[],
+  },
+}
 
 export interface ConnectState {
   vc: VCStateType;
   common: CommonStateType;
+  user: UserStateType;
 }
 
 export interface Route extends MenuDataItem {

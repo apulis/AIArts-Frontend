@@ -12,5 +12,7 @@ export default {
   'vc.page.form.vc.name': '虚拟集群名称',
   'vc.page.form.vc.device.number': '设备数量',
   'vc.page.form.vc.per.user.max.availble.number': '用户可以使用最大设备数量',
-  'vc.page.form.max.avail.rule.error': '用户最大可用数量不得大于当前设备总数'
+  'vc.page.form.max.avail.rule.error': '用户最大可用数量不得大于当前设备总数',
+  'vc.result.empty.vc': '当前账户没有可用的虚拟集群',
+  'vc.need.add.to.vc': '请联系管理员',
 }

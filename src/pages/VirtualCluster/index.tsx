@@ -4,7 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { ColumnProps } from 'antd/lib/table';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
-import { createVC, checkActiveJob, fetchVCList, deleteVC } from '@/services/vc';
+import { createVC, checkActiveJob, fetchVCList, deleteVC, fetchAvailDevice } from '@/services/vc';
 import { jobNameReg } from '@/utils/reg';
 import EqualIcon from '@/components/Icon/Equal';
 const FormItem = Form.Item;
@@ -50,6 +50,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
   const [createVCModalVisible, setCreateVCModalVisible] = useState<boolean>(false);
   const [modifyVCModalVisible, setModifyVCModalVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
+  const [currentHandledVCName, setCurrentHandledVCName] = useState<string>('');
   const [paginationState, setPaginationState] = useReducer(
     (state: IPaginationParams, action: IPaginationParams) => ({ ...state, ...action }),
     {
@@ -66,11 +67,11 @@ const VirtualCluster: React.FC = ({ resource }) => {
 
   const handleCreateVC = async () => {
     const result = await validateFields();
+    
   };
 
   const handleModifyVC = async () => {
-    
-    
+    setCurrentHandledVCName('');
   };
 
   const getVCList = async () => {
@@ -108,9 +109,23 @@ const VirtualCluster: React.FC = ({ resource }) => {
     })
   };
 
+  const getAvailDevice = async () => {
+    const res = await fetchAvailDevice();
+    if (res.code === 0) {
+      console.log('res.data', res.data)
+    }
+  }
+
   useEffect(() => {
     getVCList();
   }, [paginationState]);
+
+  useEffect(() => {
+    if (createVCModalVisible) {
+      getAvailDevice()
+    }
+  }, [createVCModalVisible])
+
   const columns: ColumnProps<IVCColumnsProps>[] = [
     {
       title: formatMessage({
@@ -175,12 +190,12 @@ const VirtualCluster: React.FC = ({ resource }) => {
       render(_text, item) {
         return (
           <>
-            <Button type="link" onClick={() => setModifyVCModalVisible(true)}>
+            <Button type="link" onClick={() => {setModifyVCModalVisible(true); setCurrentHandledVCName(item.vcName)}}>
               {formatMessage({
                 id: 'vc.page.table.button.modify',
               })}
             </Button>
-            <Button danger type="link" onClick={() => handleDeleteVC(item.name)}>
+            <Button danger type="link" onClick={() => handleDeleteVC(item.vcName)}>
               {formatMessage({
                 id: 'vc.page.table.button.delete',
               })}
@@ -308,7 +323,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
       <Modal
         forceRender
         visible={modifyVCModalVisible}
-        onCancel={() => setModifyVCModalVisible(false)}
+        onCancel={() => {setModifyVCModalVisible(false);setCurrentHandledVCName('')}}
         onOk={handleModifyVC}
         width="800px"
       >
