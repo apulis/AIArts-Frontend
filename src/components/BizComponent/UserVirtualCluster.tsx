@@ -1,6 +1,7 @@
 import React, { useState, useEffect, CSSProperties } from 'react';
 import { Select, Form, Button, message } from 'antd';
 import { connect } from 'dva'; 
+import { useIntl } from 'umi';
 import { ConnectProps, ConnectState, UserStateType } from '@/models/connect';
 import { VCStateType } from '@/models/vc';
 
@@ -15,7 +16,7 @@ interface IUserVirtualClusterProps extends Partial<ConnectProps> {
 const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, user, style }) => {
   const [form] = Form.useForm();
   const { currentVC } = user.currentUser;
-
+  const { formatMessage } = useIntl();
   useEffect(() => {
     if (vc.currentSelectedVC && currentVC.includes(vc.currentSelectedVC)) {
       form.setFieldsValue({
@@ -37,7 +38,7 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
           vcName,
         }
       })
-      message.success('Success set default virtual cluster');
+      message.success(formatMessage({ id: 'vc.component.message.success.set.default.vc' }));
     }
   }
 
@@ -49,7 +50,7 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
       style={{ paddingTop: '10px', paddingBlock: '10px', ...style }}
     >
       <Form.Item
-        label="Default Virtual Cluster"
+        label={formatMessage({ id: 'vc.component.default.vc.label' })}
         name="vcName"
       >
         <Select showSearch style={{ width: '200px' }}>
@@ -62,7 +63,7 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{ marginLeft: '40px' }}>
-          Confirm
+          {formatMessage({ id: 'vc.component' })}
         </Button>
       </Form.Item>
     </Form>

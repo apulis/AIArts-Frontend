@@ -22,5 +22,7 @@ export default {
   'vc.page.message.current.vc.busy': 'There are active job in current virtual cluster',
   'vc.page.message.success.delete.vc': 'Sucessfully delete current virtual cluster',
   'vc.page.success.modify': 'Sucessfully Modify virtual cluster',
-  
+  'vc.component.message.success.set.default.vc': 'Success set default virtual cluster',
+  'vc.component.default.vc.label': 'Default Virtual Cluster',
+  'vc.component': 'Confirm',
 }
