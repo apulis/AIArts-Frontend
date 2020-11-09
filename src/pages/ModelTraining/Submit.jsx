@@ -111,7 +111,7 @@ const ModelTraining = (props) => {
   const [engineSource, setEngineSource] = useState(1);
 
   const getAvailableResource = async () => {
-    const res = await fetchAvilableResource();
+    const res = await fetchAvilableResource(currentSelectedVC);
     if (res.code === 0) {
       let {
         data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo },

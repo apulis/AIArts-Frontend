@@ -11,8 +11,10 @@ export async function submitModelTraining(data) {
   });
 }
 
-export async function fetchAvilableResource() {
-  const data = await request('/common/resource');
+export async function fetchAvilableResource(vcName) {
+  const data = await request('/common/resource', {
+    vcName: vcName
+  });
   return data;
 }
 
