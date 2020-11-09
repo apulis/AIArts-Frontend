@@ -49,6 +49,7 @@ const { Search } = Input;
 const VirtualCluster: React.FC = ({ resource }) => {
   const [vcList, setVCList] = useState<IVCColumnsProps[]>([]);
   const [tableLoading, setTableLoading] = useState<boolean>(false);
+  const [unallocatedDevice, setUnallocatedDevice] = useState<number>(0);
   const [createVCModalVisible, setCreateVCModalVisible] = useState<boolean>(false);
   const [modifyVCModalVisible, setModifyVCModalVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
@@ -69,7 +70,7 @@ const VirtualCluster: React.FC = ({ resource }) => {
 
   const handleCreateVC = async () => {
     const result = await validateFields();
-    
+    console.log('result', result);
   };
 
   const handleModifyVC = async () => {
@@ -117,7 +118,8 @@ const VirtualCluster: React.FC = ({ resource }) => {
   const getAvailDevice = async () => {
     const res = await fetchAvailDevice();
     if (res.code === 0) {
-      console.log('res.data', res.data)
+      const { unallocatedDevice } = res.data;
+      setUnallocatedDevice(unallocatedDevice);
     }
   }
 
@@ -248,7 +250,6 @@ const VirtualCluster: React.FC = ({ resource }) => {
           total: paginationState.total,
           pageSize: paginationState.pageSize,
           current: paginationState.pageNum,
-
           onChange(page, pageSize) {
             setPaginationState({
               ...paginationState,
@@ -292,8 +293,14 @@ const VirtualCluster: React.FC = ({ resource }) => {
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
                   <EqualIcon />
-                  <FormItem style={{ display: 'inline-block' }} name={vcNumbersPrefix.deviceNumber + val} initialValue={0}>
-                    <InputNumber min={0} />
+                  <FormItem rules={[
+                    {async validator(_rule, value) {
+                      if (value > unallocatedDevice[val]) {
+                        throw new Error(formatMessage({ id: 'vc.page.form.device.max.error' }) + unallocatedDevice[val]);
+                      }
+                    }}
+                  ]} style={{ display: 'inline-block' }} name={vcNumbersPrefix.deviceNumber + val} initialValue={0}>
+                    <InputNumber min={0} max={unallocatedDevice[val]} />
                   </FormItem>
                 </>
               ))}
