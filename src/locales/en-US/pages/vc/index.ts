@@ -21,5 +21,6 @@ export default {
   'vc.page.create.vc.success': 'Sucessfully created virtual cluster',
   'vc.page.message.current.vc.busy': 'There are active job in current virtual cluster',
   'vc.page.message.success.delete.vc': 'Sucessfully delete current virtual cluster',
+  'vc.page.success.modify': 'Sucessfully Modify virtual cluster',
   
 }

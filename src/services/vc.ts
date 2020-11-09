@@ -18,8 +18,11 @@ export const deleteVC = (vcName: string) => {
   })
 }
 
-export const modifyVC = () => {
-  //
+export const modifyVC = (data: { vcName: string, quota: string, metadata: string }) => {
+  return request('/vc', {
+    method: 'PUT',
+    data,
+  })
 }
 
 export const checkActiveJob = (vcName: string) => {

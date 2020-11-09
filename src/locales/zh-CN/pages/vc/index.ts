@@ -21,4 +21,5 @@ export default {
   'vc.page.create.vc.success': '成功创建虚拟集群',
   'vc.page.message.current.vc.busy': '当前虚拟集群有正在运行的 Job',
   'vc.page.message.success.delete.vc': '成功删除当前虚拟集群',
+  'vc.page.success.modify': '成功修改 VC',
 }
