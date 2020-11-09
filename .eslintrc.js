@@ -41,5 +41,7 @@ module.exports = {
     'no-param-reassign': 'off',
     'no-return-await': 'off',
     'prefer-destructuring': 'off',
+    'consistent-return': 'off',
+    'arrow-body-style': 'off',
   },
 };
