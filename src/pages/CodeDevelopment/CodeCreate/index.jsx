@@ -19,8 +19,9 @@ import { postCode1, getResource } from '../service.js';
 import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceController.js';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
 import { beforeSubmitJob } from '@/models/resource';
-import { getUserDockerImages } from '@/services/modelTraning.js';
+import { fetchAvilableResource, getUserDockerImages } from '@/services/modelTraning.js';
 import { useIntl } from 'umi';
+import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -44,22 +45,28 @@ const CodeCreate = (props) => {
   const [deviceNumPerNodeArr, setDeviceNumPerNodeArr] = useState([]);
   const [maxNodeNum, setMaxNodeNum] = useState(1);
   const [engineSource, setEngineSource] = useState(1);
+  const [deviceList, setDeviceList] = useState([]);
   const [userFrameWorks, setUserFrameWorks] = useState([]);
+
+  const { currentSelectedVC } = props.vc;
+
   const renderInitForm = async () => {
     const result = await apiGetResource();
     if (result) {
       setResource(result);
       const enginTypeArrData = Object.keys(result.aiFrameworks);
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]];
-      const deviceTypeArrData = result.deviceList.map((item) => item.deviceType);
-      const deviceNumPerNodeArrData =
-        utilGetDeviceNumPerNodeArr(
-          result.nodeInfo,
-          result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType'],
-        ) || [];
-      const deviceNumArrData = utilGetDeviceNumArr(result.nodeInfo, deviceTypeArrData[0]) || [0];
+      const deviceList = result.deviceList;
+      const deviceTypeArrData = deviceList.map((item) => item.deviceType);
+      setDeviceList(deviceList);
+      // const deviceNumPerNodeArrData =
+      //   utilGetDeviceNumPerNodeArr(
+      //     result.nodeInfo,
+      //     result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType'],
+      //   ) || [];
+      const deviceNumArrData = getAvailRegularDeviceNumber(deviceTypeArrData[0], deviceList[0].userQuota);
+      const deviceNumPerNodeArrData = deviceNumArrData;
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]; // todo 静态数据
-      console.log('deviceTypeArrData[0]', deviceTypeArrData[0]);
       setCodePathPrefix(result.codePathPrefix);
       setEngineTypeArr(enginTypeArrData);
       setEngineNameArr(engineNameArrData);
@@ -99,7 +106,7 @@ const CodeCreate = (props) => {
   };
 
   const apiPostCode = async (values) => {
-    const obj = await postCode1({ ...values, vcName: props.vc.currentSelectedVC  });
+    const obj = await postCode1({ ...values, vcName: currentSelectedVC  });
     const { code, data, msg } = obj;
     if (code === 0) {
       message.success(intl.formatMessage({ id: 'codeCreate.tips.submit.success' }));
@@ -107,7 +114,7 @@ const CodeCreate = (props) => {
     }
   };
   const apiGetResource = async () => {
-    const obj = await getResource();
+    const obj = await fetchAvilableResource(currentSelectedVC);
     const { code, data, msg } = obj;
     if (code === 0) {
       return data;
@@ -149,17 +156,16 @@ const CodeCreate = (props) => {
   };
 
   const handleDeviceTypeChange = (type) => {
-    console.log('type', type);
     let arr = [];
+    const deviceType = getFieldValue('deviceType')
     if (jobTrainingType == 'RegularJob') {
-      arr = utilGetDeviceNumArr(resource['nodeInfo'], type);
+      arr = getAvailRegularDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota);
       setFieldsValue({ deviceNum: arr[0] });
       setDeviceNumArr(arr);
     } else if (jobTrainingType == 'PSDistJob') {
-      arr = utilGetDeviceNumPerNodeArr(resource['nodeInfo'], type);
+      arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numPs'));
       setFieldsValue({ numPsWorker: arr[0] });
       setDeviceNumPerNodeArr(arr);
-      // todo
       setMaxNodeNum(result.nodeCountByDeviceType[index]);
     }
   };
