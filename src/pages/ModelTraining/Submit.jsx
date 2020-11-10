@@ -43,6 +43,7 @@ import {
 } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
+import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -146,11 +147,11 @@ const ModelTraining = (props) => {
     if (distributedJob) {
       if (!currentDeviceType) return;
       // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
-      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo, currentDeviceType);
+      const list = getAvailPSDDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota, getFieldValue('numPsWorker'));
       setAvailableDeviceNumList(list);
     } else {
       if (!currentDeviceType) return;
-      const list = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+      const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
   }, [distributedJob, nodeInfo, currentDeviceType]);
