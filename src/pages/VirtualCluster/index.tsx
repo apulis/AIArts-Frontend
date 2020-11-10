@@ -87,7 +87,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     const res = await createVC(data);
     if (res.code === 0) {
       message.success(formatMessage({ id: 'vc.page.create.vc.success' }));
-      setCreateVCModalVisible(true);
+      setCreateVCModalVisible(false);
       getVCList();
     }
   };
