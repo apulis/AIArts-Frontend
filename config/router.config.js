@@ -254,7 +254,7 @@ export default [
             name: 'virtualCluster',
             icon: 'CloudServerOutlined',
             component: './VirtualCluster',
-            authority: ['AI_ARTS_ALL'],
+            authority: ['MANAGE_VC'],
           },
           {
             path: '/VisualOperation',
