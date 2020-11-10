@@ -32,4 +32,5 @@ export const getAvailPSDDeviceNumber = (deviceName: string, deviceQuota: number,
       return [];
     }
   }
-};
+  return [];
+}; 
