@@ -51,6 +51,20 @@ const UserModel = {
         });
       }
     },
+    * deleteUserCurrentVC({ payload }, { put, select }) {
+      const user = yield select((state) => state.user);
+      let currentVC = [...user.currentUser.currentVC];
+      currentVC = currentVC.filter((val) => val !== payload.vcName);
+      yield put({
+        type: 'updateState',
+        payload: {
+          currentUser: {
+            ...user,
+            currentVC,
+          },
+        },
+      });
+    },
   },
   reducers: {
     updateState(state, { payload }) {

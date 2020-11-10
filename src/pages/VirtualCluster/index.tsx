@@ -46,7 +46,7 @@ export const vcNumbersPrefix = {
 
 const { Search } = Input;
 
-const VirtualCluster: React.FC = ({ resource }) => {
+const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const [vcList, setVCList] = useState<IVCColumnsProps[]>([]);
   const [tableLoading, setTableLoading] = useState<boolean>(false);
   const [unallocatedDevice, setUnallocatedDevice] = useState<number>(0);
@@ -149,6 +149,12 @@ const VirtualCluster: React.FC = ({ resource }) => {
         } else {
           const res = await deleteVC(vcName);
           if (res.code === 0) {
+            dispatch({
+              type: 'user/deleteUserCurrentVC',
+              payload: {
+                vcName,
+              }
+            })
             message.success(formatMessage({ id: 'vc.page.message.success.delete.vc' }));
             getVCList();
           }
