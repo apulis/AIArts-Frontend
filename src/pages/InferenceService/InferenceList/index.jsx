@@ -109,7 +109,7 @@ const InferenceList = (props) => {
     },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.engineType' }),
-      render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework),
+      render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework) + ':' + item?.jobParams?.version,
     },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.createTime' }),

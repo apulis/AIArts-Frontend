@@ -225,7 +225,7 @@ const InferenceDetail = (props) => {
         <Descriptions.Item
           label={intl.formatMessage({ id: 'centerInference.detail.label.engineType' })}
         >
-          {jobDetail.jobParams?.framework}
+          {jobDetail.jobParams?.framework + ':' + jobDetail.jobParams?.version}
         </Descriptions.Item>
         <Descriptions.Item label={intl.formatMessage({ id: 'centerInference.detail.label.id' })}>
           {jobDetail.jobId}
