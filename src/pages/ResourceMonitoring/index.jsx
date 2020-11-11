@@ -5,21 +5,31 @@ import Iframe from 'react-iframe';
 import { FormattedMessage, getLocale } from 'umi';
 
 const ResourceMonitoring = () => {
-  // const language = getLocale();
-  const language = 'en-US';
+  const language = getLocale();
   const domainName = window.location.protocol + '//' + window.location.host;
-  const grafanaLinks = {
-    'zh-CN': domainName + '/endpoints/grafana_zh/',
-    'en-US': domainName + '/endpoints/grafana/',
-  };
-  let grafana;
+  let vcUsageLinks;
+  let deviceUsageLinks;
   if (process.env.NODE_ENV === 'development') {
-    grafana = 'https://atlas02.sigsus.cn/endpoints/grafana/';
+    vcUsageLinks = {
+      'zh-CN': 'http://219.133.167.42:6688/endpoints/grafana_zh/d/per-vc-gpu-statistic-zh/mei-ge-vcshe-bei-tong-ji-xin-xi',
+      'en-US': 'http://219.133.167.42:6688/endpoints/grafana/d/per-vc-gpu-statistic',
+    };
+    deviceUsageLinks = {
+      'zh-CN': 'http://219.133.167.42:6688/endpoints/grafana_zh/d/device-usage-history-zh/she-bei-shi-yong-liang',
+      'en-US': 'http://219.133.167.42:6688/endpoints/grafana/d/device-usage-history/device-usage',
+    };;
   } else {
-    grafana = grafanaLinks[language];
+    vcUsageLinks = {
+      'zh-CN': domainName + '/endpoints/grafana_zh/d/per-vc-gpu-statistic-zh/mei-ge-vcshe-bei-tong-ji-xin-xi',
+      'en-US': domainName + '/endpoints/grafana/d/per-vc-gpu-statistic',
+    };
+    deviceUsageLinks = {
+      'zh-CN': domainName + '/endpoints/grafana_zh/d/device-usage-history-zh/she-bei-shi-yong-liang',
+      'en-US': domainName + '/endpoints/grafana/d/device-usage-history/device-usage',
+    };
   }
-  const VCUsageUrl = `${grafana}dashboard/db/per-vc-device-statistic?_=${Date.now()}&kiosk=tv`;
-  const clusterUsageUrl = `${grafana}dashboard/db/device-usage?refresh=30s&orgId=1&_=${Date.now()}&kiosk=tv`;
+  const VCUsageUrl = vcUsageLinks[language];
+  const clusterUsageUrl = deviceUsageLinks[language];
   return (
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '0px 0px' }}>

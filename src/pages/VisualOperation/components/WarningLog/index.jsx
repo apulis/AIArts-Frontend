@@ -1,16 +1,17 @@
 import React from 'react';
 import { Card } from 'antd';
 import Iframe from 'react-iframe';
+import { getLocale, setLocale } from 'umi';
 
 const WarningLog = () => {
   let grafana;
+  const language = getLocale();
   if (process.env.NODE_ENV === 'development') {
-    grafana = 'http://219.133.167.42:52009/endpoints/grafana_zh/';
+    grafana = 'http://219.133.167.42:6688/endpoints/grafana/';
   } else {
     const protocol = window.location.protocol;
     const host = window.location.host;
     // const language = getLocale();
-    const language = 'en-US';
     const domainName = protocol + '//' + host;
     const grafanaLinks = {
       'zh-CN': domainName + '/endpoints/grafana_zh/',
