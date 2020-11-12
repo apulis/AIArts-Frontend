@@ -329,6 +329,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
             <FormItem
               name="vcName"
               label={formatMessage({ id: 'vc.page.form.vc.name' })}
+              preserve={false}
               rules={[
                 {
                   required: true,
@@ -348,14 +349,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                 }}
               />
             </FormItem>
-            <FormItem label={formatMessage({ id: 'vc.page.form.vc.device.number' })} required {...modalFormLayout}>
+            <FormItem preserve={false} label={formatMessage({ id: 'vc.page.form.vc.device.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
                 <>
-                  <FormItem style={{ display: 'inline-block' }}>
+                  <FormItem preserve={false} style={{ display: 'inline-block' }}>
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
                   <EqualIcon />
-                  <FormItem rules={[
+                  <FormItem preserve={false} rules={[
                     {
                       async validator(_rule, value) { 
                         if (value > unallocatedDevice[val]) {
@@ -369,10 +370,10 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                 </>
               ))}
             </FormItem>
-            <FormItem label={formatMessage({ id: 'vc.page.form.vc.per.user.max.availble.number' })} required {...modalFormLayout}>
+            <FormItem preserve={false} label={formatMessage({ id: 'vc.page.form.vc.per.user.max.availble.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
                 <>
-                  <FormItem style={{ display: 'inline-block' }}>
+                  <FormItem style={{ display: 'inline-block' }} preserve={false}>
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
                   <EqualIcon />
@@ -389,6 +390,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                         }
                       }
                     ]}
+                    preserve={false}
                   >
                     <InputNumber min={0} precision={0} />
                   </FormItem>
@@ -414,8 +416,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               rules={[
                 {
                   required: true,
+                  message: formatMessage({ id: 'vc.page.form.vcName.required' })
                 },
                 { ...jobNameReg },
+                {
+                  max: 20,
+                  message: formatMessage({ id: 'vc.page.form.vcName.max' })
+                }
               ]}
               {...modalFormLayout}
             >
