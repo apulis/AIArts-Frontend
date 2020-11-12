@@ -76,7 +76,7 @@ const ImageTable = (props) => {
 
   useInterval(() => {
     fetchImages({ pageParams, search, withLoading: false });
-  }, [props.common.interval]);
+  }, props.common.interval);
 
   useEffect(() => {
     fetchImages({ pageParams, search });
