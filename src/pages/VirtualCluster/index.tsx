@@ -380,6 +380,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                     style={{ display: 'inline-block' }}
                     name={vcNumbersPrefix.maxAvailble + val}
                     rules={[
+                      { required: true, message: formatMessage({ id: 'vc.page.form.max.avail.rule.error.required' }), },
                       {
                         async validator() {
                           if (getFieldValue(vcNumbersPrefix.maxAvailble + val) > getFieldValue(vcNumbersPrefix.deviceNumber + val)) {

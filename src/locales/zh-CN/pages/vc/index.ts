@@ -13,6 +13,7 @@ export default {
   'vc.page.form.vc.device.number': '设备数量',
   'vc.page.form.vc.per.user.max.availble.number': '用户可以使用最大设备数量',
   'vc.page.form.max.avail.rule.error': '用户最大可用数量不得大于当前设备总数',
+  'vc.page.form.max.avail.rule.error.required': '用户最大可用数量是必填的',
   'vc.page.form.device.max.error': '最大可用数量为：',
   'vc.page.confirm.delete.vc.title': '将会删除选中的虚拟集群',
   'vc.page.confirm.delete.vc.content': '是否继续？',
