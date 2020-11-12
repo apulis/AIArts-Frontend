@@ -27,6 +27,11 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
         vcName: currentVC[0],
       });
     }
+    if (dispatch) {
+      dispatch({
+        type: 'user/fetchCurrent',
+      });
+    }
   }, [vc])
   
   const onFinish = async () => {
