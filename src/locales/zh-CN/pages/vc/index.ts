@@ -24,6 +24,8 @@ export default {
   'vc.page.message.current.vc.busy': '当前虚拟集群有正在运行的 Job',
   'vc.page.message.success.delete.vc': '成功删除当前虚拟集群',
   'vc.page.success.modify': '成功修改 VC',
+  'vc.page.form.vcName.required': '虚拟集群名称是必填的',
+  'vc.page.form.vcName.max': '最大长度是 20',
   'vc.component.message.success.set.default.vc': '成功设置默认虚拟集群',
   'vc.component.default.vc.label': '默认虚拟集群',
   'vc.component': '确定',

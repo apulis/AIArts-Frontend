@@ -332,8 +332,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               rules={[
                 {
                   required: true,
+                  message: formatMessage({ id: 'vc.page.form.vcName.required' })
                 },
                 { ...jobNameReg },
+                {
+                  max: 20,
+                  message: formatMessage({ id: 'vc.page.form.vcName.max' })
+                }
               ]}
               {...modalFormLayout}
             >
@@ -359,7 +364,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     }
                   ]} style={{ display: 'inline-block' }} name={vcNumbersPrefix.deviceNumber + val} initialValue={0}>
-                    <InputNumber min={0} max={unallocatedDevice[val]} />
+                    <InputNumber min={0} max={unallocatedDevice[val]}  precision={0} />
                   </FormItem>
                 </>
               ))}
@@ -385,7 +390,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} />
+                    <InputNumber min={0} precision={0} />
                   </FormItem>
                 </>
               ))}
@@ -447,7 +452,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} />
+                    <InputNumber min={0} precision={0} />
                   </FormItem>
                 </>
               ))}
@@ -474,7 +479,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} />
+                    <InputNumber min={0} precision={0} />
                   </FormItem>
                 </>
               ))}
