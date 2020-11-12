@@ -108,6 +108,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       metadata: JSON.stringify(metaUserQuotas),
     })
     if (res.code === 0) {
+      getVCList();
       message.success(formatMessage({ id: 'vc.page.success.modify' }))
     }
     clearMemoValues();
@@ -149,12 +150,6 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         } else {
           const res = await deleteVC(vcName);
           if (res.code === 0) {
-            dispatch({
-              type: 'user/deleteUserCurrentVC',
-              payload: {
-                vcName,
-              }
-            })
             message.success(formatMessage({ id: 'vc.page.message.success.delete.vc' }));
             getVCList();
           }
