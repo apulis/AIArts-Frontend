@@ -28,6 +28,7 @@ import curStyles from './index.less';
 import { connect } from 'dva';
 import { beforeSubmitJob } from '@/models/resource';
 import { useIntl } from 'umi';
+import { getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -115,7 +116,8 @@ const ModelEvaluation = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    const nums = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+    const nums = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
+    console.log('nums', nums)
     setDeviceNums(nums);
   }, [nodeInfo, currentDeviceType]);
 
@@ -659,7 +661,7 @@ const ModelEvaluation = (props) => {
                   </Row>
                   <Row>
                     <Col span={5}>
-                      {intl.formatMessage({ id: 'modelEvaluation.computeNodeSpecification' })}
+                      {intl.formatMessage({ id: 'modelEv aluation.computeNodeSpecification' })}
                     </Col>
                     <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
