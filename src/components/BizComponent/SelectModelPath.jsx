@@ -4,11 +4,11 @@ import moment from 'moment';
 
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { getModels } from '@/pages/ModelMngt/PretrainedModel/services';
-import { useIntl } from 'umi';
+import { useIntl, connect } from 'umi';
 
 const { Search } = Input;
 
-const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
+const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk, vc }) => {
   const intl = useIntl();
   const [sortedInfo, setSortedInfo] = useState({
     orderBy: '',
@@ -25,6 +25,8 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
       setSortedInfo(sorter);
     }
   };
+
+  const { currentSelectedVC } = vc;
 
   const handleSelectModalPath = () => {
     onOk && onOk(selectedRows[0]);
@@ -137,7 +139,7 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
           showQuickJumper: true,
           showTotal: (total) =>
             `${intl.formatMessage({
-              id: 'bizComponent.table.pagination.showTotal.suffix',
+              id: 'bizComponent.table.pagination.showTotal.total',
             })} ${total} ${intl.formatMessage({
               id: 'bizComponent.table.pagination.showTotal.suffix',
             })}`,
@@ -153,4 +155,4 @@ const SelectModelPath = ({ onSelectModalPath, onCancel, visible, onOk }) => {
   );
 };
 
-export default SelectModelPath;
+export default connect(({ vc }) => ({ vc }))(SelectModelPath);

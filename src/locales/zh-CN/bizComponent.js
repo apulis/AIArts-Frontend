@@ -4,6 +4,6 @@ export default {
   'bizComponent.table.column.createTime': '创建时间',
   'bizComponent.table.column.desc': '描述',
   'bizComponent.table.placeholder': '请输入模型名称',
-  'bizComponent.table.pagination.showTotal.suffix': '总共',
-  'bizComponent.table.pagination.showTotal.suffix': 'ite条ms',
+  'bizComponent.table.pagination.showTotal.total': '总共',
+  'bizComponent.table.pagination.showTotal.suffix': ' 条',
 };

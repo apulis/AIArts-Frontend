@@ -357,7 +357,8 @@ const InferenceList = (props) => {
   );
 };
 
-export default connect(({ inferenceList, loading, common }) => ({
+export default connect(({ inferenceList, loading, common, vc }) => ({
   inferenceList,
   common,
+  vc,
 }))(InferenceList);
