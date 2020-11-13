@@ -154,7 +154,7 @@ const ModelTraining = (props) => {
       const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, nodeInfo, currentDeviceType]);
+  }, [distributedJob, deviceList, currentDeviceType]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {

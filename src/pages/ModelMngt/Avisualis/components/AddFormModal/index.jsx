@@ -5,6 +5,7 @@ import { fetchAvilableResource } from '../../../../../services/modelTraning';
 import { getDeviceNumPerNodeArrByNodeType, getDeviceNumArrByNodeType } from '@/utils/utils';
 import _ from 'lodash';
 import { useIntl } from 'umi';
+import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { Option } = Select;
 
@@ -32,12 +33,13 @@ const AddFormModal = (props, ref) => {
     if (!deviceType) return;
     let list = [];
     if (jobTrainingType === 'PSDistJob') {
-      list = getDeviceNumPerNodeArrByNodeType(nodeInfo, deviceType);
+      list = getAvailRegularDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType)?.userQuota);
     } else {
-      list = getDeviceNumArrByNodeType(nodeInfo, deviceType);
+      list = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType)?.userQuota, getFieldValue('numPsWorker') || 1);
     }
+
     setAvailableDeviceNumList(list);
-  }, [jobTrainingType, nodeInfo, deviceType]);
+  }, [jobTrainingType, deviceList, deviceType]);
 
   const getData = async () => {
     if (detailData) {

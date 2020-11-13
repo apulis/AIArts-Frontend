@@ -29,6 +29,7 @@ import { getLabeledDatasets } from '@/services/datasets';
 import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { useIntl } from 'umi';
+import { getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -93,9 +94,9 @@ const EditMetrics = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    const list = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+    const list =  getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
     setAvailableDeviceNumList(list);
-  }, [nodeInfo, currentDeviceType]);
+  }, [deviceList, currentDeviceType]);
 
   useEffect(() => {
     if (Object.keys(paramsDetailedData).length > 0 && !haveSetedParamsDetail) {
