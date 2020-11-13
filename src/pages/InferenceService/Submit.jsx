@@ -15,19 +15,20 @@ import {
   getAllSupportInference,
   getAllComputedDevice,
 } from '@/services/inferenceService';
-import { history, withRouter } from 'umi';
+import { history, withRouter, useIntl, connect } from 'umi';
 // import { beforeSubmitJob } from '@/models/resource';
 
 import styles from './index.less';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import SelectModelPath from '@/components/BizComponent/SelectModelPath';
-import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 
 const SubmitModelTraining = (props) => {
   const intl = useIntl();
   const query = props.location.query;
+
+  const { currentSelectedVC } = props.vc;
 
   const [runningParams, setRunningParams] = useState([
     { key: '', value: '', createTime: generateKey() },
@@ -62,6 +63,7 @@ const SubmitModelTraining = (props) => {
     submitData.params = {};
     submitData.gpuType = values.deviceType;
     submitData.resourcegpu = values.resourcegpu;
+    submitData.vcName = currentSelectedVC;
     values.runningParams &&
       values.runningParams.forEach((p) => {
         if (!p.key) return;
@@ -428,4 +430,4 @@ const SubmitModelTraining = (props) => {
   );
 };
 
-export default withRouter(SubmitModelTraining);
+export default withRouter(connect(({ vc }) => ({ vc }))(SubmitModelTraining));

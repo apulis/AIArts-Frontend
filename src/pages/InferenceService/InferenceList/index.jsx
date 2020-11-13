@@ -8,7 +8,7 @@ import { connect } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
-import { fetchJobStatusSumary, getInferences } from './services';
+import { fetchJobStatusSumary } from './services';
 import { getStatusList } from '@/utils/utils';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
@@ -24,6 +24,7 @@ const InferenceList = (props) => {
   const {
     dispatch,
     inferenceList: { data },
+    vc,
   } = props;
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,7 +62,6 @@ const InferenceList = (props) => {
     getJobStatusSumary();
     return () => {
       fetchJobStatusSumary.cancel && fetchJobStatusSumary.cancel();
-      getInferences.cancel && getInferences.cancel();
     };
   }, []);
 
@@ -189,6 +189,7 @@ const InferenceList = (props) => {
       ...pageParams,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
+      vcName: vc.currentSelectedVC,
     };
 
     if (formValues.status && formValues.status !== 'all') {
