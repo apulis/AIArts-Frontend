@@ -3,14 +3,13 @@ import { Form, Input, PageHeader, Button, message, Select } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { jobNameReg, linuxPathReg } from '@/utils/reg';
 import { createVisualization } from '@/services/modelTraning';
-import { history } from 'umi';
+import { history, connect, useIntl } from 'umi';
 import { getModels } from '../../ModelMngt/ModelList/services/index';
 import { getResource } from '../../CodeDevelopment/service';
-import { useIntl } from 'umi';
 
 const { TextArea } = Input;
 
-export default function CreateVisualization() {
+const CreateVisualization = (props) => {
   const intl = useIntl();
   const goBackPath = '/model-training/visualization';
   const [form] = useForm();
@@ -18,9 +17,9 @@ export default function CreateVisualization() {
   const [modelArr, setModelArr] = useState([]);
   const [curModel, setCurModel] = useState();
   const [codePathPrefix, setCodePathPrefix] = useState('');
-
+  const { currentSelectedVC } = props.vc;
   const apiGetModelList = async () => {
-    const obj = await getModels();
+    const obj = await getModels({ vcName: currentSelectedVC });
     const { code, data, msg } = obj;
     if (code === 0) {
       return data;
@@ -59,7 +58,7 @@ export default function CreateVisualization() {
   const onCreate = async () => {
     const values = await validateFields();
     values.tensorboardLogDir = codePathPrefix + values.tensorboardLogDir;
-    const res = await createVisualization(values);
+    const res = await createVisualization({ ...values, vcName: currentSelectedVC });
     if (res.code === 0) {
       message.success(intl.formatMessage({ id: 'createVisualization.create.success' }));
       history.push(goBackPath);
@@ -157,3 +156,5 @@ export default function CreateVisualization() {
     </>
   );
 }
+
+export default connect(({ vc }) => ({ vc }))(CreateVisualization);
