@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link, history } from 'umi';
 import moment from 'moment';
+import { connect } from 'dva';
 import { getJobStatus } from '@/utils/utils';
 import { sortText, PAGEPARAMS } from '@/utils/const';
 import {
@@ -34,7 +35,7 @@ const statusList = [
 const { Search } = Input;
 const { Option } = Select;
 
-const Visualization = () => {
+const Visualization = (props) => {
   const intl = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ status: 'all', jobName: '' });
@@ -46,6 +47,8 @@ const Visualization = () => {
     order: '',
   });
 
+  const { currentSelectedVC } = props.vc;
+
   const getVisualizations = async () => {
     setTableLoading(true);
     const params = {
@@ -54,7 +57,7 @@ const Visualization = () => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
     };
-    const res = await fetchVisualizations(params);
+    const res = await fetchVisualizations({ ...params, vcName: currentSelectedVC });
     if (res.code === 0) {
       const visualizations = (res.data && res.data.Templates) || [];
       const total = res.data.total;
@@ -278,4 +281,4 @@ const Visualization = () => {
   );
 };
 
-export default Visualization;
+export default connect(({ vc }) => ({ vc }))(Visualization);
