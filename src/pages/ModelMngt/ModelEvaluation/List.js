@@ -24,6 +24,7 @@ export const statusList = [
   { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
   { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
   { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'Killed', label: formatMessage({ id: 'service.status.killed' }) },
   { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 

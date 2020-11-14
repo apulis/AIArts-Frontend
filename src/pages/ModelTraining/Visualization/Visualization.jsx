@@ -3,7 +3,7 @@ import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link, history } from 'umi';
 import moment from 'moment';
 import { connect } from 'dva';
-import { getJobStatus } from '@/utils/utils';
+import { getJobStatus, getStatusList } from '@/utils/utils';
 import { sortText, PAGEPARAMS } from '@/utils/const';
 import {
   fetchVisualizations,
@@ -16,21 +16,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { useIntl, formatMessage } from 'umi';
 
 const { confirm } = Modal;
-
-const statusList = [
-  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
-  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
-  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
-  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
-  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
-  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
-  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
-  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
-  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
-  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
-  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
-  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
-];
 
 const { Search } = Input;
 const { Option } = Select;
@@ -198,7 +183,7 @@ const Visualization = (props) => {
               <Button
                 type="link"
                 onClick={() => changeJobStatus(item.id, 'running')}
-                disabled={!['paused', 'killed'].includes(item.status)}
+                disabled={!['paused', 'killed', 'Killed'].includes(item.status)}
               >
                 {formatMessage({ id: 'visualizationList.table.column.action.run' })}
               </Button>
@@ -231,7 +216,7 @@ const Visualization = (props) => {
             defaultValue={formValues.status}
             onChange={handleChangeStatus}
           >
-            {statusList.map((status) => (
+            {getStatusList().map((status) => (
               <Option key={status.value} value={status.value}>
                 {status.label}
               </Option>

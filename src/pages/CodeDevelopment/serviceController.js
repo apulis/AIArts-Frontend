@@ -46,6 +46,10 @@ export const statusMap = {
     local: formatMessage({ id: 'service.status.killed' }),
     priority: 10,
   },
+  Killed: {
+    local: formatMessage({ id: 'service.status.killed' }),
+    priority: 10,
+  },
   error: {
     local: formatMessage({ id: 'service.status.error' }),
     priority: 11,

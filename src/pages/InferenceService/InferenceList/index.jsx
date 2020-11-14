@@ -221,14 +221,7 @@ const InferenceList = (props) => {
   };
 
   const isDeleteDisabled = (item) => {
-    if (
-      item.jobStatus === 'failed' ||
-      item.jobStatus === 'error' ||
-      item.jobStatus === 'unapproved' ||
-      item.jobStatus === 'finished' ||
-      item.jobStatus === 'killed' ||
-      item.jobStatus === 'paused'
-    ) {
+    if (['failed', 'error', 'unapproved', 'finished', 'killed', 'paused', 'Killed'].includes(item.status)) {
       return false;
     } else {
       return true;

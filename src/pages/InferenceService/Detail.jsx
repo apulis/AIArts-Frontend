@@ -162,7 +162,7 @@ const InferenceDetail = (props) => {
     setImageUrl('');
   };
 
-  const jobEnded = ['finished', 'failed', 'killed', 'error'].includes(jobDetail.jobStatus);
+  const jobEnded = ['finished', 'failed', 'killed', 'Killed', 'error'].includes(jobDetail.jobStatus);
   return (
     <PageHeaderWrapper>
       <main className={styles.topContainer}>
