@@ -29,7 +29,6 @@ interface IVCColumnsProps {
 interface IPaginationParams {
   pageSize: number;
   pageNum: number;
-  total: number;
   search: string;
 }
 
@@ -60,9 +59,9 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       pageSize: 10,
       pageNum: 1,
       search: '',
-      total: 10,
     }
   );
+  const [pageTotal, setPageTotal] = useState(10);
   const { formatMessage } = useIntl();
   const { devices } = resource;
   const deviceArray = Object.keys(devices);
@@ -121,7 +120,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
 
   const getVCList = async () => {
     setTableLoading(true);
-    const res = await fetchVCList<{ code: number, data: { result: { vcName: string, quota: string, metadata: string, userNum: number }[] } }>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
+    const res = await fetchVCList<{ code: number, data: { totalNum: number, result: { vcName: string, quota: string, metadata: string, userNum: number }[] } }>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
     setTableLoading(false);
     if (res.code === 0) {
       const vcList: IVCColumnsProps[] = res.data.result.map(vc => {
@@ -132,6 +131,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           userNum: vc.userNum,
         };
       });
+      setPageTotal(res.data.totalNum);
       setVCList(vcList)
     }
   };
@@ -304,7 +304,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         dataSource={vcList}
         loading={tableLoading}
         pagination={{
-          total: paginationState.total,
+          total: pageTotal,
           pageSize: paginationState.pageSize,
           current: paginationState.pageNum,
           onChange(page, pageSize) {
