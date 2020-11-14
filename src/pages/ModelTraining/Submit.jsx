@@ -426,6 +426,7 @@ const ModelTraining = (props) => {
         codePath: currentSelected.params.codePath,
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
+        deviceNum: availableDeviceNumList.includes(currentSelected.params.deviceNum) ? currentSelected.params?.deviceNum : 0,
       });
       const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
