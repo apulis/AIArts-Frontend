@@ -39,7 +39,7 @@ const InferenceList = (props) => {
   const [currentStatus, setCurrentStatus] = useState('all');
 
   const getJobStatusSumary = async () => {
-    const res = await fetchJobStatusSumary();
+    const res = await fetchJobStatusSumary({ vcName: vc.currentSelectedVC });
     if (res.code === 0) {
       const jobSumary = [
         { value: 'all', label: intl.formatMessage({ id: 'centerInference.list.all' }) },

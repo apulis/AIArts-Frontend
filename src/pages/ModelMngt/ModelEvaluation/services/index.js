@@ -53,11 +53,15 @@ export async function fetchEvaluationDetail(id, page) {
   });
 }
 
-export async function fetchJobStatusSumary() {
-  return await request(`/common/job/summary?jobType=${modelEvaluationType}`, {
-    cancelToken: new CancelToken(function (c) {
+export async function fetchJobStatusSumary(params) {
+  return await request('/common/job/summary', {
+    params: {
+      ...params,
+      jobType: modelEvaluationType,
+    },
+    cancelToken: new CancelToken(((c) => {
       fetchJobStatusSumary.cancel = c;
-    }),
+    })),
   });
 }
 

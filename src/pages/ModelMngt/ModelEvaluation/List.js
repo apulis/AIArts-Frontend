@@ -77,7 +77,7 @@ const List = (props) => {
   };
 
   const getJobStatusSumary = async () => {
-    const res = await fetchJobStatusSumary();
+    const res = await fetchJobStatusSumary({ vcName: currentSelectedVC });
     if (res.code === 0) {
       const jobSumary = [{ value: 'all', label: intl.formatMessage({ id: 'list.all' }) }];
       let total = 0;
