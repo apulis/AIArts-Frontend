@@ -189,7 +189,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         message.warning(formatMessage({ id: 'vc.page.message.current.vc.active' }))
       }
     }
-    
+
   }
 
   const columns: ColumnProps<IVCColumnsProps>[] = [
@@ -358,14 +358,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   <EqualIcon />
                   <FormItem preserve={false} rules={[
                     {
-                      async validator(_rule, value) { 
+                      async validator(_rule, value) {
                         if (value > unallocatedDevice[val]) {
                           throw new Error(formatMessage({ id: 'vc.page.form.device.max.error' }) + unallocatedDevice[val]);
                         }
                       }
                     }
                   ]} style={{ display: 'inline-block' }} name={vcNumbersPrefix.deviceNumber + val} initialValue={0}>
-                    <InputNumber min={0} max={unallocatedDevice[val]}  precision={0} />
+                    <InputNumber min={0} max={unallocatedDevice[val]} precision={0} />
                   </FormItem>
                 </>
               ))}
@@ -412,6 +412,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
             <FormItem
               name="vcName"
               initialValue={currentHandledVC?.vcName}
+              preserve={false}
               label={formatMessage({ id: 'vc.page.form.vc.name' })}
               rules={[
                 {
