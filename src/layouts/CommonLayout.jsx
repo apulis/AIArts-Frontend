@@ -14,8 +14,8 @@ const CommonLayout = ({ children, dispatch, resource, user }) => {
     });
   }, []);
   const { currentUser } = user;
-  const { currentVC } = currentUser;
-  if (currentVC.length === 0) {
+  const { currentVC, userName } = currentUser;
+  if (currentVC.length === 0 && userName) {
     return (
       <Result
         status="warning"
