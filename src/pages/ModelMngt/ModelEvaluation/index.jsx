@@ -86,7 +86,7 @@ const ModelEvaluation = (props) => {
   }, [codePathPrefix]);
 
   const getAvailableResource = async () => {
-    const res = await fetchAvilableResource();
+    const res = await fetchAvilableResource(currentSelectedVC);
     if (res.code === 0) {
       let {
         data: { codePathPrefix, aiFrameworks, deviceList, nodeInfo },
@@ -304,7 +304,9 @@ const ModelEvaluation = (props) => {
         startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length) || '',
         paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length) || '',
       };
-      setFieldsValue({ ...currentSelected.params, ...suffixParams });
+      const deviceNum = currentSelected.params.deviceNum;
+
+      setFieldsValue({ ...currentSelected.params, ...suffixParams, deviceNum: deviceNums.includes(deviceNums) ? deviceNum : 0 });
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
@@ -661,7 +663,7 @@ const ModelEvaluation = (props) => {
                   </Row>
                   <Row>
                     <Col span={5}>
-                      {intl.formatMessage({ id: 'modelEv aluation.computeNodeSpecification' })}
+                      {intl.formatMessage({ id: 'modelEvaluation.computeNodeSpecification' })}
                     </Col>
                     <Col span={19}>{p.params.deviceType}</Col>
                   </Row>
