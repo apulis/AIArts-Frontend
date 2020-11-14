@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Row, Col, Input, message, Modal, Form } from 'antd';
-import { SyncOutlined } from '@ant-design/icons';
+import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu } from 'antd';
+import { SyncOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
   getCodes,
   stopCode,
   deleteCode,
   getJupyterUrl,
   getCodeCount,
+  fetchSSHInfo,
   createSaveImage,
 } from '../../service.js';
 import moment from 'moment';
@@ -50,6 +51,8 @@ const CodeList = (props) => {
   const [currentHandledJobId, setCurrentHandledJobId] = useState('');
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
+  const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
+  const [sshCommond, setSshCommond] = useState('');
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
     order: '',
@@ -266,6 +269,28 @@ const CodeList = (props) => {
     setCurrentHandledJobId(id);
   };
 
+  const handleSshPopoverVisible = async (visible, currentHandledJobId) => {
+    if (visible) {
+      const res = await fetchSSHInfo(currentHandledJobId);
+      if (res.code === 0) {
+        const sshInfo = res.data.endpointsInfo.find(val => val.name === 'ssh');
+        const identityFile = res.data.identityFile;
+        if (sshInfo) {
+          const { status } = sshInfo;
+          if (status === 'running') {
+            const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
+            const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
+            setSshCommond(command);
+          }
+          
+        }
+      }
+    } else {
+      setSshCommond('');
+    }
+    setSshPopoverVisible(visible);
+  }
+
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
@@ -320,8 +345,28 @@ const CodeList = (props) => {
       render: (codeItem) => {
         return (
           <Space size="middle">
+            <>
+            <Popover
+              trigger="click"
+              visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
+              onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
+              title="使用 SSH 连接"
+              content={<div>
+                {
+                  sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />
+                }
+                
+              </div>}
+            >
+              <Button
+                type="link"
+                disabled={!canStopStatus.has(codeItem.status)}
+                disableUpperCase
+                onClick={() => {setSshPopoverVisible(true);setCurrentHandledJobId(codeItem.id)}}
+              >ssh</Button>
+            </Popover>
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
-              {formatMessage({ id: 'codeList.table.column.action.open' })}
+              {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
             </a>
             <a
               onClick={() => handleOpenModal(codeItem)}
@@ -329,28 +374,43 @@ const CodeList = (props) => {
             >
               {formatMessage({ id: 'codeList.table.column.action.upload' })}
             </a>
-            <a
-              onClick={() => handleStop(codeItem)}
-              disabled={!canStopStatus.has(codeItem.status)}
-              style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
-            >
-              {formatMessage({ id: 'codeList.table.column.action.stop' })}
-            </a>
-            {checkIfCanDelete(codeItem.status) ? (
-              <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
-                {formatMessage({ id: 'codeList.table.column.action.delete' })}
-              </a>
-            ) : (
-              <span style={{ color: '#333' }}>
-                {formatMessage({ id: 'codeList.table.column.action.delete' })}
-              </span>
-            )}
 
-            {codeItem.status === 'running' && (
-              <a onClick={() => toSaveImage(codeItem.id)}>
-                {formatMessage({ id: 'codeList.table.column.action.save' })}
-              </a>
-            )}
+            <Dropdown overlay={<Menu>
+              <Menu.Item>
+                {codeItem.status === 'running' && (
+                  <Button type="link" onClick={() => toSaveImage(codeItem.id)}>
+                    {formatMessage({ id: 'codeList.table.column.action.save' })}
+                  </Button>
+                )}
+              </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    type="link"
+                    onClick={() => handleStop(codeItem)}
+                    disabled={!canStopStatus.has(codeItem.status)}
+                    style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
+                  >
+                    {formatMessage({ id: 'codeList.table.column.action.stop' })}
+                  </Button>  
+                </Menu.Item>
+                <Menu.Item>
+                  {checkIfCanDelete(codeItem.status) ? (
+                    <Button type="link" onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
+                      {formatMessage({ id: 'codeList.table.column.action.delete' })}
+                    </Button>
+                  ) : (
+                    <Button type="link" disabled style={{ color: '#333' }}>
+                      {formatMessage({ id: 'codeList.table.column.action.delete' })}
+                    </Button>
+                  )}
+                </Menu.Item>
+              </Menu>}>
+                <Button type="link">
+                  More
+                  <DownOutlined />
+                </Button>
+            </Dropdown>
+            </>
           </Space>
         );
       },

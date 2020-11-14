@@ -71,3 +71,7 @@ export async function createSaveImage(data) {
     data,
   });
 }
+
+export function fetchSSHInfo(id) {
+  return request(`/codes/${id}/endpoints`);
+}

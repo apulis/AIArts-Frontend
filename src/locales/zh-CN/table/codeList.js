@@ -6,7 +6,7 @@ export default {
   'codeList.table.column.storePath': '代码存储目录',
   'codeList.table.column.description': '描述',
   'codeList.table.column.action': '操作',
-  'codeList.table.column.action.open': '打开',
+  'codeList.table.column.action.open.jupyter': 'Jupyter',
   'codeList.table.column.action.upload': '上传',
   'codeList.table.column.action.stop': '停止',
   'codeList.table.column.action.delete': '删除',
