@@ -25,5 +25,6 @@ export default {
   'bizCodeMessage.30603': 'Push failed!',
   'bizCodeMessage.30012':
     'There is already a data set with the same name, please change the name of the data set!',
+  'bizCodeMessage.30701': 'There is already a virtual cluster with the same name!',
   'request.error.tips': 'Request error',
 };
