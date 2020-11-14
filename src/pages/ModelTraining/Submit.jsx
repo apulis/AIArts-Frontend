@@ -144,17 +144,15 @@ const ModelTraining = (props) => {
     }
   };
   useEffect(() => {
+    if (!currentDeviceType) return;
     if (distributedJob) {
-      if (!currentDeviceType) return;
-      // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
       const list = getAvailPSDDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota, getFieldValue('numPsWorker'));
       setAvailableDeviceNumList(list);
     } else {
-      if (!currentDeviceType) return;
       const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, deviceList, currentDeviceType]);
+  }, [distributedJob, deviceList, currentDeviceType, ]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
@@ -169,7 +167,10 @@ const ModelTraining = (props) => {
         params: newParams,
       });
       setCurrentDeviceType(newParams.deviceType);
-      setFieldsValue(newParams);
+      setFieldsValue({
+        ...newParams,
+        deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? deviceNum : 0,
+      });
     }
   }, [codePathPrefix]);
 
@@ -202,7 +203,14 @@ const ModelTraining = (props) => {
       if (typeCreate) {
         data.params.name = '';
       }
-      form.setFieldsValue(data.params);
+      const { deviceType, deviceNum } = data.params;
+      form.setFieldsValue({
+        ...data.params,
+        deviceNum: availableDeviceNumList.includes(deviceNum) ? deviceNum : 0,
+      });
+      if (deviceType) {
+        setCurrentDeviceType(data.params.deviceType);
+      }
       setRunningParams(data.params.params);
     }
   };
