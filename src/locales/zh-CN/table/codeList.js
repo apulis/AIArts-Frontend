@@ -13,4 +13,10 @@ export default {
   'codeList.table.column.action.save': '保存镜像',
   'codeList.table.pagination.showTotal.prefix': '总共',
   'codeList.table.pagination.showTotal.suffix': '条',
+  //
+  'codeList.table.column.action.more': '更多',
+  'codeList.table.column.action.use.ssh': '使用 SSH 连接',
+  'codeList.table.column.action.ssh.pending': '创建中...',
+  'codeList.table.column.action.copy.success': '成功添加到剪贴板',
+
 };

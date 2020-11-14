@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
 import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu } from 'antd';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SyncOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
   getCodes,
@@ -52,6 +53,7 @@ const CodeList = (props) => {
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
   const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
+  const [sshInfo, setSshInfo] = useState({});
   const [sshCommond, setSshCommond] = useState('');
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
@@ -129,7 +131,6 @@ const CodeList = (props) => {
         break;
       case 'pageChange':
       case 'fresh':
-        console.log('pageChange renderTable');
         setLoading(true);
         if (!isEmptyString(searchObj.word)) {
           params['searchWord'] = searchObj.word;
@@ -275,6 +276,7 @@ const CodeList = (props) => {
       if (res.code === 0) {
         const sshInfo = res.data.endpointsInfo.find(val => val.name === 'ssh');
         const identityFile = res.data.identityFile;
+        setSshInfo(sshInfo);
         if (sshInfo) {
           const { status } = sshInfo;
           if (status === 'running') {
@@ -287,8 +289,18 @@ const CodeList = (props) => {
       }
     } else {
       setSshCommond('');
+      setSshInfo({});
     }
     setSshPopoverVisible(visible);
+  }
+
+  const startSSH = (id, status) => {
+    if (status !== 'running') {
+      message.warn(formatMessage({ id: 'codeList.tips.open.error' }))
+      return;
+    }
+    setSshPopoverVisible(true);
+    setCurrentHandledJobId(id);
   }
 
   const columns = [
@@ -350,20 +362,23 @@ const CodeList = (props) => {
               trigger="click"
               visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
               onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
-              title="使用 SSH 连接"
-              content={<div>
+              title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
+              content={
+                sshInfo.status === 'running' ? <CopyToClipboard
+                text={sshCommond}
+                onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+              >
                 {
-                  sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />
+                  (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />) 
                 }
-                
-              </div>}
+              </CopyToClipboard >: <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>}
             >
               <Button
                 type="link"
-                disabled={!canStopStatus.has(codeItem.status)}
+                disabled={!canOpenStatus.has(codeItem.status)}
                 disableUpperCase
-                onClick={() => {setSshPopoverVisible(true);setCurrentHandledJobId(codeItem.id)}}
-              >ssh</Button>
+                onClick={() => startSSH(codeItem.id, codeItem.status)}
+              >SSH</Button>
             </Popover>
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
               {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
@@ -406,7 +421,7 @@ const CodeList = (props) => {
                 </Menu.Item>
               </Menu>}>
                 <Button type="link">
-                  More
+                  {formatMessage({ id: 'codeList.table.column.action.more' })}
                   <DownOutlined />
                 </Button>
             </Dropdown>
