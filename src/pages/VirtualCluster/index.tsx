@@ -351,7 +351,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
             </FormItem>
             <FormItem preserve={false} label={formatMessage({ id: 'vc.page.form.vc.device.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
-                <>
+                <div>
                   <FormItem preserve={false} style={{ display: 'inline-block' }}>
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
@@ -367,12 +367,12 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   ]} style={{ display: 'inline-block' }} name={vcNumbersPrefix.deviceNumber + val} initialValue={0}>
                     <InputNumber min={0} max={unallocatedDevice[val]} precision={0} />
                   </FormItem>
-                </>
+                </div>
               ))}
             </FormItem>
             <FormItem preserve={false} label={formatMessage({ id: 'vc.page.form.vc.per.user.max.availble.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
-                <>
+                <div>
                   <FormItem style={{ display: 'inline-block' }} preserve={false}>
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
@@ -394,7 +394,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   >
                     <InputNumber min={0} precision={0} />
                   </FormItem>
-                </>
+                </div>
               ))}
             </FormItem>
           </Form>
@@ -440,7 +440,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               {...modalFormLayout}
             >
               {deviceArray.map(val => (
-                <>
+                <div>
                   <FormItem preserve={false} style={{ display: 'inline-block' }}>
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
@@ -462,12 +462,12 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   >
                     <InputNumber min={0} precision={0} />
                   </FormItem>
-                </>
+                </div>
               ))}
             </FormItem>
             <FormItem preserve={false} label={formatMessage({ id: 'vc.page.form.vc.per.user.max.availble.number' })} required {...modalFormLayout}>
               {deviceArray.map(val => (
-                <>
+                <div>
                   <FormItem style={{ display: 'inline-block' }} preserve={false}>
                     <Input style={{ width: '165px' }} value={val} disabled />
                   </FormItem>
@@ -489,7 +489,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   >
                     <InputNumber min={0} precision={0} />
                   </FormItem>
-                </>
+                </div>
               ))}
             </FormItem>
           </Form>
