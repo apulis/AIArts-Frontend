@@ -11,6 +11,7 @@ export default {
   'vc.page.create.vc.modal.title': '创建虚拟集群',
   'vc.page.form.vc.name': '虚拟集群名称',
   'vc.page.form.vc.device.number': '设备数量',
+  'vc.page.form.device.number.required': '设备数量是必填的',
   'vc.page.form.vc.per.user.max.availble.number': '用户可以使用最大设备数量',
   'vc.page.form.max.avail.rule.error': '用户最大可用数量不得大于当前设备总数',
   'vc.page.form.max.avail.rule.error.required': '用户最大可用数量是必填的',

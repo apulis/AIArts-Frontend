@@ -11,6 +11,7 @@ export default {
   'vc.page.create.vc.modal.title': 'Create Virtual Cluster',
   'vc.page.form.vc.name': 'VC Name',
   'vc.page.form.vc.device.number': 'Device Number',
+  'vc.page.form.device.number.required': 'Device Number is required!',
   'vc.page.form.vc.per.user.max.availble.number': 'Per User Max Availble',
   'vc.page.form.max.avail.rule.error': 'Can\'t greater than device number',
   'vc.page.form.max.avail.rule.error.required': 'Max availbe device is required',

@@ -357,6 +357,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   </FormItem>
                   <EqualIcon />
                   <FormItem preserve={false} rules={[
+                    { required: true, message: formatMessage({ id: 'vc.page.form.device.number.required' }) },
                     {
                       async validator(_rule, value) {
                         if (value > unallocatedDevice[val]) {
@@ -451,6 +452,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                     name={vcNumbersPrefix.deviceNumber + val}
                     initialValue={currentHandledVC!.quota[val]}
                     rules={[
+                      { required: true, message: formatMessage({ id: 'vc.page.form.device.number.required' }) },
                       {
                         async validator(_rule, value) {
                           if (value > (unallocatedDevice[val] + currentHandledVC?.quota[val])) {
@@ -478,6 +480,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                     preserve={false}
                     initialValue={currentHandledVC.meta[val] ? currentHandledVC!.meta[val].user_quota : 0}
                     rules={[
+                      { required: true, message: formatMessage({ id: 'vc.page.form.max.avail.rule.error.required' }), },
                       {
                         async validator() {
                           if (getFieldValue(vcNumbersPrefix.maxAvailble + val) > getFieldValue(vcNumbersPrefix.deviceNumber + val)) {
