@@ -16,10 +16,12 @@ export interface VCModelType {
   };
 }
 
+const defaultVC = localStorage.vc || localStorage.team || '';
+
 const VCModel: VCModelType = {
   namespace: 'vc',
   state: {
-    currentSelectedVC: localStorage.vc || '',
+    currentSelectedVC: defaultVC,
   }, 
   effects: {
     * userSelectVC({ payload }, { call, put }) {
