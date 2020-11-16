@@ -18,7 +18,7 @@ export default {
 
   'dataSetCreate.placeholder.inputName': '请输入数据集名称',
   'dataSetCreate.placeholder.inputDescription': '请输入简介',
-  'dataSetCreate.placeholder.inputStorePath': '请输入简介',
+  'dataSetCreate.placeholder.inputStorePath': '请输入存储路径',
 
   'dataSetCreate.rule.needName': '请输入数据集名称！',
   'dataSetCreate.rule.needDesc': '请输入简介！',
