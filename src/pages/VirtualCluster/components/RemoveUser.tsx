@@ -25,7 +25,7 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
 
   const [readyRemoveUsers, setReadyRemoveUsers] = useState<{userName: string; userId: number}[]>([]);
   
-  const { formatMesssage } = useIntl();
+  const { formatMessage } = useIntl();
 
   const fetchVCUsers = async () => {
     setLoading(true);
@@ -73,7 +73,7 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
     >
       <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
         <h3>
-          {formatMesssage({ id: 'vc.component.removeUser.modal.current.contains.user' })}
+          {formatMessage({ id: 'vc.component.removeUser.modal.current.contains.user' })}
         </h3>
         {
           loading ? <LoadingOutlined /> : (
@@ -88,7 +88,7 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
       </div>
       <div style={{ marginTop: '20px' }}>
         <h3>
-        {formatMesssage({ id: 'vc.component.removeUser.modal.current.removing.user' })}
+        {formatMessage({ id: 'vc.component.removeUser.modal.current.removing.user' })}
         </h3>
         <div>
           {
@@ -97,7 +97,7 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
                 <div style={{ width: '120px', display: 'inline-block' }}>{user.userName}</div>
                 
                 <div onClick={() => handleCacelRemoveUser(user)} style={{ display: 'inline-block', cursor: 'pointer' }}>
-                  <ArrowUpOutlined title={formatMesssage({ id: 'vc.component.removeUser.modal.current.removing.cancel' })} />
+                  <ArrowUpOutlined title={formatMessage({ id: 'vc.component.removeUser.modal.current.removing.cancel' })} />
                 </div>
               </div>
             ))

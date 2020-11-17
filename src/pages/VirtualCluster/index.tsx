@@ -120,12 +120,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   };
 
   const handleSelectUser = async (result) => {
-    if (result.length > 0) {
+    if (result && result.length > 0) {
       const res = await addUsersForVC(result, currentHandledVC.vcName);
       if (res.code === 0) {
-        message.success(formatMessage({ id: 'vc.component.relateUser.message.succes' }))
+        message.success(formatMessage({ id: 'vc.component.relateUser.message.success' }))
         setSelectUserModalVisible(false);
       }
+    } else {
+      setSelectUserModalVisible(false);
     }
   }
 
