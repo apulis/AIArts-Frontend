@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-
+import requestUser from '@/utils/request-user';
 
 export const createVC = (data: { vcName: string, quota: string, metadata: string }) => {
   return request('/vc', {
@@ -49,6 +49,26 @@ export const fetchVCList = <T>(pageSize: number, pageNum: number, search: string
       pageNum,
       pageSize,
       keyword: search,
+    }
+  })
+}
+
+export const fetchUsers = (pageNo: number, pageSize: number, search: string) => {
+  return requestUser('/users/list', {
+    params: {
+      pageNo,
+      pageSize,
+      search,
+    }
+  })
+}
+
+export const addUsersForVC = (userIds: number, vcName: string) => {
+  return requestUser('/vc/userforvc', {
+    method: 'POST',
+    data: {
+      userIds,
+      vcName,
     }
   })
 }

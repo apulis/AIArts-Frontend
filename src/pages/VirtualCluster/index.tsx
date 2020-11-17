@@ -1,13 +1,15 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, message } from 'antd';
+import { Table, Button, Modal, Form, Input, InputNumber, message, Menu, Dropdown } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { ColumnProps } from 'antd/lib/table';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
-import { createVC, checkActiveJob, fetchVCList, deleteVC, fetchAvailDevice, modifyVC } from '@/services/vc';
+import { createVC, checkActiveJob, fetchVCList, deleteVC, fetchAvailDevice, modifyVC, addUsersForVC } from '@/services/vc';
 import { jobNameReg } from '@/utils/reg';
 import EqualIcon from '@/components/Icon/Equal';
 import table from '@/locales/en-US/table';
+import SelectUserModal from '@/components/BizComponent/SelectUser';
+import { DownOutlined } from '@ant-design/icons';
 const FormItem = Form.Item;
 
 interface IVCMeta {
@@ -62,6 +64,9 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     }
   );
   const [pageTotal, setPageTotal] = useState(10);
+  const [selectUserModalVisible, setSelectUserModalVisible] = useState<boolean>(false);
+  const [removeUserModalVisible, setRemoveUserModalVisible] = useState<boolean>(false);
+
   const { formatMessage } = useIntl();
   const { devices } = resource;
   const deviceArray = Object.keys(devices);
@@ -112,6 +117,16 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     }
     clearMemoValues();
   };
+
+  const handleSelectUser = async (result) => {
+    if (result.length > 0) {
+      const res = await addUsersForVC(result, currentHandledVC.vcName);
+      if (res.code === 0) {
+        message.success('成功添加用户！')
+        setSelectUserModalVisible(false);
+      }
+    }
+  }
 
   const clearMemoValues = () => {
     setCurrentHandledVC(undefined);
@@ -189,6 +204,20 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         message.warning(formatMessage({ id: 'vc.page.message.current.vc.active' }))
       }
     }
+  }
+
+  const handleRelateUser = (vc: IVCColumnsProps) => {
+    setCurrentHandledVC(vc);
+    setSelectUserModalVisible(true);
+  }
+
+  const handleCancelSelectUser = () => {
+    setSelectUserModalVisible(false);
+    clearMemoValues();
+  }
+
+  const handleRemoveUser = (vc: IVCColumnsProps) => {
+    setCurrentHandledVC(vc);
 
   }
 
@@ -264,6 +293,18 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                 id: 'vc.page.table.button.delete',
               })}
             </Button>
+            <Dropdown overlay={<Menu>
+              <Menu.Item>
+                <Button onClick={() => handleRelateUser(item)} type="link">添加用户</Button>
+              </Menu.Item>
+              <Menu.Item>
+                <Button onClick={() => handleRemoveUser(item)} type="link" danger>移除用户</Button>
+              </Menu.Item>
+            </Menu>}
+            >
+              <a>关联 <DownOutlined /></a>
+            </Dropdown>
+           
           </>
         );
       },
@@ -498,6 +539,11 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           </Form>
         </Modal>
       }
+      <SelectUserModal
+        visible={selectUserModalVisible}
+        onOk={handleSelectUser}
+        onCancel={handleCancelSelectUser} 
+      />
 
     </PageHeaderWrapper>
   );
