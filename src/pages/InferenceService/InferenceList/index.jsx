@@ -221,11 +221,7 @@ const InferenceList = (props) => {
   };
 
   const isDeleteDisabled = (item) => {
-    if (['failed', 'error', 'unapproved', 'finished', 'killed', 'paused', 'Killed'].includes(item.status)) {
-      return false;
-    } else {
-      return true;
-    }
+    return ['failed', 'error', 'unapproved', 'finished', 'killed', 'paused', 'Killed'].includes(item.status);
   };
 
   const stopJob = async (item) => {
