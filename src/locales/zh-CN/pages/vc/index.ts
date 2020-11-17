@@ -29,5 +29,15 @@ export default {
   'vc.page.form.vcName.max': '最大长度是 20',
   'vc.component.message.success.set.default.vc': '成功设置默认虚拟集群',
   'vc.component.default.vc.label': '默认虚拟集群',
-  'vc.component': '确定',
+  'vc.component.confirm': '确定',
+  //
+  'vc.component.relateUser.modal.title': '向当前虚拟集群增加用户',
+  'vc.component.relateUser.modal.userName': '用户名',
+  'vc.component.removeUser.modal.current.contains.user': '当前包含用户',
+  'vc.component.removeUser.modal.current.removing.user': '待移除用户',
+  'vc.component.removeUser.modal.current.removing.cancel': '取消',
+  'vc.component.relateUser.message.success': '成功添加用户！',
+  'vc.component.removeUser.message.success': '成功移除用户！',
+  'vc.component.relate.user.button': '用户',
+  'vc.component.remove.confirm.title': '点击确定按钮将会从当前虚拟集群移除这些用户',
 }

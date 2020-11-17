@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Form, Select, Table, Spin } from 'antd';
-import debounce from 'lodash/debounce';
+import { useIntl } from 'umi';
 
 import { fetchUsers } from '@/services/vc';
 
@@ -20,6 +20,7 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState<string>('');
   const [fetching, setFetching] = useState<boolean>(false);
+  const { formatMessage } = useIntl();
   const handleOk = async () => {
     const result = await validateFields();
     console.log('result', result)
@@ -60,13 +61,14 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
           visible={visible}
           onOk={handleOk}
           onCancel={handleCancel}
+          title={formatMessage({ id: 'vc.component.relateUser.modal.title' })}
         >
           <Form
             form={form}
           >
-            <FormItem label="用户名" name="userIds">
+            <FormItem label={formatMessage({ id: 'vc.component.relateUser.modal.userName' })} name="userIds">
               <Select
-                style={{ width: '220px' }}
+                style={{ width: '240px' }}
                 mode="multiple"
                 notFoundContent={fetching ? <Spin size="small" /> : null}
                 filterOption={false}

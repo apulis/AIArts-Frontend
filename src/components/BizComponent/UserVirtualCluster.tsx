@@ -68,7 +68,7 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" style={{ marginLeft: '40px' }}>
-          {formatMessage({ id: 'vc.component' })}
+          {formatMessage({ id: 'vc.component.confirm' })}
         </Button>
       </Form.Item>
     </Form>

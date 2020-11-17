@@ -4,12 +4,13 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { ColumnProps } from 'antd/lib/table';
 import { useIntl } from 'umi';
 import { connect } from 'dva';
-import { createVC, checkActiveJob, fetchVCList, deleteVC, fetchAvailDevice, modifyVC, addUsersForVC } from '@/services/vc';
+import { createVC, checkActiveJob, fetchVCList, deleteVC, fetchAvailDevice, modifyVC, addUsersForVC, removeVCUser } from '@/services/vc';
 import { jobNameReg } from '@/utils/reg';
 import EqualIcon from '@/components/Icon/Equal';
 import table from '@/locales/en-US/table';
 import SelectUserModal from '@/components/BizComponent/SelectUser';
 import { DownOutlined } from '@ant-design/icons';
+import RemoveUserModal from './components/RemoveUser';
 const FormItem = Form.Item;
 
 interface IVCMeta {
@@ -122,10 +123,24 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     if (result.length > 0) {
       const res = await addUsersForVC(result, currentHandledVC.vcName);
       if (res.code === 0) {
-        message.success('成功添加用户！')
+        message.success(formatMessage({ id: 'vc.component.relateUser.message.succes' }))
         setSelectUserModalVisible(false);
       }
     }
+  }
+
+  const handleRemoveVCUsers = async (userIds: number[]) => {
+    const res = await removeVCUser(currentHandledVC.vcName, userIds);
+    if (res.code === 0) {
+      message.success(formatMessage({ id: 'vc.component.removeUser.message.success' }));
+      setRemoveUserModalVisible(false);
+      clearMemoValues();
+    }
+  }
+
+  const handleCancelRemoveVCUsers = () => {
+    setRemoveUserModalVisible(false)
+    clearMemoValues();
   }
 
   const clearMemoValues = () => {
@@ -218,7 +233,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
 
   const handleRemoveUser = (vc: IVCColumnsProps) => {
     setCurrentHandledVC(vc);
-
+    setRemoveUserModalVisible(true);
   }
 
   const columns: ColumnProps<IVCColumnsProps>[] = [
@@ -302,7 +317,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               </Menu.Item>
             </Menu>}
             >
-              <a>关联 <DownOutlined /></a>
+              <a>{formatMessage({ id: 'vc.component.relate.user.button' })} <DownOutlined /></a>
             </Dropdown>
            
           </>
@@ -539,12 +554,23 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           </Form>
         </Modal>
       }
-      <SelectUserModal
-        visible={selectUserModalVisible}
-        onOk={handleSelectUser}
-        onCancel={handleCancelSelectUser} 
-      />
+      {
+        selectUserModalVisible && <SelectUserModal
+          visible={selectUserModalVisible}
+          onOk={handleSelectUser}
+          onCancel={handleCancelSelectUser} 
+        />
+      }
+      {
+        removeUserModalVisible && currentHandledVC && <RemoveUserModal
+          visible={removeUserModalVisible}
+          title={formatMessage({ id: 'vc.component.remove.confirm.title' })}
+          vcName={currentHandledVC.vcName}
+          onOk={handleRemoveVCUsers}
+          onCancel={handleCancelRemoveVCUsers}
+        />
 
+      }
     </PageHeaderWrapper>
   );
 };

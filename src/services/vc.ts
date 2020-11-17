@@ -72,3 +72,13 @@ export const addUsersForVC = (userIds: number, vcName: string) => {
     }
   })
 }
+
+export const getVCUser = (vcName: string) => {
+  return requestUser(`/vc/${vcName}/users`);
+}
+
+export const removeVCUser = (vcName: string, userIds: number[]) => {
+  return requestUser(`/vc/${vcName}/users/${userIds}`, {
+    method: 'DELETE',
+  })
+}
