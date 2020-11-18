@@ -51,7 +51,7 @@ const { Search } = Input;
 const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const [vcList, setVCList] = useState<IVCColumnsProps[]>([]);
   const [tableLoading, setTableLoading] = useState<boolean>(false);
-  const [unallocatedDevice, setUnallocatedDevice] = useState<number>(0);
+  const [unallocatedDevice, setUnallocatedDevice] = useState<{[props: string]: number}>(0);
   const [createVCModalVisible, setCreateVCModalVisible] = useState<boolean>(false);
   const [modifyVCModalVisible, setModifyVCModalVisible] = useState<boolean>(false);
   const [form] = Form.useForm();
@@ -112,6 +112,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       quota: JSON.stringify(deviceNumbers),
       metadata: JSON.stringify(metaUserQuotas),
     })
+    setModifyVCModalVisible(false)
     if (res.code === 0) {
       getVCList();
       message.success(formatMessage({ id: 'vc.page.success.modify' }))
@@ -132,6 +133,11 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   }
 
   const handleRemoveVCUsers = async (userIds: number[]) => {
+    if (!userIds || userIds.length === 0) {
+      setRemoveUserModalVisible(false);
+      clearMemoValues();
+      return;
+    }
     const res = await removeVCUser(currentHandledVC.vcName, userIds);
     if (res.code === 0) {
       message.success(formatMessage({ id: 'vc.component.removeUser.message.success' }));
@@ -194,7 +200,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     const res = await fetchAvailDevice();
     if (res.code === 0) {
       const { unallocatedDevice } = res.data;
-      setUnallocatedDevice(unallocatedDevice);
+      setUnallocatedDevice(unallocatedDevice || {});
     }
   }
 
@@ -513,7 +519,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       { required: true, message: formatMessage({ id: 'vc.page.form.device.number.required' }) },
                       {
                         async validator(_rule, value) {
-                          if (value > (unallocatedDevice[val] + currentHandledVC?.quota[val])) {
+                          const unallocated = (unallocatedDevice[val] || 0) < 0 ? 0 : (unallocatedDevice[val] || 0) 
+                          if (value > (unallocated + currentHandledVC?.quota[val])) {
                             throw new Error(formatMessage({ id: 'vc.page.form.device.max.error' }) + (unallocatedDevice[val] + currentHandledVC?.quota[val]));
                           }
                         }
