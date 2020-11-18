@@ -119,6 +119,8 @@ export const getStatusList = () => [
   { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
+export const canCreateVisualJobStatus = ['unapproved', 'queued', 'scheduling', 'running', 'finished'];
+
 export const getJobStatus = (status) => {
   const statusList = {
     all: formatMessage({ id: 'service.status.all' }),
