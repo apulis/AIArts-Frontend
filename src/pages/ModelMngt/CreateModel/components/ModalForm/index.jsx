@@ -16,11 +16,12 @@ const TrainingJobModal = (props) => {
     onCancel,
     onSubmit,
     visible = true,
+    vc
   } = props;
 
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const { currentSelectedVC } = vc;
   const [current, setCurrent] = useState(undefined);
-  console.log(123, props);
   useEffect(() => {
     dispatch({
       type: 'jobList/fetch',
@@ -28,6 +29,7 @@ const TrainingJobModal = (props) => {
         pageNum: pageParams.pageNum,
         pageSize: 5,
         status: 'finished',
+        vcName: currentSelectedVC,
       },
     });
   }, [pageParams]);
@@ -132,7 +134,8 @@ const TrainingJobModal = (props) => {
   );
 };
 
-export default connect(({ jobList, loading }) => ({
+export default connect(({ jobList, loading, vc }) => ({
   jobList,
   loading: loading.models.jobList,
+  vc,
 }))(TrainingJobModal);

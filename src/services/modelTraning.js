@@ -11,12 +11,16 @@ export async function submitModelTraining(data) {
   });
 }
 
-export async function fetchAvilableResource() {
-  const data = await request('/common/resource');
+export async function fetchAvilableResource(vcName) {
+  const data = await request('/common/resource', {
+    params: {
+      vcName,
+    }
+  });
   return data;
 }
 
-export async function fetchTrainingList({ pageNum, pageSize, status, search, sortedInfo }) {
+export async function fetchTrainingList({ pageNum, pageSize, status, search, sortedInfo, vcName }) {
   return await request(`/trainings/`, {
     params: {
       pageNum: pageNum,
@@ -25,6 +29,7 @@ export async function fetchTrainingList({ pageNum, pageSize, status, search, sor
       searchWord: search || undefined,
       orderBy: sortedInfo?.orderBy || undefined,
       order: sortedInfo?.order || undefined,
+      vcName: vcName,
     },
     cancelToken: new CancelToken(function (c) {
       fetchTrainingList.cancel = c;
@@ -89,8 +94,13 @@ export async function updateParams(data) {
   });
 }
 
-export async function fetchJobStatusSumary() {
-  return await request(`/common/job/summary?jobType=${modelTrainingType}`);
+export async function fetchJobStatusSumary(vcName) {
+  return await request(`/common/job/summary`, {
+    params: {
+      jobType: modelTrainingType,
+      vcName
+    }
+  });
 }
 
 export async function fetchPresetTemplates() {

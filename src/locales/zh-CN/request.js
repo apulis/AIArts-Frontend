@@ -20,5 +20,6 @@ export default {
   'bizCodeMessage.30010': '该数据集正在使用，不能删除！',
   'bizCodeMessage.30603': '推送失败！',
   'bizCodeMessage.30012': '已经有相同名称的数据集，请更改数据集名称！',
+  'bizCodeMessage.30701': '已经存在相同虚拟集群名称！',
   'request.error.tips': '请求错误',
 };

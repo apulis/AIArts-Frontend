@@ -11,10 +11,11 @@ const UserModel = {
       nickName: undefined,
       phone: '',
       email: '',
+      currentVC: [],
     },
   },
   effects: {
-    *fetchCurrent(_, { call, put }) {
+    * fetchCurrent(_, { call, put }) {
       const res = yield call(getUserInfo);
       const { code } = res;
       if (code === 0) {
@@ -29,6 +30,7 @@ const UserModel = {
               nickName: res.nickName,
               phone: res.phone,
               email: res.email,
+              currentVC: res.currentVC,
             },
           },
         });
@@ -48,6 +50,20 @@ const UserModel = {
           },
         });
       }
+    },
+    * deleteUserCurrentVC({ payload }, { put, select }) {
+      const user = yield select((state) => state.user);
+      let currentVC = [...user.currentUser.currentVC];
+      currentVC = currentVC.filter((val) => val !== payload.vcName);
+      yield put({
+        type: 'updateState',
+        payload: {
+          currentUser: {
+            ...user,
+            currentVC,
+          },
+        },
+      });
     },
   },
   reducers: {

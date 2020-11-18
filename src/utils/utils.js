@@ -115,6 +115,7 @@ export const getStatusList = () => [
   { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
   { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
   { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'Killed', label: formatMessage({ id: 'service.status.killed' }) },
   { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
@@ -131,6 +132,7 @@ export const getJobStatus = (status) => {
     paused: formatMessage({ id: 'service.status.paused' }),
     killing: formatMessage({ id: 'service.status.killing' }),
     killed: formatMessage({ id: 'service.status.killed' }),
+    Killed: formatMessage({ id: 'service.status.killed' }),
     error: formatMessage({ id: 'service.status.error' }),
   };
   return statusList[status] || '';
@@ -143,6 +145,7 @@ export const getStatusColor = (status) => {
     finished: '#2f4554',
     running: '#61a0a8',
     killed: '#DDDDDD',
+    Killed: '#DDDDDD',
 
     unapproved: '#91c7ae',
     queued: '#749f83',

@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Row, Col, Input, message, Modal, Form } from 'antd';
-import { SyncOutlined } from '@ant-design/icons';
+import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu } from 'antd';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { SyncOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
   getCodes,
   stopCode,
   deleteCode,
   getJupyterUrl,
   getCodeCount,
+  fetchSSHInfo,
   createSaveImage,
 } from '../../service.js';
 import moment from 'moment';
@@ -50,6 +52,9 @@ const CodeList = (props) => {
   const [currentHandledJobId, setCurrentHandledJobId] = useState('');
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
+  const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
+  const [sshInfo, setSshInfo] = useState({});
+  const [sshCommond, setSshCommond] = useState('');
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
     order: '',
@@ -126,7 +131,6 @@ const CodeList = (props) => {
         break;
       case 'pageChange':
       case 'fresh':
-        console.log('pageChange renderTable');
         setLoading(true);
         if (!isEmptyString(searchObj.word)) {
           params['searchWord'] = searchObj.word;
@@ -151,7 +155,7 @@ const CodeList = (props) => {
   };
 
   const apiGetCodeCount = async () => {
-    const obj = await getCodeCount();
+    const obj = await getCodeCount(props.vc.currentSelectedVC);
     const { code, data, msg } = obj;
     if (code === 0) {
       return data;
@@ -161,7 +165,7 @@ const CodeList = (props) => {
   };
 
   const apiGetCodes = async (params) => {
-    const obj = await getCodes(params);
+    const obj = await getCodes({ ...params, vcName: props.vc.currentSelectedVC });
     const { code, data, msg } = obj;
     if (code === 0) {
       return data;
@@ -266,6 +270,39 @@ const CodeList = (props) => {
     setCurrentHandledJobId(id);
   };
 
+  const handleSshPopoverVisible = async (visible, currentHandledJobId) => {
+    if (visible) {
+      const res = await fetchSSHInfo(currentHandledJobId);
+      if (res.code === 0) {
+        const sshInfo = res.data.endpointsInfo.find(val => val.name === 'ssh');
+        const identityFile = res.data.identityFile;
+        setSshInfo(sshInfo);
+        if (sshInfo) {
+          const { status } = sshInfo;
+          if (status === 'running') {
+            const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
+            const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
+            setSshCommond(command);
+          }
+          
+        }
+      }
+    } else {
+      setSshCommond('');
+      setSshInfo({});
+    }
+    setSshPopoverVisible(visible);
+  }
+
+  const startSSH = (id, status) => {
+    if (status !== 'running') {
+      message.warn(formatMessage({ id: 'codeList.tips.open.error' }))
+      return;
+    }
+    setSshPopoverVisible(true);
+    setCurrentHandledJobId(id);
+  }
+
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
@@ -320,8 +357,31 @@ const CodeList = (props) => {
       render: (codeItem) => {
         return (
           <Space size="middle">
+            <>
+            <Popover
+              trigger="click"
+              visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
+              onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
+              title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
+              content={
+                sshInfo.status === 'running' ? <CopyToClipboard
+                text={sshCommond}
+                onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+              >
+                {
+                  (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />) 
+                }
+              </CopyToClipboard >: <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>}
+            >
+              <Button
+                type="link"
+                disabled={!canOpenStatus.has(codeItem.status)}
+                disableUpperCase
+                onClick={() => startSSH(codeItem.id, codeItem.status)}
+              >SSH</Button>
+            </Popover>
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
-              {formatMessage({ id: 'codeList.table.column.action.open' })}
+              {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
             </a>
             <a
               onClick={() => handleOpenModal(codeItem)}
@@ -329,28 +389,43 @@ const CodeList = (props) => {
             >
               {formatMessage({ id: 'codeList.table.column.action.upload' })}
             </a>
-            <a
-              onClick={() => handleStop(codeItem)}
-              disabled={!canStopStatus.has(codeItem.status)}
-              style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
-            >
-              {formatMessage({ id: 'codeList.table.column.action.stop' })}
-            </a>
-            {checkIfCanDelete(codeItem.status) ? (
-              <a onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
-                {formatMessage({ id: 'codeList.table.column.action.delete' })}
-              </a>
-            ) : (
-              <span style={{ color: '#333' }}>
-                {formatMessage({ id: 'codeList.table.column.action.delete' })}
-              </span>
-            )}
 
-            {codeItem.status === 'running' && (
-              <a onClick={() => toSaveImage(codeItem.id)}>
-                {formatMessage({ id: 'codeList.table.column.action.save' })}
-              </a>
-            )}
+            <Dropdown overlay={<Menu>
+              <Menu.Item>
+                {codeItem.status === 'running' && (
+                  <Button type="link" onClick={() => toSaveImage(codeItem.id)}>
+                    {formatMessage({ id: 'codeList.table.column.action.save' })}
+                  </Button>
+                )}
+              </Menu.Item>
+                <Menu.Item>
+                  <Button
+                    type="link"
+                    onClick={() => handleStop(codeItem)}
+                    disabled={!canStopStatus.has(codeItem.status)}
+                    style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
+                  >
+                    {formatMessage({ id: 'codeList.table.column.action.stop' })}
+                  </Button>  
+                </Menu.Item>
+                <Menu.Item>
+                  {checkIfCanDelete(codeItem.status) ? (
+                    <Button type="link" onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
+                      {formatMessage({ id: 'codeList.table.column.action.delete' })}
+                    </Button>
+                  ) : (
+                    <Button type="link" disabled style={{ color: '#333' }}>
+                      {formatMessage({ id: 'codeList.table.column.action.delete' })}
+                    </Button>
+                  )}
+                </Menu.Item>
+              </Menu>}>
+                <Button type="link">
+                  {formatMessage({ id: 'codeList.table.column.action.more' })}
+                  <DownOutlined />
+                </Button>
+            </Dropdown>
+            </>
           </Space>
         );
       },
@@ -574,4 +649,4 @@ const CodeList = (props) => {
   );
 };
 
-export default connect(({ common }) => ({ common }))(CodeList);
+export default connect(({ common, vc }) => ({ common, vc }))(CodeList);

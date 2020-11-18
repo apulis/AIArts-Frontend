@@ -10,5 +10,6 @@ export default {
   'service.status.paused': '已暂停',
   'service.status.killing': '关闭中',
   'service.status.killed': '已关闭',
+  'service.status.Killed': '已关闭',
   'service.status.error': '错误',
 };

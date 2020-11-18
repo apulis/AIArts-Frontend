@@ -43,6 +43,7 @@ import {
 } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
+import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -59,6 +60,7 @@ export const subCodePathPrefix = (s) => {
 const ModelTraining = (props) => {
   const intl = useIntl();
   const { formatMessage } = intl;
+  const { currentSelectedVC } = props.vc;
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
@@ -110,7 +112,7 @@ const ModelTraining = (props) => {
   const [engineSource, setEngineSource] = useState(1);
 
   const getAvailableResource = async () => {
-    const res = await fetchAvilableResource();
+    const res = await fetchAvilableResource(currentSelectedVC);
     if (res.code === 0) {
       let {
         data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo },
@@ -142,17 +144,15 @@ const ModelTraining = (props) => {
     }
   };
   useEffect(() => {
+    if (!currentDeviceType) return;
     if (distributedJob) {
-      if (!currentDeviceType) return;
-      // const list = getDeviceNumPerNodeArrByNodeType(nodeInfo.find(node => node.gpuType === currentDeviceType));
-      const list = getDeviceNumPerNodeArrByNodeType(nodeInfo, currentDeviceType);
+      const list = getAvailPSDDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota, getFieldValue('numPsWorker'));
       setAvailableDeviceNumList(list);
     } else {
-      if (!currentDeviceType) return;
-      const list = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+      const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, nodeInfo, currentDeviceType]);
+  }, [distributedJob, deviceList, currentDeviceType, ]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
@@ -167,7 +167,10 @@ const ModelTraining = (props) => {
         params: newParams,
       });
       setCurrentDeviceType(newParams.deviceType);
-      setFieldsValue(newParams);
+      setFieldsValue({
+        ...newParams,
+        deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? deviceNum : 0,
+      });
     }
   }, [codePathPrefix]);
 
@@ -200,7 +203,14 @@ const ModelTraining = (props) => {
       if (typeCreate) {
         data.params.name = '';
       }
-      form.setFieldsValue(data.params);
+      const { deviceType, deviceNum } = data.params;
+      form.setFieldsValue({
+        ...data.params,
+        deviceNum: availableDeviceNumList.includes(deviceNum) ? deviceNum : 0,
+      });
+      if (deviceType) {
+        setCurrentDeviceType(data.params.deviceType);
+      }
       setRunningParams(data.params.params);
     }
   };
@@ -310,7 +320,7 @@ const ModelTraining = (props) => {
       }
       const submitJobInner = async () => {
         const cancel = message.loading(formatMessage({ id: 'model.submit.message.uploading' }));
-        const res = await submitModelTraining(values);
+        const res = await submitModelTraining({ ...values, vcName: currentSelectedVC });
         cancel();
         if (res.code === 0) {
           message.success(formatMessage({ id: 'model.submit.message.create.success' }));
@@ -416,6 +426,7 @@ const ModelTraining = (props) => {
         codePath: currentSelected.params.codePath,
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
+        deviceNum: availableDeviceNumList.includes(currentSelected.params.deviceNum) ? currentSelected.params?.deviceNum : 0,
       });
       const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
@@ -886,4 +897,4 @@ const ModelTraining = (props) => {
   );
 };
 
-export default connect(({ resource }) => ({ resource }))(ModelTraining);
+export default connect(({ resource, vc }) => ({ resource, vc }))(ModelTraining);

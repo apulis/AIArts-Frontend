@@ -44,6 +44,7 @@ export const errorHandler = async (error) => {
       30010: formatMessage({ id: 'bizCodeMessage.30010' }),
       30603: formatMessage({ id: 'bizCodeMessage.30603' }),
       30012: formatMessage({ id: 'bizCodeMessage.30012' }),
+      30701: formatMessage({ id: 'bizCodeMessage.30701' }),
     };
   }
   const { response } = error;

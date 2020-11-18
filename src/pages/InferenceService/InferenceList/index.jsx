@@ -8,7 +8,7 @@ import { connect } from 'umi';
 import moment from 'moment';
 import { getJobStatus } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
-import { fetchJobStatusSumary, getInferences } from './services';
+import { fetchJobStatusSumary } from './services';
 import { getStatusList } from '@/utils/utils';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
@@ -24,6 +24,7 @@ const InferenceList = (props) => {
   const {
     dispatch,
     inferenceList: { data },
+    vc,
   } = props;
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,7 @@ const InferenceList = (props) => {
   const [currentStatus, setCurrentStatus] = useState('all');
 
   const getJobStatusSumary = async () => {
-    const res = await fetchJobStatusSumary();
+    const res = await fetchJobStatusSumary({ vcName: vc.currentSelectedVC });
     if (res.code === 0) {
       const jobSumary = [
         { value: 'all', label: intl.formatMessage({ id: 'centerInference.list.all' }) },
@@ -61,7 +62,6 @@ const InferenceList = (props) => {
     getJobStatusSumary();
     return () => {
       fetchJobStatusSumary.cancel && fetchJobStatusSumary.cancel();
-      getInferences.cancel && getInferences.cancel();
     };
   }, []);
 
@@ -109,7 +109,7 @@ const InferenceList = (props) => {
     },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.engineType' }),
-      render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework),
+      render: (text, item) => getNameFromDockerImage(item?.jobParams?.framework) + ':' + item?.jobParams?.version,
     },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.createTime' }),
@@ -189,6 +189,7 @@ const InferenceList = (props) => {
       ...pageParams,
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
+      vcName: vc.currentSelectedVC,
     };
 
     if (formValues.status && formValues.status !== 'all') {
@@ -220,14 +221,7 @@ const InferenceList = (props) => {
   };
 
   const isDeleteDisabled = (item) => {
-    if (
-      item.jobStatus === 'failed' ||
-      item.jobStatus === 'error' ||
-      item.jobStatus === 'unapproved' ||
-      item.jobStatus === 'finished' ||
-      item.jobStatus === 'killed' ||
-      item.jobStatus === 'paused'
-    ) {
+    if (['failed', 'error', 'unapproved', 'finished', 'killed', 'paused', 'Killed'].includes(item.status)) {
       return false;
     } else {
       return true;
@@ -357,7 +351,8 @@ const InferenceList = (props) => {
   );
 };
 
-export default connect(({ inferenceList, loading, common }) => ({
+export default connect(({ inferenceList, loading, common, vc }) => ({
   inferenceList,
   common,
+  vc,
 }))(InferenceList);

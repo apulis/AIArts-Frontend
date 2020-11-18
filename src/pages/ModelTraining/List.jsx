@@ -43,6 +43,8 @@ const List = (props) => {
     getJobStatusSumary();
   }, props.common.interval);
 
+  const { currentSelectedVC } = props.vc;
+
   const getTrainingList = async (reloadPage, options = {}, withLoading = true) => {
     const { pageSize: size, status, pageNo } = options;
     let page = pageNo || pageNum;
@@ -56,6 +58,7 @@ const List = (props) => {
       search,
       sortedInfo,
       status: status || currentStatus,
+      vcName: currentSelectedVC,
     });
     if (res.code === 0) {
       setPageNum(page);
@@ -72,7 +75,7 @@ const List = (props) => {
   };
 
   const getJobStatusSumary = async () => {
-    const res = await fetchJobStatusSumary();
+    const res = await fetchJobStatusSumary(currentSelectedVC);
     if (res.code === 0) {
       const jobSumary = [{ value: 'all', label: intl.formatMessage({ id: 'service.status.all' }) }];
       let total = 0;
@@ -117,6 +120,7 @@ const List = (props) => {
       search,
       status: currentStatus,
       sortedInfo: searchSorterInfo,
+      vcName: currentSelectedVC,
     });
     if (res.code === 0) {
       setTableLoading(false);
@@ -133,7 +137,7 @@ const List = (props) => {
   const searchList = async (s) => {
     setSearch(s);
     setTableLoading(true);
-    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s, status: currentStatus });
+    const res = await fetchTrainingList({ pageNum: 1, pageSize, search: s, status: currentStatus, vcName: currentSelectedVC });
     if (res.code === 0) {
       setTrainingWorkList(res.data.Trainings);
       setTableLoading(false);
@@ -322,4 +326,4 @@ const List = (props) => {
   );
 };
 
-export default connect(({ common }) => ({ common }))(List);
+export default connect(({ common, vc }) => ({ common, vc }))(List);

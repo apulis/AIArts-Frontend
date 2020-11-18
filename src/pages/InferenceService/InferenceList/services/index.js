@@ -46,10 +46,14 @@ export async function updateInference(data = {}) {
   });
 }
 
-export async function fetchJobStatusSumary() {
-  return await request(`/common/job/summary?jobType=${inferenceJobType}`, {
-    cancelToken: new CancelToken(function (c) {
+export async function fetchJobStatusSumary(params) {
+  return await request(`/common/job/summary`, {
+    params: {
+      ...params,
+      jobType: inferenceJobType,
+    },
+    cancelToken: new CancelToken(((c) => {
       fetchJobStatusSumary.cancel = c;
-    }),
+    })),
   });
 }

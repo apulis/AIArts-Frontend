@@ -20,6 +20,7 @@ export default {
   'menu.inferenceService.center': '中心推理',
   'menu.inferenceService.edgeInference': '边缘推理',
   'menu.resourceMonitoring': '资源监控',
+  'menu.virtualCluster': '虚拟集群',
   'menu.visualOperation': '可视化运维',
   'menu.setting': '设置',
   // -----sidebar-----

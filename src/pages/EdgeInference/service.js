@@ -7,9 +7,9 @@ const CancelToken = Request.CancelToken;
 export async function getEdgeInferences(params) {
   return await request(`/${prefix}`, {
     params: params,
-    cancelToken: new CancelToken(function (c) {
+    cancelToken: new CancelToken(((c) => {
       getEdgeInferences.cancel = c;
-    }),
+    })),
   });
 }
 

@@ -19,10 +19,11 @@ import { connect } from 'dva';
 
 const { Step } = Steps;
 
-const OverView = ({ user }) => {
+const OverView = ({ user, vc }) => {
   const {
     currentUser: { permissionList },
   } = user;
+  const { currentSelectedVC } = vc;
   const [loading, setLoading] = useState(false);
   const [pieData, setPieData] = useState([
     {
@@ -53,7 +54,7 @@ const OverView = ({ user }) => {
 
   const getData = async () => {
     setLoading(true);
-    const requestArr = pieData.map((i) => getPieData({ jobType: i.params }));
+    const requestArr = pieData.map((i) => getPieData({ jobType: i.params, vcName: currentSelectedVC }));
     let obj = pieData;
     const res = await Promise.all(requestArr);
     res &&
@@ -156,4 +157,4 @@ const OverView = ({ user }) => {
   );
 };
 
-export default connect(({ user }) => ({ user }))(OverView);
+export default connect(({ user, vc }) => ({ user, vc }))(OverView);

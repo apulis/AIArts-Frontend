@@ -24,6 +24,7 @@ export const statusList = [
   { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
   { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
   { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
+  { value: 'Killed', label: formatMessage({ id: 'service.status.killed' }) },
   { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
@@ -44,6 +45,7 @@ const List = (props) => {
     order: '',
   });
   const searchEl = useRef(null);
+  const { currentSelectedVC } = props.vc;
   const handleSearch = async (withLoading = true) => {
     const params = {
       ...pageParams,
@@ -60,7 +62,7 @@ const List = (props) => {
     }
 
     if (withLoading) setTableLoading(true);
-    const res = await getEvaluations(params);
+    const res = await getEvaluations({ ...params, vcName: currentSelectedVC });
     if (res.code === 0) {
       const trainings = (res.data && res.data.evaluations) || [];
       const total = res.data?.total;
@@ -76,7 +78,7 @@ const List = (props) => {
   };
 
   const getJobStatusSumary = async () => {
-    const res = await fetchJobStatusSumary();
+    const res = await fetchJobStatusSumary({ vcName: currentSelectedVC });
     if (res.code === 0) {
       const jobSumary = [{ value: 'all', label: intl.formatMessage({ id: 'list.all' }) }];
       let total = 0;
@@ -293,4 +295,4 @@ const List = (props) => {
   );
 };
 
-export default connect(({ common }) => ({ common }))(List);
+export default connect(({ common, vc }) => ({ common, vc }))(List);

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Input, message, Card, Select, Modal } from 'antd';
 import { Link, history } from 'umi';
 import moment from 'moment';
-import { getJobStatus } from '@/utils/utils';
+import { connect } from 'dva';
+import { getJobStatus, getStatusList } from '@/utils/utils';
 import { sortText, PAGEPARAMS } from '@/utils/const';
 import {
   fetchVisualizations,
@@ -16,25 +17,10 @@ import { useIntl, formatMessage } from 'umi';
 
 const { confirm } = Modal;
 
-const statusList = [
-  { value: 'all', label: formatMessage({ id: 'service.status.all' }) },
-  { value: 'unapproved', label: formatMessage({ id: 'service.status.unapproved' }) },
-  { value: 'queued', label: formatMessage({ id: 'service.status.queued' }) },
-  { value: 'scheduling', label: formatMessage({ id: 'service.status.scheduling' }) },
-  { value: 'running', label: formatMessage({ id: 'service.status.running' }) },
-  { value: 'finished', label: formatMessage({ id: 'service.status.finished' }) },
-  { value: 'failed', label: formatMessage({ id: 'service.status.failed' }) },
-  { value: 'pausing', label: formatMessage({ id: 'service.status.pausing' }) },
-  { value: 'paused', label: formatMessage({ id: 'service.status.paused' }) },
-  { value: 'killing', label: formatMessage({ id: 'service.status.killing' }) },
-  { value: 'killed', label: formatMessage({ id: 'service.status.killed' }) },
-  { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
-];
-
 const { Search } = Input;
 const { Option } = Select;
 
-const Visualization = () => {
+const Visualization = (props) => {
   const intl = useIntl();
   const [tableLoading, setTableLoading] = useState(true);
   const [formValues, setFormValues] = useState({ status: 'all', jobName: '' });
@@ -46,6 +32,8 @@ const Visualization = () => {
     order: '',
   });
 
+  const { currentSelectedVC } = props.vc;
+
   const getVisualizations = async () => {
     setTableLoading(true);
     const params = {
@@ -54,7 +42,7 @@ const Visualization = () => {
       orderBy: sortedInfo.columnKey,
       order: sortText[sortedInfo.order],
     };
-    const res = await fetchVisualizations(params);
+    const res = await fetchVisualizations({ ...params, vcName: currentSelectedVC });
     if (res.code === 0) {
       const visualizations = (res.data && res.data.Templates) || [];
       const total = res.data.total;
@@ -195,7 +183,7 @@ const Visualization = () => {
               <Button
                 type="link"
                 onClick={() => changeJobStatus(item.id, 'running')}
-                disabled={!['paused', 'killed'].includes(item.status)}
+                disabled={!['paused', 'killed', 'Killed'].includes(item.status)}
               >
                 {formatMessage({ id: 'visualizationList.table.column.action.run' })}
               </Button>
@@ -228,7 +216,7 @@ const Visualization = () => {
             defaultValue={formValues.status}
             onChange={handleChangeStatus}
           >
-            {statusList.map((status) => (
+            {getStatusList().map((status) => (
               <Option key={status.value} value={status.value}>
                 {status.label}
               </Option>
@@ -278,4 +266,4 @@ const Visualization = () => {
   );
 };
 
-export default Visualization;
+export default connect(({ vc }) => ({ vc }))(Visualization);

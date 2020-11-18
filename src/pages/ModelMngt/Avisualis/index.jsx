@@ -4,13 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getAvisualis, deleteAvisualis } from './service';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import styles from './index.less';
-import { Link, history, useDispatch } from 'umi';
+import { Link, history, useDispatch, useIntl } from 'umi';
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { connect } from 'dva';
 import AddFormModal from './components/AddFormModal';
 import { getJobStatus } from '@/utils/utils';
-import { useIntl } from 'umi';
 
 const { confirm } = Modal;
 const { Search } = Input;

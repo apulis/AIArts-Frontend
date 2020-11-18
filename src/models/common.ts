@@ -1,9 +1,34 @@
+import { Reducer } from 'redux';
+import { Effect } from 'dva';
+
 import { setI18n } from '@/utils/utils';
 import { getPlatformConfig } from '../services/common';
 
 export const locales = ['zh-CN', 'en-US'];
 
-const common = {
+export interface CommonStateType {
+  interval: number | null;
+  platformName: string;
+  i18n: string | boolean;
+  enableVC: boolean;
+  enableAvisuals: boolean;
+}
+
+export interface CommonModelType {
+  namespace: 'common';
+  state: CommonStateType;
+  effects: {
+    changeInterval: Effect;
+    fetchPlatformConfig: Effect;
+
+  };
+  reducers: {
+    updateInterval: Reducer;
+    savePlatform: Reducer;
+  };
+}
+
+const common: CommonModelType = {
   namespace: 'common',
   state: {
     interval: localStorage.interval === 'null' ? null : Number(localStorage.interval) || 3000,
@@ -13,7 +38,7 @@ const common = {
     enableAvisuals: false,
   },
   effects: {
-    *changeInterval({ payload }, { put }) {
+    * changeInterval({ payload }, { put }) {
       if (payload === 0) {
         payload = null;
       }
@@ -33,7 +58,7 @@ const common = {
         localStorage.interval = payload;
       }
     },
-    *fetchPlatformConfig({ payload }, { call, put }) {
+    * fetchPlatformConfig({ payload }, { call, put }) {
       const res = yield call(getPlatformConfig);
       if (res.code === 0) {
         // if (typeof res.i18n === 'string') {

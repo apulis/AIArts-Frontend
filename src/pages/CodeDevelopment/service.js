@@ -8,9 +8,9 @@ const CancelToken = Request.CancelToken;
 export async function getCodes(params) {
   return await request('/codes', {
     params,
-    cancelToken: new CancelToken(function (c) {
+    cancelToken: new CancelToken(((c) => {
       getCodes.cancel = c;
-    }),
+    })),
   });
 }
 
@@ -43,12 +43,12 @@ export async function postCode1(data) {
   });
 }
 
-export async function getCodeCount() {
+export async function getCodeCount(vcName) {
   const response = await request('/common/job/summary', {
-    params: { jobType: 'codeEnv' },
-    cancelToken: new CancelToken(function (c) {
+    params: { jobType: 'codeEnv', vcName },
+    cancelToken: new CancelToken(((c) => {
       getCodeCount.cancel = c;
-    }),
+    })),
   });
   const { code, data, msg } = response;
   const myRes = { code, msg };
@@ -70,4 +70,8 @@ export async function createSaveImage(data) {
     method: 'POST',
     data,
   });
+}
+
+export function fetchSSHInfo(id) {
+  return request(`/codes/${id}/endpoints`);
 }

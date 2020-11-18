@@ -39,5 +39,9 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'off',
     'implicit-arrow-linebreak': 'off',
     'no-param-reassign': 'off',
+    'no-return-await': 'off',
+    'prefer-destructuring': 'off',
+    'consistent-return': 'off',
+    'arrow-body-style': 'off',
   },
 };

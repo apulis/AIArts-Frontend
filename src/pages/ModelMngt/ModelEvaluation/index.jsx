@@ -28,6 +28,7 @@ import curStyles from './index.less';
 import { connect } from 'dva';
 import { beforeSubmitJob } from '@/models/resource';
 import { useIntl } from 'umi';
+import { getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -58,6 +59,8 @@ const ModelEvaluation = (props) => {
 
   const [form2] = Form.useForm();
 
+  const { currentSelectedVC } = props.vc;
+
   useEffect(() => {
     getAvailableResource();
     getTestDatasets();
@@ -83,7 +86,7 @@ const ModelEvaluation = (props) => {
   }, [codePathPrefix]);
 
   const getAvailableResource = async () => {
-    const res = await fetchAvilableResource();
+    const res = await fetchAvilableResource(currentSelectedVC);
     if (res.code === 0) {
       let {
         data: { codePathPrefix, aiFrameworks, deviceList, nodeInfo },
@@ -113,7 +116,8 @@ const ModelEvaluation = (props) => {
 
   useEffect(() => {
     if (!currentDeviceType) return;
-    const nums = getDeviceNumArrByNodeType(nodeInfo, currentDeviceType);
+    const nums = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
+    console.log('nums', nums)
     setDeviceNums(nums);
   }, [nodeInfo, currentDeviceType]);
 
@@ -198,7 +202,7 @@ const ModelEvaluation = (props) => {
       paramPath: codePathPrefix + argumentsFile,
     };
     const submitJobInner = async () => {
-      const { code, msg } = await addEvaluation(evalParams);
+      const { code, msg } = await addEvaluation({ ...evalParams, vcName: currentSelectedVC });
       if (code === 0) {
         message.success(`${intl.formatMessage({ id: 'modelEvaluation.create.success' })}`);
         history.push('/ModelManagement/ModelEvaluation/List');
@@ -300,7 +304,9 @@ const ModelEvaluation = (props) => {
         startupFile: currentSelected.params.startupFile?.substr(codePathPrefix.length) || '',
         paramPath: currentSelected.params.argumentsFile?.substr(codePathPrefix.length) || '',
       };
-      setFieldsValue({ ...currentSelected.params, ...suffixParams });
+      const deviceNum = currentSelected.params.deviceNum;
+
+      setFieldsValue({ ...currentSelected.params, ...suffixParams, deviceNum: deviceNums.includes(deviceNums) ? deviceNum : 0 });
       // console.log('currentSelected.params.params', currentSelected.params.params)
       const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
@@ -677,4 +683,4 @@ const ModelEvaluation = (props) => {
   );
 };
 
-export default connect(() => ({}))(ModelEvaluation);
+export default connect(({ vc }) => ({ vc }))(ModelEvaluation);

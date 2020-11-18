@@ -1,10 +1,9 @@
 import React, { useState, useEffect, forwardRef } from 'react';
 import moment from 'moment';
 import { Modal, Form, DatePicker, Input, Table } from 'antd';
-import styles from './index.less';
 import { PAGEPARAMS } from '@/utils/const';
-import { connect } from 'umi';
-import { useIntl } from 'umi';
+import { connect, useIntl } from 'umi';
+import styles from './index.less';
 
 const TrainingJobModal = (props) => {
   const intl = useIntl();
@@ -15,17 +14,19 @@ const TrainingJobModal = (props) => {
     onCancel,
     onSubmit,
     visible = true,
+    vc
   } = props;
 
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [current, setCurrent] = useState(undefined);
-
+  const { currentSelectedVC } = vc;
   useEffect(() => {
     dispatch({
       type: 'jobList/fetch',
       payload: {
         pageNum: pageParams.pageNum,
         pageSize: 5,
+        vcName: currentSelectedVC,
         //TODO: JobStatus == finished
         // JobStatus: 5?
       },
@@ -118,7 +119,8 @@ const TrainingJobModal = (props) => {
   );
 };
 
-export default connect(({ jobList, loading }) => ({
+export default connect(({ jobList, loading, vc }) => ({
   jobList,
   loading: loading.models.jobList,
+  vc,
 }))(TrainingJobModal);

@@ -162,7 +162,7 @@ const InferenceDetail = (props) => {
     setImageUrl('');
   };
 
-  const jobEnded = ['finished', 'failed', 'killed', 'error'].includes(jobDetail.jobStatus);
+  const jobEnded = ['finished', 'failed', 'killed', 'Killed', 'error'].includes(jobDetail.jobStatus);
   return (
     <PageHeaderWrapper>
       <main className={styles.topContainer}>
@@ -225,7 +225,7 @@ const InferenceDetail = (props) => {
         <Descriptions.Item
           label={intl.formatMessage({ id: 'centerInference.detail.label.engineType' })}
         >
-          {jobDetail.jobParams?.framework}
+          {jobDetail.jobParams?.framework + ':' + jobDetail.jobParams?.version}
         </Descriptions.Item>
         <Descriptions.Item label={intl.formatMessage({ id: 'centerInference.detail.label.id' })}>
           {jobDetail.jobId}

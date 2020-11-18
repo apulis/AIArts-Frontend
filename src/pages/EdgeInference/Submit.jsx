@@ -7,13 +7,13 @@ import {
   FolderOpenOutlined,
 } from '@ant-design/icons';
 import _ from 'lodash';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
+import { connect } from 'dva';
 
 import { NameReg, NameErrorText } from '@/utils/const';
 import { getTypes, submit } from './service';
 import FormItem from 'antd/lib/form/FormItem';
 import SelectModelPath from '@/components/BizComponent/SelectModelPath';
-import { useIntl } from 'umi';
 
 const initArg = {
   key: '',
@@ -53,7 +53,7 @@ const argsOptions = [
 
 const ArgNameReg = /^[A-Za-z0-9-_."",:]+$/;
 
-const Submit = () => {
+const Submit = (props) => {
   const intl = useIntl();
   const [typesData, setTypesData] = useState([]);
   const [argArr, setArgArr] = useState([{ ...initArg, time: new Date().getTime() }]);
@@ -67,6 +67,7 @@ const Submit = () => {
       setTypesData(data.conversionTypes);
     }
   };
+  const { currentSelectedVC } = props.vc;
 
   const onArgsArrChange = (type, time, v) => {
     const newArr = _.cloneDeep(argArr);
@@ -128,6 +129,7 @@ const Submit = () => {
         outputPath,
         conversionType,
         conversionArgs,
+        vcName: currentSelectedVC,
       });
       setBtnLoading(false);
       if (code === 0) {
@@ -324,4 +326,4 @@ const Submit = () => {
   );
 };
 
-export default Submit;
+export default connect(({ vc }) => ({ vc }))(Submit);
