@@ -23,6 +23,7 @@ export default {
   'itemPanel.onSubmit.tips': '请完成剩余步骤！',
   'itemPanel.save': '保存',
   'itemPanel.create': '创建',
+  'itemPanel.model': '模型',
   'itemPanel.success': '成功！',
   'itemPanel.input': '请输入',
   'itemPanel.select': '请选择',

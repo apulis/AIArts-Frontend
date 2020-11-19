@@ -53,21 +53,6 @@ const FlowChart = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(true);
   const [selectItem, setSelectItem] = useState(null);
   const { panelApiData, treeData } = avisualis;
-  // const data = {
-  //   nodes: [
-  //     { id: "mnist", name: "mnist", treeIdx: 0, anchorPoints: anchorPoints },
-  //     { id: 'DevResNet', name: 'DevResNet',treeIdx: 1, comboId: 'SEResNet', anchorPoints: anchorPoints },
-  //     { id: 'MaxNet',name: 'MaxNet', comboId: "SEResNet", treeIdx: 1, anchorPoints: anchorPoints },
-  //   ],
-
-  //   combos: [
-  //     { id: 'Backbone', label: 'Backbone', anchorPoints: anchorPoints },
-  //     { id: 'SEResNet', label: 'SEResNet', parentId: "Backbone", anchorPoints: anchorPoints, },
-  //   ],
-  //   edges: [
-  //     { source: 'mnist', target: 'DevResNet' },
-  //   ],
-  // };
 
   useImperativeHandle(ref, () => ({
     handleDragEnd: handleDragEnd,
@@ -374,7 +359,7 @@ const FlowChart = forwardRef((props, ref) => {
         treeIdx !== flowChartData.nodes[flowChartData.nodes.length - 1].treeIdx + 1) ||
       (!hasNodes && treeIdx > 0)
     ) {
-      message.warning('只能按照步骤顺序依次拖拽！');
+      message.warning(intl.formatMessage({id: 'flowChart.tips.drag'}));
       return;
     }
     let newData = {},
@@ -485,8 +470,8 @@ const FlowChart = forwardRef((props, ref) => {
     const selectedItem = graph.findAllByState('node', 'selected');
     if (selectedItem && selectedItem.length) {
       const { treeIdx } = selectedItem[0]._cfg.model;
-      if (treeIdx !== allNodes[allNodes.length - 1]._cfg.model.treeIdx) {
-        message.warning('只能按照模型顺序依次删除！');
+      if (treeIdx !== Math.max(...allNodes.map(i => i._cfg.model.treeIdx))) {
+        message.warning(intl.formatMessage({id: 'flowChart.tips.delete'}));
         return;
       }
       let newData = _.cloneDeep(graph);

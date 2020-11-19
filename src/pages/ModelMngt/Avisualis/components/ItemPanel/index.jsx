@@ -43,7 +43,7 @@ const ItemPanel = (props) => {
     addFormModalRef.current.form.validateFields().then(async (values) => {
       const { nodes, edges, combos } = flowChartData;
       if (!nodes || (nodes && Math.max(...nodes.map((i) => i.treeIdx)) < treeData.length - 1)) {
-        message.warning('请完成剩余步骤！');
+        message.warning(intl.formatMessage({ id: 'itemPanel.onSubmit.tips' }));
         return;
       }
       isSvaeTPL ? setBtnLoading1(true) : setBtnLoading2(true);
@@ -80,7 +80,7 @@ const ItemPanel = (props) => {
         ? await patchAvisualis(detailId, submitData)
         : await submitAvisualis(submitData);
       if (code === 0) {
-        message.success(`${detailId || isSvaeTPL ? '保存' : '创建'}成功！`);
+        message.success(`${detailId || isSvaeTPL ? intl.formatMessage({ id: 'itemPanel.save' }) : intl.formatMessage({ id: 'itemPanel.create' })}${intl.formatMessage({ id: 'itemPanel.success' })}`);
         dispatch({
           type: 'avisualis/saveData',
           payload: {
@@ -187,21 +187,20 @@ const ItemPanel = (props) => {
   return (
     <div className={styles.itemPanelWrap}>
       <div className={styles.btnWrap}>
-        <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>返回</Button>
+        <Button onClick={() => history.push(`/ModelManagement/avisualis`)}>{intl.formatMessage({ id: 'itemPanel.return' })}</Button>
         {!detailId && (
           <Button type="primary" loading={btnLoading1} onClick={() => onSubmit(true)}>
-            保存模板
+            {intl.formatMessage({ id: 'itemPanel.model.save' })}
           </Button>
         )}
         <Button type="primary" loading={btnLoading2} onClick={() => onSubmit()}>
-          {`${detailId ? '保存' : '创建'}模型`}
+          {`${detailId ? intl.formatMessage({ id: 'itemPanel.save' }) : intl.formatMessage({ id: 'itemPanel.create' })} ${intl.formatMessage({ id: 'itemPanel.model' })}`}
         </Button>
       </div>
       <Descriptions title={intl.formatMessage({ id: 'itemPanel.model.deatil' })}></Descriptions>
       <AddFormModal ref={addFormModalRef} detailData={addFormData} />
-      <div className="ant-descriptions-title">{`${
-        hasSelectItem ? `节点配置(${selectItem._cfg.id})` : '该节点无配置项'
-      }`}</div>
+      <div className="ant-descriptions-title">{`${hasSelectItem ? `${intl.formatMessage({ id: 'itemPanel.node.config' })}(${selectItem._cfg.id})` : intl.formatMessage({ id: 'itemPanel.node.config.tips' })
+        }`}</div>
       {hasSelectItem && <Form form={form}>{getConfig()}</Form>}
       <div style={{ float: 'right', marginTop: 24 }}>
         {hasSelectItem && (
