@@ -1,5 +1,8 @@
-import { fetchCommonResource } from '@/services/common';
 import { message } from 'antd';
+import { Effect } from 'dva';
+import { Reducer } from 'redux';
+
+import { fetchCommonResource } from '@/services/common';
 
 let devices = {};
 
@@ -31,13 +34,34 @@ export function checkIfGpuOrNpu(deviceType) {
   return EnumDeviceTypes[deviceStr] || EnumDeviceTypes['nvidia.com/gpu'];
 }
 
+interface ResorceStateType {
+  devices: {
+    [props: string]: number;
+  },
+  images: any[]
+}
+
+export interface ResoyrceModelType {
+  namespace: 'common';
+  state: ResorceStateType;
+  effects: {
+    fetchResource: Effect;
+    fetchPlatformConfig: Effect;
+
+  };
+  reducers: {
+    updateState: Reducer;
+  };
+}
+
 const ResourceModole = {
   namespace: 'resource',
   state: {
     devices: {},
+    images: [],
   },
   effects: {
-    *fetchResource(_, { call, put }) {
+    * fetchResource(_, { call, put }) {
       const res = yield call(fetchCommonResource);
       if (res.code === 0) {
         const {
@@ -53,6 +77,9 @@ const ResourceModole = {
         devices = resources;
       }
     },
+    * fetchAvailImages(_, { call, put }) {
+      
+    }
   },
   reducers: {
     updateState(state, { payload }) {
