@@ -206,6 +206,7 @@ const SubmitModelTraining = (props) => {
 
   useEffect(() => {
     if (currentVersion) {
+      if (!supportedInference[currentEngineName]) return;
       const deviceList = Object.keys(supportedInference[currentEngineName][currentVersion]);
       setDeviceList(deviceList);
       setFieldsValue({
