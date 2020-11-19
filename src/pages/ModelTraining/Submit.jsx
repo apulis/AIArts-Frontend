@@ -553,6 +553,22 @@ const ModelTraining = (props) => {
           </Radio.Group>
         </FormItem>
       )}
+      {isSubmitPage && <FormItem
+          {...commonLayout}
+          label={'算法来源'}
+        >
+          <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
+            <Radio.Button value={1}>
+              {'经典模式'}
+            </Radio.Button>
+            <Radio.Button
+              value={2}
+            >
+              {'命令行模式'}
+            </Radio.Button>
+          </Radio.Group>
+
+        </FormItem>}
       <Form form={form}>
         {isSubmitPage && (
           <FormItem
@@ -663,22 +679,7 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
-        {isSubmitPage && <FormItem
-          {...commonLayout}
-          label={'算法来源'}
-        >
-          <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
-            <Radio.Button value={1}>
-              {'经典模式'}
-            </Radio.Button>
-            <Radio.Button
-              value={2}
-            >
-              {'命令行模式'}
-            </Radio.Button>
-          </Radio.Group>
-
-        </FormItem>}
+        
         {
           algorithmSource === 2 && <FormItem label="命令行" name="command" {...commonLayout}>
             <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
