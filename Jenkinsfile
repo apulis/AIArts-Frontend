@@ -1,5 +1,6 @@
-@Library('apulis-build@main') _
+@Library('apulis-build@master') _
 
 buildPlugin ( {
-    repoName = "AIArts"
+    repoName = "AIArts",
+    imageName = "aiarts-frontend"
 })
