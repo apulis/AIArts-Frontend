@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, PageHeader, Button, message, Select } from 'antd';
+import { Form, Input, PageHeader, Button, message, Select, Alert } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { jobNameReg, linuxPathReg } from '@/utils/reg';
 import { createVisualization } from '@/services/modelTraning';
 import { history, connect, useIntl } from 'umi';
 import { getModels } from '../../ModelMngt/ModelList/services/index';
 import { getResource } from '../../CodeDevelopment/service';
+import { FolderOpenOutlined } from '@ant-design/icons';
+import SelectModelTrainingModel from '@/components/BizComponent/SelectModelTrainingModel';
+import FormItem from 'antd/lib/form/FormItem';
 
 const { TextArea } = Input;
 
@@ -14,10 +17,12 @@ const CreateVisualization = (props) => {
   const goBackPath = '/model-training/visualization';
   const [form] = useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
-  const [modelArr, setModelArr] = useState([]);
-  const [curModel, setCurModel] = useState();
   const [codePathPrefix, setCodePathPrefix] = useState('');
+  const [selectModelPathVisible, setSelectModelPathVisible] = useState(false);
   const { currentSelectedVC } = props.vc;
+  const [importPathFlag, setImportPathFlag] = useState(false);
+  const [modelName, setModelName] = useState('');
+
   const apiGetModelList = async () => {
     const obj = await getModels({ vcName: currentSelectedVC });
     const { code, data, msg } = obj;
@@ -39,23 +44,30 @@ const CreateVisualization = (props) => {
   };
 
   const renderInitForm = async () => {
-    const modelList = await apiGetModelList();
     const resource = await apiGetResource();
-    if (modelList && resource) {
-      const codePathPrefix = resource.codePathPrefix;
-      const models = modelList.models.map((item, index) => {
-        return {
-          id: item.id,
-          name: item.name,
-          path: item.visualPath ? item.visualPath.replace(codePathPrefix, '') : '',
-        };
-      });
-      setModelArr(models);
-      setCodePathPrefix(codePathPrefix);
+    if (resource) {
+      setCodePathPrefix(resource.codePathPrefix);
     }
   };
 
-  const onCreate = async () => {
+  useEffect(() => {
+    renderInitForm();
+  }, []);
+
+  const handleSelectModelPath = (row) => {
+    setSelectModelPathVisible(false);
+    if (!row) return;
+    const { name, path } = row;
+    setImportPathFlag(true);
+    setModelName(name);
+    if (path) {
+      setFieldsValue({
+        tensorboardLogDir: name,
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
     const values = await validateFields();
     values.tensorboardLogDir = codePathPrefix + values.tensorboardLogDir;
     const res = await createVisualization({ ...values, vcName: currentSelectedVC });
@@ -64,21 +76,6 @@ const CreateVisualization = (props) => {
       history.push(goBackPath);
     }
   };
-
-  const handleModelChange = (modelId) => {
-    const model = modelArr.find((model) => model.id === modelId);
-    if (model) setCurModel(model);
-  };
-
-  useEffect(() => {
-    renderInitForm();
-  }, []);
-
-  useEffect(() => {
-    if (curModel) {
-      setFieldsValue({ tensorboardLogDir: curModel.path });
-    }
-  }, [curModel]);
 
   return (
     <>
@@ -106,37 +103,30 @@ const CreateVisualization = (props) => {
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          name="selectModel"
-          label={intl.formatMessage({ id: 'visualJobCreate.label.selectModel' })}
+          label={intl.formatMessage({id: 'visualJobCreate.importVisualPath'})}
         >
-          <Select
-            placeholder={intl.formatMessage({ id: 'visualJobCreate.placeholder.selectModel' })}
-            style={{ width: 300 }}
-            allowClear
-            optionFilterProp="children"
-            showSearch
-            onChange={() => {
-              handleModelChange(getFieldValue('selectModel'));
-            }}
+          <Button
+            type='primary'
+            onClick={() => { setSelectModelPathVisible(true); }}
           >
-            {modelArr.map((model) => (
-              <Option value={model.id}>{model.name}</Option>
-            ))}
-          </Select>
+            {intl.formatMessage({id: 'visualJobCreate.selectTraing'})}
+            </Button>
+            {importPathFlag && '  ' + intl.formatMessage({id: 'visualJobCreate.jobName'}) + modelName}
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          name="tensorboardLogDir"
-          label={intl.formatMessage({ id: 'visualJobCreate.label.tensorboardLogDir' })}
-          rules={[{ required: true }]}
+          label={intl.formatMessage({id: 'visualJobCreate.label.tensorboardLogDir'})}
+          required
         >
-          <Input
-            addonBefore={codePathPrefix}
-            placeholder={intl.formatMessage({
-              id: 'visualJobCreate.placeholder.inputVisualLogPath',
-            })}
-          />
+          <Form.Item name="tensorboardLogDir" style={{ display: 'inline-block', width: '300px', marginBottom: '0px' }} rules={[{ required: true, message: intl.formatMessage({id: 'visualJobCreate.placeholder.inputPath'}) }]}>
+            <Input
+              addonBefore={codePathPrefix}
+              placeholder={intl.formatMessage({
+                id: 'visualJobCreate.placeholder.inputVisualLogPath',
+              })}
+            />
+          </Form.Item>
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
@@ -150,9 +140,16 @@ const CreateVisualization = (props) => {
           />
         </Form.Item>
       </Form>
-      <Button type="primary" onClick={onCreate} style={{ marginLeft: '16.7%' }}>
+      <Button type="primary" onClick={handleSubmit} style={{ marginLeft: '16.7%' }}>
         {intl.formatMessage({ id: 'visualJobCreate.submit' })}
       </Button>
+      {selectModelPathVisible && (
+        <SelectModelTrainingModel
+          visible={selectModelPathVisible}
+          onOk={handleSelectModelPath}
+          onCancel={() => setSelectModelPathVisible(false)}
+        />
+      )}
     </>
   );
 }

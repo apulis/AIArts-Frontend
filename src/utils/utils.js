@@ -5,6 +5,7 @@ import { formatMessage, setLocale } from 'umi';
 import { isObject } from './types';
 import { checkIfGpuOrNpu } from '@/models/resource';
 import requestUser from './request-user';
+import moment from 'moment';
 
 /* eslint no-useless-escape:0 import/prefer-default-export:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
@@ -119,6 +120,8 @@ export const getStatusList = () => [
   { value: 'error', label: formatMessage({ id: 'service.status.error' }) },
 ];
 
+export const canCreateVisualJobStatus = ['unapproved', 'queued', 'scheduling', 'running', 'finished'];
+
 export const getJobStatus = (status) => {
   const statusList = {
     all: formatMessage({ id: 'service.status.all' }),
@@ -137,6 +140,10 @@ export const getJobStatus = (status) => {
   };
   return statusList[status] || '';
 };
+
+export const formatTime = (time) => {
+  return moment(time).format('YYYY-MM-DD HH:mm:ss')
+}
 
 export const getStatusColor = (status) => {
   const colorList = {
