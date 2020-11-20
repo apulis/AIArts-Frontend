@@ -21,27 +21,33 @@ const GlobalHeaderRight = (props) => {
     className = `${styles.right}  ${styles.dark}`;
   }
 
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="/custom-user-dashboard">
+          {intl.formatMessage({ id: 'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem' })}
+        </a>
+      </Menu.Item>
+      <Menu.Item>
+        <a target="_blank" rel="noopener noreferrer" href="/expert">
+          {intl.formatMessage({ id: 'component.globalHeader.rightContent.globalHeaderRight.expert' })}
+        </a>
+      </Menu.Item>
+    </Menu>
+
+  );
+
   return (
     <div
       className={className}
       style={{ display: 'flex', alignItems: 'center', marginRight: '20px' }}
     >
-      {/* <Dropdown overlay={menu}>
-        <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-          当前虚拟集群 <DownOutlined />
+      <Dropdown overlay={menu}>
+        <a className="ant-dropdown-link" style={{ display: 'inline-block', marginRight: '10px' }} onClick={e => e.preventDefault()}>
+          系统导航 <DownOutlined />
         </a>
-      </Dropdown> */}
-      <Button href="/custom-user-dashboard" style={{ marginLeft: '20px' }}>
-        {intl.formatMessage({
-          id: 'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem',
-        })}
-      </Button>
+      </Dropdown>
       <Avatar menu />
-      {REACT_APP_ENV && (
-        <span>
-          <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>
-        </span>
-      )}
       <SelectLang className={styles.action} />
     </div>
   );
