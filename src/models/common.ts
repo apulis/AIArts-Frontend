@@ -20,7 +20,6 @@ export interface CommonModelType {
   effects: {
     changeInterval: Effect;
     fetchPlatformConfig: Effect;
-
   };
   reducers: {
     updateInterval: Reducer;

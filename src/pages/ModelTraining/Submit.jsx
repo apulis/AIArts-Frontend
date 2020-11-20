@@ -44,6 +44,7 @@ import {
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
 import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
+import Command from './components/Command';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -82,8 +83,8 @@ const ModelTraining = (props) => {
   const goBackPath = isFromPresetModel
     ? '/model-training/PretrainedModels'
     : readParam
-    ? '/model-training/paramsManage'
-    : '/model-training/modelTraining';
+      ? '/model-training/paramsManage'
+      : '/model-training/modelTraining';
   const [runningParams, setRunningParams] = useState([
     { key: '', value: '', createTime: generateKey() },
   ]);
@@ -110,6 +111,7 @@ const ModelTraining = (props) => {
   const [paramsDetailedData, setParamsDetailedData] = useState({});
   const [importedTrainingParams, setImportedTrainingParams] = useState(false);
   const [engineSource, setEngineSource] = useState(1);
+  const [algorithmSource, setAlgorithm] = useState(1);
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource(currentSelectedVC);
@@ -152,7 +154,7 @@ const ModelTraining = (props) => {
       const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, deviceList, currentDeviceType, ]);
+  }, [distributedJob, deviceList, currentDeviceType,]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
@@ -341,7 +343,7 @@ const ModelTraining = (props) => {
           onOk() {
             submitJobInner();
           },
-          onCancel() {},
+          onCancel() { },
         });
       } else {
         submitJobInner();
@@ -551,6 +553,22 @@ const ModelTraining = (props) => {
           </Radio.Group>
         </FormItem>
       )}
+      {isSubmitPage && <FormItem
+          {...commonLayout}
+          label={'算法来源'}
+        >
+          <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
+            <Radio.Button value={1}>
+              {'经典模式'}
+            </Radio.Button>
+            <Radio.Button
+              value={2}
+            >
+              {'命令行模式'}
+            </Radio.Button>
+          </Radio.Group>
+
+        </FormItem>}
       <Form form={form}>
         {isSubmitPage && (
           <FormItem
@@ -600,34 +618,39 @@ const ModelTraining = (props) => {
           {isPretrainedModel || importedTrainingParams ? (
             <Input style={{ width: 420 }} disabled={isPretrainedModel} />
           ) : (
-            <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
-          )}
+              <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+            )}
         </FormItem>
-        <FormItem
-          labelCol={{ span: 4 }}
-          label={formatMessage({ id: 'trainingCreate.label.startupFile' })}
-          name="startupFile"
-          rules={[{ required: true }, startUpFileReg]}
-        >
-          {isPretrainedModel || importedTrainingParams ? (
-            <Input style={{ width: 420 }} disabled={isPretrainedModel} />
-          ) : (
-            <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
-          )}
-        </FormItem>
-        <FormItem
-          name="visualPath"
-          labelCol={{ span: 4 }}
-          label={formatMessage({ id: 'trainingCreate.label.visualPath' })}
-          style={{ marginTop: '50px' }}
-        >
-          {
-            <Input
-              addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}
-              style={{ width: 420 }}
-            />
-          }
-        </FormItem>
+        {
+          algorithmSource === 1 && <FormItem
+            labelCol={{ span: 4 }}
+            label={formatMessage({ id: 'trainingCreate.label.startupFile' })}
+            name="startupFile"
+            rules={[{ required: true }, startUpFileReg]}
+          >
+            {isPretrainedModel || importedTrainingParams ? (
+              <Input style={{ width: 420 }} disabled={isPretrainedModel} />
+            ) : (
+                <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+              )}
+          </FormItem>
+        }
+        {
+          algorithmSource === 1 && <FormItem
+            name="visualPath"
+            labelCol={{ span: 4 }}
+            label={formatMessage({ id: 'trainingCreate.label.visualPath' })}
+            style={{ marginTop: '50px' }}
+          >
+            {
+              <Input
+                addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}
+                style={{ width: 420 }}
+              />
+            }
+          </FormItem>
+        }
+        
         <FormItem
           name="outputPath"
           labelCol={{ span: 4 }}
@@ -656,58 +679,67 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
-        <FormItem
-          label={formatMessage({ id: 'trainingCreate.label.runningParams' })}
-          labelCol={{ span: 4 }}
-        >
-          {runningParams.map((param, index) => {
-            return (
-              <div key={param.createTime || param.key}>
-                <FormItem
-                  initialValue={runningParams[index].key}
-                  rules={[
-                    {
-                      validator(...args) {
-                        validateRunningParams(index, 'key', ...args);
+        
+        {
+          algorithmSource === 2 && <FormItem label="命令行" name="command" {...commonLayout}>
+            <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
+          </FormItem>
+        }
+        {
+          algorithmSource === 1 && <FormItem
+            label={formatMessage({ id: 'trainingCreate.label.runningParams' })}
+            labelCol={{ span: 4 }}
+          >
+            {runningParams.map((param, index) => {
+              return (
+                <div key={param.createTime || param.key}>
+                  <FormItem
+                    initialValue={runningParams[index].key}
+                    rules={[
+                      {
+                        validator(...args) {
+                          validateRunningParams(index, 'key', ...args);
+                        },
                       },
-                    },
-                  ]}
-                  name={['params', index, 'key']}
-                  wrapperCol={{ span: 24 }}
-                  style={{ display: 'inline-block' }}
-                >
-                  <Input style={{ width: 200 }} />
-                </FormItem>
-                <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
-                <FormItem
-                  initialValue={runningParams[index].value}
-                  rules={[
-                    {
-                      validator(...args) {
-                        validateRunningParams(index, 'value', ...args);
+                    ]}
+                    name={['params', index, 'key']}
+                    wrapperCol={{ span: 24 }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    <Input style={{ width: 200 }} />
+                  </FormItem>
+                  <PauseOutlined rotate={90} style={{ marginTop: '8px', width: '30px' }} />
+                  <FormItem
+                    initialValue={runningParams[index].value}
+                    rules={[
+                      {
+                        validator(...args) {
+                          validateRunningParams(index, 'value', ...args);
+                        },
                       },
-                    },
-                  ]}
-                  name={['params', index, 'value']}
-                  wrapperCol={{ span: 24 }}
-                  style={{ display: 'inline-block' }}
-                >
-                  <Input style={{ width: 200 }} />
-                </FormItem>
-                {
-                  <DeleteOutlined
-                    style={{ marginLeft: '10px', cursor: 'pointer' }}
-                    onClick={() => removeRuningParams(param.createTime || param.key)}
-                  />
-                }
-              </div>
-            );
-          })}
-          <div className={styles.addParams} onClick={addParams}>
-            <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
-            <a>{formatMessage({ id: 'model.submit.button.create.params' })}</a>
-          </div>
-        </FormItem>
+                    ]}
+                    name={['params', index, 'value']}
+                    wrapperCol={{ span: 24 }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    <Input style={{ width: 200 }} />
+                  </FormItem>
+                  {
+                    <DeleteOutlined
+                      style={{ marginLeft: '10px', cursor: 'pointer' }}
+                      onClick={() => removeRuningParams(param.createTime || param.key)}
+                    />
+                  }
+                </div>
+              );
+            })}
+            <div className={styles.addParams} onClick={addParams}>
+              <PlusSquareOutlined fill="#1890ff" style={{ color: '#1890ff', marginRight: '10px' }} />
+              <a>{formatMessage({ id: 'model.submit.button.create.params' })}</a>
+            </div>
+          </FormItem>
+        }
+        
         <FormItem
           label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
           name="jobTrainingType"
@@ -880,8 +912,8 @@ const ModelTraining = (props) => {
               ))}
             </Tabs>
           ) : (
-            <div>{formatMessage({ id: 'model.submit.modal.save.params.none' })}</div>
-          )}
+              <div>{formatMessage({ id: 'model.submit.modal.save.params.none' })}</div>
+            )}
         </Form>
       </Modal>
       <Button
