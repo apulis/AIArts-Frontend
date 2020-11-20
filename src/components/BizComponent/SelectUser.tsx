@@ -73,6 +73,7 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
                 notFoundContent={fetching ? <Spin size="small" /> : null}
                 filterOption={false}
                 onSearch={searchUsers}
+                placeholder={formatMessage({ id: 'vc.component.relateUser.username.placeholder' })}
               >
                 {
                   users.map(user => (

@@ -33,6 +33,7 @@ export default {
   //
   'vc.component.relateUser.modal.title': '向当前虚拟集群增加用户',
   'vc.component.relateUser.modal.userName': '用户名',
+  'vc.component.relateUser.username.placeholder': '输入用户信息搜索用户',
   'vc.component.removeUser.modal.current.contains.user': '当前包含用户',
   'vc.component.removeUser.modal.current.removing.user': '待移除用户',
   'vc.component.removeUser.modal.current.removing.cancel': '取消',

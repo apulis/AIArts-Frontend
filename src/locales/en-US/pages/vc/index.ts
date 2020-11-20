@@ -32,6 +32,7 @@ export default {
   'vc.component.confirm': 'Confirm',
   'vc.component.relateUser.modal.title': 'Add users to current virtual cluster',
   'vc.component.relateUser.modal.userName': 'Username',
+  'vc.component.relateUser.username.placeholder': 'Search users',
   'vc.component.removeUser.modal.current.contains.user': 'Currently Included Users',
   'vc.component.removeUser.modal.current.removing.user': 'User To Be Removed',
   'vc.component.removeUser.modal.current.removing.cancel': 'Cancel',
