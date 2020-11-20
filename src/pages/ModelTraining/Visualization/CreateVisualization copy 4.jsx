@@ -17,6 +17,8 @@ const CreateVisualization = (props) => {
   const goBackPath = '/model-training/visualization';
   const [form] = useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
+  const [modelArr, setModelArr] = useState([]);
+  const [curModel, setCurModel] = useState();
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [selectModelPathVisible, setSelectModelPathVisible] = useState(false);
   const { currentSelectedVC } = props.vc;
@@ -57,18 +59,20 @@ const CreateVisualization = (props) => {
   const handleSelectModelPath = (row) => {
     setSelectModelPathVisible(false);
     if (!row) return;
-    const { name, path } = row;
-    setImportPathFlag(true);
-    setModelName(name);
-    if (path) {
-      setFieldsValue({
-        tensorboardLogDir: name,
-      });
-    }
+    setFieldsValue({
+      tensorboardLogDir: row.name,
+    });
   };
+
+  const handleImportVisualPath = () => {
+    setImportPathFlag(true);
+    setModelName('test');
+    setSelectModelPathVisible(true);
+  }
 
   const handleSubmit = async () => {
     const values = await validateFields();
+    debugger
     values.tensorboardLogDir = codePathPrefix + values.tensorboardLogDir;
     const res = await createVisualization({ ...values, vcName: currentSelectedVC });
     if (res.code === 0) {
@@ -103,23 +107,31 @@ const CreateVisualization = (props) => {
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          label={intl.formatMessage({id: 'visualJobCreate.importVisualPath'})}
+          label='导入训练日志路径'
         >
           <Button
             type='primary'
-            onClick={() => { setSelectModelPathVisible(true); }}
+            onClick={() => { handleImportVisualPath() }}
           >
-            {intl.formatMessage({id: 'visualJobCreate.selectTraing'})}
+            选择训练
             </Button>
-            {importPathFlag && '  ' + intl.formatMessage({id: 'visualJobCreate.jobName'}) + modelName}
         </Form.Item>
+        {importPathFlag && (<Form.Item
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
+          label='已选择训练名称'
+        >
+          <Form.Item name="tensorboardLogDir" style={{ display: 'inline-block', width: '300px', marginBottom: '0px' }} rules={[{ required: true, message: '请输入可视化路径' }]}>
+            {modelName}
+          </Form.Item>
+        </Form.Item>)}
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          label={intl.formatMessage({id: 'visualJobCreate.label.tensorboardLogDir'})}
+          label={importPathFlag ? '已选择训练日志路径' : '可视化日志路径'}
           required
         >
-          <Form.Item name="tensorboardLogDir" style={{ display: 'inline-block', width: '300px', marginBottom: '0px' }} rules={[{ required: true, message: intl.formatMessage({id: 'visualJobCreate.placeholder.inputPath'}) }]}>
+          <Form.Item name="tensorboardLogDir" style={{ display: 'inline-block', width: '300px', marginBottom: '0px' }} rules={[{ required: true, message: '请输入可视化路径' }]}>
             <Input
               addonBefore={codePathPrefix}
               placeholder={intl.formatMessage({

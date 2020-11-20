@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, PageHeader, Button, message, Select, Alert } from 'antd';
+import { Form, Input, PageHeader, Button, message, Select, Radio } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { jobNameReg, linuxPathReg } from '@/utils/reg';
 import { createVisualization } from '@/services/modelTraning';
@@ -8,7 +8,6 @@ import { getModels } from '../../ModelMngt/ModelList/services/index';
 import { getResource } from '../../CodeDevelopment/service';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import SelectModelTrainingModel from '@/components/BizComponent/SelectModelTrainingModel';
-import FormItem from 'antd/lib/form/FormItem';
 
 const { TextArea } = Input;
 
@@ -17,11 +16,11 @@ const CreateVisualization = (props) => {
   const goBackPath = '/model-training/visualization';
   const [form] = useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
+  const [modelArr, setModelArr] = useState([]);
+  const [curModel, setCurModel] = useState();
   const [codePathPrefix, setCodePathPrefix] = useState('');
   const [selectModelPathVisible, setSelectModelPathVisible] = useState(false);
   const { currentSelectedVC } = props.vc;
-  const [importPathFlag, setImportPathFlag] = useState(false);
-  const [modelName, setModelName] = useState('');
 
   const apiGetModelList = async () => {
     const obj = await getModels({ vcName: currentSelectedVC });
@@ -57,18 +56,14 @@ const CreateVisualization = (props) => {
   const handleSelectModelPath = (row) => {
     setSelectModelPathVisible(false);
     if (!row) return;
-    const { name, path } = row;
-    setImportPathFlag(true);
-    setModelName(name);
-    if (path) {
-      setFieldsValue({
-        tensorboardLogDir: name,
-      });
-    }
+    setFieldsValue({
+      tensorboardLogDir: row.name,
+    });
   };
 
   const handleSubmit = async () => {
     const values = await validateFields();
+    debugger
     values.tensorboardLogDir = codePathPrefix + values.tensorboardLogDir;
     const res = await createVisualization({ ...values, vcName: currentSelectedVC });
     if (res.code === 0) {
@@ -100,26 +95,46 @@ const CreateVisualization = (props) => {
             })}
           />
         </Form.Item>
+        {/* <Form.Item
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
+          label='训练作业名称'
+        >
+          <Form.Item style={{ display: 'inline-block', width: '263px', marginBottom: '0px' }}>
+            <Input placeholder='点击右侧按钮选择训练作业' disabled/>
+          </Form.Item>
+
+          <Form.Item style={{ display: 'inline-block', marginLeft: '6px', marginBottom: '0px' }}>
+            <Button
+              icon={<FolderOpenOutlined />}
+              onClick={() => setSelectModelPathVisible(true)}
+            ></Button>
+          </Form.Item>
+        </Form.Item> */}
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          label={intl.formatMessage({id: 'visualJobCreate.importVisualPath'})}
+          label='路径来源'
         >
-          <Button
-            type='primary'
-            onClick={() => { setSelectModelPathVisible(true); }}
-          >
-            {intl.formatMessage({id: 'visualJobCreate.selectTraing'})}
-            </Button>
-            {importPathFlag && '  ' + intl.formatMessage({id: 'visualJobCreate.jobName'}) + modelName}
+          <Radio.Group defaultValue={'input'} buttonStyle="solid" style={{ marginRight: '4px' }}>
+            <Radio.Button value={'input'}>
+              输入训练路径
+          </Radio.Button>
+            <Radio.Button
+              value={'import'}
+              onClick={() => setSelectModelPathVisible(true)}
+            >
+              导入训练路径
+          </Radio.Button>
+          </Radio.Group>
         </Form.Item>
         <Form.Item
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          label={intl.formatMessage({id: 'visualJobCreate.label.tensorboardLogDir'})}
+          label='训练作业路径'
           required
         >
-          <Form.Item name="tensorboardLogDir" style={{ display: 'inline-block', width: '300px', marginBottom: '0px' }} rules={[{ required: true, message: intl.formatMessage({id: 'visualJobCreate.placeholder.inputPath'}) }]}>
+          <Form.Item name="tensorboardLogDir" style={{ display: 'inline-block', width: '300px', marginBottom: '0px' }} rules={[{ required: true, message: '请输入可视化路径' }]}>
             <Input
               addonBefore={codePathPrefix}
               placeholder={intl.formatMessage({

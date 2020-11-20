@@ -6,4 +6,8 @@ export default {
   'bizComponent.table.placeholder': 'Please enter model name',
   'bizComponent.table.pagination.showTotal.total': 'Total',
   'bizComponent.table.pagination.showTotal.suffix': 'items',
+
+  // SelectModelTrainingModel
+  'bizComponent.tips.selectOrCancel': 'Please select a model training or cancel',
+  'bizComponent.placeholder.search': 'Search',
 };

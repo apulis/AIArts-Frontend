@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Modal, Table, Input } from 'antd';
+import { Modal, Table, Input, message } from 'antd';
 import Button from '@/components/locales/Button';
 import { useIntl, connect } from 'umi';
 import { PAGEPARAMS, sortText } from '@/utils/const';
@@ -24,6 +24,7 @@ const SelectModelTrainingModel = ({ onCancel, visible, onOk, vc }) => {
     orderBy: '',
     order: '',
   });
+  const [row, setRow] = useState(null);
 
   const renderTable = async (options = {}) => {
     const { searchWord } = options;
@@ -66,9 +67,18 @@ const SelectModelTrainingModel = ({ onCancel, visible, onOk, vc }) => {
     setSortInfo({ orderBy, order });
   };
 
-  const handleSelectModalPath = () => {
-    // onOk && onOk(selectedRows[0]);
-    onOk && onOk({ name: 'xxxs' });
+  const handleSelectRow = (rows) => {
+    const row = rows[0];
+    if(!row) return;
+    setRow(row);
+  };
+  const handleSelectModelTraining = () => {
+    if(!row) {
+      message.info(formatMessage({id: 'bizComponent.tips.selectOrCancel'}));
+      return;
+    }
+    const { name, visualPath: path } = row;
+    onOk && onOk({ name, path });
   };
 
   const handleSearch = (searchWord) => {
@@ -117,17 +127,21 @@ const SelectModelTrainingModel = ({ onCancel, visible, onOk, vc }) => {
     }
   ];
 
+  const rowSelection = {
+    type: 'radio',
+  };
+
   return (
     <Modal
       visible={visible}
       maskClosable={false}
       onCancel={() => onCancel && onCancel()}
-      onOk={handleSelectModalPath}
+      onOk={handleSelectModelTraining}
       width="65%"
     >
       <div style={{ float: 'right' }}>
         <Search
-          placeholder= '搜索'
+          placeholder= {formatMessage({id: 'bizComponent.placeholder.search'})}
           ref={searchRef}
           onSearch={(value) => handleSearch(value)}
           style={{ width: '210px', marginTop: '20px', marginBottom: '10px' }}
@@ -142,13 +156,23 @@ const SelectModelTrainingModel = ({ onCancel, visible, onOk, vc }) => {
         rowKey={(r) => r.id}
         pagination={{
           total: trainingWorkList.total,
-          showTotal: (total) => `总共 ${total} 条`,
+          showTotal: (total) =>
+          `${intl.formatMessage({
+            id: 'bizComponent.table.pagination.showTotal.total',
+          })} ${total} ${intl.formatMessage({
+            id: 'bizComponent.table.pagination.showTotal.suffix',
+          })}`,
           defaultPageSize: 5,
+          pageSizeOptions: [5, 10, 15, 20],
           showQuickJumper: true,
           showSizeChanger: true,
           onChange: handlePageParamsChange,
           onShowSizeChange: handlePageParamsChange,
           current: pageParams.pageNum,
+        }}
+        rowSelection={{
+          type: 'radio',
+          onChange: (_, selectedRows) => { handleSelectRow(selectedRows) }
         }}
       />
     </Modal>
