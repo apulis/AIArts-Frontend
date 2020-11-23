@@ -114,7 +114,6 @@ const ModelTraining = (props) => {
   const [engineSource, setEngineSource] = useState(1);
   const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [savedImageDescMap, setSavedImageDescMap] = useState({});
-  const [engineDesc, setEngineDesc] = useState('');
 
   const getImageDescMap = async () => {
     const data = await apiGetImages();
@@ -509,23 +508,6 @@ const ModelTraining = (props) => {
     setDeviceTotal(deviceTotal);
   };
 
-  const handleChangeEgine = (engine) => {
-    let desc = '';
-    switch (engine) {
-      case 1:
-        // 预置引擎
-        desc = presetImageDescMap[engine] ? presetImageDescMap[engine] : '';
-        break;
-      case 2:
-        // 已保存引擎
-        desc = savedImageDescMap[engine] ? savedImageDescMap[engine] : '';
-        break;
-    }
-    if (desc) {
-      console.log(desc);
-      setEngineDesc(desc);
-    }
-  }
 
   let needOutputPathCodePrefix = true;
   if (isPretrainedModel) {
@@ -632,10 +614,10 @@ const ModelTraining = (props) => {
           label={formatMessage({ id: 'trainingCreate.label.engine' })}
           rules={[{ required: true }]}
         >
-          <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2} onChange={(engine) => { handleChangeEgine(engine) }}>
+          <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2}>
             {engineSource === 1 &&
               frameWorks.map((f) => (
-                <Option value={f} key={f} title={engineDesc}>
+                <Option value={f} key={f}>
                   {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
                   <Tooltip title={presetImageDescMap[f]}>
                     {getNameFromDockerImage(f)}
