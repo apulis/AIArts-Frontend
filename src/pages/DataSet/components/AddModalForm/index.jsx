@@ -29,25 +29,6 @@ const AddModalForm = (props, ref) => {
     headers: {
       Authorization: 'Bearer ' + window.localStorage.token,
     },
-    onChange(info) {
-      const { status, name } = info.file;
-      console.log('----', info.fileList);
-      setBtn(true);
-      if (status !== 'uploading') {
-        setBtn(false);
-      }
-      if (status === 'done') {
-        setBtn(false);
-        message.success(
-          `${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.success' })}！`,
-        );
-      } else if (status === 'error') {
-        message.error(`${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.error' })}`);
-        setBtn(false);
-      }
-      form.setFieldsValue({ fileLists: info.fileList });
-      setFileLists(info.fileList);
-    },
     beforeUpload(file, fileList) {
       const { type, size, name } = file;
       const typeReg = /\.(zip|tar|gz)$/;
@@ -72,8 +53,38 @@ const AddModalForm = (props, ref) => {
           );
           reject(file);
         }
+        const time = Date.now();
+        file.time = time;
         resolve(file);
       });
+    },
+    onChange(info) {
+      const { status, name, time } = info.file;
+      console.log('----', info.fileList);
+      setBtn(true);
+      if (status === 'uploading') {
+        // 当前进度 与 剩余进度
+        // const progress = ;
+        console.log('文件', info.file);
+        // 当前花费时间
+        const timeDiff = Date.now() - time;
+        console.log('时间差', timeDiff);
+        // 当前速度
+        //
+      } else {
+        setBtn(false);
+      }
+      if (status === 'done') {
+        setBtn(false);
+        message.success(
+          `${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.success' })}！`,
+        );
+      } else if (status === 'error') {
+        message.error(`${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.error' })}`);
+        setBtn(false);
+      }
+      form.setFieldsValue({ fileLists: info.fileList });
+      setFileLists(info.fileList);
     },
     onRemove(file) {
       let newFileList = fileLists;

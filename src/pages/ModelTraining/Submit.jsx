@@ -13,6 +13,7 @@ import {
   Col,
   Row,
   InputNumber,
+  Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
 import {
@@ -32,6 +33,7 @@ import {
   fetchPresetModel,
   updateParams,
   getUserDockerImages,
+  getImages,
 } from '../../services/modelTraning';
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -82,8 +84,8 @@ const ModelTraining = (props) => {
   const goBackPath = isFromPresetModel
     ? '/model-training/PretrainedModels'
     : readParam
-    ? '/model-training/paramsManage'
-    : '/model-training/modelTraining';
+      ? '/model-training/paramsManage'
+      : '/model-training/modelTraining';
   const [runningParams, setRunningParams] = useState([
     { key: '', value: '', createTime: generateKey() },
   ]);
@@ -110,6 +112,30 @@ const ModelTraining = (props) => {
   const [paramsDetailedData, setParamsDetailedData] = useState({});
   const [importedTrainingParams, setImportedTrainingParams] = useState(false);
   const [engineSource, setEngineSource] = useState(1);
+  const [presetImageDescMap, setPresetImageDescMap] = useState({});
+  const [savedImageDescMap, setSavedImageDescMap] = useState({});
+  const [engineDesc, setEngineDesc] = useState('');
+
+  const getImageDescMap = async () => {
+    const data = await apiGetImages();
+    const obj = {};
+    if (data) {
+      data.forEach((item) => {
+        obj[item.image] = item.desc;
+      })
+    }
+    setPresetImageDescMap(obj);
+  }
+
+  const apiGetImages = async () => {
+    const res = await getImages();
+    const { code, data, msg } = res;
+    if (code == 0) {
+      return data;
+    } else {
+      return null;
+    }
+  }
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource(currentSelectedVC);
@@ -134,6 +160,7 @@ const ModelTraining = (props) => {
       setNofeInfo(nodeInfo);
     }
   };
+
   const fetchUserDockerImages = async () => {
     const res = await getUserDockerImages();
     if (res.code === 0) {
@@ -141,6 +168,16 @@ const ModelTraining = (props) => {
         return { fullName: val.fullName, id: val.id };
       });
       setUserFrameWorks(images);
+      const savedImageDescArr = res.data.savedImages?.map((val) => {
+        return { image: val.fullName, desc: val.description };
+      });
+      if (savedImageDescArr.length > 0) {
+        const obj = {};
+        savedImageDescArr.forEach((item) => {
+          obj[item.image] = item.desc;
+        })
+        setSavedImageDescMap(obj);
+      }
     }
   };
   useEffect(() => {
@@ -152,7 +189,7 @@ const ModelTraining = (props) => {
       const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, deviceList, currentDeviceType, ]);
+  }, [distributedJob, deviceList, currentDeviceType,]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
@@ -249,6 +286,7 @@ const ModelTraining = (props) => {
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
+    getImageDescMap();
     if (['createJobWithParam', 'editParam'].includes(requestType)) {
       fetchParams();
     }
@@ -341,7 +379,7 @@ const ModelTraining = (props) => {
           onOk() {
             submitJobInner();
           },
-          onCancel() {},
+          onCancel() { },
         });
       } else {
         submitJobInner();
@@ -471,6 +509,24 @@ const ModelTraining = (props) => {
     setDeviceTotal(deviceTotal);
   };
 
+  const handleChangeEgine = (engine) => {
+    let desc = '';
+    switch (engine) {
+      case 1:
+        // 预置引擎
+        desc = presetImageDescMap[engine] ? presetImageDescMap[engine] : '';
+        break;
+      case 2:
+        // 已保存引擎
+        desc = savedImageDescMap[engine] ? savedImageDescMap[engine] : '';
+        break;
+    }
+    if (desc) {
+      console.log(desc);
+      setEngineDesc(desc);
+    }
+  }
+
   let needOutputPathCodePrefix = true;
   if (isPretrainedModel) {
     needOutputPathCodePrefix = true;
@@ -576,17 +632,22 @@ const ModelTraining = (props) => {
           label={formatMessage({ id: 'trainingCreate.label.engine' })}
           rules={[{ required: true }]}
         >
-          <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2}>
+          <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2} onChange={(engine) => { handleChangeEgine(engine) }}>
             {engineSource === 1 &&
               frameWorks.map((f) => (
-                <Option value={f} key={f}>
-                  {getNameFromDockerImage(f)}
+                <Option value={f} key={f} title={engineDesc}>
+                  {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
+                  <Tooltip title={presetImageDescMap[f]}>
+                    {getNameFromDockerImage(f)}
+                  </Tooltip>
                 </Option>
               ))}
             {engineSource === 2 &&
               userFrameWorks.map((f) => (
                 <Option value={f.fullName} key={f.id}>
-                  {getNameFromDockerImage(f.fullName)}
+                  <Tooltip title={savedImageDescMap[f]}>
+                    {getNameFromDockerImage(f.fullName)}
+                  </Tooltip>
                 </Option>
               ))}
           </Select>
@@ -600,8 +661,8 @@ const ModelTraining = (props) => {
           {isPretrainedModel || importedTrainingParams ? (
             <Input style={{ width: 420 }} disabled={isPretrainedModel} />
           ) : (
-            <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
-          )}
+              <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+            )}
         </FormItem>
         <FormItem
           labelCol={{ span: 4 }}
@@ -612,8 +673,8 @@ const ModelTraining = (props) => {
           {isPretrainedModel || importedTrainingParams ? (
             <Input style={{ width: 420 }} disabled={isPretrainedModel} />
           ) : (
-            <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
-          )}
+              <Input addonBefore={codePathPrefix} style={{ width: 420 }} disabled={typeCreate} />
+            )}
         </FormItem>
         <FormItem
           name="visualPath"
@@ -880,8 +941,8 @@ const ModelTraining = (props) => {
               ))}
             </Tabs>
           ) : (
-            <div>{formatMessage({ id: 'model.submit.modal.save.params.none' })}</div>
-          )}
+              <div>{formatMessage({ id: 'model.submit.modal.save.params.none' })}</div>
+            )}
         </Form>
       </Modal>
       <Button
