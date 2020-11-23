@@ -21,6 +21,7 @@ export default {
   'dataSetCreate.placeholder.inputStorePath': '请输入存储路径',
 
   'dataSetCreate.rule.needName': '请输入数据集名称！',
+  'dataSetCreate.rule.needName.pattern': '不允许出现符号！',
   'dataSetCreate.rule.needDesc': '请输入简介！',
   'dataSetCreate.rule.needFile': '请上传文件！',
   'dataSetCreate.rule.needStorePath': '请输入存储路径！',
