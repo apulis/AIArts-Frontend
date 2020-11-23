@@ -17,6 +17,7 @@ export default {
   'model.training.detail.startupFile': 'Startup File',
   'model.training.detail.datasetPath': 'Dataset Path',
   'model.training.detail.visualPath': 'Visualization Path',
+  'model.training.detail.command': 'Command',
   'model.training.detail.outputPath': 'Output Path',
   'model.training.detail.checkpoint': 'Checkpoint File',
   'model.training.detail.log': 'Training Log',
