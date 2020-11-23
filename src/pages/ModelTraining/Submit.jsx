@@ -641,6 +641,9 @@ const ModelTraining = (props) => {
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.visualPath' })}
             style={{ marginTop: '50px' }}
+            rules={[
+              { whitespace: true }
+            ]}
           >
             {
               <Input
