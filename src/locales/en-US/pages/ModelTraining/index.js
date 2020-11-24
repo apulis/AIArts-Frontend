@@ -34,4 +34,9 @@ export default {
   // createVisualization
   'createVisualization.create.success': 'Created successfully',
   'createVisualization.create.title.visualJob': 'Create a visualization job',
+
+  'modelTraing.submit.algorithmSource': 'Algorithm source',
+  'modelTraing.submit.classicMode': 'Classic mode',
+  'modelTraing.submit.commandLineMode': 'Command line mode',
+  'modelTraing.submit.commandLine': 'Command Line',
 };

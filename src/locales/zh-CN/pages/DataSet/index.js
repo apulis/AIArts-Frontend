@@ -31,4 +31,8 @@ export default {
   'dataSet.detail.label.createTime': '创建时间',
   'dataSet.detail.label.updateTime': '更新时间',
   'dataSet.detail.label.description': '简介',
+
+  'dataSet.addFormModel.restTime': '剩余时间：',
+
+
 };

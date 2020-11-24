@@ -13,6 +13,7 @@ import {
   Col,
   Row,
   InputNumber,
+  Tooltip,
 } from 'antd';
 import { history, useIntl } from 'umi';
 import {
@@ -32,6 +33,7 @@ import {
   fetchPresetModel,
   updateParams,
   getUserDockerImages,
+  getImages,
 } from '../../services/modelTraning';
 import styles from './index.less';
 import { getLabeledDatasets } from '../../services/datasets';
@@ -112,6 +114,29 @@ const ModelTraining = (props) => {
   const [importedTrainingParams, setImportedTrainingParams] = useState(false);
   const [engineSource, setEngineSource] = useState(1);
   const [algorithmSource, setAlgorithm] = useState(1);
+  const [presetImageDescMap, setPresetImageDescMap] = useState({});
+  const [savedImageDescMap, setSavedImageDescMap] = useState({});
+
+  const getImageDescMap = async () => {
+    const data = await apiGetImages();
+    const obj = {};
+    if (data) {
+      data.forEach((item) => {
+        obj[item.image] = item.desc;
+      })
+    }
+    setPresetImageDescMap(obj);
+  }
+
+  const apiGetImages = async () => {
+    const res = await getImages();
+    const { code, data, msg } = res;
+    if (code == 0) {
+      return data;
+    } else {
+      return null;
+    }
+  }
 
   const getAvailableResource = async () => {
     const res = await fetchAvilableResource(currentSelectedVC);
@@ -136,6 +161,7 @@ const ModelTraining = (props) => {
       setNofeInfo(nodeInfo);
     }
   };
+
   const fetchUserDockerImages = async () => {
     const res = await getUserDockerImages();
     if (res.code === 0) {
@@ -143,6 +169,16 @@ const ModelTraining = (props) => {
         return { fullName: val.fullName, id: val.id };
       });
       setUserFrameWorks(images);
+      const savedImageDescArr = res.data.savedImages?.map((val) => {
+        return { image: val.fullName, desc: val.description };
+      });
+      if (savedImageDescArr.length > 0) {
+        const obj = {};
+        savedImageDescArr.forEach((item) => {
+          obj[item.image] = item.desc;
+        })
+        setSavedImageDescMap(obj);
+      }
     }
   };
   useEffect(() => {
@@ -251,6 +287,7 @@ const ModelTraining = (props) => {
   useEffect(() => {
     getAvailableResource();
     fetchDataSets();
+    getImageDescMap();
     if (['createJobWithParam', 'editParam'].includes(requestType)) {
       fetchParams();
     }
@@ -473,6 +510,7 @@ const ModelTraining = (props) => {
     setDeviceTotal(deviceTotal);
   };
 
+
   let needOutputPathCodePrefix = true;
   if (isPretrainedModel) {
     needOutputPathCodePrefix = true;
@@ -555,16 +593,16 @@ const ModelTraining = (props) => {
       )}
       {isSubmitPage && <FormItem
           {...commonLayout}
-          label={'算法来源'}
+          label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
         >
           <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
             <Radio.Button value={1}>
-              {'经典模式'}
+              {formatMessage({ id: 'modelTraing.submit.classicMode' })}
             </Radio.Button>
             <Radio.Button
               value={2}
             >
-              {'命令行模式'}
+              {formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
             </Radio.Button>
           </Radio.Group>
 
@@ -598,13 +636,18 @@ const ModelTraining = (props) => {
             {engineSource === 1 &&
               frameWorks.map((f) => (
                 <Option value={f} key={f}>
-                  {getNameFromDockerImage(f)}
+                  {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
+                  <Tooltip title={presetImageDescMap[f]}>
+                    {getNameFromDockerImage(f)}
+                  </Tooltip>
                 </Option>
               ))}
             {engineSource === 2 &&
               userFrameWorks.map((f) => (
                 <Option value={f.fullName} key={f.id}>
-                  {getNameFromDockerImage(f.fullName)}
+                  <Tooltip title={savedImageDescMap[f]}>
+                    {getNameFromDockerImage(f.fullName)}
+                  </Tooltip>
                 </Option>
               ))}
           </Select>
@@ -681,7 +724,7 @@ const ModelTraining = (props) => {
         </FormItem>
         
         {
-          algorithmSource === 2 && <FormItem label="命令行" name="command" {...commonLayout}>
+          algorithmSource === 2 && <FormItem label={formatMessage({ id: 'modelTraing.submit.commandLine' })} name="command" {...commonLayout}>
             <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
           </FormItem>
         }

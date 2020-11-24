@@ -32,4 +32,6 @@ export default {
   'dataSet.detail.label.createTime': 'Creation Time',
   'dataSet.detail.label.updateTime': 'Update Time',
   'dataSet.detail.label.description': 'Description',
+
+  'dataSet.addFormModel.restTime': 'Time left:',
 };
