@@ -329,13 +329,27 @@ const ModelTraining = (props) => {
           history.push('/model-training/modelTraining');
         }
       };
+      const currentVCAvailDevice = deviceList.find(val => val.deviceType === values.deviceType);
+      let needConfirm = false;
+      if (currentVCAvailDevice) {
+        const currentAvail = currentVCAvailDevice.avail;
+        if (values.jobTrainingType === 'PSDistJob') {
+          if (values.numPsWorker * values.deviceNum > avail) {
+            needConfirm = true;
+          }
+        } else {
+          if (values.deviceNum > currentAvail) {
+            needConfirm = true;
+          }
+        }
+      }
       if (
         !beforeSubmitJob(
           values.jobTrainingType === 'PSDistJob',
           values.deviceType,
           values.deviceNum,
           { nodeNum: values.numPsWorker },
-        )
+        ) || needConfirm
       ) {
         Modal.confirm({
           title: formatMessage({ id: 'model.submit.resource.not.enough.title' }),
@@ -772,10 +786,10 @@ const ModelTraining = (props) => {
                   if (Number(value) > totalNodes) {
                     callback(
                       formatMessage(
-                        { id: 'trainingCreate.npmPsWorker.validator.max' }.replace(
-                          /\{num\}/,
-                          totalNodes,
-                        ),
+                        { id: 'trainingCreate.npmPsWorker.validator.max' },
+                      ).replace(
+                        /\{num\}/,
+                        totalNodes,
                       ),
                     );
                     return;
