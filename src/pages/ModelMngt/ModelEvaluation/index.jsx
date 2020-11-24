@@ -211,7 +211,15 @@ const ModelEvaluation = (props) => {
           message.error(`${intl.formatMessage({ id: 'modelEvaluation.create.error' })}:${msg}`);
       }
     };
-    if (!beforeSubmitJob(false, deviceType, deviceNum)) {
+    const currentVCAvailDevice = deviceList.find(val => val.deviceType === deviceType);
+    const needConfirm = false;
+    if (currentVCAvailDevice) {
+      const currentAvail = currentVCAvailDevice.avail;
+      if (currentAvail > deviceNum) {
+        needConfirm = true;
+      }
+    }
+    if (!beforeSubmitJob(false, deviceType, deviceNum) || needConfirm) {
       Modal.confirm({
         title: intl.formatMessage({ id: 'modelEvaluation.tips.noDeviceToWait' }),
         content: intl.formatMessage({ id: 'modelEvaluation.isContinue' }),
