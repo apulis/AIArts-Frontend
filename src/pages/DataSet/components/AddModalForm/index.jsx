@@ -99,7 +99,7 @@ const AddModalForm = (props, ref) => {
         rules={[
           { required: true, message: intl.formatMessage({ id: 'dataSetCreate.rule.needName' }) },
           { max: 25 },
-          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]$/, message: intl.formatMessage({ id: 'dataSetCreate.rule.needName.pattern' }) },
+          { pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/, message: intl.formatMessage({ id: 'dataSetCreate.rule.needName.pattern' }) },
         ]}
       >
         <Input

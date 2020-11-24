@@ -9,6 +9,7 @@ export default {
   'dataSet.list.edit': '编辑',
   'dataSet.list.add': '新增',
   'dataSet.list.success': '成功！',
+  'dataSet.add.success.path': '成功创建数据集，路径为： ',
   'dataSet.list.yes': '是',
   'dataSet.list.no': '否',
   'dataSet.list.onDelete.title': '确定要删除该数据集吗？',

@@ -9,6 +9,7 @@ export default {
   'dataSet.list.edit': 'Edit',
   'dataSet.list.add': 'Add',
   'dataSet.list.success': 'Success！',
+  'dataSet.add.success.path': 'Success create data set in: ',
   'dataSet.list.yes': 'yes',
   'dataSet.list.no': 'no',
   'dataSet.list.onDelete.title': 'Are you sure you want to delete this dataset?',
