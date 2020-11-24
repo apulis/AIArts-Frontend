@@ -1,6 +1,6 @@
 export default {
   'codeCreate.label.devEnvName': '开发环境名称',
-  'codeCreate.label.description': '开发环境名称',
+  'codeCreate.label.description': '开发环境描述',
   'codeCreate.label.storePath': '代码存储路径',
   'codeCreate.label.engineSource': '选择引擎来源',
   'codeCreate.label.engineType': '引擎类型',

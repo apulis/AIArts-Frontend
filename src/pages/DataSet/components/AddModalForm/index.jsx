@@ -1,8 +1,9 @@
 import { message, Form, Input, Button, Select, Radio, Upload } from 'antd';
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
-import { InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined, DeleteOutlined } from '@ant-design/icons';
 import { FilePathReg, FilePathErrorText } from '@/utils/const';
 import { useIntl } from 'umi';
+import moment from 'moment';
 
 const { Dragger } = Upload;
 
@@ -13,6 +14,8 @@ const AddModalForm = (props, ref) => {
   const [fileLists, setFileLists] = useState([]);
   const [sourceType, setSourceType] = useState(1);
   const [isPrivate, setIsPrivate] = useState(true);
+  const [fileUploadRestTimeMap, setFileUploadRestTimeMap] = useState({});
+
   useImperativeHandle(ref, () => ({
     form: form,
   }));
@@ -29,6 +32,10 @@ const AddModalForm = (props, ref) => {
     headers: {
       Authorization: 'Bearer ' + window.localStorage.token,
     },
+    progress: {
+      format: percent => `${parseFloat(percent.toFixed(2))}%`
+    },
+    itemRender: (originNode, file, fileList) => {console.log(fileUploadRestTimeMap);return (<div> {originNode} <div style={{ position:'relative', textAlign: 'right',marginTop: 8}}><p>{`(剩余时间：${fileUploadRestTimeMap[file.uid] ? fileUploadRestTimeMap[file.uid] : ''})`}</p></div></div>) },
     beforeUpload(file, fileList) {
       const { type, size, name } = file;
       const typeReg = /\.(zip|tar|gz)$/;
@@ -55,22 +62,31 @@ const AddModalForm = (props, ref) => {
         }
         const time = Date.now();
         file.time = time;
+        fileUploadRestTimeMap[file.uid] = undefined;
         resolve(file);
       });
     },
     onChange(info) {
-      const { status, name, time } = info.file;
-      console.log('----', info.fileList);
+      const { file }  = info;
+      const { status, name, time, percent, restTime } = file;
       setBtn(true);
       if (status === 'uploading') {
-        // 当前进度 与 剩余进度
-        // const progress = ;
-        console.log('文件', info.file);
+        // 剩余进度
+        const restPercent = 100 - percent;
         // 当前花费时间
         const timeDiff = Date.now() - time;
-        console.log('时间差', timeDiff);
         // 当前速度
-        //
+        const v = percent / timeDiff;
+        // 使用剩余进度 / 速度 得到估计的剩余时间
+        const restTime = restPercent / v;
+        const formatTime = moment(restTime).format('mm:ss');
+        // debugger
+        fileUploadRestTimeMap[file.uid] = formatTime
+        setFileUploadRestTimeMap(fileUploadRestTimeMap)
+        // console.log(fileUploadRestTimeMap);
+        // file.restTime = 'invalid date';
+        // console.log(name + '上传剩余时间：', moment(restTime).format('mm:ss'));
+        // 转换时间
       } else {
         setBtn(false);
       }
