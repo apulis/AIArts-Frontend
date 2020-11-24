@@ -2,5 +2,10 @@
 
 buildPlugin ( {
     repoName = "AIArts"
-    imageName = "aiarts-frontend"
+    dockerImages = [
+        [
+            "directory": ".",
+            "imageName": "aiarts-frontend",
+        ]
+    ]
 })
