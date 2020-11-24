@@ -21,6 +21,7 @@ export default {
   'dataSetCreate.placeholder.inputStorePath': 'Please Input Storage Path',
 
   'dataSetCreate.rule.needName': 'Please Input DataSet Name！',
+  'dataSetCreate.rule.needName.pattern': 'No symbols allowed',
   'dataSetCreate.rule.needDesc': 'Please Input Description！',
   'dataSetCreate.rule.needFile': 'Please Upload File！',
   'dataSetCreate.rule.needStorePath': 'Please Input Storage Path！',

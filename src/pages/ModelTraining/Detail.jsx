@@ -18,6 +18,7 @@ import { modelTrainingType } from '@/utils/const';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import useInterval from '@/hooks/useInterval';
 import { connect } from 'dva';
+import JobDetail from '@/components/BizComponent/JodDetail';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
@@ -137,57 +138,7 @@ const Detail = (props) => {
           </Tooltip>
         </div>
       </div>
-      <Descriptions bordered={true} column={1}>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobName' })}>
-          {jobDetail.name}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.jobStatus' })}>
-          {getJobStatus(jobDetail.status)}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.engine' })}>
-          {getNameFromDockerImage(jobDetail.engine)}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.ID' })}>
-          {jobDetail.id}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.createTime' })}>
-          {moment(jobDetail.createTime).format('YYYY-MM-DD HH:mm:ss')}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.runningParams' })}>
-          {jobDetail.params && formatParams(jobDetail.params).map((val) => <div>{val}</div>)}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.codePath' })}>
-          {jobDetail.codePath}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceNum' })}>
-          {jobDetail.deviceNum}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.startupFile' })}>
-          {jobDetail.startupFile}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceType' })}>
-          {jobDetail.deviceType}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.datasetPath' })}>
-          {jobDetail.datasetPath}
-        </Descriptions.Item>
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.desc' })}>
-          {jobDetail.desc}
-        </Descriptions.Item>
-        {jobDetail.visualPath && (
-          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.visualPath' })}>
-            {jobDetail.visualPath}
-          </Descriptions.Item>
-        )}
-        <Descriptions.Item label={formatMessage({ id: 'model.training.detail.outputPath' })}>
-          {jobDetail.outputPath}
-        </Descriptions.Item>
-        {jobDetail.checkpoint && (
-          <Descriptions.Item label={formatMessage({ id: 'model.training.detail.checkpoint' })}>
-            {jobDetail.checkpoint}
-          </Descriptions.Item>
-        )}
-      </Descriptions>
+      <JobDetail jobDetail={jobDetail} />
       <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
         {formatMessage({ id: 'model.training.detail.log' })}
       </div>

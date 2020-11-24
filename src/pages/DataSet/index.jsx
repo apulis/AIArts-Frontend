@@ -73,18 +73,23 @@ const DataSetList = () => {
       if (modalType) {
         text = intl.formatMessage({ id: 'dataSet.list.edit' });
         res = await edit(editData.id, values);
+        const { code } = res;
+        if (code === 0) {
+          getData();
+          message.success(`${text}${intl.formatMessage({ id: 'dataSet.list.success' })}`);
+          setModalFlag(false);
+        }
       } else {
         values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
         delete values.fileLists;
         delete values.sourceType;
         text = intl.formatMessage({ id: 'dataSet.list.add' });
         res = await add(values);
-      }
-      const { code } = res;
-      if (code === 0) {
-        getData();
-        message.success(`${text}${intl.formatMessage({ id: 'dataSet.list.success' })}`);
-        setModalFlag(false);
+        if (res.code === 0) {
+          message.success(intl.formatMessage({ id: 'dataSet.add.success.path' }) + res.data.DatasetPath);
+          getData();
+          setModalFlag(false);
+        }
       }
       setBtnLoading(false);
     });
