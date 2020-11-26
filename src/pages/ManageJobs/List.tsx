@@ -185,7 +185,7 @@ const ManageJobs: React.FC = (props) => {
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <a
                   style={{ marginRight: '16px', display: 'block' }}
-                  onClick={() => stopTraining(item.id)}
+                  onClick={() => stopTraining(item.jobId)}
                 >
                   {formatMessage({ id: 'modelList.table.column.action.stop' })}
                 </a>
@@ -193,7 +193,7 @@ const ManageJobs: React.FC = (props) => {
                   type="link"
                   danger
                   disabled={!checkIfCanDelete(item.status)}
-                  onClick={() => handleDeleteJob(item.id, item.status)}
+                  onClick={() => handleDeleteJob(item.jobId, item.status)}
                 >
                   {formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
@@ -207,7 +207,7 @@ const ManageJobs: React.FC = (props) => {
                     danger
                     type="link"
                     disabled={!checkIfCanDelete(item.status)}
-                    onClick={() => handleDeleteJob(item.id, item.status)}
+                    onClick={() => handleDeleteJob(item.jobId, item.status)}
                   >
                     {formatMessage({ id: 'modelList.table.column.action.delete' })}
                   </Button>
