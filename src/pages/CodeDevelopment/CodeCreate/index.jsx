@@ -55,7 +55,7 @@ const CodeCreate = (props) => {
     if (result) {
       setResource(result);
       const enginTypeArrData = Object.keys(result.aiFrameworks);
-      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]];
+      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]] || [];
       const deviceList = result.deviceList;
       const deviceTypeArrData = deviceList.map((item) => item.deviceType);
       setDeviceList(deviceList);
@@ -69,7 +69,7 @@ const CodeCreate = (props) => {
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]; // todo 静态数据
       setCodePathPrefix(result.codePathPrefix);
       setEngineTypeArr(enginTypeArrData);
-      setEngineNameArr(engineNameArrData || []);
+      setEngineNameArr(engineNameArrData);
       setDeviceTypeArr(deviceTypeArrData);
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData);
       setMaxNodeNum(maxNodeNumData);
