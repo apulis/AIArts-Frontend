@@ -3,11 +3,9 @@ import request from '@/utils/request';
 interface IfetchAllJobsParams {
   pageNum: number,
   pageSize: number;
-  search: string;
-  sortedInfo: {
-    orderBy: string;
-    order: string;
-  };
+  searchWord: string;
+  orderBy: string;
+  order: string;
   status: string;
   vcName: string;
   jobType: string;
@@ -15,7 +13,9 @@ interface IfetchAllJobsParams {
 
 export const fetchAllJobs = (params: IfetchAllJobsParams) => {
   return request('/jobs', {
-    params,
+    params: {
+      ...params,
+    },
   })
 }
 

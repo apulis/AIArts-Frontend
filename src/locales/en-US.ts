@@ -28,6 +28,7 @@ import bizComponent from './en-US/bizComponent';
 import reg from './en-US/reg';
 import layout from './en-US/layout';
 import vc from './en-US/pages/vc';
+import ManageJobs from './en-US/pages/ManageJobs';
 
 import { capFirstLetter } from '@/utils/utils';
 
@@ -72,5 +73,6 @@ export default {
   ...ParamsManage,
   ...PretrainedModel,
   ...reg,
-  ...vc
+  ...vc,
+  ...ManageJobs
 };

@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, Input, Card, Button, message } from 'antd';
-import { SortOrder } from 'antd/lib/table/interface';
+import { Table, Select, Input, Card, Button, message, Dropdown, Menu } from 'antd';
 import { connect, useIntl } from 'umi';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { SyncOutlined } from '@ant-design/icons';
 
-import { checkIfCanStop, getJobStatus, getStatusList } from '@/utils/utils';
+import { checkIfCanDelete, checkIfCanStop, getJobStatus, getStatusList } from '@/utils/utils';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { fetchAllJobs, fetchAllJobsSummary } from '@/services/manageJobs';
 import useInterval from '@/hooks/useInterval';
 import { PAGEPARAMS, sortText } from '@/utils/const';
-import { removeTrainings } from '@/services/modelTraning';
+import { deleteJob, removeTrainings } from '@/services/modelTraning';
+import Modal from 'antd/lib/modal/Modal';
+import { deleteInference } from '../InferenceService/InferenceList/services';
+import { ColumnsType } from 'antd/lib/table';
 
 const { Search } = Input;
 
 export enum EnumJobTrainingType {
+  all = 'all',
   visualization = 'visualization',
   ModelConversionJob = 'ModelConversionJob',
   InferenceJob = 'InferenceJob',
@@ -26,12 +29,12 @@ const ManageJobs: React.FC = (props) => {
   const { formatMessage } = useIntl();
   const [loading, setLoading] = useState(false);
   const [jobTotal, setJobTotal] = useState(0);
-  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: SortOrder; columnKey: string }>({
-    orderBy: 'name',
+  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: string; columnKey: string }>({
+    orderBy: 'jobTime',
     order: 'ascend',
     columnKey: '',
   });
-  const [currentJobType, setCurrentJobType] = useState(EnumJobTrainingType.training)
+  const [currentJobType, setCurrentJobType] = useState(EnumJobTrainingType.all)
   const { currentSelectedVC } = props.vc;
   const [currentStatus, setCurrentStatus] = useState('all');
   const [search, setSearch] = useState('');
@@ -44,20 +47,18 @@ const ManageJobs: React.FC = (props) => {
       setLoading(true);
     }
     const res = await fetchAllJobs({
-      search,
+      searchWord: search,
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
       status: currentStatus || 'all',
       vcName: currentSearchVC,
       jobType: 'training',
-      sortedInfo: {
-        order: sortedInfo.order,
-        orderBy: sortedInfo.orderBy,
-      },
+      order: sortText[sortedInfo.order],
+      orderBy: sortedInfo.orderBy,
     });
     setLoading(false);
     if (res.code === 0) {
-      setJobs(res.data.list);
+      setJobs(res.data.jobs);
       setJobTotal(res.data.total);
     }
   }
@@ -99,68 +100,119 @@ const ManageJobs: React.FC = (props) => {
     }
   };
 
-  const columns = [
+  const handleDeleteJob = async (jobId: string, status: string) => {
+    const handleDelete = async () => {
+      const res = await deleteInference(jobId);
+      if (res.code === 0) {
+        message.success(formatMessage({ id: 'modelTraining.list.message.handle.success' }));
+        if (jobs.length === 1) {
+          setPageParams({...pageParams, pageNum: pageParams.pageNum - 1});
+        } else {
+          getJobList(true);
+        }
+        getAllJobsSummary()
+      }
+    };
+    if (['unapproved', 'queued', 'scheduling', 'running'].includes(status)) {
+      Modal.confirm({
+        title: formatMessage({ id: 'modelTraining.list.modal.title.current.task.dont.stopped' }),
+        content: formatMessage({ id: 'modelTraining.list.modal.content.please.stop.task' }),
+        cancelButtonProps: { hidden: true },
+        onCancel() {},
+        onOk() {},
+      });
+    } else {
+      handleDelete();
+    }
+  };
+
+  const columns: ColumnsType<any> = [
     {
-      dataIndex: 'name',
+      dataIndex: 'jobName',
       title: formatMessage({ id: 'jobManagement.table.column.name' }),
-      key: 'name',
+      key: 'jobName',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
-      dataIndex: 'status',
+      dataIndex: 'jobStatus',
       title: formatMessage({ id: 'jobManagement.table.column.status' }),
-      render: (text, item) => getJobStatus(item.status),
+      render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
       dataIndex: 'engine',
       title: formatMessage({ id: 'jobManagement.table.column.engine' }),
-      render(value) {
-        return <div>{getNameFromDockerImage(value)}</div>;
+      render(_text, item) {
+        return <div>{getNameFromDockerImage(item.jobParams?.image)}</div>;
       },
     },
     {
       dataIndex: 'userName',
       title: formatMessage({ id: 'jobManagement.table.column.userName' }),
-      render(value) {
-        return <div>{getNameFromDockerImage(value)}</div>;
+      render(text, item) {
+        return <div>{item.jobParams?.userName}</div>;
       },
     },
     {
       dataIndex: 'createTime',
       title: formatMessage({ id: 'jobManagement.table.column.createTime' }),
-      key: 'createTime',
+      key: 'jobTime',
       render(_text, item) {
-        return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
+        return <div>{moment(new Date(item.jobTime).getTime()).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     {
       dataIndex: 'desc',
       title: formatMessage({ id: 'jobManagement.table.column.desc' }),
       width: '100px',
-      render(_text) {
+      render(_text, item) {
         return (
-          <div title={_text}>
-            {_text}
+          <div title={item.jobParams?.desc}>
+            {item.jobParams?.desc || '-'}
           </div>
         );
       },
     },
     {
       title: formatMessage({ id: 'modelList.table.column.action' }),
+      align: 'center',
       render(_text, item) {
         return (
           <>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <a
-                style={{ marginRight: '16px', display: 'block' }}
-                onClick={() => stopTraining(item.id)}
-              >
-                {formatMessage({ id: 'modelList.table.column.action.stop' })}
-              </a>
-            </div>
+            {checkIfCanStop(item.status) ? (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <a
+                  style={{ marginRight: '16px', display: 'block' }}
+                  onClick={() => stopTraining(item.id)}
+                >
+                  {formatMessage({ id: 'modelList.table.column.action.stop' })}
+                </a>
+                <Button
+                  type="link"
+                  danger
+                  disabled={!checkIfCanDelete(item.status)}
+                  onClick={() => handleDeleteJob(item.id, item.status)}
+                >
+                  {formatMessage({ id: 'modelList.table.column.action.delete' })}
+                </Button>
+              </div>
+            ) : (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{ marginRight: '16px' }} className="disabled">
+                    {formatMessage({ id: 'modelList.table.column.action.hasStopped' })}
+                  </div>
+                  <Button
+                    danger
+                    type="link"
+                    disabled={!checkIfCanDelete(item.status)}
+                    onClick={() => handleDeleteJob(item.id, item.status)}
+                  >
+                    {formatMessage({ id: 'modelList.table.column.action.delete' })}
+                  </Button>
+                </div>
+              )}
           </>
         );
       },
@@ -192,7 +244,6 @@ const ManageJobs: React.FC = (props) => {
   };
 
   const handleChangeCurrentSearchVC = (value: string | null) => {
-    console.log('value', value)
     setCurrentSearchVC(value);
   }
 
@@ -215,7 +266,7 @@ const ManageJobs: React.FC = (props) => {
             >
               {
                 Object.keys(EnumJobTrainingType).map(jobType => (
-                  <Option value={jobType}>{jobType}</Option>
+                  <Option value={jobType}>{formatMessage({ id: 'jobManagement.jobType.' + jobType })}</Option>
                 ))
               }
             </Select>
@@ -233,8 +284,8 @@ const ManageJobs: React.FC = (props) => {
               defaultValue={currentSelectedVC}
               onChange={handleChangeCurrentSearchVC}
             >
-              <Option value={currentSelectedVC}>{'当前虚拟集群'}</Option>
-              <Option value={null}>{'所有虚拟集群'}</Option>
+              <Option value={currentSelectedVC}>{formatMessage({ id: 'jobManagement.current.vitual.cluster' })}</Option>
+              <Option value={null}>{formatMessage({ id: 'jobManagement.all.vitual.cluster' })}</Option>
             </Select>
             <Select
               style={{ width: 120, marginRight: '20px' }}
