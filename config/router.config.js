@@ -261,7 +261,7 @@ export default [
             name: 'manageJobs',
             icon: 'ClearOutlined',
             component: './ManageJobs/List',
-            authority: ['MANAGE_VC'],
+            authority: ['MANAGE_JOBS'],
           },
           {
             path: '/VisualOperation',
