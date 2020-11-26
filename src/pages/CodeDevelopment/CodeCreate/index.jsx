@@ -55,7 +55,7 @@ const CodeCreate = (props) => {
     if (result) {
       setResource(result);
       const enginTypeArrData = Object.keys(result.aiFrameworks);
-      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]];
+      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]] || [];
       const deviceList = result.deviceList;
       const deviceTypeArrData = deviceList.map((item) => item.deviceType);
       setDeviceList(deviceList);
