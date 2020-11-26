@@ -81,7 +81,7 @@ const ManageJobs: React.FC = (props) => {
   useEffect(() => {
     getJobList(true);
     getAllJobsSummary()
-  }, [pageParams, currentSearchVC, currentJobType, currentSearchVC]);
+  }, [pageParams, currentSearchVC, currentStatus, currentJobType, currentSearchVC]);
 
   const handleChangeStatus = (value: string) => {
     setCurrentStatus(value);
@@ -286,15 +286,6 @@ const ManageJobs: React.FC = (props) => {
             >
               <Option value={currentSelectedVC}>{formatMessage({ id: 'jobManagement.current.vitual.cluster' })}</Option>
               <Option value={null}>{formatMessage({ id: 'jobManagement.all.vitual.cluster' })}</Option>
-            </Select>
-            <Select
-              style={{ width: 120, marginRight: '20px' }}
-              defaultValue={currentStatus}
-              onChange={handleChangeStatus}
-            >
-              {jobSumary.map((status) => (
-                <Option value={status.value}>{status.label}</Option>
-              ))}
             </Select>
             <Search
               style={{ width: '200px' }}
