@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, Input, Card, Button } from 'antd';
+import { Table, Select, Input, Card, Button, message } from 'antd';
 import { SortOrder } from 'antd/lib/table/interface';
 import { connect, useIntl } from 'umi';
 import moment from 'moment';
@@ -10,7 +10,8 @@ import { checkIfCanStop, getJobStatus, getStatusList } from '@/utils/utils';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { fetchAllJobs, fetchAllJobsSummary } from '@/services/manageJobs';
 import useInterval from '@/hooks/useInterval';
-import { PAGEPARAMS } from '@/utils/const';
+import { PAGEPARAMS, sortText } from '@/utils/const';
+import { removeTrainings } from '@/services/modelTraning';
 
 const { Search } = Input;
 
@@ -25,30 +26,36 @@ const ManageJobs: React.FC = (props) => {
   const { formatMessage } = useIntl();
   const [loading, setLoading] = useState(false);
   const [jobTotal, setJobTotal] = useState(0);
-  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: SortOrder; columnKey: string}>({
-    orderBy: '',
+  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: SortOrder; columnKey: string }>({
+    orderBy: 'name',
     order: 'ascend',
     columnKey: '',
   });
+  const [currentJobType, setCurrentJobType] = useState(EnumJobTrainingType.training)
   const { currentSelectedVC } = props.vc;
   const [currentStatus, setCurrentStatus] = useState('all');
   const [search, setSearch] = useState('');
   const [jobs, setJobs] = useState([]);
+  const [currentSearchVC, setCurrentSearchVC] = useState(currentSelectedVC)
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
 
-  const getJobList = async () => {
+  const getJobList = async (withLoading?: boolean) => {
+    if (withLoading) {
+      setLoading(true);
+    }
     const res = await fetchAllJobs({
       search,
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
       status: currentStatus || 'all',
-      vcName: currentSelectedVC,
+      vcName: currentSearchVC,
       jobType: 'training',
       sortedInfo: {
         order: sortedInfo.order,
         orderBy: sortedInfo.orderBy,
       },
     });
+    setLoading(false);
     if (res.code === 0) {
       setJobs(res.data.list);
       setJobTotal(res.data.total);
@@ -57,7 +64,11 @@ const ManageJobs: React.FC = (props) => {
 
   const onSortChange = (pagination, filters, sorter) => {
     if (sorter.order !== false) {
-      setSortedInfo(sorter);
+      console.log('sorter', sorter)
+      setSortedInfo({
+        ...sorter,
+        order: sortText[sortedInfo.order],
+      });
     }
   };
 
@@ -66,14 +77,27 @@ const ManageJobs: React.FC = (props) => {
     getJobList();
   }, props.common.interval);
 
+  useEffect(() => {
+    getJobList(true);
+    getAllJobsSummary()
+  }, [pageParams, currentSearchVC, currentJobType, currentSearchVC]);
+
   const handleChangeStatus = (value: string) => {
     setCurrentStatus(value);
   }
-  
+
 
   const handleSearch = (value: string) => {
     setSearch(value);
   }
+
+  const stopTraining = async (id: string) => {
+    const res = await removeTrainings(id);
+    if (res.code === 0) {
+      message.success(formatMessage({ id: 'modelTraining.list.message.delete.success' }));
+      getJobList(true);
+    }
+  };
 
   const columns = [
     {
@@ -81,7 +105,7 @@ const ManageJobs: React.FC = (props) => {
       title: formatMessage({ id: 'jobManagement.table.column.name' }),
       key: 'name',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
@@ -105,12 +129,12 @@ const ManageJobs: React.FC = (props) => {
     {
       dataIndex: 'createTime',
       title: formatMessage({ id: 'jobManagement.table.column.createTime' }),
-      key: 'jobTime',
+      key: 'createTime',
       render(_text, item) {
         return <div>{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'createTime' && sortedInfo.order,
     },
     {
       dataIndex: 'desc',
@@ -163,16 +187,16 @@ const ManageJobs: React.FC = (props) => {
     }
   }
 
-  const pageParamsChange = (page, size) => {
+  const pageParamsChange = (page: number, size: number) => {
     setPageParams({ pageNum: page, pageSize: size });
   };
 
-  useEffect(() => {
-    getAllJobsSummary()
-  }, [search]);
+  const handleChangeCurrentSearchVC = (value: string | null) => {
+    console.log('value', value)
+    setCurrentSearchVC(value);
+  }
+
   const [jobSumary, setJobSumary] = useState<{ label: string, value: string }[]>([]);
-
-
   return (
     <PageHeaderWrapper>
       <Card
@@ -183,7 +207,35 @@ const ManageJobs: React.FC = (props) => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ flexGrow: 1 }}></div>
-          <div style={{  paddingRight: '20px' }}>
+          <div style={{ paddingRight: '20px' }}>
+            <Select
+              style={{ width: 180, marginRight: '20px' }}
+              defaultValue={currentJobType}
+              onChange={(jobType) => setCurrentJobType(jobType)}
+            >
+              {
+                Object.keys(EnumJobTrainingType).map(jobType => (
+                  <Option value={jobType}>{jobType}</Option>
+                ))
+              }
+            </Select>
+            <Select
+              style={{ width: 120, marginRight: '20px' }}
+              defaultValue={currentStatus}
+              onChange={handleChangeStatus}
+            >
+              {jobSumary.map((status) => (
+                <Option value={status.value}>{status.label}</Option>
+              ))}
+            </Select>
+            <Select
+              style={{ width: 180, marginRight: '20px' }}
+              defaultValue={currentSelectedVC}
+              onChange={handleChangeCurrentSearchVC}
+            >
+              <Option value={currentSelectedVC}>{'当前虚拟集群'}</Option>
+              <Option value={null}>{'所有虚拟集群'}</Option>
+            </Select>
             <Select
               style={{ width: 120, marginRight: '20px' }}
               defaultValue={currentStatus}
@@ -199,17 +251,12 @@ const ManageJobs: React.FC = (props) => {
               onSearch={handleSearch}
               enterButton
             />
-            <Button
-              style={{ left: '20px' }}
-              icon={<SyncOutlined />}
-              onClick={() => getJobList()}
-            ></Button>
           </div>
         </div>
 
         <Table
           style={{ marginTop: '20px' }}
-          dataSource={[]}
+          dataSource={jobs}
           columns={columns}
           onChange={onSortChange}
           pagination={{
@@ -231,7 +278,7 @@ const ManageJobs: React.FC = (props) => {
         />
       </Card>
     </PageHeaderWrapper>
-    
+
   );
 }
 
