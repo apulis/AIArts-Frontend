@@ -41,12 +41,11 @@ export default [
             authority: ['AI_ARTS_ALL', 'LABELING_IMAGE'],
           },
           {
-            path: '/expert/submission',
+            path: '/codeDevelopment',
             name: 'codeDevelopment',
             icon: 'EditOutlined',
             authority: ['AI_ARTS_ALL'],
-            // component: './CodeDevelopment',
-            target: '_blank',
+            component: './CodeDevelopment',
           },
           {
             path: '/codeDevelopment/add',

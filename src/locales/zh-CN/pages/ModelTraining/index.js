@@ -33,4 +33,9 @@ export default {
   // createVisualization
   'createVisualization.create.success': '创建成功',
   'createVisualization.create.title.visualJob': '创建可视化作业',
+
+  'modelTraing.submit.algorithmSource': '算法来源',
+  'modelTraing.submit.classicMode': '经典模式',
+  'modelTraing.submit.commandLineMode': '命令行模式',
+  'modelTraing.submit.commandLine': '命令行',
 };

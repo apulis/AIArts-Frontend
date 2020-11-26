@@ -46,7 +46,7 @@ const CodeUpload = (props) => {
   };
   return (
     <>
-      <Dragger {...uploadProps}>
+      <Dragger {...uploadProps} directory>
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>

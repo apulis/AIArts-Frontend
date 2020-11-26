@@ -4,6 +4,12 @@ import { modelTrainingType } from '@/utils/const';
 
 const CancelToken = Request.CancelToken;
 
+// TODO
+export async function getImages() {
+  return await request('/common/images', {})
+}
+
+
 export async function submitModelTraining(data) {
   return await request('/trainings', {
     method: 'POST',
