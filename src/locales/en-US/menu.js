@@ -20,6 +20,7 @@ export default {
   'menu.inferenceService.center': 'Cloud Inference Mode',
   'menu.inferenceService.edgeInference': 'Edge Inference',
   'menu.virtualCluster': 'Virtual Cluster',
+  'menu.manageJobs': 'Jobs Management',
   'menu.resourceMonitoring': 'Resource Monitoring',
   'menu.visualOperation': 'Visual Maintenance',
   'menu.setting': 'Settings',

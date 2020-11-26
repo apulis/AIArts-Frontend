@@ -253,8 +253,15 @@ export default [
           {
             path: '/vc',
             name: 'virtualCluster',
-            icon: 'CloudServerOutlined',
+            icon: 'ClusterOutlined',
             component: './VirtualCluster',
+            authority: ['MANAGE_VC'],
+          },
+          {
+            path: '/manageJobs',
+            name: 'manageJobs',
+            icon: 'ClearOutlined',
+            component: './ManageJobs/List',
             authority: ['MANAGE_VC'],
           },
           {
