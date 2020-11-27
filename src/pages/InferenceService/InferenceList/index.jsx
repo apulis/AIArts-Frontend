@@ -206,17 +206,7 @@ const InferenceList = (props) => {
   };
 
   const isStopDisabled = (item) => {
-    // TODO
-    if (
-      item.jobStatus === 'running' ||
-      item.jobStatus === 'queued' ||
-      item.jobStatus === 'scheduling' ||
-      item.jobStatus === 'unapproved'
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+    return !['running', 'queued', 'scheduling', 'unapproved'].includes(item.jobStatus)
   };
 
   const isDeleteDisabled = (item) => {
