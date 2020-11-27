@@ -220,7 +220,7 @@ const InferenceList = (props) => {
   };
 
   const isDeleteDisabled = (item) => {
-    return ['failed', 'error', 'unapproved', 'finished', 'killed', 'paused', 'Killed'].includes(item.status);
+    return !['failed', 'error', 'unapproved', 'finished', 'killed', 'paused', 'Killed'].includes(item.jobStatus);
   };
 
   const stopJob = async (item) => {
