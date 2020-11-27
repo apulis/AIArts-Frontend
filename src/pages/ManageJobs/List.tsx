@@ -136,7 +136,7 @@ const ManageJobs: React.FC = (props) => {
     },
     {
       dataIndex: 'jobStatus',
-      title: formatMessage({ id: 'jobManagement.table.column.jobStatus' }),
+      title: formatMessage({ id: 'jobManagement.table.column.status' }),
       render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
