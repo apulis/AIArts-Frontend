@@ -18,10 +18,11 @@ const { Search } = Input;
 
 export enum EnumJobTrainingType {
   all = 'all',
-  visualization = 'visualization',
-  ModelConversionJob = 'ModelConversionJob',
-  InferenceJob = 'InferenceJob',
-  training = 'training'
+  visualjob = 'visualjob',
+  artsEvaluation = 'artsEvaluation',
+  artsTraining = 'artsTraining',
+  codeEnv = 'codeEnv',
+  InferenceJob = 'InferenceJob'
 }
 
 const ManageJobs: React.FC = (props) => {
@@ -51,7 +52,7 @@ const ManageJobs: React.FC = (props) => {
       pageSize: pageParams.pageSize,
       status: currentStatus || 'all',
       vcName: currentSearchVC,
-      jobType: 'training',
+      jobType: currentJobType,
       order: sortText[sortedInfo.order],
       orderBy: sortedInfo.orderBy,
     });
