@@ -136,7 +136,7 @@ const ManageJobs: React.FC = (props) => {
     },
     {
       dataIndex: 'jobStatus',
-      title: formatMessage({ id: 'jobManagement.table.column.status' }),
+      title: formatMessage({ id: 'jobManagement.table.column.jobStatus' }),
       render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
@@ -181,7 +181,7 @@ const ManageJobs: React.FC = (props) => {
       render(_text, item) {
         return (
           <>
-            {checkIfCanStop(item.status) ? (
+            {checkIfCanStop(item.jobStatus) ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <a
                   style={{ marginRight: '16px', display: 'block' }}
@@ -192,8 +192,8 @@ const ManageJobs: React.FC = (props) => {
                 <Button
                   type="link"
                   danger
-                  disabled={!checkIfCanDelete(item.status)}
-                  onClick={() => handleDeleteJob(item.jobId, item.status)}
+                  disabled={!checkIfCanDelete(item.jobStatus)}
+                  onClick={() => handleDeleteJob(item.jobId, item.jobStatus)}
                 >
                   {formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
@@ -206,8 +206,8 @@ const ManageJobs: React.FC = (props) => {
                   <Button
                     danger
                     type="link"
-                    disabled={!checkIfCanDelete(item.status)}
-                    onClick={() => handleDeleteJob(item.jobId, item.status)}
+                    disabled={!checkIfCanDelete(item.jobStatus)}
+                    onClick={() => handleDeleteJob(item.jobId, item.jobStatus)}
                   >
                     {formatMessage({ id: 'modelList.table.column.action.delete' })}
                   </Button>
