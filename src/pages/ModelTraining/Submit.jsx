@@ -130,8 +130,8 @@ const ModelTraining = (props) => {
 
   const apiGetImages = async () => {
     const res = await getImages();
-    const { code, data, msg } = res;
-    if (code == 0) {
+    const { code, data } = res;
+    if (code === 0) {
       return data;
     } else {
       return null;
