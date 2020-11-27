@@ -21,6 +21,7 @@ export default {
   'menu.inferenceService.edgeInference': '边缘推理',
   'menu.resourceMonitoring': '资源监控',
   'menu.virtualCluster': '虚拟集群',
+  'menu.manageJobs': '任务管理',
   'menu.visualOperation': '可视化运维',
   'menu.setting': '设置',
   // -----sidebar-----

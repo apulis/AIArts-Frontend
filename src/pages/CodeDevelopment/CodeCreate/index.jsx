@@ -69,7 +69,7 @@ const CodeCreate = (props) => {
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]; // todo 静态数据
       setCodePathPrefix(result.codePathPrefix);
       setEngineTypeArr(enginTypeArrData);
-      setEngineNameArr(engineNameArrData || []);
+      setEngineNameArr(engineNameArrData);
       setDeviceTypeArr(deviceTypeArrData);
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData);
       setMaxNodeNum(maxNodeNumData);

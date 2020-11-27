@@ -28,6 +28,7 @@ import bizComponent from './zh-CN/bizComponent';
 import reg from './zh-CN/reg';
 import layout from './zh-CN/layout';
 import vc from './zh-CN/pages/vc';
+import ManageJobs from './zh-CN/pages/ManageJobs';
 
 export default {
   'navBar.lang': '语言',
@@ -67,4 +68,5 @@ export default {
   ...ParamsManage,
   ...PretrainedModel,
   ...vc,
+  ...ManageJobs
 };

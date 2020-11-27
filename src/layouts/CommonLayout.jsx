@@ -24,7 +24,7 @@ const CommonLayout = ({ children, dispatch, resource, user }) => {
       />
     );
   }
-  if (currentVC.length > 0) {
+  if (currentVC?.length > 0) {
     if (!localStorage.vc || !currentVC.includes(localStorage.vc)) {
       dispatch({
         type: 'vc/userSelectVC',
