@@ -20,11 +20,16 @@ import {
   PauseOutlined,
   PlusSquareOutlined,
   DeleteOutlined,
-  FolderOpenOutlined,
-  CompassOutlined,
 } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
+import { formatParams } from '@/utils/utils';
+import { beforeSubmitJob } from '@/models/resource';
+import { connect } from 'dva';
+import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
+import { getLabeledDatasets } from '../../services/datasets';
+import styles from './index.less';
 import {
   submitModelTraining,
   fetchAvilableResource,
@@ -35,18 +40,6 @@ import {
   getUserDockerImages,
   getImages,
 } from '../../services/modelTraning';
-import styles from './index.less';
-import { getLabeledDatasets } from '../../services/datasets';
-import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
-import {
-  getDeviceNumPerNodeArrByNodeType,
-  getDeviceNumArrByNodeType,
-  formatParams,
-} from '@/utils/utils';
-import { beforeSubmitJob } from '@/models/resource';
-import { connect } from 'dva';
-import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
-import Command from './components/Command';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -67,7 +60,7 @@ const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
-  let readParam, typeCreate, typeEdit, isFromPresetModel;
+  let readParam; let typeCreate; let typeEdit; let isFromPresetModel;
   const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
@@ -597,21 +590,21 @@ const ModelTraining = (props) => {
         </FormItem>
       )}
       {isSubmitPage && <FormItem
-          {...commonLayout}
-          label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
-        >
-          <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
-            <Radio.Button value={1}>
-              {formatMessage({ id: 'modelTraing.submit.classicMode' })}
-            </Radio.Button>
-            <Radio.Button
-              value={2}
-            >
-              {formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
-            </Radio.Button>
-          </Radio.Group>
+        {...commonLayout}
+        label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
+      >
+        <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
+          <Radio.Button value={1}>
+            {formatMessage({ id: 'modelTraing.submit.classicMode' })}
+          </Radio.Button>
+          <Radio.Button
+            value={2}
+          >
+            {formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
+          </Radio.Button>
+        </Radio.Group>
 
-        </FormItem>}
+      </FormItem>}
       <Form form={form}>
         {isSubmitPage && (
           <FormItem
@@ -701,7 +694,7 @@ const ModelTraining = (props) => {
             }
           </FormItem>
         }
-        
+
         <FormItem
           name="outputPath"
           labelCol={{ span: 4 }}
@@ -730,7 +723,7 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
-        
+
         {
           algorithmSource === 2 && <FormItem label={formatMessage({ id: 'modelTraing.submit.commandLine' })} name="command" {...commonLayout}>
             <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
@@ -790,7 +783,7 @@ const ModelTraining = (props) => {
             </div>
           </FormItem>
         }
-        
+
         <FormItem
           label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
           name="jobTrainingType"
