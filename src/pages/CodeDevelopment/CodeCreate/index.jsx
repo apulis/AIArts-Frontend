@@ -5,8 +5,6 @@ import {
   Button,
   Select,
   Tooltip,
-  Row,
-  Col,
   PageHeader,
   message,
   Modal,
@@ -19,7 +17,7 @@ import { postCode1, getResource } from '../service.js';
 import { utilGetDeviceNumArr, utilGetDeviceNumPerNodeArr } from '../serviceController.js';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg.js';
 import { beforeSubmitJob } from '@/models/resource';
-import { fetchAvilableResource, getUserDockerImages } from '@/services/modelTraning.js';
+import { fetchAvilableResource, getImages, getUserDockerImages } from '@/services/modelTraning.js';
 import { useIntl } from 'umi';
 import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 
@@ -46,9 +44,27 @@ const CodeCreate = (props) => {
   const [maxNodeNum, setMaxNodeNum] = useState(1);
   const [engineSource, setEngineSource] = useState(1);
   const [deviceList, setDeviceList] = useState([]);
+  const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [userFrameWorks, setUserFrameWorks] = useState([]);
 
   const { currentSelectedVC } = props.vc;
+
+  const getImageDescMap = async () => {
+    const res = await getImages();
+    const { code, data } = res;
+    const obj = {};
+    if (code === 0) {
+      data.forEach((item) => {
+        obj[item.image] = item.desc;
+      });
+      console.log('obj', obj)
+      setPresetImageDescMap(obj);
+    }
+  }
+
+  useEffect(() => {
+    getImageDescMap();
+  }, [])
 
   const renderInitForm = async () => {
     const result = await apiGetResource();
@@ -307,9 +323,11 @@ const CodeCreate = (props) => {
                 style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
               >
                 <Select>
-                  {engineNameArr.map((item, key) => (
-                    <Option key={key} value={item}>
-                      {getNameFromDockerImage(item)}
+                  {engineNameArr.map((engine) => (
+                    <Option key={engine} value={engine}>
+                      <Tooltip title={presetImageDescMap[engine]}>
+                        {getNameFromDockerImage(engine)}
+                      </Tooltip>
                     </Option>
                   ))}
                 </Select>
