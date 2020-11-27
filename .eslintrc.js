@@ -6,6 +6,7 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'airbnb',
+    require.resolve('@umijs/fabric/dist/eslint')
   ],
   globals: {
     Atomics: 'readonly',
