@@ -1,19 +1,18 @@
-import { Link, history } from 'umi';
-import { message, Table, Modal, Form, Input, Button, Space, Card, Select } from 'antd';
-import React, { useState, useEffect, useRef } from 'react';
+import { Link, history , connect, useIntl } from 'umi';
+import { message, Table, Modal, Input, Button, Card, Select } from 'antd';
+import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { stopInference, deleteInference } from './services';
 import { PAGEPARAMS, sortText } from '@/utils/const';
-import { connect } from 'umi';
+
 import moment from 'moment';
-import { getJobStatus } from '@/utils/utils';
+import { getJobStatus , getStatusList } from '@/utils/utils';
 import { formatDuration } from '@/utils/time';
-import { fetchJobStatusSumary } from './services';
-import { getStatusList } from '@/utils/utils';
+
 import { ExclamationCircleOutlined, SyncOutlined } from '@ant-design/icons';
 import { getNameFromDockerImage } from '@/utils/reg';
 import useInterval from '@/hooks/useInterval';
-import { useIntl } from 'umi';
+import { stopInference, deleteInference , fetchJobStatusSumary } from './services';
+
 
 const { Option } = Select;
 const { Search } = Input;
