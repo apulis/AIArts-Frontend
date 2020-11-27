@@ -257,7 +257,6 @@ const ModelTraining = (props) => {
         params: params,
         // datasetPath: model.datasetName,
         datasetPath: model.datasetPath,
-        engine: model.engineType,
         codePath: model.codePath,
         startupFile: model.startupFile,
         outputPath: model.outputPath,
@@ -314,20 +313,19 @@ const ModelTraining = (props) => {
       });
     if (isPretrainedModel) {
       values.codePath = values.codePath;
-      values.startupFile = values.startupFile;
+      values.startupFile = values.startupFile ? codePathPrefix + values.startupFile : undefined;
       values.outputPath = codePathPrefix + values.outputPath;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     } else if (importedTrainingParams) {
       //
     } else {
       values.codePath = values.codePath ? codePathPrefix + values.codePath : undefined;
-      values.startupFile = codePathPrefix + values.startupFile;
-      values.outputPath = codePathPrefix + values.outputPath;
+      values.startupFile = values.startupFile ? codePathPrefix + values.startupFile : undefined;
+      values.outputPath = values.outputPath ? codePathPrefix + values.outputPath : undefined;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     }
     values.params = params;
     if (typeEdit) {
-      console.log('params:', paramsDetailedData);
       let editParams = {
         ...paramsDetailedData.metaData,
         templateData: values,
@@ -572,6 +570,7 @@ const ModelTraining = (props) => {
       {isSubmitPage && (
         <FormItem
           {...commonLayout}
+          preserve={false}
           label={formatMessage({ id: 'trainingCreate.label.paramsSource' })}
         >
           <Radio.Group defaultValue={1} buttonStyle="solid">
@@ -667,6 +666,7 @@ const ModelTraining = (props) => {
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.startupFile' })}
             name="startupFile"
+            preserve={false}
             rules={[{ required: true }, startUpFileReg]}
           >
             {isPretrainedModel || importedTrainingParams ? (
@@ -679,6 +679,7 @@ const ModelTraining = (props) => {
         {
           algorithmSource === 1 && <FormItem
             name="visualPath"
+            preserve={false}
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.visualPath' })}
             style={{ marginTop: '50px' }}
@@ -725,7 +726,7 @@ const ModelTraining = (props) => {
         </FormItem>
 
         {
-          algorithmSource === 2 && <FormItem label={formatMessage({ id: 'modelTraing.submit.commandLine' })} name="command" {...commonLayout}>
+          algorithmSource === 2 && <FormItem label={formatMessage({ id: 'modelTraing.submit.commandLine' })} preserve={false} name="command" {...commonLayout}>
             <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
           </FormItem>
         }
