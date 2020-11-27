@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, Input, Card, Button, message, Dropdown, Menu } from 'antd';
+import { Table, Select, Input, Card, Button, message } from 'antd';
 import { connect, useIntl } from 'umi';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { SyncOutlined } from '@ant-design/icons';
 
 import { checkIfCanDelete, checkIfCanStop, getJobStatus, getStatusList } from '@/utils/utils';
 import { getNameFromDockerImage } from '@/utils/reg';
@@ -239,8 +238,8 @@ const ManageJobs: React.FC = (props) => {
     }
   }
 
-  const pageParamsChange = (page: number, size: number) => {
-    setPageParams({ pageNum: page, pageSize: size });
+  const pageParamsChange = (page: number, size?: number) => {
+    setPageParams({ pageNum: page, pageSize: size || pageParams.pageSize });
   };
 
   const handleChangeCurrentSearchVC = (value: string | null) => {
