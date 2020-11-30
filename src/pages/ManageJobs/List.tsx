@@ -29,7 +29,7 @@ const ManageJobs: React.FC = (props) => {
   const { formatMessage } = useIntl();
   const [loading, setLoading] = useState(false);
   const [jobTotal, setJobTotal] = useState(0);
-  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: string; columnKey: string }>({
+  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: 'ascend' | 'descend'; columnKey: string }>({
     orderBy: 'jobTime',
     order: 'ascend',
     columnKey: '',
@@ -64,8 +64,7 @@ const ManageJobs: React.FC = (props) => {
   }
 
   const onSortChange = (pagination, filters, sorter) => {
-    if (sorter.order !== false) {
-      console.log('sorter', sorter)
+    if (sorter.order !== null) {
       setSortedInfo({
         ...sorter,
         order: sortText[sortedInfo.order],
@@ -132,7 +131,7 @@ const ManageJobs: React.FC = (props) => {
       title: formatMessage({ id: 'jobManagement.table.column.name' }),
       key: 'jobName',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'jobName' ? sortedInfo.order : null,
     },
     {
       dataIndex: 'jobStatus',
@@ -161,7 +160,7 @@ const ManageJobs: React.FC = (props) => {
         return <div>{moment(new Date(item.jobTime).getTime()).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'jobTime' ? sortedInfo.order : null,
     },
     {
       dataIndex: 'desc',
