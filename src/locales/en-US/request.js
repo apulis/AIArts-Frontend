@@ -22,6 +22,7 @@ export default {
   'bizCodeMessage.30007': 'The data set path does not meet the rules!',
   'bizCodeMessage.20001': 'Request parameter error!',
   'bizCodeMessage.30010': 'This data set is in use and cannot be deleted!',
+  'bizCodeMessage.30014': 'Current path is not existed, please change another',
   'bizCodeMessage.30603': 'Push failed!',
   'bizCodeMessage.30012':
     'There is already a data set with the same name, please change the name of the data set!',

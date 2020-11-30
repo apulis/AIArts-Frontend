@@ -18,6 +18,7 @@ export default {
   'bizCodeMessage.30007': '该数据集路径不符合规则！',
   'bizCodeMessage.20001': '请求参数错误！',
   'bizCodeMessage.30010': '该数据集正在使用，不能删除！',
+  'bizCodeMessage.30014': '当然输入的路径不存在，请确认',
   'bizCodeMessage.30603': '推送失败！',
   'bizCodeMessage.30012': '已经有相同名称的数据集，请更改数据集名称！',
   'bizCodeMessage.30701': '已经存在相同虚拟集群名称！',
