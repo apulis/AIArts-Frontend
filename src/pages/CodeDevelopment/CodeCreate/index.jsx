@@ -47,6 +47,7 @@ const CodeCreate = (props) => {
   const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [userFrameWorks, setUserFrameWorks] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
+  const [algorithmSource, setAlgorithmSource] = useState(1);
 
   const { currentSelectedVC } = props.vc;
 
@@ -143,7 +144,7 @@ const CodeCreate = (props) => {
     // todo 提取数据映射
     const values = await validateFields();
     delete values['engineType'];
-    values.codePath = codePathPrefix + values.codePath;
+    values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
@@ -273,15 +274,45 @@ const CodeCreate = (props) => {
             />
           </Form.Item>
           <Form.Item
-            label={intl.formatMessage({ id: 'codeCreate.label.storePath' })}
-            name="codePath"
-            rules={[{ required: true }]}
+            label={intl.formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
           >
-            <Input
-              addonBefore={codePathPrefix}
-              placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.storePath' })}
-            />
+            <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithmSource(e.target.value)}>
+              <Radio.Button value={1}>
+                {intl.formatMessage({ id: 'modelTraing.submit.classicMode' })}
+              </Radio.Button>
+              <Radio.Button
+                value={2}
+              >
+                {intl.formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
+              </Radio.Button>
+            </Radio.Group>
+
           </Form.Item>
+          {
+            algorithmSource === 1 && <Form.Item
+              label={intl.formatMessage({ id: 'codeCreate.label.storePath' })}
+              name="codePath"
+              rules={[{ required: true }]}
+            >
+              <Input
+                addonBefore={codePathPrefix}
+                placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.storePath' })}
+              />
+            </Form.Item>
+          }
+          
+        {
+          algorithmSource === 2 && <Form.Item
+            label={intl.formatMessage({ id: 'modelTraing.submit.commandLine' })}
+            preserve={false}
+            name="cmd"
+            rules={[{
+              required: true,
+            }]}
+          >
+            <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
+          </Form.Item>
+        }
           <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.engineSource' })}>
             <Radio.Group
               value={engineSource}
