@@ -586,7 +586,7 @@ const ModelTraining = (props) => {
           </Radio.Group>
         </FormItem>
       )}
-      {isSubmitPage && <FormItem
+      {/* {isSubmitPage && <FormItem
         {...commonLayout}
         label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
       >
@@ -601,7 +601,7 @@ const ModelTraining = (props) => {
           </Radio.Button>
         </Radio.Group>
 
-      </FormItem>}
+      </FormItem>} */}
       <Form form={form}>
         {isSubmitPage && (
           <FormItem
