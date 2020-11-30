@@ -13,6 +13,7 @@ export default {
   'codeList.modal.saveImage.title.saveImage': '保存镜像',
   'codeList.modal.saveImage.label.name': '名称',
   'codeList.modal.saveImage.label.version': '版本',
+  'codeList.modal.saveImage.label.version.reg': '只允许数字，字母和小数点',
   'codeList.modal.saveImage.label.description': '描述',
   'codeList.modal.saveImage.footer.ok': '确定',
   'codeList.modal.saveImage.footer.cancel': '取消',

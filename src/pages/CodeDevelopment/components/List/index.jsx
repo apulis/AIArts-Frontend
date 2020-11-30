@@ -657,7 +657,7 @@ const CodeList = (props) => {
             name="version"
             rules={[
               { required: true },
-              { pattern: /^[A-Za-z0-9|\.]+$/, message: '只允许数字，英文字母和小数点' },
+              { pattern: /^[A-Za-z0-9|.]+$/, message: formatMessage({ id: 'codeList.modal.saveImage.label.version.reg' }) },
             ]}
           >
             <Input style={{ width: '280px' }} />
