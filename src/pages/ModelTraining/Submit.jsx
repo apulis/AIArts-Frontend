@@ -312,8 +312,6 @@ const ModelTraining = (props) => {
         params[p.key] = p.value;
       });
     if (isPretrainedModel) {
-      values.codePath = values.codePath;
-      values.startupFile = values.startupFile ? codePathPrefix + values.startupFile : undefined;
       values.outputPath = codePathPrefix + values.outputPath;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     } else if (importedTrainingParams) {
