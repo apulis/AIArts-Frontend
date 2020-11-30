@@ -215,7 +215,7 @@ const ModelEvaluation = (props) => {
     let needConfirm = false;
     if (currentVCAvailDevice) {
       const currentAvail = currentVCAvailDevice.avail;
-      if (currentAvail > deviceNum) {
+      if (deviceNum > currentAvail) {
         needConfirm = true;
       }
     }
