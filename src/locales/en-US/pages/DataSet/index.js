@@ -35,4 +35,5 @@ export default {
   'dataSet.detail.label.description': 'Description',
 
   'dataSet.addFormModel.restTime': 'Time left:',
+  'dataSet.addFormModel.processing': 'Processing...',
 };

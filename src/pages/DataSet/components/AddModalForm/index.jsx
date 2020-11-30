@@ -43,7 +43,7 @@ const AddModalForm = (props, ref) => {
             {fileUploadRestTimeMap[file.uid] !== '00:00' &&
               <p>{`(${intl.formatMessage({ id: 'dataSet.addFormModel.restTime' })}${fileUploadRestTimeMap[file.uid] ? fileUploadRestTimeMap[file.uid] : ''})`}</p>}
             {fileStatusGreenMap[file.uid] &&
-              <p>处理中...</p>}
+              <p>{intl.formatMessage({ id: 'dataSet.addFormModel.processing' })}</p>}
           </div>
         </div>)
     },

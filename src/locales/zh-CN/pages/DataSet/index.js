@@ -34,6 +34,6 @@ export default {
   'dataSet.detail.label.description': '简介',
 
   'dataSet.addFormModel.restTime': '剩余时间：',
-
+  'dataSet.addFormModel.processing': '处理中...',
 
 };
