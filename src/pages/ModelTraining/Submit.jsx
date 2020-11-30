@@ -20,11 +20,16 @@ import {
   PauseOutlined,
   PlusSquareOutlined,
   DeleteOutlined,
-  FolderOpenOutlined,
-  CompassOutlined,
 } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
+import { formatParams } from '@/utils/utils';
+import { beforeSubmitJob } from '@/models/resource';
+import { connect } from 'dva';
+import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
+import { getLabeledDatasets } from '../../services/datasets';
+import styles from './index.less';
 import {
   submitModelTraining,
   fetchAvilableResource,
@@ -35,18 +40,6 @@ import {
   getUserDockerImages,
   getImages,
 } from '../../services/modelTraning';
-import styles from './index.less';
-import { getLabeledDatasets } from '../../services/datasets';
-import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
-import {
-  getDeviceNumPerNodeArrByNodeType,
-  getDeviceNumArrByNodeType,
-  formatParams,
-} from '@/utils/utils';
-import { beforeSubmitJob } from '@/models/resource';
-import { connect } from 'dva';
-import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
-import Command from './components/Command';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -67,7 +60,7 @@ const ModelTraining = (props) => {
   // 请求类型，根据参数创建作业，type为createJobWithParam；编辑参数type为editParam
   const requestType = props.match.params.type;
   const paramsId = props.match.params.id;
-  let readParam, typeCreate, typeEdit, isFromPresetModel;
+  let readParam; let typeCreate; let typeEdit; let isFromPresetModel;
   const isSubmitPage = '/model-training/submit' === props.location.pathname;
   if (requestType) {
     readParam = true;
@@ -264,7 +257,6 @@ const ModelTraining = (props) => {
         params: params,
         // datasetPath: model.datasetName,
         datasetPath: model.datasetPath,
-        engine: model.engineType,
         codePath: model.codePath,
         startupFile: model.startupFile,
         outputPath: model.outputPath,
@@ -320,21 +312,18 @@ const ModelTraining = (props) => {
         params[p.key] = p.value;
       });
     if (isPretrainedModel) {
-      values.codePath = values.codePath;
-      values.startupFile = values.startupFile;
       values.outputPath = codePathPrefix + values.outputPath;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     } else if (importedTrainingParams) {
       //
     } else {
       values.codePath = values.codePath ? codePathPrefix + values.codePath : undefined;
-      values.startupFile = codePathPrefix + values.startupFile;
-      values.outputPath = codePathPrefix + values.outputPath;
+      values.startupFile = values.startupFile ? codePathPrefix + values.startupFile : undefined;
+      values.outputPath = values.outputPath ? codePathPrefix + values.outputPath : undefined;
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     }
     values.params = params;
     if (typeEdit) {
-      console.log('params:', paramsDetailedData);
       let editParams = {
         ...paramsDetailedData.metaData,
         templateData: values,
@@ -579,6 +568,7 @@ const ModelTraining = (props) => {
       {isSubmitPage && (
         <FormItem
           {...commonLayout}
+          preserve={false}
           label={formatMessage({ id: 'trainingCreate.label.paramsSource' })}
         >
           <Radio.Group defaultValue={1} buttonStyle="solid">
@@ -597,21 +587,21 @@ const ModelTraining = (props) => {
         </FormItem>
       )}
       {isSubmitPage && <FormItem
-          {...commonLayout}
-          label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
-        >
-          <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
-            <Radio.Button value={1}>
-              {formatMessage({ id: 'modelTraing.submit.classicMode' })}
-            </Radio.Button>
-            <Radio.Button
-              value={2}
-            >
-              {formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
-            </Radio.Button>
-          </Radio.Group>
+        {...commonLayout}
+        label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
+      >
+        <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithm(e.target.value)}>
+          <Radio.Button value={1}>
+            {formatMessage({ id: 'modelTraing.submit.classicMode' })}
+          </Radio.Button>
+          <Radio.Button
+            value={2}
+          >
+            {formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
+          </Radio.Button>
+        </Radio.Group>
 
-        </FormItem>}
+      </FormItem>}
       <Form form={form}>
         {isSubmitPage && (
           <FormItem
@@ -674,6 +664,7 @@ const ModelTraining = (props) => {
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.startupFile' })}
             name="startupFile"
+            preserve={false}
             rules={[{ required: true }, startUpFileReg]}
           >
             {isPretrainedModel || importedTrainingParams ? (
@@ -686,6 +677,7 @@ const ModelTraining = (props) => {
         {
           algorithmSource === 1 && <FormItem
             name="visualPath"
+            preserve={false}
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.visualPath' })}
             style={{ marginTop: '50px' }}
@@ -701,23 +693,21 @@ const ModelTraining = (props) => {
             }
           </FormItem>
         }
-        
+
         <FormItem
           name="outputPath"
           labelCol={{ span: 4 }}
           label={formatMessage({ id: 'trainingCreate.label.outputPath' })}
           rules={[{ required: isPretrainedModel }]}
         >
-          {
-            <Input
+          <Input
               addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}
               style={{ width: 420 }}
             />
-          }
         </FormItem>
         <FormItem
           name="datasetPath"
-          rules={[]}
+          rules={[{ required: true }]}
           labelCol={{ span: 4 }}
           label={formatMessage({ id: 'trainingCreate.label.datasetPath' })}
         >
@@ -730,9 +720,17 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
-        
+
         {
-          algorithmSource === 2 && <FormItem label={formatMessage({ id: 'modelTraing.submit.commandLine' })} name="command" {...commonLayout}>
+          algorithmSource === 2 && <FormItem
+            label={formatMessage({ id: 'modelTraing.submit.commandLine' })}
+            preserve={false}
+            name="command"
+            {...commonLayout}
+            rules={[{
+              required: true,
+            }]}
+          >
             <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
           </FormItem>
         }
@@ -790,7 +788,7 @@ const ModelTraining = (props) => {
             </div>
           </FormItem>
         }
-        
+
         <FormItem
           label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
           name="jobTrainingType"

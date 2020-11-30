@@ -16,7 +16,7 @@ export default {
   'component.noticeIcon.view-more': 'View more',
 
   'component.globalHeader.rightContent.globalHeaderRight.menu': 'Systems',
-  'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem': '用户管理系统',
+  'component.globalHeader.rightContent.globalHeaderRight.userManagementSystem': 'User Center',
   'component.globalHeader.rightContent.globalHeaderRight.expert': 'Expert System',
   'component.globalHeader.avatarDropdown.logout': 'Sign out',
 };

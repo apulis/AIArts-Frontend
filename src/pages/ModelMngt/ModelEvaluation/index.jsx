@@ -212,7 +212,7 @@ const ModelEvaluation = (props) => {
       }
     };
     const currentVCAvailDevice = deviceList.find(val => val.deviceType === deviceType);
-    const needConfirm = false;
+    let needConfirm = false;
     if (currentVCAvailDevice) {
       const currentAvail = currentVCAvailDevice.avail;
       if (currentAvail > deviceNum) {

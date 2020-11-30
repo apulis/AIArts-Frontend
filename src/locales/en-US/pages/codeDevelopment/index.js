@@ -37,4 +37,5 @@ export default {
     'No trainning device is available right now. Submitted jobs will wait in queue.',
   'codeCreate.modal.noDevice.content': 'Continue or Not',
   'codeCreate.message.loading.processing': 'Processing...',
+  'codeList.modal.upload.content.uploadTips.directory': 'Please select a directory',
 };

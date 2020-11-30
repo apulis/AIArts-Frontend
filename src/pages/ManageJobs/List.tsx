@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, Input, Card, Button, message, Dropdown, Menu } from 'antd';
+import { Table, Select, Input, Card, Button, message } from 'antd';
 import { connect, useIntl } from 'umi';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { SyncOutlined } from '@ant-design/icons';
 
 import { checkIfCanDelete, checkIfCanStop, getJobStatus, getStatusList } from '@/utils/utils';
 import { getNameFromDockerImage } from '@/utils/reg';
@@ -19,17 +18,18 @@ const { Search } = Input;
 
 export enum EnumJobTrainingType {
   all = 'all',
-  visualization = 'visualization',
-  ModelConversionJob = 'ModelConversionJob',
-  InferenceJob = 'InferenceJob',
-  training = 'training'
+  visualjob = 'visualjob',
+  artsEvaluation = 'artsEvaluation',
+  artsTraining = 'artsTraining',
+  codeEnv = 'codeEnv',
+  InferenceJob = 'InferenceJob'
 }
 
 const ManageJobs: React.FC = (props) => {
   const { formatMessage } = useIntl();
   const [loading, setLoading] = useState(false);
   const [jobTotal, setJobTotal] = useState(0);
-  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: string; columnKey: string }>({
+  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: 'ascend' | 'descend'; columnKey: string }>({
     orderBy: 'jobTime',
     order: 'ascend',
     columnKey: '',
@@ -52,7 +52,7 @@ const ManageJobs: React.FC = (props) => {
       pageSize: pageParams.pageSize,
       status: currentStatus || 'all',
       vcName: currentSearchVC,
-      jobType: 'training',
+      jobType: currentJobType,
       order: sortText[sortedInfo.order],
       orderBy: sortedInfo.orderBy,
     });
@@ -64,8 +64,7 @@ const ManageJobs: React.FC = (props) => {
   }
 
   const onSortChange = (pagination, filters, sorter) => {
-    if (sorter.order !== false) {
-      console.log('sorter', sorter)
+    if (sorter.order !== null) {
       setSortedInfo({
         ...sorter,
         order: sortText[sortedInfo.order],
@@ -132,7 +131,7 @@ const ManageJobs: React.FC = (props) => {
       title: formatMessage({ id: 'jobManagement.table.column.name' }),
       key: 'jobName',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'jobName' ? sortedInfo.order : null,
     },
     {
       dataIndex: 'jobStatus',
@@ -161,7 +160,7 @@ const ManageJobs: React.FC = (props) => {
         return <div>{moment(new Date(item.jobTime).getTime()).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
+      sortOrder: sortedInfo.columnKey === 'jobTime' ? sortedInfo.order : null,
     },
     {
       dataIndex: 'desc',
@@ -181,7 +180,7 @@ const ManageJobs: React.FC = (props) => {
       render(_text, item) {
         return (
           <>
-            {checkIfCanStop(item.status) ? (
+            {checkIfCanStop(item.jobStatus) ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <a
                   style={{ marginRight: '16px', display: 'block' }}
@@ -192,8 +191,8 @@ const ManageJobs: React.FC = (props) => {
                 <Button
                   type="link"
                   danger
-                  disabled={!checkIfCanDelete(item.status)}
-                  onClick={() => handleDeleteJob(item.jobId, item.status)}
+                  disabled={!checkIfCanDelete(item.jobStatus)}
+                  onClick={() => handleDeleteJob(item.jobId, item.jobStatus)}
                 >
                   {formatMessage({ id: 'modelList.table.column.action.delete' })}
                 </Button>
@@ -206,8 +205,8 @@ const ManageJobs: React.FC = (props) => {
                   <Button
                     danger
                     type="link"
-                    disabled={!checkIfCanDelete(item.status)}
-                    onClick={() => handleDeleteJob(item.jobId, item.status)}
+                    disabled={!checkIfCanDelete(item.jobStatus)}
+                    onClick={() => handleDeleteJob(item.jobId, item.jobStatus)}
                   >
                     {formatMessage({ id: 'modelList.table.column.action.delete' })}
                   </Button>
@@ -239,8 +238,8 @@ const ManageJobs: React.FC = (props) => {
     }
   }
 
-  const pageParamsChange = (page: number, size: number) => {
-    setPageParams({ pageNum: page, pageSize: size });
+  const pageParamsChange = (page: number, size?: number) => {
+    setPageParams({ pageNum: page, pageSize: size || pageParams.pageSize });
   };
 
   const handleChangeCurrentSearchVC = (value: string | null) => {

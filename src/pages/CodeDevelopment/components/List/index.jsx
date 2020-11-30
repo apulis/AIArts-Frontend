@@ -55,6 +55,7 @@ const CodeList = (props) => {
   const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
   const [sshInfo, setSshInfo] = useState({});
   const [sshCommond, setSshCommond] = useState('');
+  const [enableDirectoryUpload, setEnableDirectoryUpload] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
     order: '',
@@ -246,9 +247,10 @@ const CodeList = (props) => {
     setPageParams({ pageNum, pageSize });
   };
 
-  const handleOpenModal = (codeItem) => {
+  const handleOpenUploadModal = (codeItem, directory) => {
     setModalData(codeItem);
     setModalFlag(true);
+    setEnableDirectoryUpload(directory);
   };
 
   const handleSortChange = (pagination, filters, sorter) => {
@@ -383,12 +385,23 @@ const CodeList = (props) => {
             <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
               {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
             </a>
-            <a
-              onClick={() => handleOpenModal(codeItem)}
-              disabled={!canUploadStatus.has(codeItem.status)}
-            >
-              {formatMessage({ id: 'codeList.table.column.action.upload' })}
-            </a>
+            <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu>
+              <Menu.Item>
+                <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
+                  上传文件
+                </Button>
+              </Menu.Item>
+              <Menu.Item>
+                <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
+                  上传文件夹
+                </Button>
+              </Menu.Item>
+              </Menu>}>
+                <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
+                  {formatMessage({ id: 'codeList.table.column.action.upload' })}
+                  <DownOutlined />
+                </Button>
+            </Dropdown>
 
             <Dropdown overlay={<Menu>
               <Menu.Item>
@@ -585,7 +598,7 @@ const CodeList = (props) => {
             </Button>,
           ]}
         >
-          <CodeUpload modalData={modalData}></CodeUpload>
+          <CodeUpload modalData={modalData} directory={enableDirectoryUpload} />
         </Modal>
       )}
       <Modal

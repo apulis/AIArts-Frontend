@@ -9,8 +9,9 @@ export default {
   'jobManagement.all.vitual.cluster': 'All Virtual CLuster',
   'jobManagement.current.vitual.cluster': 'All Virtual CLuster',
   'jobManagement.jobType.all': 'ALL',
-  'jobManagement.jobType.visualization': 'Visualization Job',
-  'jobManagement.jobType.ModelConversionJob': 'Model Conversion Job',
+  'jobManagement.jobType.visualjob': 'Visualization Job',
+  'jobManagement.jobType.artsEvaluation': 'Model Conversion Job',
   'jobManagement.jobType.InferenceJob': 'Inference Job',
-  'jobManagement.jobType.training': 'Training Job',
+  'jobManagement.jobType.artsTraining': 'Training Job',
+  'jobManagement.jobType.codeEnv': 'Code Development',
 }
