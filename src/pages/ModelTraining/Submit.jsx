@@ -724,7 +724,15 @@ const ModelTraining = (props) => {
         </FormItem>
 
         {
-          algorithmSource === 2 && <FormItem label={formatMessage({ id: 'modelTraing.submit.commandLine' })} preserve={false} name="command" {...commonLayout}>
+          algorithmSource === 2 && <FormItem
+            label={formatMessage({ id: 'modelTraing.submit.commandLine' })}
+            preserve={false}
+            name="command"
+            {...commonLayout}
+            rules={[{
+              required: true,
+            }]}
+          >
             <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
           </FormItem>
         }
