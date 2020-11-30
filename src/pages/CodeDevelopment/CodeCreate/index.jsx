@@ -273,7 +273,7 @@ const CodeCreate = (props) => {
               maxLength={256}
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label={intl.formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
           >
             <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithmSource(e.target.value)}>
@@ -287,7 +287,7 @@ const CodeCreate = (props) => {
               </Radio.Button>
             </Radio.Group>
 
-          </Form.Item>
+          </Form.Item> */}
           {
             algorithmSource === 1 && <Form.Item
               label={intl.formatMessage({ id: 'codeCreate.label.storePath' })}

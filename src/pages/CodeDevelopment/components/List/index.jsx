@@ -340,7 +340,8 @@ const CodeList = (props) => {
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
     {
-      title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
+      // title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
+      title: formatMessage({ id: 'codeList.table.column.storePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
       width: '16%',
