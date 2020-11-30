@@ -118,23 +118,14 @@ const ModelTraining = (props) => {
   const [savedImageDescMap, setSavedImageDescMap] = useState({});
 
   const getImageDescMap = async () => {
-    const data = await apiGetImages();
+    const res = await getImages();
+    const { code, data } = res;
     const obj = {};
-    if (data) {
+    if (code === 0) {
       data.forEach((item) => {
         obj[item.image] = item.desc;
       })
-    }
-    setPresetImageDescMap(obj);
-  }
-
-  const apiGetImages = async () => {
-    const res = await getImages();
-    const { code, data } = res;
-    if (code === 0) {
-      return data;
-    } else {
-      return null;
+      setPresetImageDescMap(obj);
     }
   }
 
