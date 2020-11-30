@@ -700,16 +700,14 @@ const ModelTraining = (props) => {
           label={formatMessage({ id: 'trainingCreate.label.outputPath' })}
           rules={[{ required: isPretrainedModel }]}
         >
-          {
-            <Input
+          <Input
               addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}
               style={{ width: 420 }}
             />
-          }
         </FormItem>
         <FormItem
           name="datasetPath"
-          rules={[]}
+          rules={[{ required: true }]}
           labelCol={{ span: 4 }}
           label={formatMessage({ id: 'trainingCreate.label.datasetPath' })}
         >
