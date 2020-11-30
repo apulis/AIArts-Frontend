@@ -27,3 +27,14 @@ export const startUpFileReg = {
   pattern: /\.py|\.sh$/,
   message: formatMessage({ id: 'reg.input.limit.fileType' }),
 };
+
+export const getUserPathPrefixReg = (path) => {
+  console.log({
+    pattern:  new RegExp(`^${path}`),
+    message: formatMessage({ id: 'reg.user.path.prefix.reg' }),
+  })
+  return {
+    pattern:  new RegExp(`^${path}`),
+    message: formatMessage({ id: 'reg.user.path.prefix.reg' }),
+  }
+}

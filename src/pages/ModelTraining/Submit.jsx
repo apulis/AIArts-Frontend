@@ -23,7 +23,7 @@ import {
 } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
-import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg, getUserPathPrefixReg } from '@/utils/reg';
 import { formatParams } from '@/utils/utils';
 import { beforeSubmitJob } from '@/models/resource';
 import { connect } from 'dva';
@@ -682,15 +682,14 @@ const ModelTraining = (props) => {
             label={formatMessage({ id: 'trainingCreate.label.visualPath' })}
             style={{ marginTop: '50px' }}
             rules={[
-              { whitespace: true }
+              { whitespace: true },
+              { pattern: needOutputPathCodePrefix ? undefined : getUserPathPrefixReg(codePathPrefix).pattern }
             ]}
           >
-            {
-              <Input
-                addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}
-                style={{ width: 420 }}
-              />
-            }
+            <Input
+              addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}
+              style={{ width: 420 }}
+            />
           </FormItem>
         }
 
@@ -698,7 +697,7 @@ const ModelTraining = (props) => {
           name="outputPath"
           labelCol={{ span: 4 }}
           label={formatMessage({ id: 'trainingCreate.label.outputPath' })}
-          rules={[{ required: isPretrainedModel }]}
+          rules={[{ required: isPretrainedModel }, { pattern: needOutputPathCodePrefix ? undefined : getUserPathPrefixReg(codePathPrefix).pattern }]}
         >
           <Input
               addonBefore={needOutputPathCodePrefix ? codePathPrefix : null}

@@ -46,6 +46,7 @@ const CodeCreate = (props) => {
   const [deviceList, setDeviceList] = useState([]);
   const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [userFrameWorks, setUserFrameWorks] = useState([]);
+  const [currentDeviceType, setCurrentDeviceType] = useState('');
 
   const { currentSelectedVC } = props.vc;
 
@@ -57,7 +58,6 @@ const CodeCreate = (props) => {
       data.forEach((item) => {
         obj[item.image] = item.desc;
       });
-      console.log('obj', obj)
       setPresetImageDescMap(obj);
     }
   }
@@ -171,20 +171,23 @@ const CodeCreate = (props) => {
     setEngineNameArr(arr);
   };
 
-  const handleDeviceTypeChange = (type) => {
-    let arr = [];
-    const deviceType = getFieldValue('deviceType')
-    if (jobTrainingType == 'RegularJob') {
-      arr = getAvailRegularDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota);
-      setFieldsValue({ deviceNum: arr[0] });
-      setDeviceNumArr(arr);
-    } else if (jobTrainingType == 'PSDistJob') {
-      arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numPs'));
-      setFieldsValue({ numPsWorker: arr[0] });
-      setDeviceNumPerNodeArr(arr);
-      setMaxNodeNum(result.nodeCountByDeviceType[index]);
+  useEffect(() => {
+    const deviceType = getFieldValue('deviceType');
+    if (deviceType) {
+      let arr = [];
+      if (jobTrainingType === 'RegularJob') {
+        arr = getAvailRegularDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota);
+        setFieldsValue({ deviceNum: arr[0] });
+        setDeviceNumArr(arr);
+      } else if (jobTrainingType === 'PSDistJob') {
+        arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numPs'));
+        setDeviceNumPerNodeArr(arr);
+        setTimeout(() => {
+          setFieldsValue({ numPsWorker: arr[0] });
+        }, 0);
+      }
     }
-  };
+  }, [jobTrainingType, currentDeviceType])
 
   const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
     setFieldsValue({ deviceNum: nodeNum * perNodeDeviceNum });
@@ -374,7 +377,7 @@ const CodeCreate = (props) => {
             name="deviceType"
             rules={[{ required: true }]}
           >
-            <Select style={{ width: '50%' }} onChange={(type) => handleDeviceTypeChange(type)}>
+            <Select style={{ width: '50%' }} onChange={(type) => setCurrentDeviceType(type)}>
               {deviceTypeArr.map((item, index) => (
                 <Option key={index} value={item} index={index}>
                   {item}
