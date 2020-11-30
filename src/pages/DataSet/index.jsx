@@ -82,7 +82,7 @@ const DataSetList = () => {
       } else {
         values.path = sourceType === 1 ? fileLists[0].response.data.path : path;
         delete values.fileLists;
-        delete values.sourceType;
+        // delete values.sourceType;
         text = intl.formatMessage({ id: 'dataSet.list.add' });
         res = await add(values);
         if (res.code === 0) {
