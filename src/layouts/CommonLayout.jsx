@@ -9,9 +9,6 @@ const CommonLayout = ({ children, dispatch, resource, user }) => {
     dispatch({
       type: 'resource/fetchResource',
     });
-    dispatch({
-      type: 'common/fetchPlatformConfig',
-    });
   }, []);
   const { currentUser } = user;
   const { currentVC, userName } = currentUser;

@@ -59,6 +59,10 @@ class SecurityLayout extends React.Component {
       this.props.dispatch({
         type: 'user/fetchCurrent',
       });
+      
+      this.props.dispatch({
+        type: 'common/fetchPlatformConfig',
+      });
     }
     this.setState({
       isReady: true,
