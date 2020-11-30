@@ -310,7 +310,10 @@ const CodeCreate = (props) => {
               required: true,
             }]}
           >
-            <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
+            <TextArea
+              style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }}
+              rows={4}
+            />
           </Form.Item>
         }
           <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.engineSource' })}>
