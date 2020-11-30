@@ -24,7 +24,9 @@ export default {
   'codeList.tips.delete.modal.title': '当前任务尚未停止',
   'codeList.tips.delete.modal.content': '请先停止该任务',
   'codeList.tips.delete.modal.okText': '确定',
-  'codeList.tips.saveImage.success': '保存镜像成功',
+  'codeList.tips.saveImage.success': '成功提交流程，预计将花费几分钟的时间',
+  'codeList.tips.saveImage.success.left': '已提交保存镜像流程，预计将花费',
+  'codeList.tips.saveImage.success.right': '秒',
 
   // create
   'codeCreate.pageHeader.backCodeCreate': '返回代码开发',

@@ -511,7 +511,12 @@ const CodeList = (props) => {
         renderTable();
         cancel();
         setSaveImageButtonLoading(false);
-        message.success(formatMessage({ id: 'codeList.tips.saveImage.success' }));
+        const { duration } = res.data;
+        if (duration) {
+          message.success(formatMessage({ id: 'codeList.tips.saveImage.success.left' }) + duration + formatMessage({ id: 'codeList.tips.saveImage.success.right' }), 6000);
+        } else {
+          message.success(formatMessage({ id: 'codeList.tips.saveImage.success' }));
+        }
         setSaveImageModalVisible(false);
       }
     }

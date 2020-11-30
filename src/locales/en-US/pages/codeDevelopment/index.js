@@ -24,7 +24,9 @@ export default {
   'codeList.tips.delete.modal.title': 'The current job has not been stopped',
   'codeList.tips.delete.modal.content': 'Please stop the job first',
   'codeList.tips.delete.modal.okText': 'ok',
-  'codeList.tips.saveImage.success': 'Successfully Saved Image',
+  'codeList.tips.saveImage.success': 'Successfully submited, expected to take few minutes',
+  'codeList.tips.saveImage.success.left': 'Expected to take ',
+  'codeList.tips.saveImage.success.right': ' seconds',
 
   'codeCreate.pageHeader.backCodeCreate': 'Back To CodeDevelopment',
 
