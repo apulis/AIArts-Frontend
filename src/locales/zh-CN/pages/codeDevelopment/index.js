@@ -37,4 +37,5 @@ export default {
   'codeCreate.tips.selectEngineName': '请选择引擎名称',
   'codeCreate.tips.submit.success': '创建成功',
   'codeCreate.message.loading.processing': '处理中...',
+  'codeList.modal.upload.content.uploadTips.directory': '请选择文件夹上传',
 };
