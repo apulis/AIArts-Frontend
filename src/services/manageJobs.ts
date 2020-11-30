@@ -19,6 +19,10 @@ export const fetchAllJobs = (params: IfetchAllJobsParams) => {
   })
 }
 
-export const fetchAllJobsSummary = () => {
-  return request('/jobs/summary');
+export const fetchAllJobsSummary = (vcName?: string) => {
+  return request('/jobs/summary', {
+    params: {
+      vcName,
+    }
+  });
 }
