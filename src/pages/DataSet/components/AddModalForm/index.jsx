@@ -15,6 +15,7 @@ const AddModalForm = (props, ref) => {
   const [sourceType, setSourceType] = useState(1);
   const [isPrivate, setIsPrivate] = useState(true);
   const [fileUploadRestTimeMap, setFileUploadRestTimeMap] = useState({});
+  const [fileStatusGreenMap, setFileStatusGreenMap] = useState({});
 
   useImperativeHandle(ref, () => ({
     form: form,
@@ -35,7 +36,17 @@ const AddModalForm = (props, ref) => {
     progress: {
       format: percent => `${parseFloat(percent.toFixed(2))}%`
     },
-    itemRender: (originNode, file, fileList) => {console.log(fileUploadRestTimeMap);return (<div> {originNode} <div style={{ position:'relative', textAlign: 'right',marginTop: 8}}> { fileUploadRestTimeMap[file.uid] !== '00:00' && <p>{`(${intl.formatMessage({ id: 'dataSet.addFormModel.restTime' })}${fileUploadRestTimeMap[file.uid] ? fileUploadRestTimeMap[file.uid] : ''})`}</p>}</div></div>) },
+    itemRender: (originNode, file, fileList) => {
+      return (
+        <div> {originNode}
+          <div style={{ position: 'relative', textAlign: 'right', marginTop: 8 }}>
+            {fileUploadRestTimeMap[file.uid] !== '00:00' &&
+              <p>{`(${intl.formatMessage({ id: 'dataSet.addFormModel.restTime' })}${fileUploadRestTimeMap[file.uid] ? fileUploadRestTimeMap[file.uid] : ''})`}</p>}
+            {fileStatusGreenMap[file.uid] &&
+              <p>{intl.formatMessage({ id: 'dataSet.addFormModel.processing' })}</p>}
+          </div>
+        </div>)
+    },
     beforeUpload(file, fileList) {
       const { type, size, name } = file;
       const typeReg = /\.(zip|tar|gz)$/;
@@ -63,13 +74,18 @@ const AddModalForm = (props, ref) => {
         const time = Date.now();
         file.time = time;
         fileUploadRestTimeMap[file.uid] = undefined;
+        fileStatusGreenMap[file.uid] = false;
         resolve(file);
       });
     },
     onChange(info) {
-      const { file }  = info;
+      const { file } = info;
       const { status, name, time, percent, restTime } = file;
       setBtn(true);
+      if (percent === 100) {
+        fileStatusGreenMap[file.uid] = true;
+        setFileStatusGreenMap(fileStatusGreenMap);
+      }
       if (status === 'uploading') {
         // 剩余进度
         const restPercent = 100 - percent;
@@ -88,14 +104,20 @@ const AddModalForm = (props, ref) => {
         // console.log(name + '上传剩余时间：', moment(restTime).format('mm:ss'));
         // 转换时间
       } else {
+        console.log('uploading else');
         setBtn(false);
       }
       if (status === 'done') {
+        fileStatusGreenMap[file.uid] = false;
+        setFileStatusGreenMap(fileStatusGreenMap);
+        console.log('done');
         setBtn(false);
         message.success(
           `${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.success' })}！`,
         );
       } else if (status === 'error') {
+        fileStatusGreenMap[file.uid] = false;
+        setFileStatusGreenMap(fileStatusGreenMap);
         message.error(`${name} ${intl.formatMessage({ id: 'dataSet.create.tips.upload.error' })}`);
         setBtn(false);
       }
