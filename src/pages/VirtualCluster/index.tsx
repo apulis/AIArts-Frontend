@@ -128,8 +128,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         setSelectUserModalVisible(false);
       }
     } else {
-      setSelectUserModalVisible(false);
+      message.warn(formatMessage({ id: 'vc.component.atleast.one.user' }));
     }
+  }
+
+  const clearMemoValues = () => {
+    setCurrentHandledVC(undefined);
+    resetFields();
   }
 
   const handleRemoveVCUsers = async (userIds: number[]) => {
@@ -149,11 +154,6 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const handleCancelRemoveVCUsers = () => {
     setRemoveUserModalVisible(false)
     clearMemoValues();
-  }
-
-  const clearMemoValues = () => {
-    setCurrentHandledVC(undefined);
-    resetFields();
   }
 
   const getVCList = async () => {
