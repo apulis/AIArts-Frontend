@@ -39,7 +39,7 @@ const ManageJobs: React.FC = (props) => {
   const [currentStatus, setCurrentStatus] = useState('all');
   const [search, setSearch] = useState('');
   const [jobs, setJobs] = useState([]);
-  const [currentSearchVC, setCurrentSearchVC] = useState(currentSelectedVC)
+  const [currentSearchVC, setCurrentSearchVC] = useState<string | null>(currentSelectedVC)
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
   const [jobSumary, setJobSumary] = useState<{ label: string, value: string }[]>([]);
 
@@ -52,7 +52,7 @@ const ManageJobs: React.FC = (props) => {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
       status: currentStatus || 'all',
-      vcName: currentSearchVC,
+      vcName: currentSearchVC || '',
       jobType: currentJobType,
       order: sortText[sortedInfo.order],
       orderBy: sortedInfo.orderBy,
@@ -89,11 +89,11 @@ const ManageJobs: React.FC = (props) => {
         const count = res.data[k];
         total += count;
         summary.push({
-          label: getStatusList().find((status) => status.value === k)?.label + `( ${count} )`,
+          label: getStatusList().find((status) => status.value === k)?.label,
           value: k,
         });
       });
-      summary[0].label = `${summary[0].label  }（${total}）`;
+      summary[0].label = `${summary[0].label  }`;
       setJobSumary(summary);
     }
   }
