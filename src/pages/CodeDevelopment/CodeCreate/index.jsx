@@ -11,6 +11,7 @@ import {
   InputNumber,
   Card,
   Radio,
+  Switch,
 } from 'antd';
 import { history, connect } from 'umi';
 import { postCode1, getResource } from '../service.js';
@@ -20,6 +21,7 @@ import { beforeSubmitJob } from '@/models/resource';
 import { fetchAvilableResource, getImages, getUserDockerImages } from '@/services/modelTraning.js';
 import { useIntl } from 'umi';
 import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
+import Ribbon from 'antd/lib/badge/Ribbon';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -145,6 +147,7 @@ const CodeCreate = (props) => {
     const values = await validateFields();
     delete values['engineType'];
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
+    values.private = [1, 2].includes(engineSource);
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
@@ -231,6 +234,13 @@ const CodeCreate = (props) => {
           engine: '',
         });
       }
+    } else if (engineSource === 1) {
+      setFieldsValue({
+        engine: engineNameArr[0] || '',
+        engineType: engineTypeArr[0] || '',
+      });
+    } else if (engineSource === 3) {
+      //
     }
   }, [engineSource]);
 
@@ -322,10 +332,11 @@ const CodeCreate = (props) => {
               onChange={(e) => {
                 setEngineSource(e.target.value);
               }}
-              style={{ width: '300px' }}
+              style={{ width: '380px' }}
             >
               <Radio value={1}>{intl.formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
               <Radio value={2}>{intl.formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
+              <Radio value={3}>使用自定义引擎</Radio>
             </Radio.Group>
           </Form.Item>
           {engineSource === 1 && (
@@ -338,7 +349,8 @@ const CodeCreate = (props) => {
                     message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineType' }),
                   },
                 ]}
-                style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                preserve={false}
+                style={{ display: 'inline-block', width: 'calc(45% - 8px)' }}
               >
                 <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
                   {engineSource === 1 &&
@@ -357,6 +369,7 @@ const CodeCreate = (props) => {
                     message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                   },
                 ]}
+                preserve={false}
                 style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
               >
                 <Select>
@@ -371,10 +384,12 @@ const CodeCreate = (props) => {
               </Form.Item>
             </Form.Item>
           )}
+          
           {engineSource === 2 && (
             <Form.Item
               name="engine"
               label={intl.formatMessage({ id: 'codeCreate.label.engineType' })}
+              preserve={false}
               rules={[
                 {
                   required: true,
@@ -389,6 +404,21 @@ const CodeCreate = (props) => {
                   </Option>
                 ))}
               </Select>
+            </Form.Item>
+          )}
+          {engineSource === 3 && (
+            <Form.Item
+              name="engine"
+              label={intl.formatMessage({ id: 'codeCreate.label.engineType' })}
+              preserve={false}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                },
+              ]}
+            >
+              <Input placeholder="请输入镜像名称" />
             </Form.Item>
           )}
 
