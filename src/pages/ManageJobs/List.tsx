@@ -101,7 +101,7 @@ const ManageJobs: React.FC = (props) => {
   useEffect(() => {
     getJobList(true);
     getAllJobsSummary()
-  }, [pageParams, currentSearchVC, currentStatus, currentJobType, currentSearchVC]);
+  }, [pageParams, currentSearchVC, currentStatus, currentJobType, search]);
 
   const handleChangeStatus = (value: string) => {
     setCurrentStatus(value);
