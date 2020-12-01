@@ -22,5 +22,19 @@ export default {
   'bizCodeMessage.30603': '推送失败！',
   'bizCodeMessage.30012': '已经有相同名称的数据集，请更改数据集名称！',
   'bizCodeMessage.30701': '已经存在相同虚拟集群名称！',
+  //
+  'bizCodeMessage.30000': '服务错误',
+  'bizCodeMessage.30001': '文件类型不支持',
+  'bizCodeMessage.30002': '保存文件出错，请稍后重试',
+  'bizCodeMessage.30003': '提取文件出错，请稍后重试',
+  'bizCodeMessage.30004': '移动文件出错，请稍后重试',
+  'bizCodeMessage.30006': '文件大小超过系统支持范围',
+  'bizCodeMessage.30008': '压缩文件出错，请稍后重试',
+  'bizCodeMessage.30009': '文件大小超过系统支持范围',
+  'bizCodeMessage.30013': '数据集不存在',
+  'bizCodeMessage.30201': '代码目录不存在',
+  'bizCodeMessage.30202': '模板参数错误',
+  'bizCodeMessage.30203': '训练类型不合法',
+
   'request.error.tips': '请求错误',
 };

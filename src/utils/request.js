@@ -46,6 +46,19 @@ export const errorHandler = async (error) => {
       30603: formatMessage({ id: 'bizCodeMessage.30603' }),
       30012: formatMessage({ id: 'bizCodeMessage.30012' }),
       30701: formatMessage({ id: 'bizCodeMessage.30701' }),
+      //
+      30000: formatMessage({ id: 'bizCodeMessage.30000' }),
+      30001: formatMessage({ id: 'bizCodeMessage.30001' }),
+      30002: formatMessage({ id: 'bizCodeMessage.30002' }),
+      30003: formatMessage({ id: 'bizCodeMessage.30003' }),
+      30004: formatMessage({ id: 'bizCodeMessage.30004' }),
+      30006: formatMessage({ id: 'bizCodeMessage.30006' }),
+      30008: formatMessage({ id: 'bizCodeMessage.30008' }),
+      30009: formatMessage({ id: 'bizCodeMessage.30009' }),
+      30013: formatMessage({ id: 'bizCodeMessage.30013' }),
+      30201: formatMessage({ id: 'bizCodeMessage.30201' }),
+      30202: formatMessage({ id: 'bizCodeMessage.30202' }),
+      30203: formatMessage({ id: 'bizCodeMessage.30203' }),
     };
   }
   const { response } = error;

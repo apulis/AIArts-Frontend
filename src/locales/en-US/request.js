@@ -27,5 +27,19 @@ export default {
   'bizCodeMessage.30012':
     'There is already a data set with the same name, please change the name of the data set!',
   'bizCodeMessage.30701': 'There is already a virtual cluster with the same name!',
+  //
+  'bizCodeMessage.30000': 'Server error',
+  'bizCodeMessage.30001': 'File type not supported',
+  'bizCodeMessage.30002': 'Save file error',
+  'bizCodeMessage.30003': 'Extact file error',
+  'bizCodeMessage.30004': 'Move file error',
+  'bizCodeMessage.30006': 'The file size exceeds the system support range',
+  'bizCodeMessage.30008': 'Compress file error',
+  'bizCodeMessage.30009': 'The file size exceeds the system support range',
+  'bizCodeMessage.30013': 'Dataset not existed',
+  'bizCodeMessage.30201': 'CodePath not existed',
+  'bizCodeMessage.30202': 'Template params error',
+  'bizCodeMessage.30203': 'Training type error',
+  
   'request.error.tips': 'Request error',
 };
