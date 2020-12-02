@@ -419,7 +419,6 @@ const CodeCreate = (props) => {
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                 },
               ]}
             >
