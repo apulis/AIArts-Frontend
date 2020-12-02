@@ -21,6 +21,9 @@ export default {
   'codeList.tips.fresh.success': 'Successfully Refresh!',
   'codeList.tips.open.error': 'The service is under preparation, please try again later',
   'codeList.tips.stop.success': 'Stop Succeeded',
+  'codeList.tips.pause.success': 'Pause Succeeded',
+  'codeList.tips.resume.success': 'Resume Succeeded',
+
   'codeList.tips.delete.success': 'Delete Succeeded',
   'codeList.tips.delete.modal.title': 'The current job has not been stopped',
   'codeList.tips.delete.modal.content': 'Please stop the job first',

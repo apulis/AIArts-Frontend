@@ -11,6 +11,8 @@ import {
   getCodeCount,
   fetchSSHInfo,
   createSaveImage,
+  pauseJob,
+  resumeJob,
 } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js';
@@ -28,7 +30,7 @@ import { getNameFromDockerImage } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 import FormItem from 'antd/lib/form/FormItem';
-import { checkIfCanDelete } from '@/utils/utils.js';
+import { checkIfCanDelete, checkIfCanPause, checkIfCanResume, checkIfCanStop } from '@/utils/utils.js';
 import { jobNameReg } from '@/utils/reg';
 import { useIntl } from 'umi';
 import Button from '@/components/locales/Button';
@@ -286,7 +288,7 @@ const CodeList = (props) => {
             const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
             setSshCommond(command);
           }
-          
+
         }
       }
     } else {
@@ -303,6 +305,22 @@ const CodeList = (props) => {
     }
     setSshPopoverVisible(true);
     setCurrentHandledJobId(id);
+  }
+
+  const handlePauseJob = async (job) => {
+    const res = await pauseJob(job.id);
+    if (res.code === 0) {
+      message.success(formatMessage({ id: 'codeList.tips.pause.success' }));
+      renderTable('update');
+    }
+  }
+
+  const handleResumeJob = async (job) => {
+    const res = await resumeJob(job.id);
+    if (res.code === 0) {
+      message.success(formatMessage({ id: 'codeList.tips.resume.success' }));
+      renderTable('update');
+    }
   }
 
   const columns = [
@@ -370,84 +388,96 @@ const CodeList = (props) => {
         return (
           <Space size="middle">
             <>
-            <Popover
-              trigger="click"
-              visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
-              onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
-              title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
-              content={
-                sshInfo.status === 'running' ? <CopyToClipboard
-                text={sshCommond}
-                onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+              <Popover
+                trigger="click"
+                visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
+                onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
+                title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
+                content={
+                  sshInfo.status === 'running' ? <CopyToClipboard
+                    text={sshCommond}
+                    onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+                  >
+                    {
+                      (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />)
+                    }
+                  </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>}
               >
-                {
-                  (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />) 
-                }
-              </CopyToClipboard >: <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>}
-            >
-              <Button
-                type="link"
-                disabled={!canOpenStatus.has(codeItem.status)}
-                disableUpperCase
-                onClick={() => startSSH(codeItem.id, codeItem.status)}
-              >SSH</Button>
-            </Popover>
-            <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
-              {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
-            </a>
-            <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu>
-              <Menu.Item>
-                <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
-                  上传文件
+                <Button
+                  type="link"
+                  disabled={!canOpenStatus.has(codeItem.status)}
+                  disableUpperCase
+                  onClick={() => startSSH(codeItem.id, codeItem.status)}
+                >SSH</Button>
+              </Popover>
+              <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
+                {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
+              </a>
+              <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu>
+                <Menu.Item>
+                  <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
+                    {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
                 </Button>
-              </Menu.Item>
-              <Menu.Item>
-                <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
-                  上传文件夹
+                </Menu.Item>
+                <Menu.Item>
+                  <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
+                    {formatMessage({ id: 'codeList.table.column.action.upload.directory' })}
                 </Button>
-              </Menu.Item>
+                </Menu.Item>
               </Menu>}>
                 <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
                   {formatMessage({ id: 'codeList.table.column.action.upload' })}
                   <DownOutlined />
                 </Button>
-            </Dropdown>
+              </Dropdown>
 
-            <Dropdown overlay={<Menu>
-              <Menu.Item>
+              <Dropdown overlay={<Menu>
                 {codeItem.status === 'running' && (
-                  <Button type="link" onClick={() => toSaveImage(codeItem.id)}>
-                    {formatMessage({ id: 'codeList.table.column.action.save' })}
-                  </Button>
+                  <Menu.Item>
+                    <Button type="link" onClick={() => toSaveImage(codeItem.id)}>
+                      {formatMessage({ id: 'codeList.table.column.action.save' })}
+                    </Button>
+                  </Menu.Item>
                 )}
-              </Menu.Item>
-                <Menu.Item>
-                  <Button
-                    type="link"
-                    onClick={() => handleStop(codeItem)}
-                    disabled={!canStopStatus.has(codeItem.status)}
-                    style={canStopStatus.has(codeItem.status) ? { color: '#1890ff' } : {}}
-                  >
-                    {formatMessage({ id: 'codeList.table.column.action.stop' })}
-                  </Button>  
-                </Menu.Item>
-                <Menu.Item>
-                  {checkIfCanDelete(codeItem.status) ? (
-                    <Button type="link" onClick={() => handleDelete(codeItem)} style={{ color: 'red' }}>
+                {
+                  checkIfCanStop(codeItem.status) &&
+                  <Menu.Item>
+                    <Button
+                      type="link"
+                      onClick={() => handleStop(codeItem)}
+                    >
+                      {formatMessage({ id: 'codeList.table.column.action.stop' })}
+                    </Button>
+                  </Menu.Item>
+                }
+                {checkIfCanDelete(codeItem.status) && (
+                  <Menu.Item>
+                    <Button type="link" onClick={() => handleDelete(codeItem)} danger>
                       {formatMessage({ id: 'codeList.table.column.action.delete' })}
                     </Button>
-                  ) : (
-                    <Button type="link" disabled style={{ color: '#333' }}>
-                      {formatMessage({ id: 'codeList.table.column.action.delete' })}
+                  </Menu.Item>
+                )}
+                {checkIfCanPause(codeItem.status) && (
+                  <Menu.Item>
+                    <Button type="link" onClick={() => handlePauseJob(codeItem)} danger>
+                      {formatMessage({ id: 'codeList.table.column.action.pause' })}
                     </Button>
-                  )}
-                </Menu.Item>
+                  </Menu.Item>
+                )}
+                
+                {checkIfCanResume(codeItem.status) && (
+                  <Menu.Item>
+                    <Button type="link" onClick={() => handleResumeJob(codeItem)}>
+                      {formatMessage({ id: 'codeList.table.column.action.resume' })}
+                    </Button>
+                  </Menu.Item>
+                )}
               </Menu>}>
                 <Button type="link">
                   {formatMessage({ id: 'codeList.table.column.action.more' })}
                   <DownOutlined />
                 </Button>
-            </Dropdown>
+              </Dropdown>
             </>
           </Space>
         );
