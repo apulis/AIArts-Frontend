@@ -40,4 +40,6 @@ export default {
   'vc.component.removeUser.message.success': 'Successfully removed users',
   'vc.component.relate.user.button': 'User',
   'vc.component.remove.confirm.title': 'Will remove user from current virtual cluster when click Confirm',
+  'vc.component.atleast.one.user': 'Need at least choose one use!',
+  'vc.component.search.not.found': 'Not found',
 }

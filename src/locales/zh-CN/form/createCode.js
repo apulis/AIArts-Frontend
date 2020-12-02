@@ -26,4 +26,6 @@ export default {
   'codeCreate.rule.selectEngineName': '至少需要一个引擎！',
 
   'codeCreate.submit': '立即创建',
+  'codeCreate.custom.engine': '使用自定义引擎',
+  'codeCreate.custom.engine.title': '要求服务器可以访问 Docker Hub',
 };

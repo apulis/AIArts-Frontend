@@ -26,4 +26,6 @@ export default {
   'codeCreate.rule.selectEngineName': 'Please select a engine name',
 
   'codeCreate.submit': 'Submit',
+  'codeCreate.custom.engine': 'Use custom engine',
+  'codeCreate.custom.engine.title': 'Require that the server can access Docker Hub',
 };

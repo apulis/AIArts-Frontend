@@ -4,6 +4,7 @@ export default {
   'codeList.table.column.engineType': '引擎类型',
   'codeList.table.column.createTime': '创建时间',
   'codeList.table.column.storePath': '代码存储目录',
+  'codeList.table.column.cmd': '命令行',
   'codeList.table.column.description': '描述',
   'codeList.table.column.action': '操作',
   'codeList.table.column.action.open.jupyter': 'Jupyter',

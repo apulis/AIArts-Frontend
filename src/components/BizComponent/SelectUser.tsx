@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Form, Select, Table, Spin } from 'antd';
 import { useIntl } from 'umi';
+import debounce from 'lodash/debounce';
 
 import { fetchUsers } from '@/services/vc';
 
@@ -20,6 +21,7 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState<string>('');
   const [fetching, setFetching] = useState<boolean>(false);
+  const [notFound, setNotFound] = useState(false);
   const { formatMessage } = useIntl();
   const handleOk = async () => {
     const result = await validateFields();
@@ -31,13 +33,18 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
     onCancel && onCancel();
   }
 
-  const searchUsers = async (search) => {
+  const searchUsers = debounce(async (search) => {
     if (!search) return;
     setFetching(true);
     setSearch(search)
     const res = await fetchUsers(1, 9999, search);
     setFetching(false);
     if (res.code === 0) {
+      if (res.list.length === 0) {
+        setNotFound(true);
+      } else {
+        setNotFound(false);
+      }
       const users = res.list.map(user => {
         return {
           userName: user.userName,
@@ -46,7 +53,7 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
       })
       setUsers(users);
     }
-  }
+  }, 800)
 
   useEffect(() => {
     if (visible && search) {
@@ -70,7 +77,7 @@ const SelectUserModal: React.FC<ISelectUserModal> = ({ visible, onOk, onCancel }
               <Select
                 style={{ width: '240px' }}
                 mode="multiple"
-                notFoundContent={fetching ? <Spin size="small" /> : null}
+                notFoundContent={fetching ? <Spin size="small" /> : (notFound && <div>{formatMessage({ id: 'vc.component.search.not.found' })}</div>)}
                 filterOption={false}
                 onSearch={searchUsers}
                 placeholder={formatMessage({ id: 'vc.component.relateUser.username.placeholder' })}

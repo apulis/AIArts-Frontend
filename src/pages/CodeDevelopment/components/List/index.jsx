@@ -310,7 +310,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.name' }),
       dataIndex: 'name',
       ellipsis: true,
-      width: '12%',
+      width: '8%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'], // name与createTime非复合排序，各自独立排序
     },
@@ -318,7 +318,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.status' }),
       dataIndex: 'status',
       ellipsis: true,
-      width: '10%',
+      width: '6%',
       render: (status) => statusMap[status]?.local,
     },
     {
@@ -340,17 +340,27 @@ const CodeList = (props) => {
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
     {
+      // title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
       title: formatMessage({ id: 'codeList.table.column.storePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
-      width: '12%',
+      width: '16%',
+      render(_text, item) {
+        if (item.codePath) {
+          return item.codePath;
+        }
+        return item.cmd;
+      }
     },
     {
       title: formatMessage({ id: 'codeList.table.column.description' }),
       dataIndex: 'desc',
       ellipsis: true,
       align: 'center',
-      width: '14%',
+      width: '5%',
+      render(text) {
+        return text || '-';
+      }
     },
     {
       title: formatMessage({ id: 'codeList.table.column.action' }),
@@ -648,7 +658,7 @@ const CodeList = (props) => {
             name="version"
             rules={[
               { required: true },
-              { pattern: /^[A-Za-z0-9|\.]+$/, message: '只允许数字，英文字母和小数点' },
+              { pattern: /^[A-Za-z0-9|.]+$/, message: formatMessage({ id: 'codeList.modal.saveImage.label.version.reg' }) },
             ]}
           >
             <Input style={{ width: '280px' }} />

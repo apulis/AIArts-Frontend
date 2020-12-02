@@ -11,6 +11,7 @@ import {
   InputNumber,
   Card,
   Radio,
+  Switch,
 } from 'antd';
 import { history, connect } from 'umi';
 import { postCode1, getResource } from '../service.js';
@@ -20,6 +21,7 @@ import { beforeSubmitJob } from '@/models/resource';
 import { fetchAvilableResource, getImages, getUserDockerImages } from '@/services/modelTraning.js';
 import { useIntl } from 'umi';
 import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
+import Ribbon from 'antd/lib/badge/Ribbon';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -30,7 +32,7 @@ const CodeCreate = (props) => {
       type: 'resource/fetchResource',
     });
   }, []);
-  const intl = useIntl();
+  const { formatMessage } = useIntl();
   const [form] = Form.useForm();
   const { validateFields, setFieldsValue, getFieldValue } = form;
   const [resource, setResource] = useState(null);
@@ -47,6 +49,7 @@ const CodeCreate = (props) => {
   const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [userFrameWorks, setUserFrameWorks] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
+  const [algorithmSource, setAlgorithmSource] = useState(1);
 
   const { currentSelectedVC } = props.vc;
 
@@ -125,7 +128,7 @@ const CodeCreate = (props) => {
     const obj = await postCode1({ ...values, vcName: currentSelectedVC  });
     const { code, data, msg } = obj;
     if (code === 0) {
-      message.success(intl.formatMessage({ id: 'codeCreate.tips.submit.success' }));
+      message.success(formatMessage({ id: 'codeCreate.tips.submit.success' }));
       history.push('/codeDevelopment');
     }
   };
@@ -142,8 +145,10 @@ const CodeCreate = (props) => {
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
-    delete values['engineType'];
-    values.codePath = codePathPrefix + values.codePath;
+    values.frameworkType = values.engineType;
+    delete values.engineType;
+    values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
+    values.private = [1, 2].includes(engineSource);
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
@@ -153,8 +158,8 @@ const CodeCreate = (props) => {
       )
     ) {
       Modal.confirm({
-        title: intl.formatMessage({ id: 'codeCreate.modal.noDevice.title' }),
-        content: intl.formatMessage({ id: 'codeCreate.modal.noDevice.content' }),
+        title: formatMessage({ id: 'codeCreate.modal.noDevice.title' }),
+        content: formatMessage({ id: 'codeCreate.modal.noDevice.content' }),
         onOk() {
           apiPostCode(values);
         },
@@ -194,7 +199,7 @@ const CodeCreate = (props) => {
   };
 
   const validateMessages = {
-    required: '${label} ' + intl.formatMessage({ id: 'codeCreate.rule.needInput' }),
+    required: '${label} ' + formatMessage({ id: 'codeCreate.rule.needInput' }),
     types: {},
   };
 
@@ -230,6 +235,13 @@ const CodeCreate = (props) => {
           engine: '',
         });
       }
+    } else if (engineSource === 1) {
+      setFieldsValue({
+        engine: engineNameArr[0] || '',
+        engineType: engineTypeArr[0] || '',
+      });
+    } else if (engineSource === 3) {
+      //
     }
   }, [engineSource]);
 
@@ -247,7 +259,7 @@ const CodeCreate = (props) => {
       <PageHeader
         ghost={false}
         onBack={() => history.push('/codeDevelopment')}
-        title={intl.formatMessage({ id: 'codeCreate.pageHeader.backCodeCreate' })}
+        title={formatMessage({ id: 'codeCreate.pageHeader.backCodeCreate' })}
       ></PageHeader>
       <Card>
         <Form
@@ -259,52 +271,91 @@ const CodeCreate = (props) => {
           form={form}
         >
           <Form.Item
-            label={intl.formatMessage({ id: 'codeCreate.label.devEnvName' })}
+            label={formatMessage({ id: 'codeCreate.label.devEnvName' })}
             name="name"
             rules={[{ required: true }, jobNameReg]}
           >
-            <Input placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.devEnvName' })} />
+            <Input placeholder={formatMessage({ id: 'codeCreate.placeholder.devEnvName' })} />
           </Form.Item>
-          <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.description' })} name="desc">
+          <Form.Item label={formatMessage({ id: 'codeCreate.label.description' })} name="desc">
             <TextArea
-              placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.description' })}
+              placeholder={formatMessage({ id: 'codeCreate.placeholder.description' })}
               autoSize={{ minRows: 2, maxRows: 6 }}
               maxLength={256}
             />
           </Form.Item>
-          <Form.Item
-            label={intl.formatMessage({ id: 'codeCreate.label.storePath' })}
-            name="codePath"
-            rules={[{ required: true }]}
+          {/* <Form.Item
+            label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
           >
-            <Input
-              addonBefore={codePathPrefix}
-              placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.storePath' })}
+            <Radio.Group defaultValue={1} buttonStyle="solid" onChange={(e) => setAlgorithmSource(e.target.value)}>
+              <Radio.Button value={1}>
+                {formatMessage({ id: 'modelTraing.submit.classicMode' })}
+              </Radio.Button>
+              <Radio.Button
+                value={2}
+              >
+                {formatMessage({ id: 'modelTraing.submit.commandLineMode' })}
+              </Radio.Button>
+            </Radio.Group>
+
+          </Form.Item> */}
+          {
+            algorithmSource === 1 && <Form.Item
+              label={formatMessage({ id: 'codeCreate.label.storePath' })}
+              name="codePath"
+              rules={[{ required: true }]}
+            >
+              <Input
+                addonBefore={codePathPrefix}
+                placeholder={formatMessage({ id: 'codeCreate.placeholder.storePath' })}
+              />
+            </Form.Item>
+          }
+          
+        {
+          algorithmSource === 2 && <Form.Item
+            label={formatMessage({ id: 'modelTraing.submit.commandLine' })}
+            preserve={false}
+            name="cmd"
+            rules={[{
+              required: true,
+            }]}
+          >
+            <TextArea
+              style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }}
+              rows={4}
             />
           </Form.Item>
-          <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.engineSource' })}>
+        }
+          <Form.Item label={formatMessage({ id: 'codeCreate.label.engineSource' })}>
             <Radio.Group
               value={engineSource}
               onChange={(e) => {
                 setEngineSource(e.target.value);
               }}
-              style={{ width: '300px' }}
+              style={{ width: '380px' }}
             >
-              <Radio value={1}>{intl.formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
-              <Radio value={2}>{intl.formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
+              <Radio value={1}>{formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
+              <Radio value={2}>{formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
+              <Radio value={3}>
+                <Tooltip title={formatMessage({ id: 'codeCreate.custom.engine.title' })}>
+                  {formatMessage({ id: 'codeCreate.custom.engine' })}
+                </Tooltip>
+              </Radio>
             </Radio.Group>
           </Form.Item>
           {engineSource === 1 && (
-            <Form.Item label={intl.formatMessage({ id: 'codeCreate.label.engineType' })} required>
+            <Form.Item label={formatMessage({ id: 'codeCreate.label.engineType' })} required>
               <Form.Item
                 name="engineType"
                 rules={[
                   {
                     required: true,
-                    message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineType' }),
+                    message: formatMessage({ id: 'codeCreate.rule.selectEngineType' }),
                   },
                 ]}
-                style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
+                preserve={false}
+                style={{ display: 'inline-block', width: 'calc(45% - 8px)' }}
               >
                 <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
                   {engineSource === 1 &&
@@ -320,9 +371,10 @@ const CodeCreate = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                    message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                   },
                 ]}
+                preserve={false}
                 style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
               >
                 <Select>
@@ -337,14 +389,16 @@ const CodeCreate = (props) => {
               </Form.Item>
             </Form.Item>
           )}
+          
           {engineSource === 2 && (
             <Form.Item
               name="engine"
-              label={intl.formatMessage({ id: 'codeCreate.label.engineType' })}
+              label={formatMessage({ id: 'codeCreate.label.engineType' })}
+              preserve={false}
               rules={[
                 {
                   required: true,
-                  message: intl.formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                  message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                 },
               ]}
             >
@@ -357,23 +411,38 @@ const CodeCreate = (props) => {
               </Select>
             </Form.Item>
           )}
+          {engineSource === 3 && (
+            <Form.Item
+              name="engine"
+              label={formatMessage({ id: 'codeCreate.label.engineType' })}
+              preserve={false}
+              rules={[
+                {
+                  required: true,
+                  message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                },
+              ]}
+            >
+              <Input placeholder="请输入镜像名称" />
+            </Form.Item>
+          )}
 
           <Form.Item
-            label={intl.formatMessage({ id: 'codeCreate.label.jobType' })}
+            label={formatMessage({ id: 'codeCreate.label.jobType' })}
             name="jobTrainingType"
             rules={[{ required: true }]}
           >
             <Radio.Group onChange={(e) => setJobTrainingType(e.target.value)}>
               <Radio value="RegularJob">
-                {intl.formatMessage({ id: 'codeCreate.value.regularJob' })}
+                {formatMessage({ id: 'codeCreate.value.regularJob' })}
               </Radio>
               <Radio value="PSDistJob">
-                {intl.formatMessage({ id: 'codeCreate.value.PSDistJob' })}
+                {formatMessage({ id: 'codeCreate.value.PSDistJob' })}
               </Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item
-            label={intl.formatMessage({ id: 'codeCreate.label.deviceType' })}
+            label={formatMessage({ id: 'codeCreate.label.deviceType' })}
             name="deviceType"
             rules={[{ required: true }]}
           >
@@ -387,7 +456,7 @@ const CodeCreate = (props) => {
           </Form.Item>
           {jobTrainingType == 'RegularJob' && (
             <Form.Item
-              label={intl.formatMessage({ id: 'codeCreate.label.deviceNum' })}
+              label={formatMessage({ id: 'codeCreate.label.deviceNum' })}
               name="deviceNum"
               rules={[{ required: true }]}
             >
@@ -402,7 +471,7 @@ const CodeCreate = (props) => {
           )}
           {jobTrainingType == 'PSDistJob' && (
             <Form.Item
-              label={intl.formatMessage({ id: 'codeCreate.label.nodeNum' })}
+              label={formatMessage({ id: 'codeCreate.label.nodeNum' })}
               name="numPs"
               rules={[{ required: true }]}
             >
@@ -410,7 +479,7 @@ const CodeCreate = (props) => {
                 style={{ width: '50%' }}
                 min={1}
                 max={maxNodeNum}
-                placeholder={intl.formatMessage({ id: 'codeCreate.placeholder.nodeNum' })}
+                placeholder={formatMessage({ id: 'codeCreate.placeholder.nodeNum' })}
                 onChange={() =>
                   handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
                 }
@@ -419,7 +488,7 @@ const CodeCreate = (props) => {
           )}
           {jobTrainingType == 'PSDistJob' && (
             <Form.Item
-              label={intl.formatMessage({ id: 'codeCreate.label.perNodeNum' })}
+              label={formatMessage({ id: 'codeCreate.label.perNodeNum' })}
               name="numPsWorker"
               rules={[{ required: true }]}
             >
@@ -439,7 +508,7 @@ const CodeCreate = (props) => {
           )}
           {jobTrainingType == 'PSDistJob' && (
             <Form.Item
-              label={intl.formatMessage({ id: 'codeCreate.label.totalDeviceNum' })}
+              label={formatMessage({ id: 'codeCreate.label.totalDeviceNum' })}
               name="deviceNum"
             >
               <Input style={{ width: '50%' }} disabled></Input>
@@ -447,7 +516,7 @@ const CodeCreate = (props) => {
           )}
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit">
-              {intl.formatMessage({ id: 'codeCreate.submit' })}
+              {formatMessage({ id: 'codeCreate.submit' })}
             </Button>
           </Form.Item>
         </Form>

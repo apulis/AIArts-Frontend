@@ -73,6 +73,24 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const deviceArray = Object.keys(devices);
   const { validateFields, getFieldValue, resetFields } = form;
 
+  const getVCList = async () => {
+    setTableLoading(true);
+    const res = await fetchVCList<{ code: number, data: { totalNum: number, result: { vcName: string, quota: string, metadata: string, userNum: number }[] } }>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
+    setTableLoading(false);
+    if (res.code === 0) {
+      const vcList: IVCColumnsProps[] = res.data.result.map(vc => {
+        return {
+          vcName: vc.vcName,
+          meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
+          quota: JSON.parse(vc.quota || '{}') as IVCQuota,
+          userNum: vc.userNum,
+        };
+      });
+      setPageTotal(res.data.totalNum);
+      setVCList(vcList)
+    }
+  };
+
   const handleCreateVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};
@@ -96,6 +114,12 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       getVCList();
     }
   };
+
+  const clearMemoValues = () => {
+    setCurrentHandledVC(undefined);
+    resetFields();
+  }
+
   const handleModifyVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};
@@ -128,9 +152,11 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         setSelectUserModalVisible(false);
       }
     } else {
-      setSelectUserModalVisible(false);
+      message.warn(formatMessage({ id: 'vc.component.atleast.one.user' }));
     }
   }
+
+  
 
   const handleRemoveVCUsers = async (userIds: number[]) => {
     if (!userIds || userIds.length === 0) {
@@ -151,28 +177,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     clearMemoValues();
   }
 
-  const clearMemoValues = () => {
-    setCurrentHandledVC(undefined);
-    resetFields();
-  }
-
-  const getVCList = async () => {
-    setTableLoading(true);
-    const res = await fetchVCList<{ code: number, data: { totalNum: number, result: { vcName: string, quota: string, metadata: string, userNum: number }[] } }>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
-    setTableLoading(false);
-    if (res.code === 0) {
-      const vcList: IVCColumnsProps[] = res.data.result.map(vc => {
-        return {
-          vcName: vc.vcName,
-          meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
-          quota: JSON.parse(vc.quota || '{}') as IVCQuota,
-          userNum: vc.userNum,
-        };
-      });
-      setPageTotal(res.data.totalNum);
-      setVCList(vcList)
-    }
-  };
+  
 
   const handleDeleteVC = (vcName: string) => {
     Modal.confirm({

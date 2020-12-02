@@ -41,4 +41,6 @@ export default {
   'vc.component.removeUser.message.success': '成功移除用户！',
   'vc.component.relate.user.button': '用户',
   'vc.component.remove.confirm.title': '点击确定按钮将会从当前虚拟集群移除这些用户',
+  'vc.component.atleast.one.user': '应该至少选择一个用户！',
+  'vc.component.search.not.found': '未搜索到相关结果',
 }

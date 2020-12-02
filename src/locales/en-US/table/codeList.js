@@ -4,6 +4,7 @@ export default {
   'codeList.table.column.engineType': 'Engine Type',
   'codeList.table.column.createTime': 'Creation Time',
   'codeList.table.column.storePath': 'Code Storage Path',
+  'codeList.table.column.cmd': 'Command',
   'codeList.table.column.description': 'Description',
   'codeList.table.column.action': 'Operation',
   'codeList.table.column.action.open.jupyter': 'Jupyter',

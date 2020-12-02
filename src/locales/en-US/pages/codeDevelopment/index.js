@@ -13,6 +13,7 @@ export default {
   'codeList.modal.saveImage.title.saveImage': 'Save Image',
   'codeList.modal.saveImage.label.name': 'Name',
   'codeList.modal.saveImage.label.version': 'Version',
+  'codeList.modal.saveImage.label.version.reg': 'Only numbers, English letters and decimal points are allowed',
   'codeList.modal.saveImage.label.description': 'Description',
   'codeList.modal.saveImage.footer.ok': 'Ok',
   'codeList.modal.saveImage.footer.cancel': 'Cancel',

@@ -39,8 +39,9 @@ const ManageJobs: React.FC = (props) => {
   const [currentStatus, setCurrentStatus] = useState('all');
   const [search, setSearch] = useState('');
   const [jobs, setJobs] = useState([]);
-  const [currentSearchVC, setCurrentSearchVC] = useState(currentSelectedVC)
+  const [currentSearchVC, setCurrentSearchVC] = useState<string | null>(currentSelectedVC)
   const [pageParams, setPageParams] = useState(PAGEPARAMS);
+  const [jobSumary, setJobSumary] = useState<{ label: string, value: string }[]>([]);
 
   const getJobList = async (withLoading?: boolean) => {
     if (withLoading) {
@@ -51,7 +52,7 @@ const ManageJobs: React.FC = (props) => {
       pageNum: pageParams.pageNum,
       pageSize: pageParams.pageSize,
       status: currentStatus || 'all',
-      vcName: currentSearchVC,
+      vcName: currentSearchVC || '',
       jobType: currentJobType,
       order: sortText[sortedInfo.order],
       orderBy: sortedInfo.orderBy,
@@ -77,10 +78,30 @@ const ManageJobs: React.FC = (props) => {
     getJobList();
   }, props.common.interval);
 
+  const getAllJobsSummary = async () => {
+    const res = await fetchAllJobsSummary(currentSearchVC || undefined);
+    if (res.code === 0) {
+      const summary = [
+        { value: 'all', label: formatMessage({ id: 'centerInference.list.all' }) },
+      ];
+      let total = 0;
+      Object.keys(res.data).forEach((k) => {
+        const count = res.data[k];
+        total += count;
+        summary.push({
+          label: getStatusList().find((status) => status.value === k)?.label,
+          value: k,
+        });
+      });
+      summary[0].label = `${summary[0].label  }`;
+      setJobSumary(summary);
+    }
+  }
+
   useEffect(() => {
     getJobList(true);
     getAllJobsSummary()
-  }, [pageParams, currentSearchVC, currentStatus, currentJobType, currentSearchVC]);
+  }, [pageParams, currentSearchVC, currentStatus, currentJobType, search]);
 
   const handleChangeStatus = (value: string) => {
     setCurrentStatus(value);
@@ -218,25 +239,7 @@ const ManageJobs: React.FC = (props) => {
     },
   ];
 
-  const getAllJobsSummary = async () => {
-    const res = await fetchAllJobsSummary();
-    if (res.code === 0) {
-      const jobSumary = [
-        { value: 'all', label: formatMessage({ id: 'centerInference.list.all' }) },
-      ];
-      let total = 0;
-      Object.keys(res.data).forEach((k) => {
-        let count = res.data[k];
-        total += count;
-        jobSumary.push({
-          label: getStatusList().find((status) => status.value === k)?.label + `( ${count} )`,
-          value: k,
-        });
-      });
-      jobSumary[0].label = jobSumary[0].label + `（${total}）`;
-      setJobSumary(jobSumary);
-    }
-  }
+  
 
   const pageParamsChange = (page: number, size?: number) => {
     setPageParams({ pageNum: page, pageSize: size || pageParams.pageSize });
@@ -246,7 +249,6 @@ const ManageJobs: React.FC = (props) => {
     setCurrentSearchVC(value);
   }
 
-  const [jobSumary, setJobSumary] = useState<{ label: string, value: string }[]>([]);
   return (
     <PageHeaderWrapper>
       <Card
