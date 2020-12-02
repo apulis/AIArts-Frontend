@@ -109,6 +109,7 @@ const ModelTraining = (props) => {
   const [algorithmSource, setAlgorithm] = useState(1);
   const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [savedImageDescMap, setSavedImageDescMap] = useState({});
+  const [frameworkMap, setFrameworkMap] = useState({});
 
   const getImageDescMap = async () => {
     const res = await getImages();
@@ -133,6 +134,7 @@ const ModelTraining = (props) => {
       }
       setCodePathPrefix(codePathPrefix);
       let aiFrameworkList = [];
+      setFrameworkMap(aiFrameworks);
       Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
       });
@@ -323,6 +325,16 @@ const ModelTraining = (props) => {
       values.visualPath = values.visualPath ? codePathPrefix + values.visualPath : undefined;
     }
     values.params = params;
+    
+    Object.keys(frameworkMap).forEach(key => {
+      if (Array.isArray(frameworkMap[key])) {
+        frameworkMap[key].forEach(engine => {
+          if (engine === values.engine) {
+            values.frameworkType = key;
+          }
+        })
+      }
+    })
     if (typeEdit) {
       let editParams = {
         ...paramsDetailedData.metaData,
@@ -460,6 +472,7 @@ const ModelTraining = (props) => {
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
         deviceNum: availableDeviceNumList.includes(currentSelected.params.deviceNum) ? currentSelected.params?.deviceNum : 0,
+        engine: frameWorks.includes(currentSelected.params.engine) ? currentSelected.params?.engine : undefined,
       });
       const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};

@@ -145,7 +145,8 @@ const CodeCreate = (props) => {
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
-    delete values['engineType'];
+    values.frameworkType = values.engineType;
+    delete values.engineType;
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     values.private = [1, 2].includes(engineSource);
     if (
