@@ -32,6 +32,7 @@ export default {
   'paramsManager.noContent': 'No content available',
 
   // createVisualization
+  'createVisualization.create.job.notHaveVisualPath': 'There is no visual path for this training',
   'createVisualization.create.success': 'Created successfully',
   'createVisualization.create.title.visualJob': 'Create a visualization job',
 

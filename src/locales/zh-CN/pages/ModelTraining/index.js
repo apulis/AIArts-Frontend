@@ -31,6 +31,7 @@ export default {
   'paramsManager.noContent': '没有可用的内容',
 
   // createVisualization
+  'createVisualization.create.job.notHaveVisualPath': '该训练没有可视化路径',
   'createVisualization.create.success': '创建成功',
   'createVisualization.create.title.visualJob': '创建可视化作业',
 
