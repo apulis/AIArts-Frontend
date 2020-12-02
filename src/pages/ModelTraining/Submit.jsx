@@ -49,7 +49,7 @@ export const generateKey = () => {
   return new Date().getTime();
 };
 
-export const subCodePathPrefix = (s) => {
+export const subCodePathPrefix = (s = '') => {
   return s.replace(/\/home\/.+?\//, '');
 };
 
@@ -215,9 +215,9 @@ const ModelTraining = (props) => {
       // check null
       data.params.params = data.params.params || [];
       // replace path prefix
-      data.params.codePath = data.params.codePath.replace(codePathPrefix, '');
-      data.params.startupFile = data.params.startupFile.replace(codePathPrefix, '');
-      data.params.outputPath = data.params.outputPath.replace(codePathPrefix, '');
+      data.params.codePath = (data.params.codePath || '').replace(codePathPrefix, '');
+      data.params.startupFile = (data.params.startupFile || '').replace(codePathPrefix, '');
+      data.params.outputPath = (data.params.outputPath || '').replace(codePathPrefix, '');
       data.params.params = Object.entries(data.params.params).map((item) => {
         var obj = {};
         obj['key'] = item[0];
