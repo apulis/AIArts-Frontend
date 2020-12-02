@@ -44,7 +44,12 @@ export default {
   'vc.component.relateUser.message.success': '成功添加用户！',
   'vc.component.removeUser.message.success': '成功移除用户！',
   'vc.component.relate.user.button': '用户',
-  'vc.component.remove.confirm.title': '点击确定按钮将会从当前虚拟集群移除这些用户',
+  'vc.component.remove.confirm.title': '点击确定按钮将会从当前虚拟集群移除选中的用户',
   'vc.component.atleast.one.user': '应该至少选择一个用户！',
   'vc.component.search.not.found': '未搜索到相关结果',
+
+  'vc.component.remove.need.confirm.title': '当前将移除的用户有仍在运行的 Job',
+  'vc.component.remove.need.confirm.content': '再次点击确认按钮将会 kill 这些 Job：',
+  'vc.component.remove.need.confirm.jobName': '任务名称',
+  'vc.component.remove.need.confirm.jobId': '任务ID',
 }

@@ -95,9 +95,12 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
         }
       </div>
       <div style={{ marginTop: '20px' }}>
-        <h3>
-        {formatMessage({ id: 'vc.component.removeUser.modal.current.removing.user' })}
-        </h3>
+        {
+          readyRemoveUsers.length > 0 && 
+            <h3>
+              {formatMessage({ id: 'vc.component.removeUser.modal.current.removing.user' })}
+            </h3>
+        }
         <div>
           {
             readyRemoveUsers.map(user => (
@@ -114,13 +117,13 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
       </div>
       {
         needConfirm && <div style={{marginTop: '18px'}}>
-          <h3>当前将移除的用户有仍在运行的 Job</h3>
-          <div>再次点击确认按钮将会 kill 这些 Job：</div>
+          <h3>{formatMessage({ id: 'vc.component.remove.need.confirm.title' })}</h3>
+          <div>{formatMessage({ id: 'vc.component.remove.need.confirm.content' })}</div>
           {
             activeJob?.map(job => (
               <Descriptions>
-                <Descriptions.Item label={'任务名称'}>{job.jobName}</Descriptions.Item>
-                <Descriptions.Item label={'任务ID'}>{job.jobId}</Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'vc.component.remove.need.confirm.jobName' })}>{job.jobName}</Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'vc.component.remove.need.confirm.jobId' })}>{job.jobId}</Descriptions.Item>
               </Descriptions>
             ))
           }
