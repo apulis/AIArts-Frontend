@@ -27,6 +27,9 @@ export default {
   'vc.page.success.modify': 'Sucessfully Modify virtual cluster',
   'vc.page.form.vcName.required': 'Virtual Cluster Name is required',
   'vc.page.form.vcName.max': 'Maximum is 20',
+  'vc.page.table.relate.user': 'Relate User',
+  'vc.page.table.view.user': 'View User',
+
   'vc.component.message.success.set.default.vc': 'Success set default virtual cluster',
   'vc.component.default.vc.label': 'Default Virtual Cluster',
   'vc.component.confirm': 'Confirm',

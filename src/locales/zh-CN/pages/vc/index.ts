@@ -27,6 +27,10 @@ export default {
   'vc.page.success.modify': '成功修改 VC',
   'vc.page.form.vcName.required': '虚拟集群名称是必填的',
   'vc.page.form.vcName.max': '最大长度是 20',
+  'vc.page.table.relate.user': '添加用户',
+  'vc.page.table.view.user': '查看用户',
+
+
   'vc.component.message.success.set.default.vc': '成功设置默认虚拟集群',
   'vc.component.default.vc.label': '默认虚拟集群',
   'vc.component.confirm': '确定',

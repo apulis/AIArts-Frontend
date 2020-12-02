@@ -77,8 +77,11 @@ export const getVCUser = (vcName: string) => {
   return requestUser(`/vc/${vcName}/users`);
 }
 
-export const removeVCUser = (vcName: string, userIds: number[]) => {
+export const removeVCUser = (vcName: string, userIds: number[], confirmed?: boolean) => {
   return requestUser(`/vc/${vcName}/users/${userIds}`, {
     method: 'DELETE',
+    params: {
+      confirmed: confirmed || undefined,
+    }
   })
 }
