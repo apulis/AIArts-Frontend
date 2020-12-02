@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu } from 'antd';
+import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu, Tooltip } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SyncOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
@@ -337,7 +337,23 @@ const CodeList = (props) => {
       dataIndex: 'status',
       ellipsis: true,
       width: '6%',
-      render: (status) => statusMap[status]?.local,
+      render: (status, item) => {
+        const detail = item.jobStatusDetail;
+        const title = (() => {
+          if (!Array.isArray(detail)) return null;
+          if (detail.length === 0) return null;
+          const firstDetail = detail[0];
+          if (typeof firstDetail !== 'object') return null;
+          const firstDetailMessage = firstDetail.message;
+          if (typeof firstDetailMessage === 'object') return (
+            <pre style={{ maxHeight: '400px', overflow: 'auto' }}>{JSON.stringify(firstDetailMessage, null, 2)}</pre>
+          );
+          return <pre>{JSON.stringify(firstDetail, null, 2)}</pre>;
+        })();
+        return <Tooltip title={title}>
+          { statusMap[status]?.local }
+        </Tooltip>
+      },
     },
     {
       title: formatMessage({ id: 'codeList.table.column.engineType' }),
