@@ -574,7 +574,7 @@ const CodeList = (props) => {
         setSaveImageButtonLoading(false);
         const { duration } = res.data;
         if (duration) {
-          message.success(formatMessage({ id: 'codeList.tips.saveImage.success.left' }) + duration + formatMessage({ id: 'codeList.tips.saveImage.success.right' }), 6000);
+          message.success(formatMessage({ id: 'codeList.tips.saveImage.success.left' }) + duration + formatMessage({ id: 'codeList.tips.saveImage.success.right' }), 6);
         } else {
           message.success(formatMessage({ id: 'codeList.tips.saveImage.success' }));
         }
@@ -658,7 +658,7 @@ const CodeList = (props) => {
           destroyOnClose
           maskClosable={false}
           width={480}
-          style={{ maxHeight: '420px', overflow: 'hidden' }}
+          style={{ maxHeight: '420px', overflow: 'auto' }}
           footer={[
             <Button onClick={() => setModalFlag(false)}>
               {formatMessage({ id: 'codeList.modal.upload.footer.close' })}
