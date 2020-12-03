@@ -16,20 +16,20 @@ const ResourceMonitoring = () => {
     };
     deviceUsageLinks = {
       'zh-CN': 'http://219.133.167.42:6688/endpoints/grafana_zh/d/device-usage-history-zh/she-bei-shi-yong-liang',
-      'en-US': 'http://219.133.167.42:6688/endpoints/grafana/d/device-usage-history/device-usage',
+      'en-US': 'http://219.133.167.42:6688/endpoints/grafana/d/device-usage-history/device-usag',
     };;
   } else {
     vcUsageLinks = {
       'zh-CN': domainName + '/endpoints/grafana_zh/d/per-vc-gpu-statistic-zh/mei-ge-vcshe-bei-tong-ji-xin-xi',
-      'en-US': domainName + '/endpoints/grafana/d/per-vc-gpu-statistic',
+      'en-US': domainName + '/endpoints/grafana/d/per-vc-gpu-statistic?kiosk=tv',
     };
     deviceUsageLinks = {
       'zh-CN': domainName + '/endpoints/grafana_zh/d/device-usage-history-zh/she-bei-shi-yong-liang',
       'en-US': domainName + '/endpoints/grafana/d/device-usage-history/device-usage',
     };
   }
-  const VCUsageUrl = vcUsageLinks[language];
-  const clusterUsageUrl = deviceUsageLinks[language];
+  const VCUsageUrl = vcUsageLinks[language] + '?kiosk=tv';
+  const clusterUsageUrl = deviceUsageLinks[language] + '?kiosk=tv';
   return (
     <PageHeaderWrapper>
       <Card bodyStyle={{ padding: '0px 0px' }}>
