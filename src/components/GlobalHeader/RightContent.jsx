@@ -44,7 +44,7 @@ const GlobalHeaderRight = (props) => {
     >
       <Dropdown overlay={menu}>
         <a className="ant-dropdown-link" style={{ display: 'inline-block', marginRight: '10px' }} onClick={e => e.preventDefault()}>
-          系统导航 <DownOutlined />
+          {intl.formatMessage({ id: 'component.globalHeader.rightContent.globalHeaderRight.menu' })} <DownOutlined />
         </a>
       </Dropdown>
       <Avatar menu />
