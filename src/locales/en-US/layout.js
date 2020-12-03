@@ -1,4 +1,4 @@
 export default {
-  '403.tips.error': '抱歉，您无权限访问此页面.',
-  '403.tips.concat': '请联系管理员添加权限',
+  '403.tips.error': 'Sorry, you do not have permission to access this page.',
+  '403.tips.concat': 'Please contact the administrator to add permissions',
 };
