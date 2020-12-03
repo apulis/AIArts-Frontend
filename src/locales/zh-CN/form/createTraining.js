@@ -22,6 +22,7 @@ export default {
   'trainingCreate.value.importTrainingParams': '导入训练参数',
   'trainingCreate.value.presetEngine': '预置引擎',
   'trainingCreate.value.savedEngine': '已保存引擎',
+  'trainingCreate.value.customEngine': '自定义引擎',
   'trainingCreate.value.yes': '是',
   'trainingCreate.value.no': '否',
 
