@@ -658,6 +658,7 @@ const CodeList = (props) => {
           destroyOnClose
           maskClosable={false}
           width={480}
+          style={{ maxHeight: '420px', overflow: 'hidden' }}
           footer={[
             <Button onClick={() => setModalFlag(false)}>
               {formatMessage({ id: 'codeList.modal.upload.footer.close' })}

@@ -22,6 +22,7 @@ export default {
   'trainingCreate.value.importTrainingParams': 'Import Training Params',
   'trainingCreate.value.presetEngine': 'Preset Engine',
   'trainingCreate.value.savedEngine': 'Saved Engine',
+  'trainingCreate.value.customEngine': 'Customize Engine',
   'trainingCreate.value.yes': 'Yes',
   'trainingCreate.value.no': 'No',
 
