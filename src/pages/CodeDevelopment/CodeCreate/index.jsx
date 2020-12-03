@@ -151,13 +151,22 @@ const CodeCreate = (props) => {
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     values.private = [1, 2].includes(engineSource);
     setSubmitButtonLoading(true);
+    const currentVCAvailDevice = deviceList.find(val => val.deviceType === values.deviceType);
+    let needConfirm = false;
+    if (currentVCAvailDevice) {
+      const currentAvail = currentVCAvailDevice.avail;
+      const deviceNum = values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum;
+      if (deviceNum > currentAvail) {
+        needConfirm = true;
+      }
+    }
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
         values.deviceType,
         values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum,
         { nodeNum: values.numPs },
-      )
+      ) || needConfirm
     ) {
       Modal.confirm({
         title: formatMessage({ id: 'codeCreate.modal.noDevice.title' }),
