@@ -437,7 +437,7 @@ const CodeCreate = (props) => {
                 },
               ]}
             >
-              <Input placeholder="请输入镜像名称" />
+              <Input placeholder={formatMessage({ id: 'codeCreate.input.placeholder.engine' })} />
             </Form.Item>
           )}
 

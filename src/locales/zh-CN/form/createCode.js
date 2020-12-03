@@ -10,6 +10,7 @@ export default {
   'codeCreate.label.nodeNum': '节点数量',
   'codeCreate.label.perNodeNum': '单节点数量',
   'codeCreate.label.totalDeviceNum': '设备总数量',
+  'codeCreate.input.placeholder.engine': '请输入镜像', 
 
   'codeCreate.value.presetEngine': '预置引擎',
   'codeCreate.value.savedEngine': '已保存引擎',

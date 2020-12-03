@@ -667,7 +667,7 @@ const ModelTraining = (props) => {
           }
           {
             engineSource === 3 && 
-              <Input style={{ width: '300px' }} placeholder="请输入镜像名称" />
+              <Input style={{ width: '300px' }} placeholder={formatMessage({ id: 'trainingCreate.engine.input.placeholder' })} />
           }
         </FormItem>
         <FormItem

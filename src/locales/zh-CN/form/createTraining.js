@@ -17,6 +17,7 @@ export default {
   'trainingCreate.label.perNodeDeviceNum': '每个节点设备数量',
   'trainingCreate.label.deviceNum': '设备数量',
   'trainingCreate.label.deviceTotal': '设备总数',
+  'trainingCreate.engine.input.placeholder': '请输入镜像名称',
 
   'trainingCreate.value.manualParameterConfiguration': '手动参数配置',
   'trainingCreate.value.importTrainingParams': '导入训练参数',
