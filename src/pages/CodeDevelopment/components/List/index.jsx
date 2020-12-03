@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
 import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu, Tooltip } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { SyncOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
+import { SyncOutlined, DownOutlined, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import {
   getCodes,
   stopCode,
@@ -336,7 +336,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.status' }),
       dataIndex: 'status',
       ellipsis: true,
-      width: '6%',
+      width: '8%',
       render: (status, item) => {
         const detail = item.jobStatusDetail;
         const title = (() => {
@@ -350,9 +350,14 @@ const CodeList = (props) => {
           );
           return <pre>{JSON.stringify(firstDetail, null, 2)}</pre>;
         })();
-        return <Tooltip title={title}>
-          { statusMap[status]?.local }
-        </Tooltip>
+        return <div style={{ display: 'flex', alignItems: 'center' }}>
+          { statusMap[status]?.local}
+          <Tooltip title={title}>
+            {
+              title && <InfoCircleOutlined style={{ cursor: 'pointer', marginLeft: '6px', marginTop: '2px' }} twoToneColor="#eb2f96" />
+            }
+          </Tooltip>
+        </div>
       },
     },
     {
@@ -433,12 +438,12 @@ const CodeList = (props) => {
                 <Menu.Item>
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
-                </Button>
+                  </Button>
                 </Menu.Item>
                 <Menu.Item>
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.directory' })}
-                </Button>
+                  </Button>
                 </Menu.Item>
               </Menu>}>
                 <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
@@ -480,7 +485,7 @@ const CodeList = (props) => {
                     </Button>
                   </Menu.Item>
                 )}
-                
+
                 {checkIfCanResume(codeItem.status) && (
                   <Menu.Item>
                     <Button type="link" onClick={() => handleResumeJob(codeItem)}>
