@@ -87,8 +87,9 @@ const SelectModelTrainingModel: React.FC = ({ onCancel, visible, onOk, vc }) => 
       message.info(formatMessage({id: 'bizComponent.tips.selectOrCancel'}));
       return;
     }
-    const { name, visualPath: path } = row;
-    onOk && onOk({ name, path });
+    const { name } = row;
+    const { visualPath } = row.params;
+    onOk && onOk({ name, visualPath });
   };
 
   const handleSearch = (searchWord) => {
