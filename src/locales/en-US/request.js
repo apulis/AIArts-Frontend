@@ -40,6 +40,7 @@ export default {
   'bizCodeMessage.30201': 'CodePath not existed',
   'bizCodeMessage.30202': 'Template params error',
   'bizCodeMessage.30203': 'Training type error',
+  'bizCodeMessage.30205': 'Image not exist',
   
   'request.error.tips': 'Request error',
 };

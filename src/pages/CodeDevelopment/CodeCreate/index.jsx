@@ -50,6 +50,7 @@ const CodeCreate = (props) => {
   const [userFrameWorks, setUserFrameWorks] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [algorithmSource, setAlgorithmSource] = useState(1);
+  const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
 
   const { currentSelectedVC } = props.vc;
 
@@ -149,6 +150,7 @@ const CodeCreate = (props) => {
     delete values.engineType;
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     values.private = [1, 2].includes(engineSource);
+    setSubmitButtonLoading(true);
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
@@ -160,13 +162,17 @@ const CodeCreate = (props) => {
       Modal.confirm({
         title: formatMessage({ id: 'codeCreate.modal.noDevice.title' }),
         content: formatMessage({ id: 'codeCreate.modal.noDevice.content' }),
-        onOk() {
-          apiPostCode(values);
+        async onOk() {
+          await apiPostCode(values);
+          setSubmitButtonLoading(false);
         },
-        onCancel() {},
+        onCancel() {
+          setSubmitButtonLoading(false);
+        },
       });
     } else {
-      apiPostCode(values);
+      await apiPostCode(values);
+      setSubmitButtonLoading(false);
     }
   };
 
@@ -514,7 +520,7 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           <Form.Item {...buttonItemLayout}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               {formatMessage({ id: 'codeCreate.submit' })}
             </Button>
           </Form.Item>
