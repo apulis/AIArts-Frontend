@@ -27,6 +27,10 @@ export default {
   'vc.page.success.modify': '成功修改 VC',
   'vc.page.form.vcName.required': '虚拟集群名称是必填的',
   'vc.page.form.vcName.max': '最大长度是 20',
+  'vc.page.table.relate.user': '添加用户',
+  'vc.page.table.view.user': '查看用户',
+
+
   'vc.component.message.success.set.default.vc': '成功设置默认虚拟集群',
   'vc.component.default.vc.label': '默认虚拟集群',
   'vc.component.confirm': '确定',
@@ -40,7 +44,12 @@ export default {
   'vc.component.relateUser.message.success': '成功添加用户！',
   'vc.component.removeUser.message.success': '成功移除用户！',
   'vc.component.relate.user.button': '用户',
-  'vc.component.remove.confirm.title': '点击确定按钮将会从当前虚拟集群移除这些用户',
+  'vc.component.remove.confirm.title': '点击确定按钮将会从当前虚拟集群移除选中的用户',
   'vc.component.atleast.one.user': '应该至少选择一个用户！',
   'vc.component.search.not.found': '未搜索到相关结果',
+
+  'vc.component.remove.need.confirm.title': '当前将移除的用户有仍在运行的 Job',
+  'vc.component.remove.need.confirm.content': '再次点击确认按钮将会 kill 这些 Job：',
+  'vc.component.remove.need.confirm.jobName': '任务名称',
+  'vc.component.remove.need.confirm.jobId': '任务ID',
 }

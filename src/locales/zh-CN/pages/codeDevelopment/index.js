@@ -21,6 +21,8 @@ export default {
   'codeList.tips.fresh.success': '刷新成功',
   'codeList.tips.open.error': '服务正在准备中，请稍候再试',
   'codeList.tips.stop.success': '停止成功',
+  'codeList.tips.pause.success': '成功暂停',
+  'codeList.tips.resume.success': '成功重启',
   'codeList.tips.delete.success': '删除成功',
   'codeList.tips.delete.modal.title': '当前任务尚未停止',
   'codeList.tips.delete.modal.content': '请先停止该任务',

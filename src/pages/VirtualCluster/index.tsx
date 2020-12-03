@@ -67,6 +67,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const [pageTotal, setPageTotal] = useState(10);
   const [selectUserModalVisible, setSelectUserModalVisible] = useState<boolean>(false);
   const [removeUserModalVisible, setRemoveUserModalVisible] = useState<boolean>(false);
+  const [needConfirmOnDelete, setNeedConfirmOnDelete] = useState<boolean>(false);
+  const [activeJobOnDelete, setActiceJobsOnDelete] = useState([]);
 
   const { formatMessage } = useIntl();
   const { devices } = resource;
@@ -118,6 +120,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const clearMemoValues = () => {
     setCurrentHandledVC(undefined);
     resetFields();
+    setActiceJobsOnDelete([]);
+    setNeedConfirmOnDelete(false);
   }
 
   const handleModifyVC = async () => {
@@ -158,17 +162,21 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
 
   
 
-  const handleRemoveVCUsers = async (userIds: number[]) => {
+  const handleRemoveVCUsers = async (userIds: number[], confirmed?: boolean) => {
     if (!userIds || userIds.length === 0) {
       setRemoveUserModalVisible(false);
       clearMemoValues();
       return;
     }
-    const res = await removeVCUser(currentHandledVC.vcName, userIds);
+    const res = await removeVCUser(currentHandledVC.vcName, userIds, confirmed);
     if (res.code === 0) {
       message.success(formatMessage({ id: 'vc.component.removeUser.message.success' }));
       setRemoveUserModalVisible(false);
       clearMemoValues();
+    } else {
+      setNeedConfirmOnDelete(true);
+      const { activeJobs } = res;
+      setActiceJobsOnDelete(activeJobs);
     }
   }
 
@@ -323,10 +331,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
             </Button>
             <Dropdown overlay={<Menu>
               <Menu.Item>
-                <Button onClick={() => handleRelateUser(item)} type="link">添加用户</Button>
+                <Button onClick={() => handleRelateUser(item)} type="link">
+                  {formatMessage({ id: 'vc.page.table.relate.user' })}
+                </Button>
               </Menu.Item>
               <Menu.Item>
-                <Button onClick={() => handleRemoveUser(item)} type="link" danger>移除用户</Button>
+                <Button onClick={() => handleRemoveUser(item)} type="link">
+                  {formatMessage({ id: 'vc.page.table.view.user' })}
+                </Button>
               </Menu.Item>
             </Menu>}
             >
@@ -582,6 +594,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           vcName={currentHandledVC.vcName}
           onOk={handleRemoveVCUsers}
           onCancel={handleCancelRemoveVCUsers}
+          needConfirm={needConfirmOnDelete}
+          activeJob={activeJobOnDelete}
         />
 
       }

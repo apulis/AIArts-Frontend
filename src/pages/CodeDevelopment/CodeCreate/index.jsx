@@ -50,6 +50,7 @@ const CodeCreate = (props) => {
   const [userFrameWorks, setUserFrameWorks] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [algorithmSource, setAlgorithmSource] = useState(1);
+  const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
 
   const { currentSelectedVC } = props.vc;
 
@@ -149,24 +150,38 @@ const CodeCreate = (props) => {
     delete values.engineType;
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     values.private = [1, 2].includes(engineSource);
+    setSubmitButtonLoading(true);
+    const currentVCAvailDevice = deviceList.find(val => val.deviceType === values.deviceType);
+    let needConfirm = false;
+    if (currentVCAvailDevice) {
+      const currentAvail = currentVCAvailDevice.avail;
+      const deviceNum = values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum;
+      if (deviceNum > currentAvail) {
+        needConfirm = true;
+      }
+    }
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
         values.deviceType,
         values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum,
         { nodeNum: values.numPs },
-      )
+      ) || needConfirm
     ) {
       Modal.confirm({
         title: formatMessage({ id: 'codeCreate.modal.noDevice.title' }),
         content: formatMessage({ id: 'codeCreate.modal.noDevice.content' }),
-        onOk() {
-          apiPostCode(values);
+        async onOk() {
+          await apiPostCode(values);
+          setSubmitButtonLoading(false);
         },
-        onCancel() {},
+        onCancel() {
+          setSubmitButtonLoading(false);
+        },
       });
     } else {
-      apiPostCode(values);
+      await apiPostCode(values);
+      setSubmitButtonLoading(false);
     }
   };
 
@@ -419,7 +434,6 @@ const CodeCreate = (props) => {
               rules={[
                 {
                   required: true,
-                  message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                 },
               ]}
             >
@@ -515,7 +529,7 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           <Form.Item {...buttonItemLayout}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               {formatMessage({ id: 'codeCreate.submit' })}
             </Button>
           </Form.Item>

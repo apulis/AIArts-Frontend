@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Select } from 'antd';
+import { Descriptions, Modal, Select } from 'antd';
 import { useIntl } from 'umi';
 
 
@@ -12,16 +12,19 @@ interface IRemoveUserModal {
   visible: boolean;
   vcName: string;
   title: string;
-  onOk: (userIds: number[]) => void;
+  onOk: (userIds: number[], confirmed?: boolean) => void;
   onCancel: () => void;
+  needConfirm?: boolean;
+  activeJob?: {jobId: string, jobName: string}[];
 }
 
 const { Option } = Select;
 
-const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, onOk, onCancel }) => {
+const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, onOk, onCancel, needConfirm, activeJob }) => {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [actionDisabled, setActionDisabled] = useState<boolean>(false);
 
   const [readyRemoveUsers, setReadyRemoveUsers] = useState<{userName: string; userId: number}[]>([]);
   
@@ -44,8 +47,10 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
     }
   }, [visible])
 
-  const handleOk = () => {
-    onOk(readyRemoveUsers.map(val => val.userId));
+  const handleOk = async () => {
+    setActionDisabled(true);
+    await onOk(readyRemoveUsers.map(val => val.userId), needConfirm || undefined);
+    setActionDisabled(false);
   }
 
   const handleCacel = () => {
@@ -53,12 +58,14 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
   }
 
   const handleRemoveUser = (user) => {
+    if (actionDisabled) return;
     const newRemoveUsers = readyRemoveUsers.concat(user);
     setUsers(users.filter(val => val.userId !== user.userId));
     setReadyRemoveUsers(newRemoveUsers);
   }
 
   const handleCacelRemoveUser = (user) => {
+    if (actionDisabled) return;
     const newRemoveUsers = readyRemoveUsers.filter(val => val.userId !== user.userId);
     setUsers(users.concat(user));
     setReadyRemoveUsers(newRemoveUsers);
@@ -70,6 +77,7 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
       title={title}
       onOk={handleOk}
       onCancel={handleCacel}
+      width="65%"
     >
       <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
         <h3>
@@ -87,9 +95,12 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
         }
       </div>
       <div style={{ marginTop: '20px' }}>
-        <h3>
-        {formatMessage({ id: 'vc.component.removeUser.modal.current.removing.user' })}
-        </h3>
+        {
+          readyRemoveUsers.length > 0 && 
+            <h3>
+              {formatMessage({ id: 'vc.component.removeUser.modal.current.removing.user' })}
+            </h3>
+        }
         <div>
           {
             readyRemoveUsers.map(user => (
@@ -104,7 +115,20 @@ const RemoveUserModal: React.FC<IRemoveUserModal> = ({ visible, vcName, title, o
           }
         </div>
       </div>
-      
+      {
+        needConfirm && <div style={{marginTop: '18px'}}>
+          <h3>{formatMessage({ id: 'vc.component.remove.need.confirm.title' })}</h3>
+          <div>{formatMessage({ id: 'vc.component.remove.need.confirm.content' })}</div>
+          {
+            activeJob?.map(job => (
+              <Descriptions>
+                <Descriptions.Item label={formatMessage({ id: 'vc.component.remove.need.confirm.jobName' })}>{job.jobName}</Descriptions.Item>
+                <Descriptions.Item label={formatMessage({ id: 'vc.component.remove.need.confirm.jobId' })}>{job.jobId}</Descriptions.Item>
+              </Descriptions>
+            ))
+          }
+        </div>
+      }
     </Modal>
   )
 }

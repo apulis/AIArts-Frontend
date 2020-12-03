@@ -75,3 +75,11 @@ export async function createSaveImage(data) {
 export function fetchSSHInfo(id) {
   return request(`/codes/${id}/endpoints`);
 }
+
+export function pauseJob(jobId) {
+  return request(`/jobs/pause/${jobId}`)
+}
+
+export function resumeJob(jobId) {
+  return request(`/jobs/resume/${jobId}`)
+}

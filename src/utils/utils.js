@@ -310,6 +310,14 @@ export const checkIfCanStop = (status) => {
   return ['unapproved', 'queued', 'scheduling', 'running'].includes(status);
 };
 
+export const checkIfCanResume = (status) => {
+  return ['paused'].includes(status);
+};
+
+export const checkIfCanPause = (status) => {
+  return ['running', 'queued', 'scheduling'].includes(status);
+};
+
 export function setI18n(lang) {
   localStorage.language = lang;
   requestUser('/language/' + lang);

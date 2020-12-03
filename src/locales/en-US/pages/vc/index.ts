@@ -27,6 +27,9 @@ export default {
   'vc.page.success.modify': 'Sucessfully Modify virtual cluster',
   'vc.page.form.vcName.required': 'Virtual Cluster Name is required',
   'vc.page.form.vcName.max': 'Maximum is 20',
+  'vc.page.table.relate.user': 'Relate User',
+  'vc.page.table.view.user': 'View User',
+
   'vc.component.message.success.set.default.vc': 'Success set default virtual cluster',
   'vc.component.default.vc.label': 'Default Virtual Cluster',
   'vc.component.confirm': 'Confirm',
@@ -39,7 +42,12 @@ export default {
   'vc.component.relateUser.message.success': 'Successfully related users',
   'vc.component.removeUser.message.success': 'Successfully removed users',
   'vc.component.relate.user.button': 'User',
-  'vc.component.remove.confirm.title': 'Will remove user from current virtual cluster when click Confirm',
+  'vc.component.remove.confirm.title': 'Will remove selected user from current virtual cluster when click Confirm',
   'vc.component.atleast.one.user': 'Need at least choose one use!',
   'vc.component.search.not.found': 'Not found',
+
+  'vc.component.remove.need.confirm.title': 'Current removing user has active jobs',
+  'vc.component.remove.need.confirm.content': 'These active jobs will be kiiled when click Confirm button again',
+  'vc.component.remove.need.confirm.jobName': 'Job Name',
+  'vc.component.remove.need.confirm.jobId': 'Job ID',
 }

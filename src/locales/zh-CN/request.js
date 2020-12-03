@@ -35,6 +35,7 @@ export default {
   'bizCodeMessage.30201': '代码目录不存在',
   'bizCodeMessage.30202': '模板参数错误',
   'bizCodeMessage.30203': '训练类型不合法',
+  'bizCodeMessage.30205': '镜像不存在',
 
   'request.error.tips': '请求错误',
 };
