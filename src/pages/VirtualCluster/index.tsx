@@ -121,6 +121,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     setCurrentHandledVC(undefined);
     resetFields();
     setActiceJobsOnDelete([]);
+    setNeedConfirmOnDelete(false);
   }
 
   const handleModifyVC = async () => {
