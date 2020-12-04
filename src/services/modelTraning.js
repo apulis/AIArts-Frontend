@@ -153,12 +153,13 @@ export async function deleteVisualization(id) {
   });
 }
 
-export async function switchVisualizationJobStatus(id, action) {
+export async function switchVisualizationJobStatus(id, action, vcName) {
   return await request(`/visual/`, {
     method: 'PUT',
     params: {
       id: id,
       status: action,
+      vcName
     },
   });
 }

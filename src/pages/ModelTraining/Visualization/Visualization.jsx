@@ -68,7 +68,7 @@ const Visualization = (props) => {
   };
 
   const changeJobStatus = async (id, action) => {
-    const res = await switchVisualizationJobStatus(id, action);
+    const res = await switchVisualizationJobStatus(id, action, currentSelectedVC);
     if (res.code === 0) {
       getVisualizations();
     }
