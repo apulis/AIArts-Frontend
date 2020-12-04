@@ -434,23 +434,23 @@ const CodeList = (props) => {
               <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
-              <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu>
-                <Menu.Item>
+              {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
+                {/* <Menu.Item> */}
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
                   </Button>
-                </Menu.Item>
+                {/* </Menu.Item> */}
                 {/* <Menu.Item>
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.directory' })}
                   </Button>
                 </Menu.Item> */}
-              </Menu>}>
+              {/* </Menu>}> */}
                 <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
                   {formatMessage({ id: 'codeList.table.column.action.upload' })}
                   <DownOutlined />
                 </Button>
-              </Dropdown>
+              {/* </Dropdown> */}
 
               <Dropdown overlay={<Menu>
                 {codeItem.status === 'running' && (
