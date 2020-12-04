@@ -14,7 +14,7 @@ export default {
   'codeList.table.column.action.stop': '停止',
   'codeList.table.column.action.delete': '删除',
   'codeList.table.column.action.pause': '暂停',
-  'codeList.table.column.action.resume': '重启',
+  'codeList.table.column.action.resume': '启动',
   'codeList.table.column.action.save': '保存镜像',
   'codeList.table.pagination.showTotal.prefix': '总共',
   'codeList.table.pagination.showTotal.suffix': '条',

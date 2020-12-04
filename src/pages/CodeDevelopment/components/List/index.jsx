@@ -446,10 +446,10 @@ const CodeList = (props) => {
                   </Button>
                 </Menu.Item> */}
               {/* </Menu>}> */}
-                <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
+                {/* <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
                   {formatMessage({ id: 'codeList.table.column.action.upload' })}
                   <DownOutlined />
-                </Button>
+                </Button> */}
               {/* </Dropdown> */}
 
               <Dropdown overlay={<Menu>
@@ -494,7 +494,7 @@ const CodeList = (props) => {
                   </Menu.Item>
                 )}
               </Menu>}>
-                <Button type="link">
+                <Button type="link" disabled={codeItem.status === 'pausing'}>
                   {formatMessage({ id: 'codeList.table.column.action.more' })}
                   <DownOutlined />
                 </Button>
