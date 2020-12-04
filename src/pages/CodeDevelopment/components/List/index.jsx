@@ -440,11 +440,11 @@ const CodeList = (props) => {
                     {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
                   </Button>
                 </Menu.Item>
-                <Menu.Item>
+                {/* <Menu.Item>
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.directory' })}
                   </Button>
-                </Menu.Item>
+                </Menu.Item> */}
               </Menu>}>
                 <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
                   {formatMessage({ id: 'codeList.table.column.action.upload' })}
