@@ -636,41 +636,60 @@ const ModelTraining = (props) => {
             </Radio.Group>
           </FormItem>
         )}
-
-        <FormItem
-          {...commonLayout}
-          name="engine"
-          label={formatMessage({ id: 'trainingCreate.label.engine' })}
-          rules={[{ required: true }]}
-          preserve={false}
-        >
-          {
-            (engineSource === 1 || engineSource === 2) &&
-              <Select style={{ width: 300 }} disabled={typeCreate} showSearch={engineSource === 2}>
-                {engineSource === 1 &&
-                frameWorks.map((f) => (
-                  <Option value={f} key={f}>
-                    {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
-                    <Tooltip title={presetImageDescMap[f]}>
-                      {getNameFromDockerImage(f)}
-                    </Tooltip>
-                  </Option>
-                ))}
-              {engineSource === 2 &&
-                userFrameWorks.map((f) => (
-                  <Option value={f.fullName} key={f.id}>
-                    <Tooltip title={savedImageDescMap[f]}>
-                      {getNameFromDockerImage(f.fullName)}
-                    </Tooltip>
-                  </Option>
-                ))}
+        {
+          engineSource === 1 && 
+          <FormItem
+            {...commonLayout}
+            name="engine"
+            label={formatMessage({ id: 'trainingCreate.label.engine' })}
+            rules={[{ required: true }]}
+            preserve={false}
+          >
+             <Select style={{ width: 300 }} disabled={typeCreate}>
+              {engineSource === 1 &&
+              frameWorks.map((f) => (
+                <Option value={f} key={f}>
+                  {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
+                  <Tooltip title={presetImageDescMap[f]}>
+                    {getNameFromDockerImage(f)}
+                  </Tooltip>
+                </Option>
+              ))}
             </Select>
-          }
-          {
-            engineSource === 3 && 
-              <Input style={{ width: '300px' }} placeholder={formatMessage({ id: 'trainingCreate.engine.input.placeholder' })} />
-          }
-        </FormItem>
+          </FormItem>
+        }
+        {
+          engineSource === 2 && 
+          <FormItem
+            {...commonLayout}
+            name="engine"
+            label={formatMessage({ id: 'trainingCreate.label.engine' })}
+            rules={[{ required: true }]}
+            preserve={false}
+          >
+            <Select style={{ width: 300 }} disabled={typeCreate} showSearch>
+              {userFrameWorks.map((f) => (
+                <Option value={f.fullName} key={f.id}>
+                  <Tooltip title={savedImageDescMap[f]}>
+                    {getNameFromDockerImage(f.fullName)}
+                  </Tooltip>
+                </Option>
+              ))}
+            </Select>
+          </FormItem>
+        }
+        {
+          engineSource === 3 && 
+          <FormItem
+            {...commonLayout}
+            name="engine"
+            label={formatMessage({ id: 'trainingCreate.label.engine' })}
+            rules={[{ required: true }]}
+            preserve={false}
+          >
+            <Input style={{ width: '300px' }} placeholder={formatMessage({ id: 'trainingCreate.engine.input.placeholder' })} />
+          </FormItem>
+        }
         <FormItem
           labelCol={{ span: 4 }}
           name="codePath"
