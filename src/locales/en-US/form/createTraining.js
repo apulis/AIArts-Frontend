@@ -17,6 +17,7 @@ export default {
   'trainingCreate.label.perNodeDeviceNum': 'Number of Devices Per Node',
   'trainingCreate.label.deviceNum': 'Number of Devices',
   'trainingCreate.label.deviceTotal': 'Total Number of Devices',
+  'trainingCreate.engine.input.placeholder': 'Please input docker image',
 
   'trainingCreate.value.manualParameterConfiguration': 'Manual Parameter Configuration',
   'trainingCreate.value.importTrainingParams': 'Import Training Params',

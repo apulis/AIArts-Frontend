@@ -10,6 +10,7 @@ export default {
   'codeCreate.label.nodeNum': 'Number of Nodes',
   'codeCreate.label.perNodeNum': 'Number of Devices Per Node',
   'codeCreate.label.totalDeviceNum': 'Total Number of Devices',
+  'codeCreate.input.placeholder.engine': 'Please input docker image', 
 
   'codeCreate.value.presetEngine': 'Preset Engine',
   'codeCreate.value.savedEngine': 'Saved Engine',

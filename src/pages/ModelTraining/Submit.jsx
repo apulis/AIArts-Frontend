@@ -138,6 +138,7 @@ const ModelTraining = (props) => {
       Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
       });
+      console.log('aiFrameworkList', aiFrameworkList)
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
       const totalNodes = nodeInfo.length;
@@ -193,7 +194,7 @@ const ModelTraining = (props) => {
       setCurrentDeviceType(newParams.deviceType);
       setFieldsValue({
         ...newParams,
-        deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? deviceNum : 0,
+        deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? newParams.deviceNum : 0,
       });
     }
   }, [codePathPrefix]);
@@ -667,7 +668,7 @@ const ModelTraining = (props) => {
           }
           {
             engineSource === 3 && 
-              <Input style={{ width: '300px' }} placeholder="请输入镜像名称" />
+              <Input style={{ width: '300px' }} placeholder={formatMessage({ id: 'trainingCreate.engine.input.placeholder' })} />
           }
         </FormItem>
         <FormItem

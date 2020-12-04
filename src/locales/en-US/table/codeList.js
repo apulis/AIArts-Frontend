@@ -14,7 +14,7 @@ export default {
   'codeList.table.column.action.stop': 'Stop',
   'codeList.table.column.action.delete': 'Delete',
   'codeList.table.column.action.pause': 'Pause',
-  'codeList.table.column.action.resume': 'Resume',
+  'codeList.table.column.action.resume': 'Start',
   'codeList.table.column.action.save': 'Save Image',
   'codeList.table.pagination.showTotal.prefix': 'Total',
   'codeList.table.pagination.showTotal.suffix': 'items',

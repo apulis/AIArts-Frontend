@@ -434,23 +434,23 @@ const CodeList = (props) => {
               <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
-              <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu>
-                <Menu.Item>
+              {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
+                {/* <Menu.Item> */}
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
                   </Button>
-                </Menu.Item>
-                <Menu.Item>
+                {/* </Menu.Item> */}
+                {/* <Menu.Item>
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.directory' })}
                   </Button>
-                </Menu.Item>
-              </Menu>}>
-                <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
+                </Menu.Item> */}
+              {/* </Menu>}> */}
+                {/* <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
                   {formatMessage({ id: 'codeList.table.column.action.upload' })}
                   <DownOutlined />
-                </Button>
-              </Dropdown>
+                </Button> */}
+              {/* </Dropdown> */}
 
               <Dropdown overlay={<Menu>
                 {codeItem.status === 'running' && (
@@ -494,7 +494,7 @@ const CodeList = (props) => {
                   </Menu.Item>
                 )}
               </Menu>}>
-                <Button type="link">
+                <Button type="link" disabled={codeItem.status === 'pausing'}>
                   {formatMessage({ id: 'codeList.table.column.action.more' })}
                   <DownOutlined />
                 </Button>
@@ -574,7 +574,7 @@ const CodeList = (props) => {
         setSaveImageButtonLoading(false);
         const { duration } = res.data;
         if (duration) {
-          message.success(formatMessage({ id: 'codeList.tips.saveImage.success.left' }) + duration + formatMessage({ id: 'codeList.tips.saveImage.success.right' }), 6000);
+          message.success(formatMessage({ id: 'codeList.tips.saveImage.success.left' }) + duration + formatMessage({ id: 'codeList.tips.saveImage.success.right' }), 6);
         } else {
           message.success(formatMessage({ id: 'codeList.tips.saveImage.success' }));
         }
@@ -658,7 +658,7 @@ const CodeList = (props) => {
           destroyOnClose
           maskClosable={false}
           width={480}
-          style={{ maxHeight: '420px', overflow: 'hidden' }}
+          style={{ maxHeight: '420px', overflow: 'auto' }}
           footer={[
             <Button onClick={() => setModalFlag(false)}>
               {formatMessage({ id: 'codeList.modal.upload.footer.close' })}
