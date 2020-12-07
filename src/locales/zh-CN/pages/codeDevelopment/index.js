@@ -4,7 +4,7 @@ export default {
 
   'codeList.placeholder.search': '输入名称查询',
 
-  'codeList.modal.upload.title.uploadCode': '上传代码',
+  'codeList.modal.upload.title.uploadCode': '上传文件',
   'codeList.modal.upload.content.uploadTips': '请点击或拖入文件上传（支持多文件）',
   'codeList.modal.upload.tips.uploadSuccess': '文件上传成功!',
   'codeList.modal.upload.tips.uploadError': '文件上传失败!',

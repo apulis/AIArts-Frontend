@@ -3,7 +3,7 @@ export default {
 
   'codeList.placeholder.search': 'Search for names',
 
-  'codeList.modal.upload.title.uploadCode': 'Upload Code',
+  'codeList.modal.upload.title.uploadCode': 'Upload Files',
   'codeList.modal.upload.content.uploadTips':
     'Please click or drag files to upload (multi-file support)',
   'codeList.modal.upload.tips.uploadSuccess': 'File Uploaded Successfully!',
