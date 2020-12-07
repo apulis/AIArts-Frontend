@@ -153,7 +153,8 @@ const ModelTraining = (props) => {
     const res = await getUserDockerImages();
     if (res.code === 0) {
       const images = res.data.savedImages?.map((val) => {
-        return { fullName: val.fullName, id: val.id };
+        const param = val.param ? JSON.parse(val.param) : {};
+        return { fullName: val.fullName, id: val.id, frameworkType: param.frameworkType };
       });
       setUserFrameWorks(images);
       const savedImageDescArr = res.data.savedImages?.map((val) => {
@@ -327,16 +328,23 @@ const ModelTraining = (props) => {
     }
     values.params = params;
     values.private = [1, 2].includes(engineSource);
-    
-    Object.keys(frameworkMap).forEach(key => {
-      if (Array.isArray(frameworkMap[key])) {
-        frameworkMap[key].forEach(engine => {
-          if (engine === values.engine) {
-            values.frameworkType = key;
-          }
-        })
+    if (engineSource === 1) {
+      Object.keys(frameworkMap).forEach(key => {
+        if (Array.isArray(frameworkMap[key])) {
+          frameworkMap[key].forEach(engine => {
+            if (engine === values.engine) {
+              values.frameworkType = key;
+            }
+          })
+        }
+      })
+    } else if (engineSource === 2) {
+      const f = userFrameWorks.find(val => val.fullName === values.engine);
+      if (f) {
+        values.frameworkType = f.frameworkType;
       }
-    })
+    }
+    
     if (typeEdit) {
       let editParams = {
         ...paramsDetailedData.metaData,
