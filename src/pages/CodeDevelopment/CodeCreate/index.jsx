@@ -107,7 +107,8 @@ const CodeCreate = (props) => {
     const res = await getUserDockerImages();
     if (res.code === 0) {
       const images = res.data.savedImages?.map((val) => {
-        return { fullName: val.fullName, id: val.id };
+        const param = val.param ? JSON.parse(val.param) : {};
+        return { fullName: val.fullName, id: val.id, frameworkType: param.frameworkType };
       });
       setUserFrameWorks(images);
     }
@@ -146,7 +147,14 @@ const CodeCreate = (props) => {
   const handleSubmit = async () => {
     // todo 提取数据映射
     const values = await validateFields();
-    values.frameworkType = values.engineType;
+    if (engineSource === 1) {
+      values.frameworkType = values.engineType;
+    } else if (engineSource === 2) {
+      const f = userFrameWorks.find(val => val.fullName === values.engine);
+      if (f) {
+        values.frameworkType = f.frameworkType;
+      }
+    }
     delete values.engineType;
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     values.private = [1, 2].includes(engineSource);
