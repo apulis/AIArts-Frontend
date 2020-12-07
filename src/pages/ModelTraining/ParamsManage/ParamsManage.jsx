@@ -214,7 +214,9 @@ const ParamsManage = () => {
         });
         setUploadParamsObj(newTemplate);
       } catch (err) {
-        message.error(err);
+        if (typeof err === 'string') {
+          message.error(err);
+        }
       }
     };
     reader.readAsText(file);
@@ -319,6 +321,7 @@ const ParamsManage = () => {
             beforeUpload={beforeUpload}
             action="/"
             onChange={(info) => setFileList(info.fileList)}
+            disabled={fileList.length >= 1}
           >
             <Tooltip
               title={fileList.length >= 1 ? formatMessage({ id: 'paramsManage.upload.tip' }) : ''}
