@@ -45,8 +45,11 @@ const CodeUpload = (props) => {
     },
   };
   return (
-    <>
-      <Dragger {...uploadProps}>
+    <div style={{ maxHeight: '320px', overflowY: 'auto' }}>
+      <Dragger
+        {...uploadProps}
+        showUploadList={{ showRemoveIcon: false }}
+      >
         <p className="ant-upload-drag-icon">
           <InboxOutlined />
         </p>
@@ -57,7 +60,7 @@ const CodeUpload = (props) => {
           }
         </p>
       </Dragger>
-    </>
+    </div>
   );
 };
 export default CodeUpload;
