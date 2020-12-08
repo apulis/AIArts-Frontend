@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Select, Input, Card, Button, message } from 'antd';
+import { Table, Select, Input, Card, Button, message, Modal } from 'antd';
 import { connect, useIntl } from 'umi';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -10,7 +10,6 @@ import { fetchAllJobs, fetchAllJobsSummary } from '@/services/manageJobs';
 import useInterval from '@/hooks/useInterval';
 import { PAGEPARAMS, sortText } from '@/utils/const';
 import { deleteJob, removeTrainings } from '@/services/modelTraning';
-import Modal from 'antd/lib/modal/Modal';
 import { deleteInference } from '../InferenceService/InferenceList/services';
 import { ColumnsType } from 'antd/lib/table';
 
