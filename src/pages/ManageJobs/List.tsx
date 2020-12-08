@@ -290,7 +290,7 @@ const ManageJobs: React.FC = (props) => {
             </Select>
             <Search
               style={{ width: '200px' }}
-              placeholder={formatMessage({ id: 'modelList.placeholder.search' })}
+              placeholder={formatMessage({ id: 'jobManagement.placeholder.search' })}
               onSearch={handleSearch}
               enterButton
             />

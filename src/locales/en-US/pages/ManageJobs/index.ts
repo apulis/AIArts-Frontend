@@ -14,4 +14,5 @@ export default {
   'jobManagement.jobType.InferenceJob': 'Inference Job',
   'jobManagement.jobType.artsTraining': 'Training Job',
   'jobManagement.jobType.codeEnv': 'Code Development',
+  'jobManagement.placeholder.search': 'Search for keywords'
 }

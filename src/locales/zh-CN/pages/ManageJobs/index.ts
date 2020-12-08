@@ -14,4 +14,5 @@ export default {
   'jobManagement.jobType.InferenceJob': '推理任务',
   'jobManagement.jobType.artsTraining': '训练任务',
   'jobManagement.jobType.codeEnv': '代码开发',
+  'jobManagement.placeholder.search': '输入关键字查询'
 }
