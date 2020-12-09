@@ -128,8 +128,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
 
   const handleModifyVC = async () => {
     const result = await validateFields();
-    const deviceNumbers = {};
-    const metaUserQuotas = {};
+    const deviceNumbers = {};    
+    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond } };
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
