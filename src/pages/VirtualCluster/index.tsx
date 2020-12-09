@@ -288,10 +288,10 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       }
     },
     {
-      title: '单个 job 最大运行时长',
+      title: formatMessage({ id: 'vc.page.table.jobMaxSecond.title' }),
       align: 'center',
       render(_text, item) {
-        return <div>{item.jobMaxTimeSecond || '不限时'}</div>
+        return <div>{item.jobMaxTimeSecond || formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })}</div>
       }
     },
     {
@@ -490,7 +490,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
             </FormItem>
             <FormItem
               name="jobMaxTimeSecond"
-              label="最大使用时长/分钟"
+              label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
               initialValue={5 * 3600}
               rules={[
@@ -601,7 +601,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
             
             <FormItem
               name="jobMaxTimeSecond"
-              label="最大使用时长/分钟"
+              label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
               initialValue={currentHandledVC.jobMaxTimeSecond}
               rules={[
