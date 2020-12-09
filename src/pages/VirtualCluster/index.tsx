@@ -27,6 +27,7 @@ interface IVCColumnsProps {
   meta: IVCMeta;
   quota: IVCQuota;
   userNum: number;
+  jobMaxTimeSecond: number;
 }
 
 interface IPaginationParams {
@@ -80,23 +81,24 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     const res = await fetchVCList<{ code: number, data: { totalNum: number, result: { vcName: string, quota: string, metadata: string, userNum: number }[] } }>(paginationState.pageSize, paginationState.pageNum, paginationState.search);
     setTableLoading(false);
     if (res.code === 0) {
-      const vcList: IVCColumnsProps[] = res.data.result.map(vc => {
+      const list: IVCColumnsProps[] = res.data.result.map(vc => {
         return {
           vcName: vc.vcName,
           meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
           quota: JSON.parse(vc.quota || '{}') as IVCQuota,
           userNum: vc.userNum,
+          jobMaxTimeSecond: JSON.parse(vc.metadata || '{}').admin?.job_max_time_second,
         };
       });
       setPageTotal(res.data.totalNum);
-      setVCList(vcList)
+      setVCList(list)
     }
   };
 
   const handleCreateVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};
-    const metaUserQuotas = {};
+    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond } };
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
@@ -283,6 +285,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         return Object.keys(item.quota).map(val => (
           <div>{(item.quota)[val]}</div>
         ))
+      }
+    },
+    {
+      title: '单个 job 最大运行时长',
+      align: 'center',
+      render(_text, item) {
+        return <div>{item.jobMaxTimeSecond || '不限时'}</div>
       }
     },
     {
@@ -479,6 +488,18 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                 </div>
               ))}
             </FormItem>
+            <FormItem
+              name="jobMaxTimeSecond"
+              label="最大使用时长/分钟"
+              {...modalFormLayout}
+              initialValue={5 * 3600}
+              rules={[
+                { required: true }
+              ]}
+              preserve={false}
+            >
+              <InputNumber precision={0} />
+            </FormItem>
           </Form>
         </Modal>
       )}
@@ -576,6 +597,19 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                   </FormItem>
                 </div>
               ))}
+            </FormItem>
+            
+            <FormItem
+              name="jobMaxTimeSecond"
+              label="最大使用时长/分钟"
+              {...modalFormLayout}
+              initialValue={currentHandledVC.jobMaxTimeSecond}
+              rules={[
+                { required: true }
+              ]}
+              preserve={false}
+            >
+              <InputNumber precision={0} />
             </FormItem>
           </Form>
         </Modal>
