@@ -323,6 +323,8 @@ const CodeList = (props) => {
     }
   }
 
+  const { jobMaxTimeSecond } = props.vc;
+
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
@@ -350,9 +352,9 @@ const CodeList = (props) => {
           );
           return <pre style={{ display: 'block', width: 'auto', fontSize: '12px' }}>{JSON.stringify(firstDetail, null, 2)}</pre>;
         })();
-        return <div style={{ display: 'flex', alignItems: 'center', maxWidth: 'auto' }}>
+        return <div style={{ display: 'flex', alignItems: 'center' }}>
           { statusMap[status]?.local}
-          <Tooltip title={title} overlayStyle={{ maxWidth: '100vw' }} placement="rightTop">
+          <Tooltip title={title} overlayStyle={{ maxWidth: 'auto' }} placement="rightTop">
             {
               title && <InfoCircleOutlined style={{ cursor: 'pointer', marginLeft: '6px', marginTop: '2px' }} twoToneColor="#eb2f96" />
             }
@@ -377,6 +379,25 @@ const CodeList = (props) => {
       width: '12%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
+    },
+    {
+      title: formatMessage({ id: 'job.rest.time' }),
+      render: (text, item) => {
+        const status = item.status || item.jobStatus;
+        const startTime = new Date(item.createTime || item.jobTime).getTime();
+        const currentTime = new Date().getTime();
+        const lastedTime = currentTime - startTime;
+        if (status === 'running') {
+          if (!jobMaxTimeSecond) {
+            return '-';
+          }
+          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          return restTime + formatMessage({ id: 'job.rest.minute' });
+        }
+        return '-';
+      },
+      ellipsis: true,
+      width: '8%',
     },
     {
       // title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
@@ -436,7 +457,7 @@ const CodeList = (props) => {
               </a>
               {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
                 {/* <Menu.Item> */}
-                  <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
+                  <Button disabled={codeItem.status !== 'running'} type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
                   </Button>
                 {/* </Menu.Item> */}
@@ -584,7 +605,7 @@ const CodeList = (props) => {
   };
 
   return (
-    <div style={{ width: '1400px', overflow: 'auto' }}>
+    <div style={{ width: '1580px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
