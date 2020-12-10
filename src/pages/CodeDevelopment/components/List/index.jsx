@@ -323,6 +323,8 @@ const CodeList = (props) => {
     }
   }
 
+  const { jobMaxTimeSecond } = props.vc;
+
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
@@ -377,6 +379,25 @@ const CodeList = (props) => {
       width: '12%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
+    },
+    {
+      title: formatMessage({ id: 'job.rest.time' }),
+      render: (text, item) => {
+        const status = item.status || item.jobStatus;
+        const startTime = new Date(item.createTime).getTime();
+        const currentTime = new Date().getTime();
+        const lastedTime = currentTime - startTime;
+        if (status === 'running') {
+          if (!jobMaxTimeSecond) {
+            return '-';
+          }
+          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          return restTime + formatMessage({ id: 'job.rest.minute' });
+        }
+        return '-';
+      },
+      ellipsis: true,
+      width: '12%',
     },
     {
       // title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
@@ -584,7 +605,7 @@ const CodeList = (props) => {
   };
 
   return (
-    <div style={{ width: '1400px', overflow: 'auto' }}>
+    <div style={{ width: '1580px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
