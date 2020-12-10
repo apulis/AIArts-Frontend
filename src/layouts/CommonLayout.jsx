@@ -29,6 +29,13 @@ const CommonLayout = ({ children, dispatch, resource, user }) => {
           vcName: currentVC[0],
         },
       });
+    } else if (localStorage.vc) {
+      dispatch({
+        type: 'vc/userSelectVC',
+        payload: {
+          vcName: localStorage.vc,
+        },
+      });
     }
   }
   if (Object.keys(resource.devices).length === 0) {

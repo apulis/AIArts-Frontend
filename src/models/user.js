@@ -12,6 +12,7 @@ const UserModel = {
       phone: '',
       email: '',
       currentVC: [],
+      jobMaxTimeSecond: null,
     },
   },
   effects: {
@@ -31,6 +32,7 @@ const UserModel = {
               phone: res.phone,
               email: res.email,
               currentVC: res.currentVC,
+              jobMaxTimeSecond: res.jobMaxTimeSecond,
             },
           },
         });

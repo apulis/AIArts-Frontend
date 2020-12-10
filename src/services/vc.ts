@@ -85,3 +85,12 @@ export const removeVCUser = (vcName: string, userIds: number[], confirmed?: bool
     }
   })
 }
+
+export const getVCDetail = (vcName: string) => {
+  return request('/vc', {
+    method: 'GET',
+    params: {
+      vcName, 
+    }
+  })
+}

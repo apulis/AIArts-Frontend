@@ -91,7 +91,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
         };
       });
       setPageTotal(res.data.totalNum);
-      setVCList(list)
+      setVCList(list);
     }
   };
 
