@@ -397,7 +397,7 @@ const CodeList = (props) => {
         return '-';
       },
       ellipsis: true,
-      width: '12%',
+      width: '8%',
     },
     {
       // title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
