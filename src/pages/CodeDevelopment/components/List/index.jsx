@@ -584,7 +584,7 @@ const CodeList = (props) => {
   };
 
   return (
-    <>
+    <div style={{ width: '1400px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
@@ -724,7 +724,7 @@ const CodeList = (props) => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 
