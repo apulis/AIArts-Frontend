@@ -34,7 +34,7 @@ const ManageJobs: React.FC = (props) => {
     columnKey: '',
   });
   const [currentJobType, setCurrentJobType] = useState(EnumJobTrainingType.all)
-  const { currentSelectedVC } = props.vc;
+  const { currentSelectedVC, jobMaxTimeSecond } = props.vc;
   const [currentStatus, setCurrentStatus] = useState('all');
   const [search, setSearch] = useState('');
   const [jobs, setJobs] = useState([]);
@@ -156,6 +156,7 @@ const ManageJobs: React.FC = (props) => {
     {
       dataIndex: 'jobStatus',
       title: formatMessage({ id: 'jobManagement.table.column.status' }),
+      width: '8%',
       render: (text, item) => getJobStatus(item.jobStatus),
     },
     {
@@ -171,6 +172,7 @@ const ManageJobs: React.FC = (props) => {
       render(text, item) {
         return <div>{item.jobParams?.userName}</div>;
       },
+      width: '8%',
     },
     {
       dataIndex: 'createTime',
@@ -181,6 +183,26 @@ const ManageJobs: React.FC = (props) => {
       },
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' ? sortedInfo.order : null,
+    },
+    
+    {
+      title: formatMessage({ id: 'job.rest.time' }),
+      render: (text, item) => {
+        const status = item.status || item.jobStatus;
+        const startTime = new Date(item.createTime || item.jobName).getTime();
+        const currentTime = new Date().getTime();
+        const lastedTime = currentTime - startTime;
+        if (status === 'running') {
+          if (!jobMaxTimeSecond) {
+            return '-';
+          }
+          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          return restTime + formatMessage({ id: 'job.rest.minute' });
+        }
+        return '-';
+      },
+      ellipsis: true,
+      width: '8%',
     },
     {
       dataIndex: 'desc',

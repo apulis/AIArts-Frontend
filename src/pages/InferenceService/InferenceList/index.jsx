@@ -118,6 +118,27 @@ const InferenceList = (props) => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
+    
+    
+    {
+      title: intl.formatMessage({ id: 'job.rest.time' }),
+      render: (text, item) => {
+        const status = item.status || item.jobStatus;
+        const startTime = new Date(item.createTime || item.jobName).getTime();
+        const currentTime = new Date().getTime();
+        const lastedTime = currentTime - startTime;
+        if (status === 'running') {
+          if (!vc.jobMaxTimeSecond) {
+            return '-';
+          }
+          const restTime = Math.floor(vc.jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          return restTime + intl.formatMessage({ id: 'job.rest.minute' });
+        }
+        return '-';
+      },
+      ellipsis: true,
+      width: '8%',
+    },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.runningTime' }),
       align: 'center',

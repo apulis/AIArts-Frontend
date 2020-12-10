@@ -43,7 +43,7 @@ const List = (props) => {
     getJobStatusSumary();
   }, props.common.interval);
 
-  const { currentSelectedVC } = props.vc;
+  const { currentSelectedVC, jobMaxTimeSecond } = props.vc;
 
   const getTrainingList = async (reloadPage, options = {}, withLoading = true) => {
     const { pageSize: size, status, pageNo } = options;
@@ -183,17 +183,20 @@ const List = (props) => {
       render(_text, item) {
         return <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>;
       },
+      width: '8%',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
       title: intl.formatMessage({ id: 'modelList.table.column.status' }),
+      width: '8%',
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
       title: intl.formatMessage({ id: 'modelList.table.column.engine' }),
+      width: '8%',
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
@@ -207,6 +210,27 @@ const List = (props) => {
       },
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
+    },
+    
+    
+    {
+      title: formatMessage({ id: 'job.rest.time' }),
+      render: (text, item) => {
+        const status = item.status || item.jobStatus;
+        const startTime = new Date(item.createTime || item.jobName).getTime();
+        const currentTime = new Date().getTime();
+        const lastedTime = currentTime - startTime;
+        if (status === 'running') {
+          if (!jobMaxTimeSecond) {
+            return '-';
+          }
+          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          return restTime + formatMessage({ id: 'job.rest.minute' });
+        }
+        return '-';
+      },
+      ellipsis: true,
+      width: '8%',
     },
     {
       dataIndex: 'desc',

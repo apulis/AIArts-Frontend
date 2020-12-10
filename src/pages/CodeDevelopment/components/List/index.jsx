@@ -384,7 +384,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        const startTime = new Date(item.createTime).getTime();
+        const startTime = new Date(item.createTime || item.jobTime).getTime();
         const currentTime = new Date().getTime();
         const lastedTime = currentTime - startTime;
         if (status === 'running') {

@@ -45,7 +45,7 @@ const List = (props) => {
     order: '',
   });
   const searchEl = useRef(null);
-  const { currentSelectedVC } = props.vc;
+  const { currentSelectedVC, jobMaxTimeSecond } = props.vc;
   const handleSearch = async (withLoading = true) => {
     const params = {
       ...pageParams,
@@ -212,6 +212,27 @@ const List = (props) => {
       },
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
+    },
+    
+    
+    {
+      title: formatMessage({ id: 'job.rest.time' }),
+      render: (text, item) => {
+        const status = item.status || item.jobStatus;
+        const startTime = new Date(item.createTime || item.jobName).getTime();
+        const currentTime = new Date().getTime();
+        const lastedTime = currentTime - startTime;
+        if (status === 'running') {
+          if (!jobMaxTimeSecond) {
+            return '-';
+          }
+          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          return restTime + formatMessage({ id: 'job.rest.minute' });
+        }
+        return '-';
+      },
+      ellipsis: true,
+      width: '8%',
     },
     // {
     //   dataIndex: 'desc',
