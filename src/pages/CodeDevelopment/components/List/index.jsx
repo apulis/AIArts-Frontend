@@ -346,13 +346,13 @@ const CodeList = (props) => {
           if (typeof firstDetail !== 'object') return null;
           const firstDetailMessage = firstDetail.message;
           if (typeof firstDetailMessage === 'object') return (
-            <pre style={{ maxHeight: '400px', overflow: 'auto' }}>{JSON.stringify(firstDetailMessage, null, 2)}</pre>
+            <pre style={{ maxHeight: '400px', overflow: 'auto'}}>{JSON.stringify(firstDetailMessage, null, 2)}</pre>
           );
-          return <pre>{JSON.stringify(firstDetail, null, 2)}</pre>;
+          return <pre style={{ display: 'block', width: 'auto', fontSize: '12px' }}>{JSON.stringify(firstDetail, null, 2)}</pre>;
         })();
         return <div style={{ display: 'flex', alignItems: 'center' }}>
           { statusMap[status]?.local}
-          <Tooltip title={title}>
+          <Tooltip title={title} overlayStyle={{ maxWidth: 'auto' }} placement="rightTop">
             {
               title && <InfoCircleOutlined style={{ cursor: 'pointer', marginLeft: '6px', marginTop: '2px' }} twoToneColor="#eb2f96" />
             }
@@ -584,7 +584,7 @@ const CodeList = (props) => {
   };
 
   return (
-    <>
+    <div style={{ width: '1400px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
@@ -724,7 +724,7 @@ const CodeList = (props) => {
           </Form.Item>
         </Form>
       </Modal>
-    </>
+    </div>
   );
 };
 
