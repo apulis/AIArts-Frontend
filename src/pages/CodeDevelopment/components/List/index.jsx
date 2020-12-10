@@ -366,7 +366,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.engineType' }),
       dataIndex: 'engine',
       ellipsis: true,
-      width: '10%',
+      width: '11%',
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
@@ -457,7 +457,7 @@ const CodeList = (props) => {
               </a>
               {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
                 {/* <Menu.Item> */}
-                  <Button type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
+                  <Button disabled={codeItem.status !== 'running'} type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
                   </Button>
                 {/* </Menu.Item> */}
