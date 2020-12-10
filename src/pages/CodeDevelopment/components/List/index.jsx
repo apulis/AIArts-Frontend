@@ -350,9 +350,9 @@ const CodeList = (props) => {
           );
           return <pre style={{ display: 'block', width: 'auto', fontSize: '12px' }}>{JSON.stringify(firstDetail, null, 2)}</pre>;
         })();
-        return <div style={{ display: 'flex', alignItems: 'center' }}>
+        return <div style={{ display: 'flex', alignItems: 'center', maxWidth: 'auto' }}>
           { statusMap[status]?.local}
-          <Tooltip title={title} overlayStyle={{ maxWidth: 'auto' }} placement="rightTop">
+          <Tooltip title={title} overlayStyle={{ maxWidth: '100vw' }} placement="rightTop">
             {
               title && <InfoCircleOutlined style={{ cursor: 'pointer', marginLeft: '6px', marginTop: '2px' }} twoToneColor="#eb2f96" />
             }
