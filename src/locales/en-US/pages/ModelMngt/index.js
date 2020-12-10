@@ -24,6 +24,7 @@ export default {
   'itemPanel.save': 'Save',
   'itemPanel.create': 'Create',
   'itemPanel.success': 'Success!',
+  'itemPanel.model': 'model',
   'itemPanel.input': 'Please Input',
   'itemPanel.select': 'Please Select',
   'itemPanel.save.success': 'Successfully Saved!',
@@ -302,4 +303,5 @@ export default {
   'list.delete.success': 'Successfull Deleted',
   'list.delete.error': 'Failed to delete:',
   'list.delete.evaluation.detail.view': 'View evaluation details',
+
 };
