@@ -50,7 +50,7 @@ export default {
   'vc.component.remove.need.confirm.content': 'These active jobs will be kiiled when click Confirm button again',
   'vc.component.remove.need.confirm.jobName': 'Job Name',
   'vc.component.remove.need.confirm.jobId': 'Job ID',
-  'vc.page.table.jobMaxSecond.title': 'Max use time per job(min)',
+  'vc.page.table.jobMaxSecond.title': 'Max use time per job(Seconds)',
   'vc.page.table.jobMaxSecond.none': 'No limit',
-  'vc.page.form.jobMaxTimeSecond': 'Max use time / min',
+  'vc.page.form.jobMaxTimeSecond': 'Max use time / Seconds',
 }
