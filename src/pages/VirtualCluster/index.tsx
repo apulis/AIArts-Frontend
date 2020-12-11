@@ -88,7 +88,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
           quota: JSON.parse(vc.quota || '{}') as IVCQuota,
           userNum: vc.userNum,
-          jobMaxTimeSecond: Math.floor(jobMaxTimeSecond / 3600) ,
+          jobMaxTimeSecond,
         };
       });
       setPageTotal(res.data.totalNum);
@@ -292,7 +292,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       title: formatMessage({ id: 'vc.page.table.jobMaxSecond.title' }),
       align: 'center',
       render(_text, item) {
-        return <div>{item.jobMaxTimeSecond || formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })}</div>
+        return <div>{Math.floor(item.jobMaxTimeSecond / 3600) || formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })}</div>
       }
     },
     {
@@ -599,7 +599,6 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                 </div>
               ))}
             </FormItem>
-            
             <FormItem
               name="jobMaxTimeSecond"
               label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
