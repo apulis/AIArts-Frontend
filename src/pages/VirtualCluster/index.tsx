@@ -82,12 +82,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     setTableLoading(false);
     if (res.code === 0) {
       const list: IVCColumnsProps[] = res.data.result.map(vc => {
+        const jobMaxTimeSecond = JSON.parse(vc.metadata || '{}').admin?.job_max_time_second;
         return {
           vcName: vc.vcName,
           meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
           quota: JSON.parse(vc.quota || '{}') as IVCQuota,
           userNum: vc.userNum,
-          jobMaxTimeSecond: JSON.parse(vc.metadata || '{}').admin?.job_max_time_second,
+          jobMaxTimeSecond: Math.floor(jobMaxTimeSecond / 3600) ,
         };
       });
       setPageTotal(res.data.totalNum);
@@ -98,7 +99,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const handleCreateVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};
-    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond } };
+    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond * 3600 } };
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
@@ -492,7 +493,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               name="jobMaxTimeSecond"
               label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
-              initialValue={5 * 3600}
+              initialValue={5}
               rules={[
                 { required: true }
               ]}
@@ -603,7 +604,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               name="jobMaxTimeSecond"
               label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
-              initialValue={currentHandledVC.jobMaxTimeSecond}
+              initialValue={Math.floor(currentHandledVC.jobMaxTimeSecond / 3600)}
               rules={[
                 { required: true }
               ]}
