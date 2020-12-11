@@ -720,12 +720,14 @@ const CodeList = (props) => {
             {...commonLayout}
             label={formatMessage({ id: 'codeList.modal.saveImage.label.name' })}
             name="name"
+            preserve={false}
             rules={[{ required: true }, jobNameReg]}
           >
             <Input style={{ width: '280px' }} />
           </Form.Item>
           <Form.Item
             {...commonLayout}
+            preserve={false}
             label={formatMessage({ id: 'codeList.modal.saveImage.label.version' })}
             name="version"
             rules={[
@@ -737,6 +739,7 @@ const CodeList = (props) => {
           </Form.Item>
           <Form.Item
             {...commonLayout}
+            preserve={false}
             label={formatMessage({ id: 'codeList.modal.saveImage.label.description' })}
             name="description"
             rules={[{ required: true }]}
