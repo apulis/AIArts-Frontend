@@ -277,12 +277,12 @@ const Submit = (props) => {
                       key === 'insert_op_conf'
                         ? []
                         : [
-                            {
-                              pattern: ArgNameReg,
-                              message: intl.formatMessage({
-                                id: 'edgeInferenceJobCreate.rule.supportInput',
-                              }),
-                            },
+                            // {
+                            //   pattern: ArgNameReg,
+                            //   message: intl.formatMessage({
+                            //     id: 'edgeInferenceJobCreate.rule.supportInput',
+                            //   }),
+                            // },
                           ]
                     }
                     style={{ display: 'inline-block' }}
