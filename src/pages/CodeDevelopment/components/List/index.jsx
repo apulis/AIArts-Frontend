@@ -347,10 +347,16 @@ const CodeList = (props) => {
           const firstDetail = detail[0];
           if (typeof firstDetail !== 'object') return null;
           const firstDetailMessage = firstDetail.message;
-          if (typeof firstDetailMessage === 'object') return (
-            <pre style={{ maxHeight: '400px', overflow: 'auto'}}>{JSON.stringify(firstDetailMessage, null, 2)}</pre>
-          );
-          return <pre style={{ display: 'block', width: 'auto', fontSize: '12px' }}>{JSON.stringify(firstDetail, null, 2)}</pre>;
+          if (typeof firstDetailMessage === 'object') {
+            return (
+              <pre style={{ maxHeight: '400px', overflow: 'auto'}}>{JSON.stringify(firstDetailMessage, null, 2)}</pre>
+            )
+          }
+          if (typeof firstDetail === 'object') {
+            firstDetail.errorMsg = item.errorMsg;
+            return <pre style={{ display: 'block', width: 'auto', fontSize: '12px' }}>{JSON.stringify(firstDetail, null, 2)}</pre>;
+          }
+          return null
         })();
         return <div style={{ display: 'flex', alignItems: 'center' }}>
           { statusMap[status]?.local}
