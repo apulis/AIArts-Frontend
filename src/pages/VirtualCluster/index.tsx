@@ -499,7 +499,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               ]}
               preserve={false}
             >
-              <InputNumber precision={0} />
+              <InputNumber precision={0} min={1} />
             </FormItem>
           </Form>
         </Modal>
@@ -609,7 +609,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               ]}
               preserve={false}
             >
-              <InputNumber precision={0} />
+              <InputNumber precision={0} min={1} />
             </FormItem>
           </Form>
         </Modal>
