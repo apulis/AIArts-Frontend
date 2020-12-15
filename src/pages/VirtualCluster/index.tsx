@@ -82,7 +82,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     setTableLoading(false);
     if (res.code === 0) {
       const list: IVCColumnsProps[] = res.data.result.map(vc => {
-        const jobMaxTimeSecond = JSON.parse(vc.metadata || '{}').admin?.job_max_time_second;
+        const jobMaxTimeSecond = JSON.parse(vc.metadata || '{}').admin?.job_max_time_second || 0;
         return {
           vcName: vc.vcName,
           meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
