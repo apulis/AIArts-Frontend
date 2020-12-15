@@ -590,7 +590,7 @@ const CodeList = (props) => {
   };
 
   return (
-    <div style={{ width: '1580px', overflow: 'auto' }}>
+    <div style={{ minWidth: '1580px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
