@@ -6,6 +6,7 @@ buildPlugin ( {
         [
             "directory": ".",
             "imageName": "aiarts-frontend",
+            "arch": ["amd64", "arm64"]
         ]
     ]
 })
