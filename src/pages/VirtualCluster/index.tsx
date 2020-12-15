@@ -70,6 +70,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const [removeUserModalVisible, setRemoveUserModalVisible] = useState<boolean>(false);
   const [needConfirmOnDelete, setNeedConfirmOnDelete] = useState<boolean>(false);
   const [activeJobOnDelete, setActiceJobsOnDelete] = useState([]);
+  const [vcActiveDisabled, setVCActiveDisabled] = useState<boolean>(false);
 
   const { formatMessage } = useIntl();
   const { devices } = resource;
@@ -125,6 +126,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     resetFields();
     setActiceJobsOnDelete([]);
     setNeedConfirmOnDelete(false);
+    setVCActiveDisabled(false);
   }
 
   const handleModifyVC = async () => {
@@ -143,7 +145,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       quota: JSON.stringify(deviceNumbers),
       metadata: JSON.stringify(metaUserQuotas),
     })
-    setModifyVCModalVisible(false)
+    setModifyVCModalVisible(false);
+    setVCActiveDisabled(false);
     if (res.code === 0) {
       getVCList();
       message.success(formatMessage({ id: 'vc.page.success.modify' }))
@@ -234,13 +237,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     const activeJob = await checkActiveJob(vcName);
     if (activeJob.code === 0) {
       if (activeJob.data.jobCount === 0) {
-        if (type === 'modify') {
-          setModifyVCModalVisible(true);
-        } else if (type === 'delete') {
-          handleDeleteVC(vcName);
-        }
+        setVCActiveDisabled(false);
       } else {
-        message.warning(formatMessage({ id: 'vc.page.message.current.vc.active' }))
+        setVCActiveDisabled(true);
+      }
+      if (type === 'modify') {
+        setModifyVCModalVisible(true);
+      } else if (type === 'delete') {
+        handleDeleteVC(vcName);
       }
     }
   }
@@ -569,7 +573,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} precision={0} />
+                    <InputNumber min={0} precision={0} disabled={vcActiveDisabled} title={formatMessage({ id: 'vc.page.message.current.vc.active' })} />
                   </FormItem>
                 </div>
               ))}
@@ -597,7 +601,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} precision={0} />
+                    <InputNumber min={0} precision={0} disabled={vcActiveDisabled} title={formatMessage({ id: 'vc.page.message.current.vc.active' })} />
                   </FormItem>
                 </div>
               ))}
