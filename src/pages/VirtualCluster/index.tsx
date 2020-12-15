@@ -292,7 +292,10 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       title: formatMessage({ id: 'vc.page.table.jobMaxSecond.title' }),
       align: 'center',
       render(_text, item) {
-        return <div>{Math.floor(item.jobMaxTimeSecond / 3600) || formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })}</div>
+        if (item.jobMaxTimeSecond === null || typeof item.jobMaxTimeSecond === 'undefined') {
+          return formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })
+        }
+        return <div>{Math.floor(item.jobMaxTimeSecond / 3600)}</div>
       }
     },
     {
