@@ -34,6 +34,7 @@ import { checkIfCanDelete, checkIfCanPause, checkIfCanResume, checkIfCanStop } f
 import { jobNameReg } from '@/utils/reg';
 import { useIntl } from 'umi';
 import Button from '@/components/locales/Button';
+import JobStatusToolTip from '@/components/JobStatusToolTip/index';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -360,11 +361,7 @@ const CodeList = (props) => {
         })();
         return <div style={{ display: 'flex', alignItems: 'center' }}>
           { statusMap[status]?.local}
-          <Tooltip title={title} overlayStyle={{ maxWidth: 'auto' }} placement="rightTop">
-            {
-              title && <InfoCircleOutlined style={{ cursor: 'pointer', marginLeft: '6px', marginTop: '2px' }} twoToneColor="#eb2f96" />
-            }
-          </Tooltip>
+          <JobStatusToolTip jobDetail={item} />
         </div>
       },
     },
