@@ -356,7 +356,7 @@ const CodeCreate = (props) => {
               onChange={(e) => {
                 setEngineSource(e.target.value);
               }}
-              style={{ width: '380px' }}
+              style={{ width: '420px' }}
             >
               <Radio value={1}>{formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
               <Radio value={2}>{formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
