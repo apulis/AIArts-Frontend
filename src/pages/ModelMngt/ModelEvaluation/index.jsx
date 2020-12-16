@@ -13,6 +13,7 @@ import {
   Divider,
   Col,
   Row,
+  Switch,
 } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -53,6 +54,7 @@ const ModelEvaluation = (props) => {
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
   const [isPublic, setIsPublic] = useState(false);
+  const [iSPrivileged, setISPrivileged] = useState(false);
 
   const [form] = Form.useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
@@ -186,6 +188,8 @@ const ModelEvaluation = (props) => {
       deviceType,
       deviceNum,
       argumentsFile,
+      isPrivileged,
+      bypassCode
     } = values;
     const evalParams = {
       id: modelId,
@@ -200,6 +204,8 @@ const ModelEvaluation = (props) => {
       deviceType,
       deviceNum,
       paramPath: codePathPrefix + argumentsFile,
+      isPrivileged,
+      bypassCode,
     };
     const submitJobInner = async () => {
       const { code, msg } = await addEvaluation({ ...evalParams, vcName: currentSelectedVC });
@@ -610,6 +616,26 @@ const ModelEvaluation = (props) => {
                 ))}
               </Select>
             </Form.Item>
+            <Form.Item
+              label={'是否启用 Privilege'}
+              name="isPrivileged"
+              {...layout}
+              initialValue={iSPrivileged}
+            >
+              <Switch onChange={(checked) => setISPrivileged(checked)} />
+            </Form.Item>
+            {
+              iSPrivileged && <Form.Item
+              label="校验码"
+              name="bypassCode"
+              {...layout}
+              rules={[
+                { required: true }
+              ]}
+            >
+              <Input style={{ width: '50%' }}/>
+            </Form.Item>
+            }
             <Form.Item style={{ float: 'right' }}>
               <Button type="primary" htmlType="submit">
                 {intl.formatMessage({ id: 'modelEvaluation.startEvaluate' })}
