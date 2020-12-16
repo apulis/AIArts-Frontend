@@ -154,7 +154,7 @@ const Submit = (props) => {
                 required: true,
                 message: intl.formatMessage({ id: 'edgeInferenceJobCreate.rule.needName' }),
               },
-              { pattern: NameReg, message: NameErrorText },
+              { pattern: NameReg, message: intl.formatMessage({ id: 'const.nameInputLimit' }) },
               { max: 20 },
             ]}
             {...commonLayout}

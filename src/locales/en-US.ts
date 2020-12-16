@@ -29,6 +29,7 @@ import reg from './en-US/reg';
 import layout from './en-US/layout';
 import vc from './en-US/pages/vc';
 import ManageJobs from './en-US/pages/ManageJobs';
+import _const from './en-US/const';
 
 import { capFirstLetter } from '@/utils/utils';
 
@@ -44,8 +45,9 @@ export default {
   'app.preview.down.block': 'Download this page to your local project',
   'app.welcome.link.fetch-blocks': 'Get all block',
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
-  'job.rest.time': 'Job Rest Running Time',
+  'job.rest.time': 'remaining runnable time',
   'job.rest.minute': 'Min',
+  ..._const,
   ...layout,
   ...bizComponent,
   ...request,
