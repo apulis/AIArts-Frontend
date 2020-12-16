@@ -6,6 +6,7 @@ import { getVCDetail } from '@/services/vc';
 export interface VCStateType {
   currentSelectedVC: string;
   jobMaxTimeSecond: number | null;
+  currentVCDetail: any;
 }
 
 export interface VCModelType {
@@ -27,9 +28,14 @@ const VCModel: VCModelType = {
   state: {
     currentSelectedVC: defaultVC,
     jobMaxTimeSecond: null,
+    currentVCDetail: undefined,
   }, 
   effects: {
     * userSelectVC({ payload }, { call, put, select }) {
+      const currentVCDetail = yield select(state => state.vc.currentVCDetail);
+      if (payload.vcName === localStorage.vc && currentVCDetail) {
+        return;
+      }
       localStorage.vc = payload.vcName;
       const currentUser = yield select(state => state.user.currentUser);
       const userJobMaxTimeSecond = currentUser.jobMaxTimeSecond
@@ -42,6 +48,7 @@ const VCModel: VCModelType = {
             type: 'saveCurrentVCTime',
             payload: {
               jobMaxTimeSecond: jobMaxTimeSecond,
+              currentVCDetail: res.data,
             }
           })
         }
@@ -66,6 +73,7 @@ const VCModel: VCModelType = {
       return {
         ...state,
         jobMaxTimeSecond: payload.jobMaxTimeSecond,
+        currentVCDetail: payload.currentVCDetail,
       }
     }
   },

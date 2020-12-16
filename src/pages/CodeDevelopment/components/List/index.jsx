@@ -34,6 +34,7 @@ import { checkIfCanDelete, checkIfCanPause, checkIfCanResume, checkIfCanStop } f
 import { jobNameReg } from '@/utils/reg';
 import { useIntl } from 'umi';
 import Button from '@/components/locales/Button';
+import JobStatusToolTip from '@/components/JobStatusToolTip/index';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -340,25 +341,9 @@ const CodeList = (props) => {
       ellipsis: true,
       width: '8%',
       render: (status, item) => {
-        const detail = item.jobStatusDetail;
-        const title = (() => {
-          if (!Array.isArray(detail)) return null;
-          if (detail.length === 0) return null;
-          const firstDetail = detail[0];
-          if (typeof firstDetail !== 'object') return null;
-          const firstDetailMessage = firstDetail.message;
-          if (typeof firstDetailMessage === 'object') return (
-            <pre style={{ maxHeight: '400px', overflow: 'auto'}}>{JSON.stringify(firstDetailMessage, null, 2)}</pre>
-          );
-          return <pre style={{ display: 'block', width: 'auto', fontSize: '12px' }}>{JSON.stringify(firstDetail, null, 2)}</pre>;
-        })();
         return <div style={{ display: 'flex', alignItems: 'center' }}>
           { statusMap[status]?.local}
-          <Tooltip title={title} overlayStyle={{ maxWidth: 'auto' }} placement="rightTop">
-            {
-              title && <InfoCircleOutlined style={{ cursor: 'pointer', marginLeft: '6px', marginTop: '2px' }} twoToneColor="#eb2f96" />
-            }
-          </Tooltip>
+          <JobStatusToolTip jobDetail={item} />
         </div>
       },
     },
@@ -391,7 +376,8 @@ const CodeList = (props) => {
           if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          console.log(123, jobMaxTimeSecond, lastedTime)
+          const restTime = Math.floor(jobMaxTimeSecond / 60 - (lastedTime / 60 / 1000));
           return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
@@ -605,7 +591,7 @@ const CodeList = (props) => {
   };
 
   return (
-    <div style={{ width: '1580px', overflow: 'auto' }}>
+    <div style={{ minWidth: '1580px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>

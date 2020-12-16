@@ -52,8 +52,8 @@ export default {
   'vc.component.remove.need.confirm.content': '再次点击确认按钮将会 kill 这些 Job：',
   'vc.component.remove.need.confirm.jobName': '任务名称',
   'vc.component.remove.need.confirm.jobId': '任务ID',
-  'vc.page.table.jobMaxSecond.title': '单个 job 最大运行时长（分钟）',
+  'vc.page.table.jobMaxSecond.title': '单个 job 最大运行时长（小时）',
   'vc.page.table.jobMaxSecond.none': '不限时',
-  'vc.page.form.jobMaxTimeSecond': '最大使用时长/分钟',
+  'vc.page.form.jobMaxTimeSecond': '最大使用时长/小时',
 
 }

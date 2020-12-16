@@ -17,6 +17,7 @@ import { getNameFromDockerImage } from '@/utils/reg';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 import { useIntl } from 'umi';
+import JobStatusToolTip from '@/components/JobStatusToolTip';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -191,7 +192,12 @@ const List = (props) => {
       dataIndex: 'status',
       title: intl.formatMessage({ id: 'modelList.table.column.status' }),
       width: '8%',
-      render: (text, item) => getJobStatus(item.status),
+      render: (text, item) => {
+        return <div style={{ display: 'flex', alignItems: 'center' }}>
+          {getJobStatus(item.status)}
+          {/* <JobStatusToolTip jobDetail={item} /> */}
+        </div>
+      },
     },
     {
       dataIndex: 'engine',
@@ -224,7 +230,7 @@ const List = (props) => {
           if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          const restTime = Math.floor(jobMaxTimeSecond / 60  - (lastedTime / 60 / 1000));
           return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';

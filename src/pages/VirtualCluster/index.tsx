@@ -70,6 +70,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const [removeUserModalVisible, setRemoveUserModalVisible] = useState<boolean>(false);
   const [needConfirmOnDelete, setNeedConfirmOnDelete] = useState<boolean>(false);
   const [activeJobOnDelete, setActiceJobsOnDelete] = useState([]);
+  const [vcActiveDisabled, setVCActiveDisabled] = useState<boolean>(false);
 
   const { formatMessage } = useIntl();
   const { devices } = resource;
@@ -82,12 +83,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     setTableLoading(false);
     if (res.code === 0) {
       const list: IVCColumnsProps[] = res.data.result.map(vc => {
+        const jobMaxTimeSecond = JSON.parse(vc.metadata || '{}').admin?.job_max_time_second || 0;
         return {
           vcName: vc.vcName,
           meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
           quota: JSON.parse(vc.quota || '{}') as IVCQuota,
           userNum: vc.userNum,
-          jobMaxTimeSecond: JSON.parse(vc.metadata || '{}').admin?.job_max_time_second,
+          jobMaxTimeSecond,
         };
       });
       setPageTotal(res.data.totalNum);
@@ -98,7 +100,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const handleCreateVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};
-    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond } };
+    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond * 3600 } };
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
@@ -124,12 +126,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     resetFields();
     setActiceJobsOnDelete([]);
     setNeedConfirmOnDelete(false);
+    setVCActiveDisabled(false);
   }
 
   const handleModifyVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};    
-    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond } };
+    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond * 3600 } };
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
@@ -142,7 +145,8 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       quota: JSON.stringify(deviceNumbers),
       metadata: JSON.stringify(metaUserQuotas),
     })
-    setModifyVCModalVisible(false)
+    setModifyVCModalVisible(false);
+    setVCActiveDisabled(false);
     if (res.code === 0) {
       getVCList();
       message.success(formatMessage({ id: 'vc.page.success.modify' }))
@@ -233,13 +237,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     const activeJob = await checkActiveJob(vcName);
     if (activeJob.code === 0) {
       if (activeJob.data.jobCount === 0) {
-        if (type === 'modify') {
-          setModifyVCModalVisible(true);
-        } else if (type === 'delete') {
-          handleDeleteVC(vcName);
-        }
+        setVCActiveDisabled(false);
       } else {
-        message.warning(formatMessage({ id: 'vc.page.message.current.vc.active' }))
+        setVCActiveDisabled(true);
+      }
+      if (type === 'modify') {
+        setModifyVCModalVisible(true);
+      } else if (type === 'delete') {
+        handleDeleteVC(vcName);
       }
     }
   }
@@ -291,7 +296,10 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
       title: formatMessage({ id: 'vc.page.table.jobMaxSecond.title' }),
       align: 'center',
       render(_text, item) {
-        return <div>{item.jobMaxTimeSecond || formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })}</div>
+        if (item.jobMaxTimeSecond === null || typeof item.jobMaxTimeSecond === 'undefined') {
+          return formatMessage({ id: 'vc.page.table.jobMaxSecond.none' })
+        }
+        return <div>{Math.floor(item.jobMaxTimeSecond / 3600)}</div>
       }
     },
     {
@@ -492,13 +500,13 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               name="jobMaxTimeSecond"
               label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
-              initialValue={5 * 3600}
+              initialValue={5}
               rules={[
                 { required: true }
               ]}
               preserve={false}
             >
-              <InputNumber precision={0} />
+              <InputNumber precision={0} min={1} />
             </FormItem>
           </Form>
         </Modal>
@@ -565,7 +573,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} precision={0} />
+                    <InputNumber min={0} precision={0} disabled={vcActiveDisabled} title={formatMessage({ id: 'vc.page.message.current.vc.active' })} />
                   </FormItem>
                 </div>
               ))}
@@ -593,23 +601,22 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
                       }
                     ]}
                   >
-                    <InputNumber min={0} precision={0} />
+                    <InputNumber min={0} precision={0} disabled={vcActiveDisabled} title={formatMessage({ id: 'vc.page.message.current.vc.active' })} />
                   </FormItem>
                 </div>
               ))}
             </FormItem>
-            
             <FormItem
               name="jobMaxTimeSecond"
               label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
-              initialValue={currentHandledVC.jobMaxTimeSecond}
+              initialValue={Math.floor(currentHandledVC.jobMaxTimeSecond / 3600) || undefined}
               rules={[
                 { required: true }
               ]}
               preserve={false}
             >
-              <InputNumber precision={0} />
+              <InputNumber precision={0} min={1} />
             </FormItem>
           </Form>
         </Modal>
