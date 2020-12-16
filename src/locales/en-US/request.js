@@ -41,6 +41,8 @@ export default {
   'bizCodeMessage.30202': 'Template params error',
   'bizCodeMessage.30203': 'Training type error',
   'bizCodeMessage.30205': 'Image not exist',
+  'bizCodeMessage.30801': 'Operation forbidden, please contact administrater',
+  
   
   'request.error.tips': 'Request error',
 };
