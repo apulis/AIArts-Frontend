@@ -14,6 +14,7 @@ import {
   Row,
   InputNumber,
   Tooltip,
+  Switch,
 } from 'antd';
 import { history, useIntl } from 'umi';
 import {
@@ -110,6 +111,7 @@ const ModelTraining = (props) => {
   const [presetImageDescMap, setPresetImageDescMap] = useState({});
   const [savedImageDescMap, setSavedImageDescMap] = useState({});
   const [frameworkMap, setFrameworkMap] = useState({});
+  const [iSPrivileged, setISPrivileged] = useState(false);
 
   const getImageDescMap = async () => {
     const res = await getImages();
@@ -344,7 +346,6 @@ const ModelTraining = (props) => {
         values.frameworkType = f.frameworkType;
       }
     }
-    
     if (typeEdit) {
       let editParams = {
         ...paramsDetailedData.metaData,
@@ -921,6 +922,7 @@ const ModelTraining = (props) => {
             ))}
           </Select>
         </FormItem>
+        
         {distributedJob && (
           <FormItem
             {...commonLayout}
@@ -931,6 +933,26 @@ const ModelTraining = (props) => {
             <Input value={deviceTotal} style={{ width: '300px' }} disabled />
           </FormItem>
         )}
+        <FormItem
+            label={'是否启用 Privilege'}
+            name="isPrivileged"
+            {...commonLayout}
+            initialValue={iSPrivileged}
+          >
+            <Switch onChange={(checked) => setISPrivileged(checked)} />
+          </FormItem>
+          {
+            iSPrivileged && <FormItem
+            label="校验码"
+            name="bypassCode"
+            {...commonLayout}
+            rules={[
+              { required: true }
+            ]}
+          >
+            <Input style={{ width: '50%' }}/>
+          </FormItem>
+          }
       </Form>
       <Modal
         visible={bootFileModalVisible}
