@@ -610,7 +610,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               name="jobMaxTimeSecond"
               label={formatMessage({ id: 'vc.page.form.jobMaxTimeSecond' })}
               {...modalFormLayout}
-              initialValue={Math.floor(currentHandledVC.jobMaxTimeSecond / 3600)}
+              initialValue={Math.floor(currentHandledVC.jobMaxTimeSecond / 3600) || undefined}
               rules={[
                 { required: true }
               ]}
