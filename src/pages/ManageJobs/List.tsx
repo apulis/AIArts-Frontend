@@ -196,7 +196,7 @@ const ManageJobs: React.FC = (props) => {
           if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          const restTime = Math.floor(jobMaxTimeSecond / 60  - (lastedTime / 60 / 1000));
           return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
