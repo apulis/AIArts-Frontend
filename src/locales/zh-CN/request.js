@@ -37,6 +37,8 @@ export default {
   'bizCodeMessage.30203': '训练类型不合法',
   'bizCodeMessage.30205': '镜像不存在',
   'bizCodeMessage.30801': '无权限操作，请联系管理员开通权限',
+  'bizCodeMessage.30802': 'Privilege Job未开启，请联系管理员设置',
+  'bizCodeMessage.30803': '校验码错误',
 
   'request.error.tips': '请求错误',
 };

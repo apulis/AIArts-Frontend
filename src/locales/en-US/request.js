@@ -42,6 +42,8 @@ export default {
   'bizCodeMessage.30203': 'Training type error',
   'bizCodeMessage.30205': 'Image not exist',
   'bizCodeMessage.30801': 'Operation forbidden, please contact administrater',
+  'bizCodeMessage.30802': 'Privilege job can not running, please contact administrater',
+  'bizCodeMessage.30803': 'Passcode error',
   
   
   'request.error.tips': 'Request error',
