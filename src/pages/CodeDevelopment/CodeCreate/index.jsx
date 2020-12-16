@@ -51,6 +51,7 @@ const CodeCreate = (props) => {
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [algorithmSource, setAlgorithmSource] = useState(1);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
+  const [iSPrivileged, setISPrivileged] = useState(false);
 
   const { currentSelectedVC } = props.vc;
 
@@ -536,11 +537,31 @@ const CodeCreate = (props) => {
               <Input style={{ width: '50%' }} disabled></Input>
             </Form.Item>
           )}
+          <Form.Item
+            label={'是否启用 Privilege'}
+            name="isPrivileged"
+            
+            initialValue={iSPrivileged}
+          >
+            <Switch onChange={(checked) => setISPrivileged(checked)} />
+          </Form.Item>
+          {
+            iSPrivileged && <Form.Item
+            label="校验码"
+            name="bypassCode"
+            rules={[
+              { required: true }
+            ]}
+          >
+            <Input style={{ width: '50%' }}/>
+          </Form.Item>
+          }
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               {formatMessage({ id: 'codeCreate.submit' })}
             </Button>
           </Form.Item>
+          
         </Form>
       </Card>
     </>
