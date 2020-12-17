@@ -186,17 +186,12 @@ const ManageJobs: React.FC = (props) => {
     },
     
     {
-      title: formatMessage({ id: 'job.rest.time' }),
+      title: formatMessage({ id: 'job.used.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        const startTime = new Date(item.createTime || item.jobName).getTime();
-        const currentTime = new Date().getTime();
-        const lastedTime = currentTime - startTime;
+        const lastedTime = item.duration;
         if (status === 'running') {
-          if (!jobMaxTimeSecond) {
-            return '-';
-          }
-          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          const restTime = Math.floor((lastedTime) / 60);
           return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';

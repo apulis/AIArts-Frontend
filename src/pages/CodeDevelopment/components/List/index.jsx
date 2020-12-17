@@ -369,14 +369,12 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        const startTime = new Date(item.createTime || item.jobTime).getTime();
-        const currentTime = new Date().getTime();
-        const lastedTime = currentTime - startTime;
+        const lastedTime = item.duration;
         if (status === 'running') {
           if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          const restTime = Math.floor((jobMaxTimeSecond - lastedTime) / 60);
           return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';

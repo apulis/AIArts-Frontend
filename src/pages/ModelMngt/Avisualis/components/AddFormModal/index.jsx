@@ -76,7 +76,7 @@ const AddFormModal = (props, ref) => {
             required: true,
             message: intl.formatMessage({ id: 'avisualis.rule.needInferenceName' }),
           },
-          { pattern: NameReg, message: NameErrorText },
+          { pattern: NameReg, message: intl.formatMessage({ id: 'const.nameInputLimit' }) },
           { max: 30 },
         ]}
       >

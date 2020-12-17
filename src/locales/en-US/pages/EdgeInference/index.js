@@ -5,7 +5,7 @@ export default {
   'edgeInference.list.typeText.converting': 'Converting',
   'edgeInference.list.typeText.push': 'Pushing',
   'edgeInference.list.typeText.push.success': 'Successfully Pushed!',
-  'edgeInference.list.typeText.push.failed': 'Push Faied',
+  'edgeInference.list.typeText.push.failed': 'push failed',
 
   'edgeInference.list.onDelete.title': 'Are you sure you want to delete this inference job?',
   'edgeInference.list.onDelete.okText': 'Delete',

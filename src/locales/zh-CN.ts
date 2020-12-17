@@ -29,6 +29,7 @@ import reg from './zh-CN/reg';
 import layout from './zh-CN/layout';
 import vc from './zh-CN/pages/vc';
 import ManageJobs from './zh-CN/pages/ManageJobs';
+import _const from './zh-CN/const';
 
 export default {
   'navBar.lang': '语言',
@@ -39,7 +40,9 @@ export default {
   'app.welcome.link.fetch-blocks': '获取全部区块',
   'app.welcome.link.block-list': '基于 block 开发，快速构建标准页面',
   'job.rest.time': '剩余可运行时间',
+  'job.used.time': '已运行时间',
   'job.rest.minute': '分钟',
+  ..._const,
   ...layout,
   ...reg,
   ...request,

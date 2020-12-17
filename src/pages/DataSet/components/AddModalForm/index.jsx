@@ -245,7 +245,7 @@ const AddModalForm = (props, ref) => {
               required: true,
               message: intl.formatMessage({ id: 'dataSetCreate.rule.needStorePath' }),
             },
-            { pattern: FilePathReg, message: FilePathErrorText },
+            { pattern: FilePathReg, message: intl.formatMessage({ id: 'const.pathInputLimit' }) },
           ]}
         >
           <Input
