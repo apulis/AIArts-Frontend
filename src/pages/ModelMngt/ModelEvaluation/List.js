@@ -213,8 +213,6 @@ const List = (props) => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
-    
-    
     {
       title: '是否为 Privilege Job',
       dataIndex: 'isPrivileged',

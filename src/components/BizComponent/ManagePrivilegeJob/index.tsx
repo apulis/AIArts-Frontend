@@ -24,7 +24,7 @@ const ManagePrivilegeJob: React.FC = () => {
         isEnable: isEnable,
         bypassCode: bypassCode,
       });
-      console.log({ isEnable, bypassCode })
+      console.log('isEnable', isEnable)
       setFieldsValue({
         isEnable,
         bypassCode,
@@ -57,6 +57,7 @@ const ManagePrivilegeJob: React.FC = () => {
           ]}
           name="isEnable"
           label="是否启用 Privilege Job"
+          valuePropName="checked"
         >
           <Switch />
         </FormItem>
