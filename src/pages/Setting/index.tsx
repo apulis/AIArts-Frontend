@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { FormattedMessage } from 'umi';
 import UserVirtualCluster from '@/components/BizComponent/UserVirtualCluster';
 import { ConnectProps, ConnectState } from '@/models/connect';
+import ManagePrivilegeJob from '@/components/BizComponent/ManagePrivilegeJob';
 
 const { Option } = Select;
 
@@ -64,7 +65,7 @@ const Setting: React.FC<ConnectProps> = ({ common, dispatch, user }) => {
           currentUser?.permissionList.includes('MANAGE_PRIVILEGE_JOB') && */}
           <>
             <h1>系统设置</h1>
-            
+            <ManagePrivilegeJob />
           </>
         {/* } */}
       </div>
