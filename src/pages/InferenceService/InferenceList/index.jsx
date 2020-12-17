@@ -128,11 +128,11 @@ const InferenceList = (props) => {
         const currentTime = new Date().getTime();
         const lastedTime = currentTime - startTime;
         if (status === 'running') {
-          if (!vc.jobMaxTimeSecond) {
+          if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(vc.jobMaxTimeSecond - (lastedTime / 60 / 1000));
-          return restTime + intl.formatMessage({ id: 'job.rest.minute' });
+          const restTime = Math.floor(jobMaxTimeSecond / 60  - (lastedTime / 60 / 1000));
+          return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
       },
