@@ -132,7 +132,7 @@ const InferenceList = (props) => {
             return '-';
           }
           const restTime = Math.floor(jobMaxTimeSecond / 60  - (lastedTime / 60 / 1000));
-          return restTime + formatMessage({ id: 'job.rest.minute' });
+          return restTime + intl.formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
       },

@@ -325,7 +325,6 @@ const CodeList = (props) => {
   }
 
   const { jobMaxTimeSecond } = props.vc;
-
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
