@@ -14,9 +14,10 @@ import {
   Col,
   Row,
   Switch,
+  Tooltip,
 } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
-import { PlusSquareOutlined, PauseOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, PauseOutlined, DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { getModel } from '../ModelList/services';
 import { addEvaluation, fetchPresetTemplates, getAllLabeledDatasets } from './services';
 import { fetchAvilableResource } from '@/services/modelTraning';
@@ -354,6 +355,7 @@ const ModelEvaluation = (props) => {
     wrapperCol: { span: 12 },
   };
 
+  const disablePrivileged = !props.common.enablePrivileged;
   return (
     <>
       <PageHeader
@@ -617,12 +619,22 @@ const ModelEvaluation = (props) => {
               </Select>
             </Form.Item>
             <Form.Item
-              label={'是否启用 Privilege'}
+              label={
+                !disablePrivileged ? 
+                  <div>使用 Privilege Job</div>
+                  :
+                  <Tooltip title="平台目前没有开启 Privilege， 如有需要请联系管理员">
+                    使用 Privilege Job
+                    <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
+                  </Tooltip>
+              }
               name="isPrivileged"
-              {...layout}
               initialValue={iSPrivileged}
             >
-              <Switch onChange={(checked) => setISPrivileged(checked)} />
+              <Switch
+                disabled={disablePrivileged}
+                onChange={(checked) => setISPrivileged(checked)}
+              />
             </Form.Item>
             {
               iSPrivileged && <Form.Item
@@ -717,4 +729,4 @@ const ModelEvaluation = (props) => {
   );
 };
 
-export default connect(({ vc }) => ({ vc }))(ModelEvaluation);
+export default connect(({ vc, common }) => ({ vc, common }))(ModelEvaluation);

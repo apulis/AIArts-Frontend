@@ -3,6 +3,7 @@ import { Effect } from 'dva';
 
 import { setI18n } from '@/utils/utils';
 import { getPlatformConfig } from '../services/common';
+import { fetchPrivilegeJobEnable } from '@/services/privilegeJob';
 
 export const locales = ['zh-CN', 'en-US'];
 
@@ -12,6 +13,7 @@ export interface CommonStateType {
   i18n: string | boolean;
   enableVC: boolean;
   enableAvisuals: boolean;
+  enablePrivileged: boolean;
 }
 
 export interface CommonModelType {
@@ -35,6 +37,7 @@ const common: CommonModelType = {
     i18n: locales.includes(localStorage.language) ? localStorage.language : navigator.language,
     enableVC: false,
     enableAvisuals: false,
+    enablePrivileged: false,
   },
   effects: {
     * changeInterval({ payload }, { put }) {
@@ -60,16 +63,6 @@ const common: CommonModelType = {
     * fetchPlatformConfig({ payload }, { call, put }) {
       const res = yield call(getPlatformConfig);
       if (res.code === 0) {
-        // if (typeof res.i18n === 'string') {
-        //   setI18n(res.i18n);
-        //   yield call(setCookieLang, res.i18n);
-        //   yield put({
-        //     type: 'saveLang',
-        //     payload: {
-        //       language: res.i18n,
-        //     }
-        //   })
-        // }
         // res.i18n = 'en-US'; // 开发
         if (locales.includes(res.i18n)) {
           setI18n(res.i18n);
@@ -83,6 +76,17 @@ const common: CommonModelType = {
             enableAvisuals: res.enableAvisuals,
           },
         });
+      }
+      const privilegedJob = yield call(fetchPrivilegeJobEnable);
+      if (privilegedJob.code === 0) {
+        const enablePrivileged = privilegedJob.data.isEnable;
+        console.log('enablePrivileged', enablePrivileged)
+        yield put({
+          type: 'savePlatform',
+          payload: {
+            enablePrivileged: enablePrivileged
+          }
+        })
       }
     },
   },

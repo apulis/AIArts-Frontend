@@ -22,6 +22,7 @@ import { fetchAvilableResource, getImages, getUserDockerImages } from '@/service
 import { useIntl } from 'umi';
 import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 import Ribbon from 'antd/lib/badge/Ribbon';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -277,7 +278,7 @@ const CodeCreate = (props) => {
       renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1);
     }
   }, [jobTrainingType]); // 更新处理
-
+  const disablePrivileged = !props.common.enablePrivileged;
   return (
     <>
       <PageHeader
@@ -538,12 +539,22 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           <Form.Item
-            label={'是否启用 Privilege'}
+            label={
+              !disablePrivileged ? 
+                <div>使用 Privilege Job</div>
+                :
+                <Tooltip title="平台目前没有开启 Privilege， 如有需要请联系管理员">
+                  使用 Privilege Job
+                  <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
+                </Tooltip>
+            }
             name="isPrivileged"
-            
             initialValue={iSPrivileged}
           >
-            <Switch onChange={(checked) => setISPrivileged(checked)} />
+            <Switch
+              disabled={disablePrivileged}
+              onChange={(checked) => setISPrivileged(checked)}
+            />
           </Form.Item>
           {
             iSPrivileged && <Form.Item
@@ -568,7 +579,8 @@ const CodeCreate = (props) => {
   );
 };
 
-export default connect(({ resource, vc }) => ({
+export default connect(({ resource, vc, common }) => ({
   devices: resource.devices,
-  vc
+  vc,
+  common
 }))(CodeCreate);

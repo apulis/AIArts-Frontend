@@ -21,6 +21,7 @@ import {
   PauseOutlined,
   PlusSquareOutlined,
   DeleteOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useForm } from 'antd/lib/form/Form';
 import FormItem from 'antd/lib/form/FormItem';
@@ -538,6 +539,7 @@ const ModelTraining = (props) => {
     needOutputPathCodePrefix = true;
   }
 
+  const disablePrivileged = !props.common.enablePrivileged;
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -933,14 +935,24 @@ const ModelTraining = (props) => {
             <Input value={deviceTotal} style={{ width: '300px' }} disabled />
           </FormItem>
         )}
-        <FormItem
-            label={'是否启用 Privilege'}
-            name="isPrivileged"
-            {...commonLayout}
-            initialValue={iSPrivileged}
-          >
-            <Switch onChange={(checked) => setISPrivileged(checked)} />
-          </FormItem>
+        <Form.Item
+          label={
+            !disablePrivileged ? 
+              <div>使用 Privilege Job</div>
+              :
+              <Tooltip title="平台目前没有开启 Privilege， 如有需要请联系管理员">
+                使用 Privilege Job
+                <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
+              </Tooltip>
+          }
+          name="isPrivileged"
+          initialValue={iSPrivileged}
+        >
+          <Switch
+            disabled={disablePrivileged}
+            onChange={(checked) => setISPrivileged(checked)}
+          />
+        </Form.Item>
           {
             iSPrivileged && <FormItem
             label="校验码"
@@ -1050,4 +1062,4 @@ const ModelTraining = (props) => {
   );
 };
 
-export default connect(({ resource, vc }) => ({ resource, vc }))(ModelTraining);
+export default connect(({ resource, vc, common }) => ({ resource, vc, common }))(ModelTraining);
