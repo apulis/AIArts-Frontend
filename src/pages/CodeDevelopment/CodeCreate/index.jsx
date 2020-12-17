@@ -553,7 +553,7 @@ const CodeCreate = (props) => {
               { required: true }
             ]}
           >
-            <Input style={{ width: '50%' }}/>
+            <Input style={{ width: '200px' }}/>
           </Form.Item>
           }
           <Form.Item {...buttonItemLayout}>

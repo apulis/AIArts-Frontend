@@ -950,7 +950,7 @@ const ModelTraining = (props) => {
               { required: true }
             ]}
           >
-            <Input style={{ width: '50%' }}/>
+            <Input style={{ width: '200px' }} />
           </FormItem>
           }
       </Form>
