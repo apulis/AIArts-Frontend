@@ -100,7 +100,10 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const handleCreateVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};
-    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond * 3600 } };
+    const metaUserQuotas = {};
+    if (result.jobMaxTimeSecond) {
+      metaUserQuotas.admin = { job_max_time_second: result.jobMaxTimeSecond * 3600 };
+    }
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
@@ -132,7 +135,10 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
   const handleModifyVC = async () => {
     const result = await validateFields();
     const deviceNumbers = {};    
-    const metaUserQuotas = { admin: { job_max_time_second: result.jobMaxTimeSecond * 3600 } };
+    const metaUserQuotas = {};
+    if (result.jobMaxTimeSecond) {
+      metaUserQuotas.admin = { job_max_time_second: result.jobMaxTimeSecond * 3600 };
+    }
     Object.keys(result).forEach(val => {
       if (val.startsWith(vcNumbersPrefix.deviceNumber)) {
         deviceNumbers[val.replace(new RegExp(vcNumbersPrefix.deviceNumber), '')] = result[val]
@@ -502,7 +508,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               {...modalFormLayout}
               initialValue={5}
               rules={[
-                { required: true }
+                // { required: true }
               ]}
               preserve={false}
             >
@@ -612,7 +618,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
               {...modalFormLayout}
               initialValue={Math.floor(currentHandledVC.jobMaxTimeSecond / 3600) || undefined}
               rules={[
-                { required: true }
+                // { required: true }
               ]}
               preserve={false}
             >
