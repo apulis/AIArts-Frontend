@@ -4,7 +4,7 @@ export const fetchPrivilegeJobConfig = () => {
   return request('/settings/privileged');
 }
 
-export const submitPrivilegeJobConfig = (data: { isEnable: boolean; bypasscode: string }) => {
+export const submitPrivilegeJobConfig = (data: { isEnable: boolean; bypassCode: string }) => {
   return request('/settings/privileged', {
     method: 'POST',
     data,
