@@ -406,6 +406,13 @@ const CodeList = (props) => {
       }
     },
     {
+      title: '是否为 Privilege Job',
+      dataIndex: 'isPrivileged',
+      render(isPrivileged) {
+        return isPrivileged ? '是' : '否'
+      }
+    },
+    {
       title: formatMessage({ id: 'codeList.table.column.action' }),
       align: 'center',
       width: '20%',

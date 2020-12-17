@@ -249,6 +249,13 @@ const List = (props) => {
       },
     },
     {
+      title: '是否为 Privilege Job',
+      dataIndex: 'isPrivileged',
+      render(isPrivileged) {
+        return isPrivileged ? '是' : '否'
+      }
+    },
+    {
       title: intl.formatMessage({ id: 'modelList.table.column.action' }),
       render(_text, item) {
         return (
