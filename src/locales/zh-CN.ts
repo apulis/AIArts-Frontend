@@ -29,6 +29,7 @@ import reg from './zh-CN/reg';
 import layout from './zh-CN/layout';
 import vc from './zh-CN/pages/vc';
 import ManageJobs from './zh-CN/pages/ManageJobs';
+import _const from './zh-CN/const';
 
 export default {
   'navBar.lang': '语言',
@@ -41,6 +42,7 @@ export default {
   'job.rest.time': '剩余可运行时间',
   'job.used.time': '已运行时间',
   'job.rest.minute': '分钟',
+  ..._const,
   ...layout,
   ...reg,
   ...request,
