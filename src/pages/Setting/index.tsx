@@ -10,7 +10,7 @@ const { Option } = Select;
 
 const FormItem = Form.Item;
 
-const Setting: React.FC<ConnectProps> = ({ common, dispatch }) => {
+const Setting: React.FC<ConnectProps> = ({ common, dispatch, user }) => {
   const [form] = Form.useForm();
   const { validateFields } = form;
   const commonLayout = {
@@ -31,9 +31,12 @@ const Setting: React.FC<ConnectProps> = ({ common, dispatch }) => {
   };
 
   const defaultInterval = common.interval === null ? 0 : common.interval;
+  console.log('user', user.currentUser.permissionList)
+  const currentUser = user.currentUser;
   return (
     <PageHeaderWrapper>
       <div style={{ width: '100%', paddingBottom: '20px' }}>
+        <h1>个人设置</h1>
         <Form form={form} layout="inline">
           <FormItem
             name="interval"
@@ -57,9 +60,16 @@ const Setting: React.FC<ConnectProps> = ({ common, dispatch }) => {
           </Form.Item>
         </Form>
         <UserVirtualCluster style={{ marginTop: '20px' }} />
+        {/* {
+          currentUser?.permissionList.includes('MANAGE_PRIVILEGE_JOB') && */}
+          <>
+            <h1>系统设置</h1>
+            
+          </>
+        {/* } */}
       </div>
     </PageHeaderWrapper>
   );
 };
 
-export default connect(({ common }: ConnectState) => ({ common }))(Setting);
+export default connect(({ common, user }: ConnectState) => ({ common, user }))(Setting);
