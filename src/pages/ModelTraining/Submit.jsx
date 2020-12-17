@@ -138,7 +138,6 @@ const ModelTraining = (props) => {
       Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
       });
-      console.log('aiFrameworkList', aiFrameworkList)
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
       const totalNodes = nodeInfo.length;
@@ -272,12 +271,15 @@ const ModelTraining = (props) => {
   const isPretrainedModel = ['PretrainedModel'].includes(requestType);
   const needCodePathPrefix = isPretrainedModel || importedTrainingParams;
   useEffect(() => {
-    getAvailableResource();
+    if (['createJobWithParam', 'editParam'].includes(requestType)) {
+      fetchParams().then(() => {
+        getAvailableResource();
+      })
+    } else {
+      getAvailableResource();
+    }
     fetchDataSets();
     getImageDescMap();
-    if (['createJobWithParam', 'editParam'].includes(requestType)) {
-      fetchParams();
-    }
     if (isPretrainedModel) {
       getPresetModel();
     }
@@ -508,7 +510,6 @@ const ModelTraining = (props) => {
   };
 
   const handleSelectPresetParams = (current) => {
-    console.log(current);
     setCurrentSelectedPresetParamsId(current);
   };
 
