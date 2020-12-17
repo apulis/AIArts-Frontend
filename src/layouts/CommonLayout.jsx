@@ -13,8 +13,8 @@ const CommonLayout = ({ children, dispatch, resource, user, common }) => {
   }, []);
   const { currentUser } = user;
   const { currentVC, userName } = currentUser;
-  
-  useInterval(() => {
+
+  const getVCDetail = () => {
     if (currentVC?.length > 0) {
       if (!localStorage.vc || !currentVC.includes(localStorage.vc)) {
         dispatch({
@@ -32,7 +32,16 @@ const CommonLayout = ({ children, dispatch, resource, user, common }) => {
         });
       }
     }
+  }
+  
+  useInterval(() => {
+    getVCDetail();
   }, common.interval)
+
+  useEffect(() => {
+    getVCDetail();
+  }, [])
+
   if (currentVC?.length === 0 && userName) {
     return (
       <Result
