@@ -80,7 +80,6 @@ const common: CommonModelType = {
       const privilegedJob = yield call(fetchPrivilegeJobEnable);
       if (privilegedJob.code === 0) {
         const enablePrivileged = privilegedJob.data.isEnable;
-        console.log('enablePrivileged', enablePrivileged)
         yield put({
           type: 'savePlatform',
           payload: {
