@@ -27,7 +27,7 @@ interface IVCColumnsProps {
   meta: IVCMeta;
   quota: IVCQuota;
   userNum: number;
-  jobMaxTimeSecond: number;
+  jobMaxTimeSecond?: number;
 }
 
 interface IPaginationParams {
@@ -83,7 +83,7 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
     setTableLoading(false);
     if (res.code === 0) {
       const list: IVCColumnsProps[] = res.data.result.map(vc => {
-        const jobMaxTimeSecond = JSON.parse(vc.metadata || '{}').admin?.job_max_time_second || 0;
+        const jobMaxTimeSecond = JSON.parse(vc.metadata || '{}').admin?.job_max_time_second;
         return {
           vcName: vc.vcName,
           meta: JSON.parse(vc.metadata || '{}') as IVCMeta,
