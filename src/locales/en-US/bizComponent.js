@@ -10,4 +10,10 @@ export default {
   // SelectModelTrainingModel
   'bizComponent.tips.selectOrCancel': 'Please select a model training or cancel',
   'bizComponent.placeholder.search': 'Search',
+  // ManagePrivilegeJob
+  'bizComponent.ManagePrivilegeJob.update.success': 'Modify successful',
+  'bizComponent.ManagePrivilegeJob.title.privilege.config': 'Privilege Job Config',
+  'bizComponent.ManagePrivilegeJob.form.enablePrivilege': 'Enable Privilege Job',
+  'bizComponent.ManagePrivilegeJob.form.bypascode': 'Privilege Passcode',
+  'bizComponent.ManagePrivilegeJob.button.confirm': 'Confirm',
 };

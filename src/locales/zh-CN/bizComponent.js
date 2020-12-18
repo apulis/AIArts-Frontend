@@ -10,4 +10,11 @@ export default {
   // SelectModelTrainingModel
   'bizComponent.tips.selectOrCancel': '请选择模型训练或者点击取消',
   'bizComponent.placeholder.search': '搜索',
+  // ManagePrivilegeJob
+  'bizComponent.ManagePrivilegeJob.update.success': '修改成功',
+  'bizComponent.ManagePrivilegeJob.title.privilege.config': 'Privilege Job 设置',
+  'bizComponent.ManagePrivilegeJob.form.enablePrivilege': '是否启用 Privilege Job',
+  'bizComponent.ManagePrivilegeJob.form.bypascode': 'Privilege 校验码',
+  'bizComponent.ManagePrivilegeJob.button.confirm': '确定',
+
 };

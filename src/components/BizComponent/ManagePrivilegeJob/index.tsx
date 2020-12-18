@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Switch, Input, Form, Button, message, Card } from 'antd';
-import { fetchPrivilegeJobConfig, submitPrivilegeJobConfig } from '@/services/privilegeJob';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { useIntl } from 'umi';
+
+import { fetchPrivilegeJobConfig, submitPrivilegeJobConfig } from '@/services/privilegeJob';
+import { format } from 'prettier';
 
 const FormItem = Form.Item;
 const { useForm } = Form;
@@ -13,6 +16,7 @@ interface IPrivilegeJobConfig {
 
 const ManagePrivilegeJob: React.FC = () => {
   const [form] = useForm();
+  const { formatMessage } = useIntl();
   const { validateFields, setFieldsValue } = form;
   const [privilegeConfig, setPrivilegeConfig] = useState<IPrivilegeJobConfig | undefined>(undefined);
 
@@ -24,7 +28,6 @@ const ManagePrivilegeJob: React.FC = () => {
         isEnable: isEnable,
         bypassCode: bypassCode,
       });
-      console.log('isEnable', isEnable)
       setFieldsValue({
         isEnable,
         bypassCode,
@@ -39,13 +42,13 @@ const ManagePrivilegeJob: React.FC = () => {
     const result = await validateFields();
     const res = await submitPrivilegeJobConfig(result as IPrivilegeJobConfig);
     if (res.code === 0) {
-      message.success('修改成功');
+      message.success(formatMessage({ id: 'bizComponent.ManagePrivilegeJob.update.success' }));
       getPrivilegeConfig();
     }
   }
   return (
     <Card
-      title="Privilege Job 设置"
+      title={formatMessage({ id: 'bizComponent.ManagePrivilegeJob.title.privilege.config' })}
     >
       <Form
         form={form}
@@ -56,7 +59,7 @@ const ManagePrivilegeJob: React.FC = () => {
             { required: true }
           ]}
           name="isEnable"
-          label="是否启用 Privilege Job"
+          label={formatMessage({ id: 'bizComponent.ManagePrivilegeJob.form.enablePrivilege' })}
           valuePropName="checked"
         >
           <Switch />
@@ -67,13 +70,13 @@ const ManagePrivilegeJob: React.FC = () => {
             { required: true }
           ]}
           name="bypassCode"
-          label="Privilege 校验码"
+          label={formatMessage({ id: 'bizComponent.ManagePrivilegeJob.form.bypascode' })}
         >
         
           <Input.Password iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)} style={{ width: '200px' }} />
         </FormItem>
         <Button type="primary" htmlType="submit">
-          确定
+          {formatMessage({ id: 'bizComponent.ManagePrivilegeJob.button.confirm' })}
         </Button>
       </Form>
       
