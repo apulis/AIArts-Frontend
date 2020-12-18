@@ -336,7 +336,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.name' }),
       dataIndex: 'name',
       ellipsis: true,
-      width: '8%',
+      width: '5%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'name' && sortInfo['order'], // name与createTime非复合排序，各自独立排序
     },
@@ -344,7 +344,7 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.status' }),
       dataIndex: 'status',
       ellipsis: true,
-      width: '8%',
+      width: '5%',
       render: (status, item) => {
         return <div style={{ display: 'flex', alignItems: 'center' }}>
           {statusMap[status]?.local}
@@ -366,7 +366,7 @@ const CodeList = (props) => {
       dataIndex: 'createTime',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss'),
       ellipsis: true,
-      width: '12%',
+      width: '10%',
       sorter: true,
       sortOrder: sortInfo.orderBy === 'createTime' && sortInfo['order'],
     },
@@ -385,7 +385,7 @@ const CodeList = (props) => {
         return '-';
       },
       ellipsis: true,
-      width: '8%',
+      width: '7%',
     },
     {
       // title: formatMessage({ id: 'codeList.table.column.storePath' }) + ' / ' + formatMessage({ id: 'codeList.table.column.cmd' }),
@@ -411,8 +411,9 @@ const CodeList = (props) => {
       }
     },
     {
-      title: '是否为 Privilege Job',
+      title: '是否 Privilege Job',
       dataIndex: 'isPrivileged',
+      width: '7%',
       render(isPrivileged) {
         return isPrivileged ? '是' : '否'
       }
@@ -635,8 +636,14 @@ const CodeList = (props) => {
     }
   }, [currentHandledJob]);
 
+  useEffect(() => {
+    if (!endpointsModalVisible) {
+      setCurrentHandledJob(undefined);
+    }
+  }, [endpointsModalVisible])
+
   return (
-    <div style={{ minWidth: '1780px', overflow: 'auto' }}>
+    <div style={{ minWidth: '1920px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
