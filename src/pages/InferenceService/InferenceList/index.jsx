@@ -36,7 +36,7 @@ const InferenceList = (props) => {
   });
   const [jobSumary, setJobSumary] = useState([]);
   const [currentStatus, setCurrentStatus] = useState('all');
-
+  const { jobMaxTimeSecond } = vc;
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary({ vcName: vc.currentSelectedVC });
     if (res.code === 0) {
@@ -132,7 +132,7 @@ const InferenceList = (props) => {
             return '-';
           }
           const restTime = Math.floor(jobMaxTimeSecond / 60  - (lastedTime / 60 / 1000));
-          return restTime + formatMessage({ id: 'job.rest.minute' });
+          return restTime + intl.formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
       },

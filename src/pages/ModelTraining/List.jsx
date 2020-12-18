@@ -184,14 +184,12 @@ const List = (props) => {
       render(_text, item) {
         return <Link to={`/model-training/${item.id}/detail`}>{item.name}</Link>;
       },
-      width: '8%',
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobName' && sortedInfo.order,
     },
     {
       dataIndex: 'status',
       title: intl.formatMessage({ id: 'modelList.table.column.status' }),
-      width: '8%',
       render: (text, item) => {
         return <div style={{ display: 'flex', alignItems: 'center' }}>
           {getJobStatus(item.status)}
@@ -202,7 +200,6 @@ const List = (props) => {
     {
       dataIndex: 'engine',
       title: intl.formatMessage({ id: 'modelList.table.column.engine' }),
-      width: '8%',
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
       },
@@ -217,8 +214,6 @@ const List = (props) => {
       sorter: true,
       sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
-    
-    
     {
       title: formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
@@ -234,12 +229,10 @@ const List = (props) => {
         return '-';
       },
       ellipsis: true,
-      width: '8%',
     },
     {
       dataIndex: 'desc',
       title: intl.formatMessage({ id: 'modelList.table.column.description' }),
-      width: '100px',
       render(_text) {
         return (
           <div title={_text} className={style.overflow}>
@@ -341,7 +334,7 @@ const List = (props) => {
         </div>
         <Table
           loading={tableLoading}
-          style={{ marginTop: '30px' }}
+          style={{ marginTop: '30px', minWidth: '1080px' }}
           columns={columns}
           dataSource={trainingWorkList}
           onChange={onTableChange}
