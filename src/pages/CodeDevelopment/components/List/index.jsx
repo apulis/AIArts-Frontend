@@ -643,7 +643,7 @@ const CodeList = (props) => {
   }, [endpointsModalVisible])
 
   return (
-    <div style={{ minWidth: '1920px', overflow: 'auto' }}>
+    <div style={{ minWidth: '2120px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
