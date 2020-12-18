@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history } from 'umi';
-import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Popover, Dropdown, Menu, Tooltip } from 'antd';
+import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Dropdown, Menu, Typography, Popover, InputNumber } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SyncOutlined, DownOutlined, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import {
@@ -13,6 +13,7 @@ import {
   createSaveImage,
   pauseJob,
   resumeJob,
+  addEndpointForJob
 } from '../../service.js';
 import moment from 'moment';
 import { isEmptyString } from '../../util.js';
@@ -38,6 +39,7 @@ import JobStatusToolTip from '@/components/JobStatusToolTip/index';
 
 const { Search } = Input;
 const { Option } = Select;
+const { Text } = Typography;
 
 const CodeList = (props) => {
   const { formatMessage } = useIntl();
@@ -53,6 +55,7 @@ const CodeList = (props) => {
   const [modalFlag, setModalFlag] = useState(false);
   const [modalData, setModalData] = useState({});
   const [currentHandledJobId, setCurrentHandledJobId] = useState('');
+  const [currentHandledJob, setCurrentHandledJob] = useState(undefined);
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
   const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
@@ -63,6 +66,9 @@ const CodeList = (props) => {
     orderBy: '',
     order: '',
   });
+  const [endpointsModalVisible, setEndpointsModalVisible] = useState(false);
+  const [interactiveEndpoints, setInteractiveEndpoints] = useState([]);
+  const [interactiveEndpointsTableLoading, setInteractiveEndpointsTableLoading] = useState(false);
 
   const renderStatusSelect = async (type = 'init') => {
     const apiData = await apiGetCodeCount();
@@ -444,6 +450,7 @@ const CodeList = (props) => {
               <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
+              <Button type="link" disabled={codeItem.status !== 'running'} onClick={() => {setCurrentHandledJob(codeItem)}}>使用交互式端口</Button>
               {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
               {/* <Menu.Item> */}
               <Button disabled={codeItem.status !== 'running'} type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
@@ -593,8 +600,43 @@ const CodeList = (props) => {
     }
   };
 
+  const fetchEndpointsInfo = async (jobId) => {
+    setInteractiveEndpointsTableLoading(true);
+    const res = await fetchSSHInfo(jobId);
+    setInteractiveEndpointsTableLoading(false);
+    if (res.code === 0) {
+      const endpointsInfo = res.data.endpointsInfo;
+      const interactiveEndpoints = [];
+      endpointsInfo.forEach(endpoint => {
+        if (!['ipython', 'ssh', 'jupyter'].includes(endpoint.name)) {
+          endpoint.link = `http://${endpoint['nodeName']}.${endpoint['domain']}:${endpoint['port']}`;
+          interactiveEndpoints.push(endpoint);
+        }
+      });
+      setInteractiveEndpoints(interactiveEndpoints);
+     
+    }
+  }
+
+  const handleCreateInteractiveEndpoints = async () => {
+    const result = await form.validateFields(['podPort']);
+    const res = await addEndpointForJob(currentHandledJob.id, result.podPort);
+    if (res.code === 0) {
+      form.resetFields();
+      fetchEndpointsInfo(currentHandledJob.id);
+      message.success('添加成功')
+    }
+  }
+
+  useEffect(() => {
+    if (currentHandledJob) {
+      setEndpointsModalVisible(true);
+      fetchEndpointsInfo(currentHandledJob.id);
+    }
+  }, [currentHandledJob]);
+
   return (
-    <div style={{ minWidth: '1580px', overflow: 'auto' }}>
+    <div style={{ minWidth: '1780px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
@@ -738,6 +780,67 @@ const CodeList = (props) => {
               <Input style={{ width: '280px' }} />
             </Form.Item>
           </Form>
+        </Modal>
+      }
+
+      {
+        endpointsModalVisible && <Modal
+          visible={endpointsModalVisible}
+          onCancel={() => setEndpointsModalVisible(false)}
+          onOk={() => setEndpointsModalVisible(false)}
+          width="60%"
+          title="可交互端口信息"
+        >
+
+          <Form
+            form={form}
+            style={{ marginTop: '50px' }}
+          >
+            <FormItem
+              label="可交互端口"
+            >
+              <FormItem
+                name="podPort"
+                rules={[
+                  { required: true }
+                ]}
+                style={{ display: 'inline-block' }}
+              >
+                <InputNumber style={{ width: '280px' }} min={40000} max={49999} placeholder="选填 40000 - 49999 之间的数值" />
+              </FormItem>
+              <FormItem
+                style={{ display: 'inline-block', marginLeft: '20px' }}
+              >
+                <Button
+                  key="submit"
+                  type="primary"
+                  onClick={handleCreateInteractiveEndpoints}
+                >
+                  确定
+                </Button>
+              </FormItem>
+            </FormItem>
+            
+            
+          </Form>
+
+          <Table
+            loading={interactiveEndpointsTableLoading}
+            columns={[
+              { title: '交互端口', dataIndex: 'name', align: 'center' },
+              { title: '操作', align: 'center', render(_text, item) {
+                return (
+                  <Button type="link" href={item.link} onClick={() => {}}>
+                    打开
+                  </Button>
+                )
+              }, }
+            ]}
+            dataSource={interactiveEndpoints}
+            pagination={false}
+          />
+
+
         </Modal>
       }
 

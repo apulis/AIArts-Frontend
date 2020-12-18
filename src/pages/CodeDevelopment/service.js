@@ -83,3 +83,12 @@ export function pauseJob(jobId) {
 export function resumeJob(jobId) {
   return request(`/jobs/resume/${jobId}`)
 }
+
+export function addEndpointForJob(jobId, port) {
+  return request(`/codes/${jobId}/endpoints`, {
+    method: 'PATCH',
+    data: {
+      endpoints: [{name:`port-${port}`, podPort: port}],
+    }
+  })
+}
