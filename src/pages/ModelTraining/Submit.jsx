@@ -540,7 +540,7 @@ const ModelTraining = (props) => {
     needOutputPathCodePrefix = true;
   }
 
-  const disablePrivileged = !props.common.enablePrivileged;
+  const disablePrivileged = !props.common.enablePrivileged || (!props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -1063,4 +1063,4 @@ const ModelTraining = (props) => {
   );
 };
 
-export default connect(({ resource, vc, common }) => ({ resource, vc, common }))(ModelTraining);
+export default connect(({ resource, vc, common, user }) => ({ resource, vc, common, currentUser: user.currentUser }))(ModelTraining);

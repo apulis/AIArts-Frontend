@@ -278,7 +278,7 @@ const CodeCreate = (props) => {
       renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1);
     }
   }, [jobTrainingType]); // 更新处理
-  const disablePrivileged = !props.common.enablePrivileged;
+  const disablePrivileged = !props.common.enablePrivileged || (!props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   return (
     <>
       <PageHeader
@@ -543,7 +543,7 @@ const CodeCreate = (props) => {
               !disablePrivileged ? 
                 <div>使用 Privilege Job</div>
                 :
-                <Tooltip title="平台目前没有开启 Privilege， 如有需要请联系管理员">
+                <Tooltip title="目前没有开启 Privilege， 如有需要请联系管理员">
                   使用 Privilege Job
                   <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
                 </Tooltip>
@@ -579,8 +579,9 @@ const CodeCreate = (props) => {
   );
 };
 
-export default connect(({ resource, vc, common }) => ({
+export default connect(({ resource, vc, common, user }) => ({
   devices: resource.devices,
   vc,
-  common
+  common,
+  currentUser: user.currentUser
 }))(CodeCreate);

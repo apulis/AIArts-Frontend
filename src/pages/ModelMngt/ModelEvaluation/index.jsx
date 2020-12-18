@@ -355,7 +355,7 @@ const ModelEvaluation = (props) => {
     wrapperCol: { span: 12 },
   };
 
-  const disablePrivileged = !props.common.enablePrivileged;
+  const disablePrivileged = !props.common.enablePrivileged || (!props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   return (
     <>
       <PageHeader
@@ -729,4 +729,4 @@ const ModelEvaluation = (props) => {
   );
 };
 
-export default connect(({ vc, common }) => ({ vc, common }))(ModelEvaluation);
+export default connect(({ vc, common, user }) => ({ vc, common, currentUser: user.currentUser }))(ModelEvaluation);
