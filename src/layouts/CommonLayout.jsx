@@ -33,10 +33,6 @@ const CommonLayout = ({ children, dispatch, resource, user, common }) => {
       }
     }
   }
-  
-  useInterval(() => {
-    getVCDetail();
-  }, common.interval)
 
   useEffect(() => {
     getVCDetail();

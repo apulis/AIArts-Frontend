@@ -49,7 +49,9 @@ const BasicLayout = (props) => {
       pathname: '/',
     },
     collapsed,
+    user,
   } = props;
+  const { currentVC } = user.currentUser;
   /**
    * constructor
    */
@@ -78,6 +80,30 @@ const BasicLayout = (props) => {
       },
     });
   }, [props.common]);
+
+  const getVCDetail = () => {
+    if (currentVC?.length > 0) {
+      if (!localStorage.vc || !currentVC.includes(localStorage.vc)) {
+        dispatch({
+          type: 'vc/userSelectVC',
+          payload: {
+            vcName: currentVC[0],
+          },
+        });
+      } else if (localStorage.vc) {
+        dispatch({
+          type: 'vc/userSelectVC',
+          payload: {
+            vcName: localStorage.vc,
+          },
+        });
+      }
+    }
+  }
+  useEffect(() => {
+    getVCDetail();
+    console.log(123123)
+  }, [location])
   return (
     <>
       <ProLayout
@@ -144,8 +170,9 @@ const BasicLayout = (props) => {
   );
 };
 
-export default connect(({ global, settings, common }) => ({
+export default connect(({ global, settings, common, user }) => ({
   collapsed: global.collapsed,
   settings,
   common,
+  user
 }))(BasicLayout);
