@@ -621,10 +621,10 @@ const ModelEvaluation = (props) => {
             <Form.Item
               label={
                 !disablePrivileged ? 
-                  <div>使用 Privilege Job</div>
+                  <div>{intl.formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}</div>
                   :
-                  <Tooltip title="平台目前没有开启 Privilege， 如有需要请联系管理员">
-                    使用 Privilege Job
+                  <Tooltip title={intl.formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label.disable.tip' })}>
+                    {intl.formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}
                     <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
                   </Tooltip>
               }
@@ -638,7 +638,7 @@ const ModelEvaluation = (props) => {
             </Form.Item>
             {
               iSPrivileged && <Form.Item
-              label="校验码"
+              label={intl.formatMessage({ id: 'ManagePrivilegeJob.bypassCode.label' })}
               name="bypassCode"
               {...layout}
               rules={[

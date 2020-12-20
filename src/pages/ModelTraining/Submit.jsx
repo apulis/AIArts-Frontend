@@ -978,7 +978,7 @@ const ModelTraining = (props) => {
         </Form.Item>
           {
             iSPrivileged && <FormItem
-            label="校验码"
+            label={formatMessage({ id: 'ManagePrivilegeJob.bypassCode.label' })}
             name="bypassCode"
             {...commonLayout}
             rules={[

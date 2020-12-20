@@ -526,10 +526,10 @@ const CodeCreate = (props) => {
           <Form.Item
             label={
               !disablePrivileged ?
-                <div>使用 Privilege Job</div>
+                <div>{formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}</div>
                 :
-                <Tooltip title="目前没有开启 Privilege， 如有需要请联系管理员">
-                  使用 Privilege Job
+                <Tooltip title={formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label.disable.tip' })}>
+                  {formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}
                   <QuestionCircleOutlined style={{ marginLeft: '6px' }} />
                 </Tooltip>
             }
@@ -543,7 +543,7 @@ const CodeCreate = (props) => {
           </Form.Item>
           {
             iSPrivileged && <Form.Item
-              label="校验码"
+              label={formatMessage({ id: 'ManagePrivilegeJob.bypassCode.label' })}
               name="bypassCode"
               rules={[
                 { required: true }
