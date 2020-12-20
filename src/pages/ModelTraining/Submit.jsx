@@ -968,26 +968,6 @@ const ModelTraining = (props) => {
           }
       </Form>
       <Modal
-        visible={bootFileModalVisible}
-        forceRender
-        onCancel={() => setBootFileModalVisible(false)}
-      ></Modal>
-      <Modal
-        visible={codeDirModalVisible}
-        forceRender
-        onCancel={() => setCodeDirModalVisible(false)}
-      ></Modal>
-      <Modal
-        visible={outputPathModalVisible}
-        forceRender
-        onCancel={() => setOutputPathModalVisible(false)}
-      ></Modal>
-      <Modal
-        visible={trainingDataSetModalVisible}
-        forceRender
-        onCancel={() => setTrainingDataSetModalVisible(false)}
-      ></Modal>
-      <Modal
         visible={presetParamsVisible}
         onCancel={() => setPresetParamsVisible(false)}
         onOk={handleConfirmPresetParams}
