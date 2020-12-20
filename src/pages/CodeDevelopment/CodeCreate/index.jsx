@@ -52,6 +52,7 @@ const CodeCreate = (props) => {
   const [algorithmSource, setAlgorithmSource] = useState(1);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
   const [iSPrivileged, setISPrivileged] = useState(false);
+  const [engineTip, setEngineTip] = useState('')
 
   const { currentSelectedVC } = props.vc;
 
@@ -64,12 +65,9 @@ const CodeCreate = (props) => {
         obj[item.image] = item.desc;
       });
       setPresetImageDescMap(obj);
+      setEngineTip(obj[getFieldValue('engine')] || '');
     }
   }
-
-  useEffect(() => {
-    getImageDescMap();
-  }, [])
 
   const renderInitForm = async () => {
     const result = await apiGetResource();
@@ -94,6 +92,9 @@ const CodeCreate = (props) => {
         engine: engineNameArrData[0],
         deviceType: deviceTypeArrData[0],
       });
+      if (Object.keys(presetImageDescMap)) {
+        setEngineTip(presetImageDescMap[engineNameArrData[0]]);
+      }
       renderInitRegularForm(deviceNumArrData[0]);
     }
   };
@@ -122,7 +123,7 @@ const CodeCreate = (props) => {
   };
 
   const apiPostCode = async (values) => {
-    const obj = await postCode1({ ...values, vcName: currentSelectedVC  });
+    const obj = await postCode1({ ...values, vcName: currentSelectedVC });
     const { code, data, msg } = obj;
     if (code === 0) {
       message.success(formatMessage({ id: 'codeCreate.tips.submit.success' }));
@@ -210,6 +211,11 @@ const CodeCreate = (props) => {
     setFieldsValue({ deviceNum: nodeNum * perNodeDeviceNum });
   };
 
+  const onEngineChange = (engine) => {
+    const engineTip = presetImageDescMap[engine] || '';
+    setEngineTip(engineTip);
+  }
+
   const validateMessages = {
     required: '${label} ' + formatMessage({ id: 'codeCreate.rule.needInput' }),
     types: {},
@@ -233,7 +239,9 @@ const CodeCreate = (props) => {
 
   useEffect(() => {
     // 初始化处理
-    renderInitForm();
+    renderInitForm().then(() => {
+      getImageDescMap();
+    });
   }, []); // 更新处理
 
   useEffect(() => {
@@ -322,22 +330,22 @@ const CodeCreate = (props) => {
               />
             </Form.Item>
           }
-          
-        {
-          algorithmSource === 2 && <Form.Item
-            label={formatMessage({ id: 'modelTraing.submit.commandLine' })}
-            preserve={false}
-            name="cmd"
-            rules={[{
-              required: true,
-            }]}
-          >
-            <TextArea
-              style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }}
-              rows={4}
-            />
-          </Form.Item>
-        }
+
+          {
+            algorithmSource === 2 && <Form.Item
+              label={formatMessage({ id: 'modelTraing.submit.commandLine' })}
+              preserve={false}
+              name="cmd"
+              rules={[{
+                required: true,
+              }]}
+            >
+              <TextArea
+                style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }}
+                rows={4}
+              />
+            </Form.Item>
+          }
           <Form.Item label={formatMessage({ id: 'codeCreate.label.engineSource' })}>
             <Radio.Group
               value={engineSource}
@@ -357,30 +365,41 @@ const CodeCreate = (props) => {
           </Form.Item>
           {engineSource === 1 && (
             <Form.Item
-              name="engine"
-              label={formatMessage({ id: 'codeCreate.label.engineType' })} 
-              rules={[
-                {
-                  required: true,
-                  message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
-                },
-              ]}
-              preserve={false}
+              label={formatMessage({ id: 'codeCreate.label.engineType' })}
+              required
             >
-              <Select
-                style={{ width: 'calc(50%)' }}
+              <Form.Item
+                name="engine"
+                rules={[
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                  },
+                ]}
+                style={{ display: 'inline-block', width: 'calc(50%)' }}
+                preserve={false}
               >
-                {engineNameArr.map((engine) => (
-                  <Option key={engine} value={engine}>
-                    <Tooltip title={presetImageDescMap[engine]}>
-                      {getNameFromDockerImage(engine)}
-                    </Tooltip>
-                  </Option>
-                ))}
-              </Select>
+                <Select
+                  onChange={onEngineChange}
+                >
+                  {engineNameArr.map((engine) => (
+                    <Option key={engine} value={engine}>
+                      <Tooltip title={presetImageDescMap[engine]}>
+                        {getNameFromDockerImage(engine)}
+                      </Tooltip>
+                    </Option>
+
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                style={{ display: 'inline-block', width: '0' }}
+              >
+                <Tooltip title={engineTip} placement="right" visible={!!engineTip}><div>{null}</div></Tooltip>
+              </Form.Item>
             </Form.Item>
           )}
-          
+
           {engineSource === 2 && (
             <Form.Item
               name="engine"
@@ -506,12 +525,12 @@ const CodeCreate = (props) => {
           )}
           <Form.Item
             label={
-              !disablePrivileged ? 
+              !disablePrivileged ?
                 <div>使用 Privilege Job</div>
                 :
                 <Tooltip title="目前没有开启 Privilege， 如有需要请联系管理员">
                   使用 Privilege Job
-                  <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
+                  <QuestionCircleOutlined style={{ marginLeft: '6px' }} />
                 </Tooltip>
             }
             name="isPrivileged"
@@ -524,21 +543,21 @@ const CodeCreate = (props) => {
           </Form.Item>
           {
             iSPrivileged && <Form.Item
-            label="校验码"
-            name="bypassCode"
-            rules={[
-              { required: true }
-            ]}
-          >
-            <Input style={{ width: '200px' }}/>
-          </Form.Item>
+              label="校验码"
+              name="bypassCode"
+              rules={[
+                { required: true }
+              ]}
+            >
+              <Input style={{ width: '200px' }} />
+            </Form.Item>
           }
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               {formatMessage({ id: 'codeCreate.submit' })}
             </Button>
           </Form.Item>
-          
+
         </Form>
       </Card>
     </>
