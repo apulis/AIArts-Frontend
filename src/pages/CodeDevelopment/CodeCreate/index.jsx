@@ -356,28 +356,28 @@ const CodeCreate = (props) => {
             </Radio.Group>
           </Form.Item>
           {engineSource === 1 && (
-            <Form.Item label={formatMessage({ id: 'codeCreate.label.engineType' })} required>
-              <Form.Item
-                name="engine"
-                rules={[
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
-                  },
-                ]}
-                preserve={false}
-                style={{ display: 'inline-block', width: 'calc(50%)', margin: '0 0 0 8px' }}
+            <Form.Item
+              name="engine"
+              label={formatMessage({ id: 'codeCreate.label.engineType' })} 
+              rules={[
+                {
+                  required: true,
+                  message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
+                },
+              ]}
+              preserve={false}
+            >
+              <Select
+                style={{ width: 'calc(50%)' }}
               >
-                <Select>
-                  {engineNameArr.map((engine) => (
-                    <Option key={engine} value={engine}>
-                      <Tooltip title={presetImageDescMap[engine]}>
-                        {getNameFromDockerImage(engine)}
-                      </Tooltip>
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
+                {engineNameArr.map((engine) => (
+                  <Option key={engine} value={engine}>
+                    <Tooltip title={presetImageDescMap[engine]}>
+                      {getNameFromDockerImage(engine)}
+                    </Tooltip>
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
           )}
           
