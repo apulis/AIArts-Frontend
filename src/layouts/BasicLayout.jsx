@@ -102,7 +102,6 @@ const BasicLayout = (props) => {
   }
   useEffect(() => {
     getVCDetail();
-    console.log(123123)
   }, [location])
   return (
     <>
