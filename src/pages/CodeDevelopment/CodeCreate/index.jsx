@@ -39,7 +39,6 @@ const CodeCreate = (props) => {
   const [resource, setResource] = useState(null);
   const [deviceTypeArr, setDeviceTypeArr] = useState([]); // 更新状态是异步的
   const [deviceNumArr, setDeviceNumArr] = useState([]);
-  const [engineTypeArr, setEngineTypeArr] = useState([]);
   const [jobTrainingType, setJobTrainingType] = useState('RegularJob');
   const [engineNameArr, setEngineNameArr] = useState([]);
   const [codePathPrefix, setCodePathPrefix] = useState('');
@@ -76,28 +75,22 @@ const CodeCreate = (props) => {
     const result = await apiGetResource();
     if (result) {
       setResource(result);
-      const enginTypeArrData = Object.keys(result.aiFrameworks);
-      const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]] || [];
+      const engineNameArrData = Object.keys(result.aiFrameworks || {}).reduce((temp, frameworkName) => {
+        return temp.concat((result.aiFrameworks || {})[frameworkName])
+      }, []);
       const deviceList = result.deviceList;
       const deviceTypeArrData = deviceList.map((item) => item.deviceType);
       setDeviceList(deviceList);
-      // const deviceNumPerNodeArrData =
-      //   utilGetDeviceNumPerNodeArr(
-      //     result.nodeInfo,
-      //     result.nodeInfo && result.nodeInfo[0] && result.nodeInfo[0]['gpuType'],
-      //   ) || [];
       const deviceNumArrData = getAvailRegularDeviceNumber(deviceTypeArrData[0], deviceList[0].userQuota);
       const deviceNumPerNodeArrData = deviceNumArrData;
       const maxNodeNumData = result.nodeCountByDeviceType[deviceTypeArrData[0]]; // todo 静态数据
       setCodePathPrefix(result.codePathPrefix);
-      setEngineTypeArr(enginTypeArrData);
       setEngineNameArr(engineNameArrData);
       setDeviceTypeArr(deviceTypeArrData);
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData);
       setMaxNodeNum(maxNodeNumData);
       setDeviceNumArr(deviceNumArrData);
       setFieldsValue({
-        engineType: enginTypeArrData[0],
         engine: engineNameArrData[0],
         deviceType: deviceTypeArrData[0],
       });
@@ -195,12 +188,6 @@ const CodeCreate = (props) => {
     }
   };
 
-  const handleEngineTypeChange = (engineType) => {
-    const arr = resource.aiFrameworks[engineType];
-    setFieldsValue({ engine: arr[0] || '' });
-    setEngineNameArr(arr);
-  };
-
   useEffect(() => {
     const deviceType = getFieldValue('deviceType');
     if (deviceType) {
@@ -263,7 +250,6 @@ const CodeCreate = (props) => {
     } else if (engineSource === 1) {
       setFieldsValue({
         engine: engineNameArr[0] || '',
-        engineType: engineTypeArr[0] || '',
       });
     } else if (engineSource === 3) {
       //
@@ -371,26 +357,6 @@ const CodeCreate = (props) => {
           </Form.Item>
           {engineSource === 1 && (
             <Form.Item label={formatMessage({ id: 'codeCreate.label.engineType' })} required>
-              <Form.Item
-                name="engineType"
-                rules={[
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'codeCreate.rule.selectEngineType' }),
-                  },
-                ]}
-                preserve={false}
-                style={{ display: 'inline-block', width: 'calc(45% - 8px)' }}
-              >
-                <Select onChange={() => handleEngineTypeChange(getFieldValue('engineType'))}>
-                  {engineSource === 1 &&
-                    engineTypeArr.map((item, key) => (
-                      <Option key={key} value={item}>
-                        {item}
-                      </Option>
-                    ))}
-                </Select>
-              </Form.Item>
               <Form.Item
                 name="engine"
                 rules={[
