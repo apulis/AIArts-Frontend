@@ -113,6 +113,7 @@ const ModelTraining = (props) => {
   const [savedImageDescMap, setSavedImageDescMap] = useState({});
   const [frameworkMap, setFrameworkMap] = useState({});
   const [iSPrivileged, setISPrivileged] = useState(false);
+  const [engineTip, setEngineTip] = useState('');
 
   const getImageDescMap = async () => {
     const res = await getImages();
@@ -123,6 +124,7 @@ const ModelTraining = (props) => {
         obj[item.image] = item.desc;
       })
       setPresetImageDescMap(obj);
+      setEngineTip(obj[getFieldValue('engine')]);
     }
   }
 
@@ -141,6 +143,9 @@ const ModelTraining = (props) => {
       Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
       });
+      setFieldsValue({
+        engine: aiFrameworkList[0],
+      })
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
       const totalNodes = nodeInfo.length;
@@ -276,13 +281,16 @@ const ModelTraining = (props) => {
   useEffect(() => {
     if (['createJobWithParam', 'editParam'].includes(requestType)) {
       fetchParams().then(() => {
-        getAvailableResource();
+        getAvailableResource().then(() => {
+          getImageDescMap();;
+        })
       })
     } else {
-      getAvailableResource();
+      getAvailableResource().then(() => {
+        getImageDescMap();;
+      });
     }
     fetchDataSets();
-    getImageDescMap();
     if (isPretrainedModel) {
       getPresetModel();
     }
@@ -521,6 +529,10 @@ const ModelTraining = (props) => {
     }
   };
 
+  const onEngineChange = (engine) => {
+    setEngineTip(presetImageDescMap[engine]);
+  }
+
   const handleDeviceChange = () => {
     const deviceTotal =
       Number(getFieldValue('numPsWorker') || 0) * Number(getFieldValue('deviceNum') || 0);
@@ -649,26 +661,35 @@ const ModelTraining = (props) => {
           </FormItem>
         )}
         {
-          engineSource === 1 && 
+          engineSource === 1 &&
           <FormItem
             {...commonLayout}
-            name="engine"
             label={formatMessage({ id: 'trainingCreate.label.engine' })}
-            rules={[{ required: true }]}
-            preserve={false}
+            required
           >
-             <Select style={{ width: 300 }} disabled={typeCreate}>
-              {engineSource === 1 &&
-              frameWorks.map((f) => (
-                <Option value={f} key={f}>
-                  {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
-                  <Tooltip title={presetImageDescMap[f]}>
-                    {getNameFromDockerImage(f)}
-                  </Tooltip>
-                </Option>
-              ))}
-            </Select>
+            <FormItem
+              name="engine"
+              rules={[{ required: true }]}
+              preserve={false}
+              style={{ display: 'inline-block' }}
+            >
+              <Select style={{ width: 300 }} disabled={typeCreate} onChange={onEngineChange}>
+                {engineSource === 1 &&
+                frameWorks.map((f) => (
+                  <Option value={f} key={f}>
+                    {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
+                    <Tooltip title={presetImageDescMap[f]}>
+                      {getNameFromDockerImage(f)}
+                    </Tooltip>
+                  </Option>
+                ))}
+              </Select>
+            </FormItem>
+            <FormItem style={{ display: 'inline-block' }}>
+              <Tooltip visible={engineTip} placement="right" title={engineTip} />
+            </FormItem>
           </FormItem>
+          
         }
         {
           engineSource === 2 && 
