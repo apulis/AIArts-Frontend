@@ -30,6 +30,7 @@ import layout from './zh-CN/layout';
 import vc from './zh-CN/pages/vc';
 import ManageJobs from './zh-CN/pages/ManageJobs';
 import _const from './zh-CN/const';
+import ManagePrivilegeJob from './zh-CN/ManagePrivilegeJob';
 
 export default {
   'navBar.lang': '语言',
@@ -73,5 +74,6 @@ export default {
   ...ParamsManage,
   ...PretrainedModel,
   ...vc,
-  ...ManageJobs
+  ...ManageJobs,
+  ...ManagePrivilegeJob
 };

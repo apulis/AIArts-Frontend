@@ -30,6 +30,7 @@ import layout from './en-US/layout';
 import vc from './en-US/pages/vc';
 import ManageJobs from './en-US/pages/ManageJobs';
 import _const from './en-US/const';
+import ManagePrivilegeJob from './en-US/ManagePrivilegeJob';
 
 import { capFirstLetter } from '@/utils/utils';
 
@@ -79,5 +80,6 @@ export default {
   ...PretrainedModel,
   ...reg,
   ...vc,
-  ...ManageJobs
+  ...ManageJobs,
+  ...ManagePrivilegeJob,
 };

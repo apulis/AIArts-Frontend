@@ -958,12 +958,13 @@ const ModelTraining = (props) => {
           </FormItem>
         )}
         <Form.Item
+          {...commonLayout}
           label={
             !disablePrivileged ? 
-              <div>使用 Privilege Job</div>
+              <div>{formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}</div>
               :
-              <Tooltip title="平台目前没有开启 Privilege， 如有需要请联系管理员">
-                使用 Privilege Job
+              <Tooltip title={formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label.disable.tip' })}>
+                {formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}
                 <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
               </Tooltip>
           }
