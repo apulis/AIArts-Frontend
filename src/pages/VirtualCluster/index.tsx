@@ -214,7 +214,14 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           const res = await deleteVC(vcName);
           if (res.code === 0) {
             message.success(formatMessage({ id: 'vc.page.message.success.delete.vc' }));
-            getVCList();
+            if (vcList.length === 1) {
+              setPaginationState({
+                ...paginationState,
+                pageNum: paginationState.pageNum - 1,
+              })
+            } else {
+              getVCList()
+            }
           }
         }
       }
