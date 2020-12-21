@@ -124,20 +124,20 @@ const InferenceList = (props) => {
       title: intl.formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        const startTime = new Date(item.createTime || item.jobName).getTime();
-        const currentTime = new Date().getTime();
-        const lastedTime = currentTime - startTime;
+        console.log('jobMaxTimeSecond', jobMaxTimeSecond)
+        // 中心推理的 duration 是毫秒
+        const lastedTime = item.duration / 1000;
         if (status === 'running') {
           if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(jobMaxTimeSecond / 60  - (lastedTime / 60 / 1000));
+          const restTime = Math.floor((jobMaxTimeSecond - lastedTime) / 60);
           return restTime + intl.formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
       },
       ellipsis: true,
-      width: '8%',
+      width: '9%',
     },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.runningTime' }),
