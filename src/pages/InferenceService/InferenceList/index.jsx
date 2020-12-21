@@ -124,7 +124,6 @@ const InferenceList = (props) => {
       title: intl.formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        console.log('jobMaxTimeSecond', jobMaxTimeSecond)
         // 中心推理的 duration 是毫秒
         const lastedTime = item.duration / 1000;
         if (status === 'running') {
