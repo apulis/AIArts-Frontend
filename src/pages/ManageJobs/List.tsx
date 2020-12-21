@@ -163,7 +163,7 @@ const ManageJobs: React.FC = (props) => {
       dataIndex: 'engine',
       title: formatMessage({ id: 'jobManagement.table.column.engine' }),
       render(_text, item) {
-        return <div>{getNameFromDockerImage(item.jobParams?.image)}</div>;
+        return <div>{getNameFromDockerImage(item.jobParams?.image || item.jobParams?.framework)}</div>;
       },
     },
     {
