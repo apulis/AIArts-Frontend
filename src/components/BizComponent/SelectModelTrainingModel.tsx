@@ -89,7 +89,7 @@ const SelectModelTrainingModel: React.FC = ({ onCancel, visible, onOk, vc }) => 
     }
     const { name } = row;
     const { visualPath } = row.params;
-    onOk && onOk({ name, visualPath });
+    onOk && onOk({ name, path: visualPath });
   };
 
   const handleSearch = (searchWord) => {
