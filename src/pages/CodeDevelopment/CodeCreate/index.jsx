@@ -167,7 +167,6 @@ const CodeCreate = (props) => {
     if (values.jobTrainingType === 'PSDistJob') {
       values.numPs = 1;
     }
-    return
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
