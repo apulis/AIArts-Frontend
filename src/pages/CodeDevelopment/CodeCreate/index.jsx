@@ -118,8 +118,8 @@ const CodeCreate = (props) => {
     setFieldsValue({ deviceNum: deviceNum });
   };
 
-  const renderInitPSDistJobForm = (numPs, numPsWorker, deviceNum) => {
-    setFieldsValue({ numPs, numPsWorker, deviceNum });
+  const renderInitPSDistJobForm = (numPsWorker, deviceNum) => {
+    setFieldsValue({ numPsWorker, deviceNum });
   };
 
   const apiPostCode = async (values) => {
@@ -159,17 +159,21 @@ const CodeCreate = (props) => {
     let needConfirm = false;
     if (currentVCAvailDevice) {
       const currentAvail = currentVCAvailDevice.avail;
-      const deviceNum = values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum;
+      const deviceNum = values.deviceNum;
       if (deviceNum > currentAvail) {
         needConfirm = true;
       }
     }
+    if (values.jobTrainingType === 'PSDistJob') {
+      values.numPs = 1;
+    }
+    return
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
         values.deviceType,
-        values.jobTrainingType === 'PSDistJob' ? values.numPsWorker : values.deviceNum,
-        { nodeNum: values.numPs },
+        values.deviceNum,
+        { nodeNum: values.numPsWorker },
       ) || needConfirm
     ) {
       Modal.confirm({
@@ -189,6 +193,10 @@ const CodeCreate = (props) => {
     }
   };
 
+  const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
+    setFieldsValue({ deviceTotal: nodeNum * perNodeDeviceNum });
+  };
+
   useEffect(() => {
     const deviceType = getFieldValue('deviceType');
     if (deviceType) {
@@ -198,18 +206,15 @@ const CodeCreate = (props) => {
         setFieldsValue({ deviceNum: arr[0] });
         setDeviceNumArr(arr);
       } else if (jobTrainingType === 'PSDistJob') {
-        arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numPs'));
+        arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numberPsWorker'));
         setDeviceNumPerNodeArr(arr);
         setTimeout(() => {
-          setFieldsValue({ numPsWorker: arr[0] });
+          setFieldsValue({ deviceNum: arr[0] || undefined });
+          handleCaclTotalDeviceNum(1, arr[0] || 0)
         }, 0);
       }
     }
   }, [jobTrainingType, currentDeviceType])
-
-  const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
-    setFieldsValue({ deviceNum: nodeNum * perNodeDeviceNum });
-  };
 
   const onEngineChange = (engine) => {
     const engineTip = presetImageDescMap[engine] || '';
@@ -263,23 +268,23 @@ const CodeCreate = (props) => {
       //
     }
   }, [engineSource]);
-
   useEffect(() => {
-    // 初始化处理deviceNum
-    if (jobTrainingType == 'RegularJob') {
-      renderInitRegularForm(deviceNumArr[0]);
-    } else if (jobTrainingType == 'PSDistJob') {
-      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1);
+    if (jobTrainingType === 'RegularJob') {
+      renderInitRegularForm(deviceNumArr[0] || undefined);
+    } else if (jobTrainingType === 'PSDistJob') {
+      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0] || undefined);
     }
-  }, [jobTrainingType]); // 更新处理
+  }, [jobTrainingType]);
+
   const disablePrivileged = !props.common.enablePrivileged || (!props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
+  
   return (
     <>
       <PageHeader
         ghost={false}
         onBack={() => history.push('/codeDevelopment')}
         title={formatMessage({ id: 'codeCreate.pageHeader.backCodeCreate' })}
-      ></PageHeader>
+      />
       <Card>
         <Form
           {...formItemLayout}
@@ -478,10 +483,10 @@ const CodeCreate = (props) => {
               </Select>
             </Form.Item>
           )}
-          {jobTrainingType == 'PSDistJob' && (
+          {jobTrainingType === 'PSDistJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.nodeNum' })}
-              name="numPs"
+              name="numPsWorker"
               rules={[{ required: true }]}
             >
               <InputNumber
@@ -489,23 +494,24 @@ const CodeCreate = (props) => {
                 min={1}
                 max={maxNodeNum}
                 placeholder={formatMessage({ id: 'codeCreate.placeholder.nodeNum' })}
-                onChange={() =>
-                  handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
+                onChange={(nodeNum) =>
+                  handleCaclTotalDeviceNum(nodeNum, getFieldValue('deviceNum'))
                 }
-              ></InputNumber>
+              />
             </Form.Item>
           )}
-          {jobTrainingType == 'PSDistJob' && (
+          {jobTrainingType === 'PSDistJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.perNodeNum' })}
-              name="numPsWorker"
+              name="deviceNum"
               rules={[{ required: true }]}
             >
               <Select
                 style={{ width: '50%' }}
-                onChange={() =>
-                  handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
-                }
+                onChange={() =>{
+                  console.log(1111, getFieldValue('numPsWorker'))
+                  handleCaclTotalDeviceNum(getFieldValue('numPsWorker'), getFieldValue('deviceNum'))
+                }}
               >
                 {deviceNumPerNodeArr.map((item, key) => (
                   <Option key={key} value={item}>
@@ -515,10 +521,10 @@ const CodeCreate = (props) => {
               </Select>
             </Form.Item>
           )}
-          {jobTrainingType == 'PSDistJob' && (
+          {jobTrainingType === 'PSDistJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.totalDeviceNum' })}
-              name="deviceNum"
+              name="deviceTotal"
             >
               <Input style={{ width: '50%' }} disabled></Input>
             </Form.Item>
