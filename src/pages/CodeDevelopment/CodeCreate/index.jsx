@@ -167,6 +167,7 @@ const CodeCreate = (props) => {
     if (values.jobTrainingType === 'PSDistJob') {
       values.numPs = 1;
     }
+    delete values.deviceTotal;
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
