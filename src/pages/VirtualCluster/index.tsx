@@ -212,6 +212,12 @@ const VirtualCluster: React.FC = ({ resource, dispatch }) => {
           message.warn(formatMessage({ id: 'vc.page.message.current.vc.busy' }));
         } else {
           const res = await deleteVC(vcName);
+          dispatch({
+            type: 'user/deleteUserCurrentVC',
+            payload: {
+              vcName,
+            }
+          })
           if (res.code === 0) {
             message.success(formatMessage({ id: 'vc.page.message.success.delete.vc' }));
             if (vcList.length === 1) {
