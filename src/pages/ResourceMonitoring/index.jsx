@@ -21,7 +21,7 @@ const ResourceMonitoring = () => {
   } else {
     vcUsageLinks = {
       'zh-CN': domainName + '/endpoints/grafana_zh/d/per-vc-gpu-statistic-zh/mei-ge-vcshe-bei-tong-ji-xin-xi',
-      'en-US': domainName + '/endpoints/grafana/d/per-vc-gpu-statistic?kiosk=tv',
+      'en-US': domainName + '/endpoints/grafana/d/per-vc-gpu-statistic',
     };
     deviceUsageLinks = {
       'zh-CN': domainName + '/endpoints/grafana_zh/d/device-usage-history-zh/she-bei-shi-yong-liang',
