@@ -3,8 +3,9 @@ import { connect } from 'dva';
 import { PageLoading } from '@ant-design/pro-layout';
 import { Result } from 'antd';
 import { formatMessage } from 'umi';
+import useInterval from '@/hooks/useInterval';
 
-const CommonLayout = ({ children, dispatch, resource, user }) => {
+const CommonLayout = ({ children, dispatch, resource, user, common }) => {
   useEffect(() => {
     dispatch({
       type: 'resource/fetchResource',
@@ -12,6 +13,31 @@ const CommonLayout = ({ children, dispatch, resource, user }) => {
   }, []);
   const { currentUser } = user;
   const { currentVC, userName } = currentUser;
+
+  const getVCDetail = () => {
+    if (currentVC?.length > 0) {
+      if (!localStorage.vc || !currentVC.includes(localStorage.vc)) {
+        dispatch({
+          type: 'vc/userSelectVC',
+          payload: {
+            vcName: currentVC[0],
+          },
+        });
+      } else if (localStorage.vc) {
+        dispatch({
+          type: 'vc/userSelectVC',
+          payload: {
+            vcName: localStorage.vc,
+          },
+        });
+      }
+    }
+  }
+
+  useEffect(() => {
+    getVCDetail();
+  }, [])
+
   if (currentVC?.length === 0 && userName) {
     return (
       <Result
@@ -21,27 +47,11 @@ const CommonLayout = ({ children, dispatch, resource, user }) => {
       />
     );
   }
-  if (currentVC?.length > 0) {
-    if (!localStorage.vc || !currentVC.includes(localStorage.vc)) {
-      dispatch({
-        type: 'vc/userSelectVC',
-        payload: {
-          vcName: currentVC[0],
-        },
-      });
-    } else if (localStorage.vc) {
-      dispatch({
-        type: 'vc/userSelectVC',
-        payload: {
-          vcName: localStorage.vc,
-        },
-      });
-    }
-  }
+  
   if (Object.keys(resource.devices).length === 0) {
     return <PageLoading />;
   }
   return <>{children}</>;
 };
 
-export default connect(({ resource, user }) => ({ resource, user }))(CommonLayout);
+export default connect(({ resource, user, common }) => ({ resource, user, common }))(CommonLayout);

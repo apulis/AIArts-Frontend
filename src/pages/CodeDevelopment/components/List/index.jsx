@@ -325,7 +325,6 @@ const CodeList = (props) => {
   }
 
   const { jobMaxTimeSecond } = props.vc;
-
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
@@ -342,7 +341,7 @@ const CodeList = (props) => {
       width: '8%',
       render: (status, item) => {
         return <div style={{ display: 'flex', alignItems: 'center' }}>
-          { statusMap[status]?.local}
+          {statusMap[status]?.local}
           <JobStatusToolTip jobDetail={item} />
         </div>
       },
@@ -369,15 +368,12 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        const startTime = new Date(item.createTime || item.jobTime).getTime();
-        const currentTime = new Date().getTime();
-        const lastedTime = currentTime - startTime;
+        const lastedTime = item.duration;
         if (status === 'running') {
           if (!jobMaxTimeSecond) {
             return '-';
           }
-          console.log(123, jobMaxTimeSecond, lastedTime)
-          const restTime = Math.floor(jobMaxTimeSecond / 60 - (lastedTime / 60 / 1000));
+          const restTime = Math.floor((jobMaxTimeSecond - lastedTime) / 60);
           return restTime + formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
@@ -442,18 +438,18 @@ const CodeList = (props) => {
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
               {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
-                {/* <Menu.Item> */}
-                  <Button disabled={codeItem.status !== 'running'} type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
-                    {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
-                  </Button>
-                {/* </Menu.Item> */}
-                {/* <Menu.Item>
+              {/* <Menu.Item> */}
+              <Button disabled={codeItem.status !== 'running'} type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
+                {formatMessage({ id: 'codeList.table.column.action.upload.file' })}
+              </Button>
+              {/* </Menu.Item> */}
+              {/* <Menu.Item>
                   <Button type="link" onClick={() => handleOpenUploadModal(codeItem, true)}>
                     {formatMessage({ id: 'codeList.table.column.action.upload.directory' })}
                   </Button>
                 </Menu.Item> */}
               {/* </Menu>}> */}
-                {/* <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
+              {/* <Button type="link" disabled={!canUploadStatus.has(codeItem.status)}>
                   {formatMessage({ id: 'codeList.table.column.action.upload' })}
                   <DownOutlined />
                 </Button> */}
@@ -674,66 +670,70 @@ const CodeList = (props) => {
           <CodeUpload modalData={modalData} directory={enableDirectoryUpload} />
         </Modal>
       )}
-      <Modal
-        title={formatMessage({ id: 'codeList.modal.saveImage.title.saveImage' })}
-        visible={saveImageModalVisible}
-        onCancel={() => {
-          setSaveImageModalVisible(false);
-          setCurrentHandledJobId('');
-        }}
-        footer={[
-          <Button
-            key="back"
-            onClick={() => {
-              setSaveImageModalVisible(false);
-              setCurrentHandledJobId('');
-            }}
-          >
-            {formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            loading={saveImageButtonLoading}
-            onClick={() => handleSaveImage()}
-          >
-            {formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
-          </Button>,
-        ]}
-      >
-        <Form form={form}>
-          <Form.Item
-            {...commonLayout}
-            label={formatMessage({ id: 'codeList.modal.saveImage.label.name' })}
-            name="name"
-            preserve={false}
-            rules={[{ required: true }, jobNameReg]}
-          >
-            <Input style={{ width: '280px' }} />
-          </Form.Item>
-          <Form.Item
-            {...commonLayout}
-            preserve={false}
-            label={formatMessage({ id: 'codeList.modal.saveImage.label.version' })}
-            name="version"
-            rules={[
-              { required: true },
-              { pattern: /^[A-Za-z0-9|.]+$/, message: formatMessage({ id: 'codeList.modal.saveImage.label.version.reg' }) },
-            ]}
-          >
-            <Input style={{ width: '280px' }} />
-          </Form.Item>
-          <Form.Item
-            {...commonLayout}
-            preserve={false}
-            label={formatMessage({ id: 'codeList.modal.saveImage.label.description' })}
-            name="description"
-            rules={[{ required: true }]}
-          >
-            <Input style={{ width: '280px' }} />
-          </Form.Item>
-        </Form>
-      </Modal>
+      {
+        saveImageModalVisible && <Modal
+          title={formatMessage({ id: 'codeList.modal.saveImage.title.saveImage' })}
+          visible={saveImageModalVisible}
+          forceRender
+          onCancel={() => {
+            setSaveImageModalVisible(false);
+            setCurrentHandledJobId('');
+          }}
+          footer={[
+            <Button
+              key="back"
+              onClick={() => {
+                setSaveImageModalVisible(false);
+                setCurrentHandledJobId('');
+              }}
+            >
+              {formatMessage({ id: 'codeList.modal.saveImage.footer.cancel' })}
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              loading={saveImageButtonLoading}
+              onClick={() => handleSaveImage()}
+            >
+              {formatMessage({ id: 'codeList.modal.saveImage.footer.ok' })}
+            </Button>,
+          ]}
+        >
+          <Form form={form}>
+            <Form.Item
+              {...commonLayout}
+              label={formatMessage({ id: 'codeList.modal.saveImage.label.name' })}
+              name="name"
+              preserve={false}
+              rules={[{ required: true }, jobNameReg]}
+            >
+              <Input style={{ width: '280px' }} />
+            </Form.Item>
+            <Form.Item
+              {...commonLayout}
+              preserve={false}
+              label={formatMessage({ id: 'codeList.modal.saveImage.label.version' })}
+              name="version"
+              rules={[
+                { required: true },
+                { pattern: /^[A-Za-z0-9|.]+$/, message: formatMessage({ id: 'codeList.modal.saveImage.label.version.reg' }) },
+              ]}
+            >
+              <Input style={{ width: '280px' }} />
+            </Form.Item>
+            <Form.Item
+              {...commonLayout}
+              preserve={false}
+              label={formatMessage({ id: 'codeList.modal.saveImage.label.description' })}
+              name="description"
+              rules={[{ required: true }]}
+            >
+              <Input style={{ width: '280px' }} />
+            </Form.Item>
+          </Form>
+        </Modal>
+      }
+
     </div>
   );
 };

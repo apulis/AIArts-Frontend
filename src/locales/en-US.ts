@@ -47,6 +47,7 @@ export default {
   'app.welcome.link.block-list': 'Quickly build standard, pages based on `block` development',
   'job.rest.time': 'remaining runnable time',
   'job.rest.minute': 'Min',
+  'job.used.time': 'Running Time',
   ..._const,
   ...layout,
   ...bizComponent,

@@ -36,7 +36,7 @@ const InferenceList = (props) => {
   });
   const [jobSumary, setJobSumary] = useState([]);
   const [currentStatus, setCurrentStatus] = useState('all');
-
+  const { jobMaxTimeSecond } = vc;
   const getJobStatusSumary = async () => {
     const res = await fetchJobStatusSumary({ vcName: vc.currentSelectedVC });
     if (res.code === 0) {
@@ -124,20 +124,19 @@ const InferenceList = (props) => {
       title: intl.formatMessage({ id: 'job.rest.time' }),
       render: (text, item) => {
         const status = item.status || item.jobStatus;
-        const startTime = new Date(item.createTime || item.jobName).getTime();
-        const currentTime = new Date().getTime();
-        const lastedTime = currentTime - startTime;
+        // 中心推理的 duration 是毫秒
+        const lastedTime = item.duration / 1000;
         if (status === 'running') {
-          if (!vc.jobMaxTimeSecond) {
+          if (!jobMaxTimeSecond) {
             return '-';
           }
-          const restTime = Math.floor(vc.jobMaxTimeSecond - (lastedTime / 60 / 1000));
+          const restTime = Math.floor((jobMaxTimeSecond - lastedTime) / 60);
           return restTime + intl.formatMessage({ id: 'job.rest.minute' });
         }
         return '-';
       },
       ellipsis: true,
-      width: '8%',
+      width: '9%',
     },
     {
       title: intl.formatMessage({ id: 'centerInferenceList.table.column.runningTime' }),
