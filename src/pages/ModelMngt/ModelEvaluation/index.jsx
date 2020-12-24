@@ -56,6 +56,7 @@ const ModelEvaluation = (props) => {
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [iSPrivileged, setISPrivileged] = useState(false);
+  const [frameworkMap, setFrameworkMap] = useState({});
 
   const [form] = Form.useForm();
   const { validateFields, getFieldValue, setFieldsValue } = form;
@@ -98,7 +99,7 @@ const ModelEvaluation = (props) => {
         codePathPrefix = codePathPrefix + '/';
       }
       setCodePathPrefix(codePathPrefix);
-
+      setFrameworkMap(aiFrameworks);
       // 获取引擎
       let engineList = [];
       Object.keys(aiFrameworks).forEach((val) => {
@@ -208,6 +209,15 @@ const ModelEvaluation = (props) => {
       isPrivileged,
       bypassCode,
     };
+    Object.keys(frameworkMap).forEach(key => {
+      if (Array.isArray(frameworkMap[key])) {
+        frameworkMap[key].forEach(e => {
+          if (e === values.engine) {
+            evalParams.frameworkType = key;
+          }
+        })
+      }
+    })
     const submitJobInner = async () => {
       const { code, msg } = await addEvaluation({ ...evalParams, vcName: currentSelectedVC });
       if (code === 0) {
