@@ -19,6 +19,7 @@ export default {
   'codeList.modal.saveImage.footer.cancel': 'Cancel',
 
   'codeList.tips.fresh.success': 'Successfully Refresh!',
+  'codeList.tips.open.none': 'Jupyter has not been opened for the current task',
   'codeList.tips.open.error': 'The service is under preparation, please try again later',
   'codeList.tips.stop.success': 'Stop Succeeded',
   'codeList.tips.pause.success': 'Pause Succeeded',

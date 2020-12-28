@@ -56,7 +56,6 @@ const CodeList = (props) => {
   const [currentHandledJob, setCurrentHandledJob] = useState(undefined);
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
-  const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
   const [sshInfo, setSshInfo] = useState({});
   const [sshCommond, setSshCommond] = useState('');
   const [enableDirectoryUpload, setEnableDirectoryUpload] = useState(false);
@@ -67,6 +66,7 @@ const CodeList = (props) => {
   const [endpointsModalVisible, setEndpointsModalVisible] = useState(false);
   const [interactiveEndpoints, setInteractiveEndpoints] = useState([]);
   const [interactiveEndpointsTableLoading, setInteractiveEndpointsTableLoading] = useState(false);
+  const [sshModalVisible, setSshModalVisible] = useState(false);
 
   const renderStatusSelect = async (type = 'init') => {
     const apiData = await apiGetCodeCount();
@@ -187,6 +187,8 @@ const CodeList = (props) => {
     if (code === 0) {
       if (data.name === 'ipython' && data.status === 'running' && data.accessPoint) {
         window.open(data.accessPoint);
+      } else if (data.name === '' && data.status === '') {
+        message.info(formatMessage({ id: 'codeList.tips.open.none' }))
       } else {
         message.info(formatMessage({ id: 'codeList.tips.open.error' }));
       }
@@ -281,6 +283,7 @@ const CodeList = (props) => {
 
   const handleSshPopoverVisible = async (visible, currentHandledJobId) => {
     if (visible) {
+      setSshModalVisible(true);
       const res = await fetchSSHInfo(currentHandledJobId);
       if (res.code === 0) {
         const sshInfo = res.data.endpointsInfo.find(val => val.name === 'ssh');
@@ -297,10 +300,10 @@ const CodeList = (props) => {
         }
       }
     } else {
+      setSshModalVisible(false);
       setSshCommond('');
       setSshInfo({});
     }
-    setSshPopoverVisible(visible);
   }
 
   const startSSH = (id, status) => {
@@ -308,7 +311,8 @@ const CodeList = (props) => {
       message.warn(formatMessage({ id: 'codeList.tips.open.error' }))
       return;
     }
-    setSshPopoverVisible(true);
+    handleSshPopoverVisible(true, id)
+    setSshModalVisible(true);
     setCurrentHandledJobId(id);
   }
 
@@ -329,6 +333,7 @@ const CodeList = (props) => {
   }
 
   const { jobMaxTimeSecond } = props.vc;
+
   const columns = [
     {
       title: formatMessage({ id: 'codeList.table.column.name' }),
@@ -424,28 +429,12 @@ const CodeList = (props) => {
         return (
           <Space size="middle">
             <>
-              <Popover
-                trigger="click"
-                visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
-                onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
-                title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
-                content={
-                  sshInfo.status === 'running' ? <CopyToClipboard
-                    text={sshCommond}
-                    onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
-                  >
-                    {
-                      (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />)
-                    }
-                  </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>}
-              >
-                <Button
-                  type="link"
-                  disabled={!canOpenStatus.has(codeItem.status)}
-                  disableUpperCase
-                  onClick={() => startSSH(codeItem.id, codeItem.status)}
-                >SSH</Button>
-              </Popover>
+              <Button
+                type="link"
+                disabled={!canOpenStatus.has(codeItem.status)}
+                disableUpperCase
+                onClick={() => startSSH(codeItem.id, codeItem.status)}
+              >SSH</Button>
               <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
@@ -802,30 +791,26 @@ const CodeList = (props) => {
             style={{ marginTop: '50px' }}
           >
             <FormItem
+              name="podPort"
               label="可交互端口"
+              rules={[
+                { required: true }
+              ]}
+              style={{ display: 'inline-block' }}
             >
-              <FormItem
-                name="podPort"
-                rules={[
-                  { required: true }
-                ]}
-                style={{ display: 'inline-block' }}
-              >
-                <InputNumber style={{ width: '280px' }} min={40000} max={49999} placeholder="选填 40000 - 49999 之间的数值" />
-              </FormItem>
-              <FormItem
-                style={{ display: 'inline-block', marginLeft: '20px' }}
-              >
-                <Button
-                  key="submit"
-                  type="primary"
-                  onClick={handleCreateInteractiveEndpoints}
-                >
-                  确定
-                </Button>
-              </FormItem>
+              <InputNumber style={{ width: '280px' }} min={40000} max={49999} placeholder="选填 40000 - 49999 之间的数值" />
             </FormItem>
-            
+            <FormItem
+              style={{ display: 'inline-block', marginLeft: '20px' }}
+            >
+              <Button
+                key="submit"
+                type="primary"
+                onClick={handleCreateInteractiveEndpoints}
+              >
+                确定
+              </Button>
+            </FormItem>
             
           </Form>
 
@@ -844,8 +829,30 @@ const CodeList = (props) => {
             dataSource={interactiveEndpoints}
             pagination={false}
           />
+        </Modal>
+      }
 
-
+      {
+        sshModalVisible && <Modal
+          title="SSH"
+          visible={sshModalVisible}
+          onCancel={() => setSshModalVisible(false)}
+          onOk={() => setSshModalVisible(false)}
+          width="65%"
+        >
+          {
+            sshInfo && (sshInfo.status === 'running' ? <CopyToClipboard
+              text={sshCommond}
+              onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+            >
+              {
+                (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />)
+              }
+            </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>)
+          }
+          {
+            !sshInfo && <div>当前任务尚未开启 SSH</div>
+          }
         </Modal>
       }
 

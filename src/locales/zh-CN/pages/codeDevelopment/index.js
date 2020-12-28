@@ -19,6 +19,7 @@ export default {
   'codeList.modal.saveImage.footer.cancel': '取消',
 
   'codeList.tips.fresh.success': '刷新成功',
+  'codeList.tips.open.none': '当前 Job 尚未开启 Jupyter',
   'codeList.tips.open.error': '服务正在准备中，请稍候再试',
   'codeList.tips.stop.success': '停止成功',
   'codeList.tips.pause.success': '成功暂停',
