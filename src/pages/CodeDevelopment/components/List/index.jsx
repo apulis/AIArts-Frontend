@@ -827,10 +827,14 @@ const CodeList = (props) => {
             columns={[
               { title: formatMessage({ id: 'codeList.endpoint.modal.table.endpoint' }), dataIndex: 'name', align: 'center' },
               { title: formatMessage({ id: 'codeList.endpoint.modal.table.action' }), align: 'center', render(_text, item) {
+                
                 return (
-                  <Button type="link" href={item.link} onClick={() => {}}>
-                    {formatMessage({ id: 'codeList.endpoint.modal.table.action.open' })}
-                  </Button>
+                  <Tooltip title={item.status === 'pending' ? 'pending' : undefined}>
+
+                    <Button disabled={item.status === 'pending'} type="link" href={item.link} onClick={() => {}}>
+                      {formatMessage({ id: 'codeList.endpoint.modal.table.action.open' })}
+                    </Button>
+                  </Tooltip>
                 )
               }, }
             ]}
