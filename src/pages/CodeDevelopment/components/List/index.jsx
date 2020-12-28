@@ -1,8 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Dropdown, Menu, Typography, Popover, InputNumber } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SyncOutlined, DownOutlined, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import { getNameFromDockerImage , jobNameReg } from '@/utils/reg.js';
+import { connect } from 'dva';
+import useInterval from '@/hooks/useInterval';
+import FormItem from 'antd/lib/form/FormItem';
+import { checkIfCanDelete, checkIfCanPause, checkIfCanResume, checkIfCanStop } from '@/utils/utils.js';
+
+import Button from '@/components/locales/Button';
+import JobStatusToolTip from '@/components/JobStatusToolTip/index';
+import CodeUpload from '../UpLoad';
+import { isEmptyString } from '../../util.js';
+import {
+  statusMap,
+  canOpenStatus,
+  canStopStatus,
+  sortColumnMap,
+  sortTextMap,
+  pageObj,
+} from '../../serviceController.js';
 import {
   getCodes,
   stopCode,
@@ -15,31 +35,9 @@ import {
   resumeJob,
   addEndpointForJob
 } from '../../service.js';
-import moment from 'moment';
-import { isEmptyString } from '../../util.js';
-import CodeUpload from '../UpLoad';
-import {
-  statusMap,
-  canOpenStatus,
-  canStopStatus,
-  canUploadStatus,
-  sortColumnMap,
-  sortTextMap,
-  pageObj,
-} from '../../serviceController.js';
-import { getNameFromDockerImage } from '@/utils/reg.js';
-import { connect } from 'dva';
-import useInterval from '@/hooks/useInterval';
-import FormItem from 'antd/lib/form/FormItem';
-import { checkIfCanDelete, checkIfCanPause, checkIfCanResume, checkIfCanStop } from '@/utils/utils.js';
-import { jobNameReg } from '@/utils/reg';
-import { useIntl } from 'umi';
-import Button from '@/components/locales/Button';
-import JobStatusToolTip from '@/components/JobStatusToolTip/index';
 
 const { Search } = Input;
 const { Option } = Select;
-const { Text } = Typography;
 
 const CodeList = (props) => {
   const { formatMessage } = useIntl();
