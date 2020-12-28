@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { history, useIntl } from 'umi';
-import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Dropdown, Menu, Typography, Popover, InputNumber } from 'antd';
+import { Table, Select, Space, Row, Col, Input, message, Modal, Form, Dropdown, Menu, Typography, Popover, InputNumber, Tooltip } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SyncOutlined, DownOutlined, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
@@ -395,10 +395,12 @@ const CodeList = (props) => {
       title: formatMessage({ id: 'codeList.table.column.storePath' }),
       dataIndex: 'codePath',
       ellipsis: true,
-      width: '16%',
+      width: '10%',
       render(_text, item) {
         if (item.codePath) {
-          return item.codePath;
+          return <Tooltip title={item.codePath}>
+            {item.codePath}
+          </Tooltip>
         }
         return item.cmd;
       }
@@ -630,7 +632,7 @@ const CodeList = (props) => {
   }, [endpointsModalVisible])
 
   return (
-    <div style={{ minWidth: '2120px', overflow: 'auto' }}>
+    <div style={{ minWidth: '2180px', overflow: 'auto' }}>
       <Row style={{ marginBottom: '20px' }}>
         <Col span={12}>
           <div style={{ float: 'left' }}>
