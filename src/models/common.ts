@@ -22,6 +22,7 @@ export interface CommonModelType {
   effects: {
     changeInterval: Effect;
     fetchPlatformConfig: Effect;
+    fetchPrivilegeJobStatus: Effect;
   };
   reducers: {
     updateInterval: Reducer;
@@ -88,6 +89,18 @@ const common: CommonModelType = {
         })
       }
     },
+    * fetchPrivilegeJobStatus(_, { call, put }) {
+      const privilegedJob = yield call(fetchPrivilegeJobEnable);
+      if (privilegedJob.code === 0) {
+        const enablePrivileged = privilegedJob.data.isEnable;
+        yield put({
+          type: 'savePlatform',
+          payload: {
+            enablePrivileged: enablePrivileged
+          }
+        })
+      }
+    }
   },
   reducers: {
     updateInterval(state, { payload }) {

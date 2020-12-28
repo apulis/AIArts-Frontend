@@ -32,7 +32,6 @@ const Setting: React.FC<ConnectProps> = ({ common, dispatch, user }) => {
   };
 
   const defaultInterval = common.interval === null ? 0 : common.interval;
-  console.log('user', user.currentUser.permissionList)
   const currentUser = user.currentUser;
   return (
     <PageHeaderWrapper>
@@ -52,7 +51,7 @@ const Setting: React.FC<ConnectProps> = ({ common, dispatch, user }) => {
                   .map((val) => (
                     <Option value={val}>
                       {(val || 0) / 1000}
-                      {<FormattedMessage id="setting.second" />}
+                      <FormattedMessage id="setting.second" />
                     </Option>
                   ))}
               </Select>

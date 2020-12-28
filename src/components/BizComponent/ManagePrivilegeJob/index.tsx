@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Switch, Input, Form, Button, message, Card } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { useIntl } from 'umi';
+import { useDispatch, useIntl } from 'umi';
 
 import { fetchPrivilegeJobConfig, submitPrivilegeJobConfig } from '@/services/privilegeJob';
-import { format } from 'prettier';
 
 const FormItem = Form.Item;
 const { useForm } = Form;
@@ -16,6 +15,7 @@ interface IPrivilegeJobConfig {
 
 const ManagePrivilegeJob: React.FC = () => {
   const [form] = useForm();
+  const dispatch = useDispatch();
   const { formatMessage } = useIntl();
   const { validateFields, setFieldsValue } = form;
   const [privilegeConfig, setPrivilegeConfig] = useState<IPrivilegeJobConfig | undefined>(undefined);
@@ -42,6 +42,9 @@ const ManagePrivilegeJob: React.FC = () => {
     const result = await validateFields();
     const res = await submitPrivilegeJobConfig(result as IPrivilegeJobConfig);
     if (res.code === 0) {
+      dispatch({
+        type: 'common/fetchPrivilegeJobStatus',
+      });
       message.success(formatMessage({ id: 'bizComponent.ManagePrivilegeJob.update.success' }));
       getPrivilegeConfig();
     }
