@@ -62,7 +62,7 @@ const CreateVisualization = (props) => {
     setModelName(name);
     if (path) {
       setFieldsValue({
-        tensorboardLogDir: path,
+        tensorboardLogDir: path.split(codePathPrefix)[1],
       });
     } else {
       message.info(intl.formatMessage({ id: 'createVisualization.create.job.notHaveVisualPath' }));
