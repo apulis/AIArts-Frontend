@@ -800,7 +800,12 @@ const CodeList = (props) => {
               <FormItem
                 name="podPort"
                 rules={[
-                  { required: true, message: formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.required' }) }
+                  { required: true, message: formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.required' }) },
+                  { validator(_rule, value, callback) {
+                    if (value < 40000 || value > 49999) {
+                      callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator' }));
+                    }
+                  }}
                 ]}
                 style={{ display: 'inline-block' }}
               >

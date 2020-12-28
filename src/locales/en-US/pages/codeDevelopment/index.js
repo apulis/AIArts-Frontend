@@ -50,6 +50,7 @@ export default {
   'codeList.endpoint.modal.title': 'Endpoint Info',
   'codeList.endpoint.modal.form.endpoint': 'Endpoint',
   'codeList.endpoint.modal.form.endpoint.required': 'Endpoint',
+  'codeList.endpoint.modal.form.endpoint.validator': 'Value range :40000-49999',
   'codeList.endpoint.modal.form.confirm': 'Confirm',
   'codeList.endpoint.modal.table.endpoint': 'Endpoint',
   'codeList.endpoint.modal.table.action': 'Operation',

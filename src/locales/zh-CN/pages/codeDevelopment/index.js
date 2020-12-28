@@ -47,7 +47,7 @@ export default {
 
   'codeList.endpoint.modal.title': '可交互端口信息',
   'codeList.endpoint.modal.form.endpoint': '可交互端口',
-  'codeList.endpoint.modal.form.endpoint.required': '可交互端口',
+  'codeList.endpoint.modal.form.endpoint.validator': '取值范围为 40000 - 49999',
   'codeList.endpoint.modal.form.confirm': '确定',
   'codeList.endpoint.modal.table.endpoint': '交互端口',
   'codeList.endpoint.modal.table.action': '操作',
