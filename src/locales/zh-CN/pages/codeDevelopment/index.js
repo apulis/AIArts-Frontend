@@ -44,4 +44,14 @@ export default {
   'codeCreate.tips.submit.success': '创建成功',
   'codeCreate.message.loading.processing': '处理中...',
   'codeList.modal.upload.content.uploadTips.directory': '请选择文件夹上传',
+
+  'codeList.endpoint.modal.title': '可交互端口信息',
+  'codeList.endpoint.modal.form.endpoint': '可交互端口',
+  'codeList.endpoint.modal.form.endpoint.required': '可交互端口',
+  'codeList.endpoint.modal.form.confirm': '确定',
+  'codeList.endpoint.modal.table.endpoint': '交互端口',
+  'codeList.endpoint.modal.table.action': '操作',
+  'codeList.endpoint.modal.table.action.open': '打开',
+
+  'codeList.ssh.not.open': '当前任务尚未开启 SSH',
 };

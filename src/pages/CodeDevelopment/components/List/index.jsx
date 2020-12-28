@@ -35,6 +35,7 @@ import {
   resumeJob,
   addEndpointForJob
 } from '../../service.js';
+import { format } from 'prettier';
 
 const { Search } = Input;
 const { Option } = Select;
@@ -784,8 +785,8 @@ const CodeList = (props) => {
           visible={endpointsModalVisible}
           onCancel={() => setEndpointsModalVisible(false)}
           onOk={() => setEndpointsModalVisible(false)}
-          width="60%"
-          title="可交互端口信息"
+          width="660px"
+          title={formatMessage({ id: 'codeList.endpoint.modal.title' })}
         >
 
           <Form
@@ -793,37 +794,42 @@ const CodeList = (props) => {
             style={{ marginTop: '50px' }}
           >
             <FormItem
-              name="podPort"
-              label="可交互端口"
-              rules={[
-                { required: true }
-              ]}
-              style={{ display: 'inline-block' }}
+              required
+              label={formatMessage({ id: 'codeList.endpoint.modal.form.endpoint' })}
             >
-              <InputNumber style={{ width: '280px' }} min={40000} max={49999} placeholder="选填 40000 - 49999 之间的数值" />
-            </FormItem>
-            <FormItem
-              style={{ display: 'inline-block', marginLeft: '20px' }}
-            >
-              <Button
-                key="submit"
-                type="primary"
-                onClick={handleCreateInteractiveEndpoints}
+              <FormItem
+                name="podPort"
+                rules={[
+                  { required: true, message: formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.required' }) }
+                ]}
+                style={{ display: 'inline-block' }}
               >
-                确定
-              </Button>
+                <InputNumber style={{ width: '280px' }} min={40000} max={49999} placeholder="选填 40000 - 49999 之间的数值" />
+              </FormItem>
+              <FormItem
+                style={{ display: 'inline-block', width: '40%', marginLeft: '25px' }}
+              >
+                <Button
+                  key="submit"
+                  type="primary"
+                  onClick={handleCreateInteractiveEndpoints}
+                >
+                  {formatMessage({ id: 'codeList.endpoint.modal.form.confirm' })}
+                </Button>
+              </FormItem>
             </FormItem>
+            
             
           </Form>
 
           <Table
             loading={interactiveEndpointsTableLoading}
             columns={[
-              { title: '交互端口', dataIndex: 'name', align: 'center' },
-              { title: '操作', align: 'center', render(_text, item) {
+              { title: formatMessage({ id: 'codeList.endpoint.modal.table.endpoint' }), dataIndex: 'name', align: 'center' },
+              { title: formatMessage({ id: 'codeList.endpoint.modal.table.action' }), align: 'center', render(_text, item) {
                 return (
                   <Button type="link" href={item.link} onClick={() => {}}>
-                    打开
+                    {formatMessage({ id: 'codeList.endpoint.modal.table.action.open' })}
                   </Button>
                 )
               }, }
@@ -853,7 +859,9 @@ const CodeList = (props) => {
             </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>)
           }
           {
-            !sshInfo && <div>当前任务尚未开启 SSH</div>
+            !sshInfo && <div>
+              {formatMessage({ id: 'codeList.ssh.not.open' })}
+            </div>
           }
         </Modal>
       }

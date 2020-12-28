@@ -19,7 +19,7 @@ export default {
   'codeList.modal.saveImage.footer.cancel': 'Cancel',
 
   'codeList.tips.fresh.success': 'Successfully Refresh!',
-  'codeList.tips.open.none': 'Jupyter has not been opened for the current task',
+  'codeList.tips.open.none': 'Jupyter has not been opened for the current job',
   'codeList.tips.open.error': 'The service is under preparation, please try again later',
   'codeList.tips.stop.success': 'Stop Succeeded',
   'codeList.tips.pause.success': 'Pause Succeeded',
@@ -45,4 +45,15 @@ export default {
   'codeCreate.modal.noDevice.content': 'Continue or Not',
   'codeCreate.message.loading.processing': 'Processing...',
   'codeList.modal.upload.content.uploadTips.directory': 'Please select a directory',
+
+  
+  'codeList.endpoint.modal.title': 'Endpoint Info',
+  'codeList.endpoint.modal.form.endpoint': 'Endpoint',
+  'codeList.endpoint.modal.form.endpoint.required': 'Endpoint',
+  'codeList.endpoint.modal.form.confirm': 'Confirm',
+  'codeList.endpoint.modal.table.endpoint': 'Endpoint',
+  'codeList.endpoint.modal.table.action': 'Operation',
+  'codeList.endpoint.modal.table.action.open': 'Open',
+
+  'codeList.ssh.not.open': 'SSH is not open for current job',
 };
