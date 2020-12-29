@@ -25,11 +25,11 @@ const ManagePrivilegeJob: React.FC = () => {
     if (res.code === 0) {
       const { isEnable, bypassCode } = res.data;
       setPrivilegeConfig({
-        isEnable: isEnable,
+        isEnable: isEnable || false,
         bypassCode: bypassCode,
       });
       setFieldsValue({
-        isEnable,
+        isEnable: isEnable || false,
         bypassCode,
       });
     }
