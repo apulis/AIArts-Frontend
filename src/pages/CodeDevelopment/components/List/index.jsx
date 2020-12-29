@@ -611,7 +611,9 @@ const CodeList = (props) => {
   }
 
   const handleCreateInteractiveEndpoints = async () => {
+    console.log(111111)
     const result = await form.validateFields(['podPort']);
+    console.log(123123123)
     const res = await addEndpointForJob(currentHandledJob.id, result.podPort);
     if (res.code === 0) {
       form.resetFields();
@@ -803,8 +805,10 @@ const CodeList = (props) => {
                 rules={[
                   { required: true, message: formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.required' }) },
                   { validator(_rule, value, callback) {
-                    if (value < 40000 || value > 49999) {
+                    if (value < 40000 || value > 49999 || !/^\d{1,}$/.test(value)) {
                       callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator' }));
+                    } else {
+                      callback();
                     }
                   }}
                 ]}
@@ -845,7 +849,7 @@ const CodeList = (props) => {
               }, }
             ]}
             dataSource={interactiveEndpoints}
-            pagination={false}
+            // pagination={false}
           />
         </Modal>
       }
