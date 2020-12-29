@@ -44,5 +44,6 @@ module.exports = {
     'prefer-destructuring': 'off',
     'consistent-return': 'off',
     'arrow-body-style': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
   },
 };

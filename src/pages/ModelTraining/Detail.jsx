@@ -31,31 +31,7 @@ const Detail = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [logCurrentPage, setLogCurrentPage] = useState(1);
   const [logtotal, setLogTotal] = useState(1);
-  const getTrainingDetail = async (options) => {
-    const res = await fetchTrainingDetail(id);
-    if (res.code === 0) {
-      const data = res.data;
-      if ('visualPath' in data.params) {
-        data.visualPath = data.params.visualPath;
-        delete data.params['visualPath'];
-      }
-      setJobDetail(res.data);
-      const status = res.data.status;
-      if (!['unapproved', 'queued', 'scheduling'].includes(status)) {
-        getTrainingLogs(id, { page: options.page });
-      }
-    }
-  };
-  useEffect(() => {
-    getTrainingDetail({ page: logCurrentPage });
-    return () => {
-      fetchTrainingDetail.cancel && fetchTrainingDetail.cancel();
-      fetchTrainingLog.cancel && fetchTrainingLog.cancel();
-    };
-  }, []);
-  useInterval(() => {
-    getTrainingDetail({ page: logCurrentPage });
-  }, props.common.interval);
+
   const jobStarted = ['unapproved', 'queued', 'scheduling'].includes(jobDetail.status);
   const jobFailed = ['failed'].includes(jobDetail.status);
 
@@ -69,6 +45,21 @@ const Detail = (props) => {
     if (res.code === 0) {
       setLogs(res.data.log || '');
       setLogTotal(res.data.maxPage || 1);
+    }
+  };
+  const getTrainingDetail = async (options) => {
+    const res = await fetchTrainingDetail(id);
+    if (res.code === 0) {
+      const data = res.data;
+      if ('visualPath' in data.params) {
+        data.visualPath = data.params.visualPath;
+        delete data.params.visualPath;
+      }
+      setJobDetail(res.data);
+      const status = res.data.status;
+      if (!['unapproved', 'queued', 'scheduling'].includes(status)) {
+        getTrainingLogs(id, { page: options.page });
+      }
     }
   };
 
@@ -87,7 +78,7 @@ const Detail = (props) => {
     submitData.scope = 2; // save as private
     submitData.jobType = modelTrainingType;
     submitData.templateData = {};
-    submitData.templateData = Object.assign({}, jobDetail, values);
+    submitData.templateData = { ...jobDetail, ...values};
     delete submitData.templateData.id;
     const res = await saveTrainingParams(submitData);
     if (res.code === 0) {
@@ -106,7 +97,19 @@ const Detail = (props) => {
     getTrainingLogs(id, { page });
   };
 
-  let setTemplateButtonDisabled =
+   
+  useEffect(() => {
+    getTrainingDetail({ page: logCurrentPage });
+    return () => {
+      fetchTrainingDetail.cancel && fetchTrainingDetail.cancel();
+      fetchTrainingLog.cancel && fetchTrainingLog.cancel();
+    };
+  }, []);
+  useInterval(() => {
+    getTrainingDetail({ page: logCurrentPage });
+  }, props.common.interval);
+
+  const setTemplateButtonDisabled =
     /^\/data/.test(jobDetail.codePath) || Object.keys(jobDetail).length === 0;
   return (
     <div className={styles.modelDetail}>
