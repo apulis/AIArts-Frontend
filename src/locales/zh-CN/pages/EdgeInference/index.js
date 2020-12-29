@@ -21,12 +21,12 @@ export default {
   'edgeInference.list.onSubmitFD.success': '设置成功！',
 
   'edgeInference.list.statusMap.all': '全部',
-  'edgeInference.list.statusMap.push.ing': '全部',
-  'edgeInference.list.statusMap.push.success': '全部',
-  'edgeInference.list.statusMap.push.error': '全部',
-  'edgeInference.list.statusMap.converting.ing': '全部',
-  'edgeInference.list.statusMap.converting.success': '全部',
-  'edgeInference.list.statusMap.converting.error': '全部',
+  'edgeInference.list.statusMap.push.ing': '推送中',
+  'edgeInference.list.statusMap.push.success': '推送成功',
+  'edgeInference.list.statusMap.push.error': '错误',
+  'edgeInference.list.statusMap.converting.ing': '转换中',
+  'edgeInference.list.statusMap.converting.success': '转换成功',
+  'edgeInference.list.statusMap.converting.error': '转换错误',
 
   'edgeInference.list.fdServer': 'FD服务器',
   'edgeInference.list.fresh.success': '刷新成功！',
