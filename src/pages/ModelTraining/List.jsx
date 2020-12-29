@@ -242,10 +242,10 @@ const List = (props) => {
       },
     },
     {
-      title: '是否为 Privilege Job',
+      title: formatMessage({ id: 'ManagePrivilegeJob.table.title.is.privilege' }),
       dataIndex: 'isPrivileged',
       render(isPrivileged) {
-        return isPrivileged ? '是' : '否'
+        return isPrivileged ? formatMessage({ id: 'ManagePrivilegeJob.table.title.is' }) : formatMessage({ id: 'ManagePrivilegeJob.table.title.not' })
       }
     },
     {

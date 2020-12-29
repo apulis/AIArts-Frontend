@@ -417,11 +417,10 @@ const CodeList = (props) => {
       }
     },
     {
-      title: '是否 Privilege Job',
+      title: formatMessage({ id: 'ManagePrivilegeJob.table.title.is.privilege' }),
       dataIndex: 'isPrivileged',
-      width: '7%',
       render(isPrivileged) {
-        return isPrivileged ? '是' : '否'
+        return isPrivileged ? formatMessage({ id: 'ManagePrivilegeJob.table.title.is' }) : formatMessage({ id: 'ManagePrivilegeJob.table.title.not' })
       }
     },
     {
