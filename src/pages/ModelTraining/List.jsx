@@ -245,7 +245,6 @@ const List = (props) => {
       title: formatMessage({ id: 'ManagePrivilegeJob.table.title.is.privilege' }),
       dataIndex: 'isPrivileged',
       align: 'center',
-      width: '6%',
       render(isPrivileged) {
         return isPrivileged ? formatMessage({ id: 'ManagePrivilegeJob.table.title.is' }) : formatMessage({ id: 'ManagePrivilegeJob.table.title.not' })
       }
