@@ -1,24 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Descriptions, Modal } from 'antd';
-import { useParams, useIntl } from 'umi';
-import { message, Form, Input, Tooltip, Pagination } from 'antd';
-import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
+import { Button, Modal , message, Form, Input, Tooltip, Pagination } from 'antd';
+import { useParams, useIntl, connect } from 'umi';
+
+import { LoadingOutlined } from '@ant-design/icons';
 import 'react-virtualized/styles.css';
-import List from 'react-virtualized/dist/es/List';
-import moment from 'moment';
 import {
   fetchTrainingDetail,
-  removeTrainings,
   fetchTrainingLog,
   saveTrainingParams,
 } from '@/services/modelTraning';
-import styles from './index.less';
-import { getJobStatus, formatParams } from '@/utils/utils';
 import { modelTrainingType } from '@/utils/const';
 import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import useInterval from '@/hooks/useInterval';
-import { connect } from 'dva';
 import JobDetail from '@/components/BizComponent/JodDetail';
+import styles from './index.less';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
