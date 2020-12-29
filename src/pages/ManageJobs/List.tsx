@@ -164,7 +164,7 @@ const ManageJobs: React.FC = (props) => {
       title: formatMessage({ id: 'jobManagement.table.column.engine' }),
       render(_text, item) {
         if (item.jobType === 'InferenceJob') {
-          return <div>{getNameFromDockerImage(item.jobParams?.framework + + ':' + item.jobParams?.version)}</div>;
+          return <div>{getNameFromDockerImage(`${item.jobParams?.framework}:${item.jobParams?.version}`)}</div>;
         }
         return <div>{getNameFromDockerImage(item.jobParams?.image || item.jobParams?.framework)}</div>;
       },
