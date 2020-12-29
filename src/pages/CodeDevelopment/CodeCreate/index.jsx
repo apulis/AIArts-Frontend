@@ -23,6 +23,7 @@ import { useIntl } from 'umi';
 import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/device-utils';
 import Ribbon from 'antd/lib/badge/Ribbon';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import PrivilegedLabel from '@/components/PrivilegeLabel/index';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -276,7 +277,8 @@ const CodeCreate = (props) => {
     }
   }, [jobTrainingType]);
 
-  const disablePrivileged = !props.common.enablePrivileged || (!props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
+  const disablePrivileged = !props.common.enablePrivileged;
+  const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   
   return (
     <>
@@ -530,15 +532,7 @@ const CodeCreate = (props) => {
             </Form.Item>
           )}
           <Form.Item
-            label={
-              !disablePrivileged ?
-                <div>{formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}</div>
-                :
-                <Tooltip title={formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label.disable.tip' })}>
-                  {formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}
-                  <QuestionCircleOutlined style={{ marginLeft: '6px' }} />
-                </Tooltip>
-            }
+           label={PrivilegedLabel({ noPrivilegedJobPermission, disablePrivileged })}
             name="isPrivileged"
             initialValue={iSPrivileged}
           >

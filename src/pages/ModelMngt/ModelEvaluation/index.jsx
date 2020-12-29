@@ -31,6 +31,7 @@ import { connect } from 'dva';
 import { beforeSubmitJob } from '@/models/resource';
 import { useIntl } from 'umi';
 import { getAvailRegularDeviceNumber } from '@/utils/device-utils';
+import PrivilegedLabel from '@/components/PrivilegeLabel';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -365,7 +366,9 @@ const ModelEvaluation = (props) => {
     wrapperCol: { span: 12 },
   };
 
-  const disablePrivileged = !props.common.enablePrivileged || (!props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
+  const disablePrivileged = !props.common.enablePrivileged;
+  const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
+  
   return (
     <>
       <PageHeader
@@ -629,15 +632,7 @@ const ModelEvaluation = (props) => {
               </Select>
             </Form.Item>
             <Form.Item
-              label={
-                !disablePrivileged ? 
-                  <div>{intl.formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}</div>
-                  :
-                  <Tooltip title={intl.formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label.disable.tip' })}>
-                    {intl.formatMessage({ id: 'ManagePrivilegeJob.isPrivileged.label' })}
-                    <QuestionCircleOutlined style={{ marginLeft: '6px'}} />
-                  </Tooltip>
-              }
+              label={PrivilegedLabel({ noPrivilegedJobPermission, disablePrivileged })}
               name="isPrivileged"
               initialValue={iSPrivileged}
             >
