@@ -375,7 +375,7 @@ const ModelTraining = (props) => {
       if (currentVCAvailDevice) {
         const currentAvail = currentVCAvailDevice.avail;
         if (values.jobTrainingType === 'PSDistJob') {
-          if (values.numPsWorker * values.deviceNum > avail) {
+          if (values.numPsWorker * values.deviceNum > currentAvail) {
             needConfirm = true;
           }
         } else {
