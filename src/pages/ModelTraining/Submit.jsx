@@ -462,11 +462,6 @@ const ModelTraining = (props) => {
     wrapperCol: { span: 12 },
   };
 
-  const handleDistributedJob = (e) => {
-    const type = e.target.value;
-    setDistributedJob(type === 'PSDistJob');
-  };
-
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
@@ -537,6 +532,18 @@ const ModelTraining = (props) => {
   } else {
     needOutputPathCodePrefix = true;
   }
+
+  const handleDistributedJob = (e) => {
+    const type = e.target.value;
+    setDistributedJob(type === 'PSDistJob');
+  };
+
+  useEffect(() => {
+    if (distributedJob) {
+      handleDeviceChange();
+    }
+  }, [distributedJob])
+
 
   return (
     <div className={styles.modelTraining}>

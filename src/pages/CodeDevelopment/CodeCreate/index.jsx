@@ -122,9 +122,10 @@ const CodeCreate = (props) => {
     setFieldsValue({ deviceNum: deviceNum });
   };
 
-  const renderInitPSDistJobForm = (numPs, numPsWorker, deviceNum) => {
-    setFieldsValue({ numPs, numPsWorker, deviceNum });
+  const renderInitPSDistJobForm = (numPsWorker, deviceNum) => {
+    setFieldsValue({ numPsWorker, deviceNum });
   };
+
 
   const apiPostCode = async (values) => {
     const obj = await postCode1({ ...values, vcName: currentSelectedVC  });
@@ -168,6 +169,10 @@ const CodeCreate = (props) => {
         needConfirm = true;
       }
     }
+    if (values.jobTrainingType === 'PSDistJob') {
+      values.numPs = 1;
+    }
+    delete values.deviceTotal;
     if (
       !beforeSubmitJob(
         values.jobTrainingType === 'PSDistJob',
@@ -210,15 +215,12 @@ const CodeCreate = (props) => {
       } else if (jobTrainingType === 'PSDistJob') {
         arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numPs'));
         setDeviceNumPerNodeArr(arr);
-        setTimeout(() => {
-          setFieldsValue({ numPsWorker: arr[0] });
-        }, 0);
       }
     }
   }, [jobTrainingType, currentDeviceType])
 
-  const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
-    setFieldsValue({ deviceNum: nodeNum * perNodeDeviceNum });
+  const handleCalcTotalDeviceNum = (nodeNum, deviceNum) => {
+    setFieldsValue({ deviceTotal: (nodeNum || getFieldValue('numPsWorker')) * deviceNum });
   };
 
   const validateMessages = {
@@ -269,13 +271,14 @@ const CodeCreate = (props) => {
   }, [engineSource]);
 
   useEffect(() => {
-    // 初始化处理deviceNum
-    if (jobTrainingType == 'RegularJob') {
-      renderInitRegularForm(deviceNumArr[0]);
-    } else if (jobTrainingType == 'PSDistJob') {
-      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0], deviceNumPerNodeArr[0] * 1);
+    if (jobTrainingType === 'RegularJob') {
+      renderInitRegularForm(deviceNumArr[0] || undefined);
+    } else if (jobTrainingType === 'PSDistJob') {
+      handleCalcTotalDeviceNum(1, deviceNumPerNodeArr[0] || 0);
+      renderInitPSDistJobForm(1, deviceNumPerNodeArr[0] || undefined);
     }
-  }, [jobTrainingType]); // 更新处理
+  }, [jobTrainingType]);
+
 
   return (
     <>
@@ -476,7 +479,7 @@ const CodeCreate = (props) => {
               ))}
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' && (
+          {jobTrainingType === 'RegularJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.deviceNum' })}
               name="deviceNum"
@@ -491,34 +494,35 @@ const CodeCreate = (props) => {
               </Select>
             </Form.Item>
           )}
-          {jobTrainingType == 'PSDistJob' && (
+          {jobTrainingType === 'PSDistJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.nodeNum' })}
-              name="numPs"
+              name="numPsWorker"
               rules={[{ required: true }]}
+              initialValue={1}
             >
               <InputNumber
                 style={{ width: '50%' }}
                 min={1}
                 max={maxNodeNum}
                 placeholder={formatMessage({ id: 'codeCreate.placeholder.nodeNum' })}
-                onChange={() =>
-                  handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
+                onChange={(nodeNum) =>
+                  handleCalcTotalDeviceNum(nodeNum, getFieldValue('deviceNum'))
                 }
-              ></InputNumber>
+              />
             </Form.Item>
           )}
-          {jobTrainingType == 'PSDistJob' && (
+          {jobTrainingType === 'PSDistJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.perNodeNum' })}
-              name="numPsWorker"
+              name="deviceNum"
               rules={[{ required: true }]}
             >
               <Select
                 style={{ width: '50%' }}
-                onChange={() =>
-                  handleCaclTotalDeviceNum(getFieldValue('numPs'), getFieldValue('numPsWorker'))
-                }
+                onChange={(deviceNum) => {
+                  handleCalcTotalDeviceNum(getFieldValue('numPsWorker'), deviceNum)
+                }}
               >
                 {deviceNumPerNodeArr.map((item, key) => (
                   <Option key={key} value={item}>
@@ -528,14 +532,15 @@ const CodeCreate = (props) => {
               </Select>
             </Form.Item>
           )}
-          {jobTrainingType == 'PSDistJob' && (
+          {jobTrainingType === 'PSDistJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.totalDeviceNum' })}
-              name="deviceNum"
+              name="deviceTotal"
             >
-              <Input style={{ width: '50%' }} disabled></Input>
+              <Input style={{ width: '50%' }} disabled />
             </Form.Item>
           )}
+
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               {formatMessage({ id: 'codeCreate.submit' })}

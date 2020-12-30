@@ -8,7 +8,7 @@ export default {
   'codeCreate.label.deviceType': '设备类型',
   'codeCreate.label.deviceNum': '设备数量',
   'codeCreate.label.nodeNum': '节点数量',
-  'codeCreate.label.perNodeNum': '单节点数量',
+  'codeCreate.label.perNodeNum': '单节点设备数量',
   'codeCreate.label.totalDeviceNum': '设备总数量',
   'codeCreate.input.placeholder.engine': '请输入镜像', 
 
