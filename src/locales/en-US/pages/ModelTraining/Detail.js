@@ -12,6 +12,7 @@ export default {
   'model.training.detail.createTime': 'Creation Time',
   'model.training.detail.runningParams': 'Running parameters',
   'model.training.detail.codePath': 'Code directory',
+  'model.training.detail.numPsWorker': 'Distributed Job Node Num',
   'model.training.detail.deviceNum': 'Device Num',
   'model.training.detail.deviceType': 'Device Type',
   'model.training.detail.startupFile': 'Startup File',

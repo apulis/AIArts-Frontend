@@ -12,6 +12,7 @@ export default {
   'model.training.detail.createTime': '创建时间',
   'model.training.detail.runningParams': '运行参数',
   'model.training.detail.codePath': '代码目录',
+  'model.training.detail.numPsWorker': '分布式训练使用的节点数量',
   'model.training.detail.deviceNum': '计算节点个数',
   'model.training.detail.deviceType': '计算节点规格',
   'model.training.detail.startupFile': '启动文件',

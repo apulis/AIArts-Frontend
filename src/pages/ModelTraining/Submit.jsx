@@ -544,7 +544,6 @@ const ModelTraining = (props) => {
     }
   }, [distributedJob])
 
-
   return (
     <div className={styles.modelTraining}>
       <PageHeader
