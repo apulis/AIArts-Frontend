@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button, Modal , message, Form, Input, Tooltip, Pagination } from 'antd';
+import { Button, Modal , message, Form, Input, Tooltip, Pagination, Card } from 'antd';
 import { useParams, useIntl, connect } from 'umi';
 
 import { LoadingOutlined } from '@ant-design/icons';
@@ -14,6 +14,8 @@ import { jobNameReg, getNameFromDockerImage } from '@/utils/reg';
 import useInterval from '@/hooks/useInterval';
 import JobDetail from '@/components/BizComponent/JodDetail';
 import styles from './index.less';
+import { getFullLogContent } from '@/services/common';
+import { downloadStringAsFile } from '@/utils/utils';
 
 const { useForm } = Form;
 const FormItem = Form.Item;
@@ -109,6 +111,16 @@ const Detail = (props) => {
     getTrainingDetail({ page: logCurrentPage });
   }, props.common.interval);
 
+  const downloadFullLog = async () => {
+    const cancel = message.loading('加载中');
+    const res = await getFullLogContent(id);
+    cancel();
+    if (res.code === 0) {
+      const log = res.data.log;
+      downloadStringAsFile(log, jobDetail.name + '.log');
+    }
+  }
+
   const setTemplateButtonDisabled =
     /^\/data/.test(jobDetail.codePath) || Object.keys(jobDetail).length === 0;
   return (
@@ -137,9 +149,6 @@ const Detail = (props) => {
         </div>
       </div>
       <JobDetail jobDetail={jobDetail} />
-      <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-        {formatMessage({ id: 'model.training.detail.log' })}
-      </div>
       {!jobStarted && !jobFailed && (
         <Button
           type="primary"
@@ -150,12 +159,19 @@ const Detail = (props) => {
         </Button>
       )}
       {typeof logs !== 'undefined' ? (
-        <div style={{ paddingBottom: '25px' }}>
-          <pre ref={logEl} className={styles.logs}>
-            {logs}
-          </pre>
+        <div style={{ marginTop: '20px' }}>
+          <Card
+            title={formatMessage({ id: 'model.training.detail.log' })}
+            extra={<Button type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+          >
+            <pre ref={logEl} className={styles.logs}>
+              {logs}
+            </pre>
+          </Card>
+          
           {logtotal && (
             <Pagination
+              style={{ marginTop: '16px' }}
               showSizeChanger={false}
               defaultCurrent={1}
               defaultPageSize={1}
