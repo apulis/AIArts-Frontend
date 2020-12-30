@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { Effect } from 'dva';
 
 import { setI18n } from '@/utils/utils';
-import { getPlatformConfig } from '../services/common';
+import { getPlatformConfig, getPresetImages } from '../services/common';
 import { fetchPrivilegeJobEnable } from '@/services/privilegeJob';
 
 export const locales = ['zh-CN', 'en-US'];
@@ -14,6 +14,9 @@ export interface CommonStateType {
   enableVC: boolean;
   enableAvisuals: boolean;
   enablePrivileged: boolean;
+  presetImages: {
+    [props: string]: string[]
+  };
 }
 
 export interface CommonModelType {
@@ -23,12 +26,20 @@ export interface CommonModelType {
     changeInterval: Effect;
     fetchPlatformConfig: Effect;
     fetchPrivilegeJobStatus: Effect;
+    fetchPresetImages: Effect;
   };
   reducers: {
     updateInterval: Reducer;
     savePlatform: Reducer;
+    saveImages: Reducer;
   };
 }
+
+export enum EnumImageCategorys {
+  normal = 'normal',
+  hyperparameters = 'hyperparameters',
+}
+
 
 const common: CommonModelType = {
   namespace: 'common',
@@ -39,6 +50,10 @@ const common: CommonModelType = {
     enableVC: false,
     enableAvisuals: false,
     enablePrivileged: false,
+    presetImages: {
+      normal: [],
+      hyperparameters: [],
+    }
   },
   effects: {
     * changeInterval({ payload }, { put }) {
@@ -100,6 +115,27 @@ const common: CommonModelType = {
           }
         })
       }
+    },
+    * fetchPresetImages(_, { call, put }) {
+      const res = yield call(getPresetImages);
+      if (res.code === 0) {
+        const images = res.data as {
+          category: string
+          desc: string
+          image: string
+        }[];
+        const hyperparamsImages = images.filter(val => val.category === EnumImageCategorys.hyperparameters);
+        const normalImages = images.filter(val => val.category === EnumImageCategorys.normal);
+        yield put({
+          type: 'saveImages',
+          payload: {
+            presetImages: {
+              [EnumImageCategorys.hyperparameters]: hyperparamsImages.map(val => val.image),
+              [EnumImageCategorys.normal]: normalImages.map(val => val.image),
+            }
+          }
+        })
+      }
     }
   },
   reducers: {
@@ -113,6 +149,13 @@ const common: CommonModelType = {
       return {
         ...state,
         ...payload,
+      };
+    },
+
+    saveImages(state, { payload }) {
+      return {
+        ...state,
+        presetImages: payload.presetImages,
       };
     },
   },

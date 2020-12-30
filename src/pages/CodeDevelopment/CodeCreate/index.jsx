@@ -24,9 +24,11 @@ import { getAvailPSDDeviceNumber, getAvailRegularDeviceNumber } from '@/utils/de
 import Ribbon from 'antd/lib/badge/Ribbon';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import PrivilegedLabel from '@/components/PrivilegeLabel/index';
+import { EnumImageCategorys } from '@/models/common'; 
 
 const { Option } = Select;
 const { TextArea } = Input;
+
 
 const CodeCreate = (props) => {
   useEffect(() => {
@@ -53,14 +55,16 @@ const CodeCreate = (props) => {
   const [algorithmSource, setAlgorithmSource] = useState(1);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
   const [iSPrivileged, setISPrivileged] = useState(false);
-  const [engineTip, setEngineTip] = useState('')
+  const [engineTip, setEngineTip] = useState('');
+  const [isHyperparamImage, setIsHyperparamImage] = useState(false);
 
   const { currentSelectedVC } = props.vc;
-
+  const { presetImages } = props.common;
   const getImageDescMap = async () => {
     const res = await getImages();
     const { code, data } = res;
     const obj = {};
+    
     if (code === 0) {
       data.forEach((item) => {
         obj[item.image] = item.desc;
@@ -251,6 +255,7 @@ const CodeCreate = (props) => {
   }, []); // 更新处理
 
   useEffect(() => {
+    setIsHyperparamImage(false);
     if (engineSource === 2) {
       if (userFrameWorks.length) {
         setFieldsValue({
@@ -267,6 +272,8 @@ const CodeCreate = (props) => {
       });
     } else if (engineSource === 3) {
       //
+    } else if (engineSource === 4) {
+      setIsHyperparamImage(true);
     }
   }, [engineSource]);
   useEffect(() => {
@@ -280,6 +287,18 @@ const CodeCreate = (props) => {
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   
+  let currentAvailPresetImage = [];
+  if (isHyperparamImage) {
+    currentAvailPresetImage = presetImages.hyperparameters;
+  } else {
+    currentAvailPresetImage = presetImages.normal;
+  }
+
+  useEffect(() => {
+    setFieldsValue({
+      engine: currentAvailPresetImage[0] || undefined,
+    });
+  }, [isHyperparamImage])
   return (
     <>
       <PageHeader
@@ -359,7 +378,7 @@ const CodeCreate = (props) => {
               onChange={(e) => {
                 setEngineSource(e.target.value);
               }}
-              style={{ width: '420px' }}
+              style={{ width: '590px' }}
             >
               <Radio value={1}>{formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
               <Radio value={2}>{formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
@@ -368,9 +387,14 @@ const CodeCreate = (props) => {
                   {formatMessage({ id: 'codeCreate.custom.engine' })}
                 </Tooltip>
               </Radio>
+              <Radio value={4}>
+                <Tooltip title={'使用超参调优'}>
+                  使用超参调优
+                </Tooltip>
+              </Radio>
             </Radio.Group>
           </Form.Item>
-          {engineSource === 1 && (
+          {(engineSource === 1 || engineSource === 4) && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.engineType' })}
               required
@@ -389,20 +413,21 @@ const CodeCreate = (props) => {
                 <Select
                   onChange={onEngineChange}
                 >
-                  {engineNameArr.map((engine) => (
+                  {currentAvailPresetImage.map((engine) => (
                     <Option key={engine} value={engine}>
                       <Tooltip title={presetImageDescMap[engine]}>
                         {getNameFromDockerImage(engine)}
                       </Tooltip>
                     </Option>
-
                   ))}
                 </Select>
               </Form.Item>
               <Form.Item
-                style={{ display: 'inline-block', width: '0' }}
+                style={{ display: 'inline-block', width: '10px' }}
               >
-                <Tooltip title={engineTip} placement="right" visible={!!engineTip}><div>{null}</div></Tooltip>
+                <div>
+                  <Tooltip title={engineTip} placement="right" visible={!!engineTip}><div>{null}</div></Tooltip>
+                </div>
               </Form.Item>
             </Form.Item>
           )}

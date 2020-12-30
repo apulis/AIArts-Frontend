@@ -36,6 +36,9 @@ const CommonLayout = ({ children, dispatch, resource, user, common }) => {
 
   useEffect(() => {
     getVCDetail();
+    dispatch({
+      type: 'common/fetchPresetImages',
+    });
   }, [])
 
   if (currentVC?.length === 0 && userName) {
