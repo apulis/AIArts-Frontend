@@ -117,7 +117,7 @@ const Detail = (props) => {
     cancel();
     if (res.code === 0) {
       const log = res.data.log;
-      downloadStringAsFile(log, jobDetail.name + '.log');
+      downloadStringAsFile(log, `${jobDetail.name}.log`);
     }
   }
 
