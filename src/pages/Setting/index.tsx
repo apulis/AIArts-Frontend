@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { FormattedMessage, useIntl } from 'umi';
 import UserVirtualCluster from '@/components/BizComponent/UserVirtualCluster';
 import ManagePrivilegeJob from '@/components/BizComponent/ManagePrivilegeJob';
+import { ConnectProps, ConnectState } from '@/models/connect';
 
 const { Option } = Select;
 

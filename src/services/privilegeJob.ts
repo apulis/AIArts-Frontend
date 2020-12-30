@@ -1,7 +1,9 @@
 import request from '@/utils/request';
 
 export const fetchPrivilegeJobConfig = () => {
-  return request('/settings/privileged');
+  return request('/settings/privileged', {
+    errorHandler: () => {},
+  });
 }
 
 export const submitPrivilegeJobConfig = (data: { isEnable: boolean; bypassCode: string }) => {

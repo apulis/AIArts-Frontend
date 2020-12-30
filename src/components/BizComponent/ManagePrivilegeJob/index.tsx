@@ -41,7 +41,7 @@ const ManagePrivilegeJob: React.FC = () => {
   const handleSubmit = async () => {
     const result = await validateFields();
     const res = await submitPrivilegeJobConfig(result as IPrivilegeJobConfig);
-    if (res.code === 0) {
+    if (res && res.code === 0) {
       dispatch({
         type: 'common/fetchPrivilegeJobStatus',
       });
