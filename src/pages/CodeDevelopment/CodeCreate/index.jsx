@@ -274,6 +274,7 @@ const CodeCreate = (props) => {
       //
     } else if (engineSource === 4) {
       setIsHyperparamImage(true);
+      setEngineTip(presetImageDescMap[presetImages.hyperparameters] || '');
     }
   }, [engineSource]);
   useEffect(() => {
@@ -388,8 +389,8 @@ const CodeCreate = (props) => {
                 </Tooltip>
               </Radio>
               <Radio value={4}>
-                <Tooltip title={'使用超参调优'}>
-                  使用超参调优
+                <Tooltip title={formatMessage({ id: 'codeCreate.label.hyperparam' })}>
+                  {formatMessage({ id: 'codeCreate.label.hyperparam' })}
                 </Tooltip>
               </Radio>
             </Radio.Group>

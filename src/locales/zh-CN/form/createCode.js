@@ -4,6 +4,7 @@ export default {
   'codeCreate.label.storePath': '代码存储路径',
   'codeCreate.label.engineSource': '选择引擎来源',
   'codeCreate.label.engineType': '引擎类型',
+  'codeCreate.label.hyperparam': '使用超参调优镜像',
   'codeCreate.label.jobType': '任务类型',
   'codeCreate.label.deviceType': '设备类型',
   'codeCreate.label.deviceNum': '设备数量',
@@ -30,3 +31,4 @@ export default {
   'codeCreate.custom.engine': '使用自定义引擎',
   'codeCreate.custom.engine.title': '要求服务器可以访问 Docker Hub',
 };
+
