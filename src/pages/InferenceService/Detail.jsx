@@ -286,11 +286,12 @@ const InferenceDetail = (props) => {
       )}
       <div>
         <Card
-          title={intl.formatMessage({ id: 'model.training.detail.log' })}
-          extra={<Button type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+          title={'推理日志'}
+          style={{ marginTop: '20px', width: 'calc(100% - 60px)', marginBottom: '12px' }}
+          extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus)} type="link" onClick={downloadFullLog}>Download Full Log</Button>}
         >
           {logs ? (
-            <pre ref={logEl} style={{ marginTop: '20px' }} className={styles.logs}>
+            <pre ref={logEl} className={styles.logs}>
               {logs}
             </pre>
           ) : (

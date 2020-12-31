@@ -9,17 +9,19 @@ import {
   Input,
   Tooltip,
   Pagination,
+  Card,
 } from 'antd';
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'umi';
 import moment from 'moment';
 import { fetchEvaluationDetail, saveEvaluationParams } from './services';
-import { getJobStatus, formatParams } from '@/utils/utils';
+import { getJobStatus, formatParams, downloadStringAsFile } from '@/utils/utils';
 import { modelEvaluationType, REFRESH_INTERVAL } from '@/utils/const';
 
 import styles from './index.less';
 import { getNameFromDockerImage } from '@/utils/reg';
 import { useIntl } from 'umi';
+import { getFullLogContent } from '@/services/common';
 
 const EvaluationDetail = (props) => {
   const intl = useIntl();
@@ -130,6 +132,16 @@ const EvaluationDetail = (props) => {
     labelCol: { span: 6 },
     wrapperCol: { span: 15 },
   };
+
+  const downloadFullLog = async () => {
+    const cancel = message.loading('加载中');
+    const res = await getFullLogContent(evaluationJob.id);
+    cancel();
+    if (res.code === 0) {
+      const log = res.data.log;
+      downloadStringAsFile(log, `${evaluationJob.name}.log`);
+    }
+  }
 
   return (
     <>
@@ -252,11 +264,18 @@ const EvaluationDetail = (props) => {
             ))}
           </Descriptions>
         )}
-        {logs && (
-          <pre ref={logEl} style={{ marginTop: '20px' }} className={styles.logs}>
-            {logs}
-          </pre>
-        )}
+        <Card
+          title={'获取评估日志'}
+          style={{ marginTop: '20px' }}
+          extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(evaluationJob?.jobStatus)} type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+        >
+          {logs && (
+            <pre ref={logEl}className={styles.logs}>
+              {logs}
+            </pre>
+          )}
+        </Card>
+        
         <Pagination
           onChange={(page) => setLogCurrentPage(page)}
           defaultCurrent={logCurrentPage}
