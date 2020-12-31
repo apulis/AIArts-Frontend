@@ -44,6 +44,7 @@ export default {
   'job.used.time': '已运行时间',
   'job.rest.minute': '分钟',
   'download.full.log': '下载全部日志',
+  'download.full.log.loading': '加载中...',
   ..._const,
   ...layout,
   ...reg,

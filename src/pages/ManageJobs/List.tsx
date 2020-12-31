@@ -21,7 +21,8 @@ export enum EnumJobTrainingType {
   artsEvaluation = 'artsEvaluation',
   artsTraining = 'artsTraining',
   codeEnv = 'codeEnv',
-  InferenceJob = 'InferenceJob'
+  InferenceJob = 'InferenceJob',
+  ModelConversionJob = 'ModelConversionJob',
 }
 
 const ManageJobs: React.FC = (props) => {
