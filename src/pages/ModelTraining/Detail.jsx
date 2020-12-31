@@ -112,7 +112,7 @@ const Detail = (props) => {
   }, props.common.interval);
 
   const downloadFullLog = async () => {
-    const cancel = message.loading('加载中');
+    const cancel = message.loading(intl.formatMessage({ id: 'download.full.log.loading' }));;
     const res = await getFullLogContent(id);
     cancel();
     if (res.code === 0) {
