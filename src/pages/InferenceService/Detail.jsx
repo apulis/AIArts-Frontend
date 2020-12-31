@@ -1,17 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Descriptions, message, Upload, Button, Table } from 'antd';
+import { Descriptions, message, Upload, Button, Table, Card } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { useParams } from 'umi';
 import moment from 'moment';
 
-import { fetchInferenceDetail, fetchInferenceLog } from '../../services/inferenceService';
 
-import styles from './index.less';
-import { getJobStatus } from '@/utils/utils';
+import { downloadStringAsFile, getJobStatus } from '@/utils/utils';
 import useInterval from '@/hooks/useInterval';
-import { connect } from 'dva';
-import { useIntl } from 'umi';
+import { useIntl, useParams, connect } from 'umi';
+import { getFullLogContent } from '@/services/common';
+import styles from './index.less';
+import { fetchInferenceDetail, fetchInferenceLog } from '../../services/inferenceService';
 
 export function getBase64(img, callback) {
   const reader = new FileReader();
@@ -162,6 +161,16 @@ const InferenceDetail = (props) => {
     setImageUrl('');
   };
 
+  const downloadFullLog = async () => {
+    const cancel = message.loading('加载中');
+    const res = await getFullLogContent(id);
+    cancel();
+    if (res.code === 0) {
+      const log = res.data.log;
+      downloadStringAsFile(log, `${jobDetail.name || jobDetail.jobName}.log`);
+    }
+  }
+
   const jobEnded = ['finished', 'failed', 'killed', 'Killed', 'error'].includes(jobDetail.jobStatus);
   return (
     <PageHeaderWrapper>
@@ -276,15 +285,21 @@ const InferenceDetail = (props) => {
         </Button>
       )}
       <div>
-        {logs ? (
-          <pre ref={logEl} style={{ marginTop: '20px' }} className={styles.logs}>
-            {logs}
-          </pre>
-        ) : (
-          ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && (
-            <div>{intl.formatMessage({ id: 'centerInference.detail.notStart' })}</div>
-          )
-        )}
+        <Card
+          title={intl.formatMessage({ id: 'model.training.detail.log' })}
+          extra={<Button type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+        >
+          {logs ? (
+            <pre ref={logEl} style={{ marginTop: '20px' }} className={styles.logs}>
+              {logs}
+            </pre>
+          ) : (
+            ['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus) && (
+              <div>{intl.formatMessage({ id: 'centerInference.detail.notStart' })}</div>
+            )
+          )}
+        </Card>
+        
         {['failed'].includes(jobDetail.jobStatus) && (
           <div style={{ marginTop: '20px' }}>
             {intl.formatMessage({ id: 'centerInference.detail.trainingError' })}
