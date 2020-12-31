@@ -555,7 +555,7 @@ const ModelTraining = (props) => {
 
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
-  
+  const currentAvailPresetImage = props.common.presetImages.normal;
   return (
     <div className={styles.modelTraining}>
       <PageHeader
@@ -678,7 +678,7 @@ const ModelTraining = (props) => {
             >
               <Select style={{ width: 300 }} disabled={typeCreate} onChange={onEngineChange}>
                 {engineSource === 1 &&
-                frameWorks.map((f) => (
+                currentAvailPresetImage.map((f) => (
                   <Option value={f} key={f}>
                     {/* <Tooltip title={presetImageDescMap[getNameFromDockerImage(f)]}> */}
                     <Tooltip title={presetImageDescMap[f]}>

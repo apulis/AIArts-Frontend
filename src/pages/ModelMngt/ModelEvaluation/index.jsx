@@ -368,7 +368,7 @@ const ModelEvaluation = (props) => {
 
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
-  
+  const currentAvailPresetImage = props.common.presetImages.normal;
   return (
     <>
       <PageHeader
@@ -433,8 +433,8 @@ const ModelEvaluation = (props) => {
               ]}
             >
               <Select>
-                {engines &&
-                  engines.map((f) => (
+                {currentAvailPresetImage &&
+                  currentAvailPresetImage.map((f) => (
                     <Option value={f} key={f}>
                       {getNameFromDockerImage(f)}
                     </Option>
