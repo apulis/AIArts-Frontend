@@ -134,7 +134,7 @@ const EvaluationDetail = (props) => {
   };
 
   const downloadFullLog = async () => {
-    const cancel = message.loading('加载中');
+    const cancel = message.loading(intl.formatMessage({ id: 'download.full.log.loading' }));
     const res = await getFullLogContent(evaluationJob.id);
     cancel();
     if (res.code === 0) {
@@ -267,7 +267,7 @@ const EvaluationDetail = (props) => {
         <Card
           title={'获取评估日志'}
           style={{ marginTop: '20px' }}
-          extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(evaluationJob?.jobStatus)} type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+          extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(evaluationJob?.jobStatus)} type="link" onClick={downloadFullLog}>{intl.formatMessage({ id: 'download.full.log' })}</Button>}
         >
           {logs && (
             <pre ref={logEl}className={styles.logs}>

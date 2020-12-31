@@ -162,7 +162,7 @@ const Detail = (props) => {
         <div style={{ marginTop: '20px' }}>
           <Card
             title={formatMessage({ id: 'model.training.detail.log' })}
-            extra={<Button type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+            extra={<Button type="link" onClick={downloadFullLog}>{intl.formatMessage({ id: 'download.full.log' })}</Button>}
           >
             <pre ref={logEl} className={styles.logs}>
               {logs}

@@ -49,6 +49,8 @@ export default {
   'job.rest.time': 'remaining runnable time',
   'job.rest.minute': 'Min',
   'job.used.time': 'Running Time',
+  'download.full.log': 'Download Full Log',
+  'download.full.log.loading': 'Loading...',
   ..._const,
   ...layout,
   ...bizComponent,

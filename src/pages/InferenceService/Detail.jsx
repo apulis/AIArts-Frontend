@@ -162,7 +162,7 @@ const InferenceDetail = (props) => {
   };
 
   const downloadFullLog = async () => {
-    const cancel = message.loading('加载中');
+    const cancel = message.loading(intl.formatMessage({ id: 'download.full.log.loading' }));
     const res = await getFullLogContent(id);
     cancel();
     if (res.code === 0) {
@@ -286,9 +286,9 @@ const InferenceDetail = (props) => {
       )}
       <div>
         <Card
-          title={'推理日志'}
+          title={intl.formatMessage({ id: 'centerInference.detail.trainingLog' })}
           style={{ marginTop: '20px', width: 'calc(100% - 60px)', marginBottom: '12px' }}
-          extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus)} type="link" onClick={downloadFullLog}>Download Full Log</Button>}
+          extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(jobDetail.jobStatus)} type="link" onClick={downloadFullLog}>{intl.formatMessage({ id: 'download.full.log' })}</Button>}
         >
           {logs ? (
             <pre ref={logEl} className={styles.logs}>
