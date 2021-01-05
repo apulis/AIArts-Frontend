@@ -1,49 +1,16 @@
 import React from 'react';
 import { PageLoading } from '@ant-design/pro-layout';
 import { ConfigProvider, message } from 'antd';
-import { Redirect, connect } from 'umi';
+import { connect, getLocale } from 'umi';
 // import enUS from 'antd/es/locale/en_US';
 import zhCN from 'antd/es/locale/zh_CN';
 import enUS from 'antd/es/locale/en_US';
-import LoginPage from '@/pages/exception/401';
 import { USER_LOGIN_URL } from '@/utils/const';
 import { stringify } from 'querystring';
-import { setLocale, getLocale } from 'umi';
+
 class SecurityLayout extends React.Component {
   state = {
     isReady: false,
-  };
-
-  collectAuthInfo = () => {
-    let token = '';
-    let error = '';
-    const { location, history } = this.props;
-    if (location && location.query && location.query.token) {
-      token = location.query.token;
-    }
-    if (token) {
-      localStorage.token = token;
-      let redirectPath = location?.pathname;
-      const routerBase = window.routerBase;
-      if (routerBase.includes(redirectPath) || redirectPath?.includes(routerBase)) {
-        history && history.push('/');
-      } else {
-        history && history.push(location.pathname);
-      }
-    }
-    if (location && location.query && location.query.error) {
-      error = location.query.error;
-    }
-    if (error) {
-      message.error(error);
-      let redirectPath = location?.pathname;
-      const routerBase = window.routerBase;
-      if (routerBase.includes(redirectPath) || redirectPath?.includes(routerBase)) {
-        history && history.push('/');
-      } else {
-        history && history.push(location.pathname);
-      }
-    }
   };
 
   componentDidMount() {
@@ -52,7 +19,7 @@ class SecurityLayout extends React.Component {
         redirect: window.location.href,
       });
       if (process.env.NODE_ENV !== 'development') {
-        window.location.href = USER_LOGIN_URL + '?' + queryString;
+        window.location.href = `${USER_LOGIN_URL  }?${  queryString}`;
       }
     }
     if (this.props.dispatch) {
@@ -70,6 +37,38 @@ class SecurityLayout extends React.Component {
     this.collectAuthInfo();
   }
 
+  collectAuthInfo = () => {
+    let token = '';
+    let error = '';
+    const { location, history } = this.props;
+    if (location && location.query && location.query.token) {
+      token = location.query.token;
+    }
+    if (token) {
+      localStorage.token = token;
+      const redirectPath = location?.pathname;
+      const routerBase = window.routerBase;
+      if (routerBase.includes(redirectPath) || redirectPath?.includes(routerBase)) {
+        history && history.push('/');
+      } else {
+        history && history.push(location.pathname);
+      }
+    }
+    if (location && location.query && location.query.error) {
+      error = location.query.error;
+    }
+    if (error) {
+      message.error(error);
+      const redirectPath = location?.pathname;
+      const routerBase = window.routerBase;
+      if (routerBase.includes(redirectPath) || redirectPath?.includes(routerBase)) {
+        history && history.push('/');
+      } else {
+        history && history.push(location.pathname);
+      }
+    }
+  };
+
   render() {
     const { isReady } = this.state;
     const { children, loading } = this.props;
@@ -81,7 +80,7 @@ class SecurityLayout extends React.Component {
       const lang = getLocale();
       if (lang === 'en-US') {
         return enUS;
-      } else if (lang === 'zh-CN') {
+      } if (lang === 'zh-CN') {
         return zhCN;
       }
     };
