@@ -278,7 +278,9 @@ const CodeCreate = (props) => {
 
   useEffect(() => {
     if (isHyperparamImage) {
-      setEngineTip(presetImageDescMap[presetImages.hyperparameters] || '');
+      setEngineTip(presetImageDescMap[presetImages.hyperparameters[0]] || '');
+    } else {
+      setEngineTip(presetImageDescMap[presetImages.normal[0]] || '');
     }
   }, [isHyperparamImage]);
   useEffect(() => {
