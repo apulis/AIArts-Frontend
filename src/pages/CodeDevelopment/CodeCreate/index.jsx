@@ -406,7 +406,7 @@ const CodeCreate = (props) => {
             {
               engineSource === 1 && <Form.Item style={{ display: 'inline-block', width: '100px', marginLeft: '30px' }}>
                 <Popover
-                  content={<div>{isHyperparamImage ? formatMessage({ id: 'codeCreate.label.hyperparam' }) : formatMessage({ id: 'codeCreate.label.hyperparam.not' })}</div>}
+                  content={<div>{formatMessage({ id: 'codeCreate.label.hyperparam' })}</div>}
                   visible={engineSource === 1}
                   placement="topLeft"
                 >
