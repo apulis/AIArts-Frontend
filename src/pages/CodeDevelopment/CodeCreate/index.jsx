@@ -12,6 +12,7 @@ import {
   Card,
   Radio,
   Switch,
+  Popover,
 } from 'antd';
 import { history, connect } from 'umi';
 import { postCode1, getResource } from '../service.js';
@@ -272,11 +273,14 @@ const CodeCreate = (props) => {
       });
     } else if (engineSource === 3) {
       //
-    } else if (engineSource === 4) {
-      setIsHyperparamImage(true);
-      setEngineTip(presetImageDescMap[presetImages.hyperparameters] || '');
     }
   }, [engineSource]);
+
+  useEffect(() => {
+    if (isHyperparamImage) {
+      setEngineTip(presetImageDescMap[presetImages.hyperparameters] || '');
+    }
+  }, [isHyperparamImage]);
   useEffect(() => {
     if (jobTrainingType === 'RegularJob') {
       renderInitRegularForm(deviceNumArr[0] || undefined);
@@ -373,29 +377,47 @@ const CodeCreate = (props) => {
               />
             </Form.Item>
           }
-          <Form.Item label={formatMessage({ id: 'codeCreate.label.engineSource' })}>
-            <Radio.Group
-              value={engineSource}
-              onChange={(e) => {
-                setEngineSource(e.target.value);
-              }}
-              style={{ width: '590px' }}
-            >
-              <Radio value={1}>{formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
-              <Radio value={2}>{formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
-              <Radio value={3}>
-                <Tooltip title={formatMessage({ id: 'codeCreate.custom.engine.title' })}>
-                  {formatMessage({ id: 'codeCreate.custom.engine' })}
-                </Tooltip>
-              </Radio>
-              <Radio value={4}>
-                <Tooltip title={formatMessage({ id: 'codeCreate.label.hyperparam' })}>
-                  {formatMessage({ id: 'codeCreate.label.hyperparam' })}
-                </Tooltip>
-              </Radio>
-            </Radio.Group>
+          <Form.Item
+            // style={{ display: 'flex', alignItems: 'center' }}
+            label={formatMessage({ id: 'codeCreate.label.engineSource' })}
+            required
+          >
+            <Form.Item
+              style={{ display: 'inline-block' }}
+              >
+              <Radio.Group
+                value={engineSource}
+                onChange={(e) => {
+                  setEngineSource(e.target.value);
+                }}
+              >
+                <Radio value={1}>{formatMessage({ id: 'codeCreate.value.presetEngine' })}</Radio>
+                <Radio value={2}>{formatMessage({ id: 'codeCreate.value.savedEngine' })}</Radio>
+                <Radio value={3}>
+                  <Tooltip title={formatMessage({ id: 'codeCreate.custom.engine.title' })}>
+                    {formatMessage({ id: 'codeCreate.custom.engine' })}
+                  </Tooltip>
+                </Radio>
+                {/* <Radio value={4}>
+                  <Tooltip title={formatMessage({ id: 'codeCreate.label.hyperparam' })}>
+                    {formatMessage({ id: 'codeCreate.label.hyperparam' })}
+                  </Tooltip>
+                </Radio> */}
+              </Radio.Group>
+            </Form.Item>
+            {
+              engineSource === 1 && <Form.Item style={{ display: 'inline-block', width: '100px', marginLeft: '30px' }}>
+                <Popover
+                  content={<div>{isHyperparamImage ? formatMessage({ id: 'codeCreate.label.hyperparam' }) : formatMessage({ id: 'codeCreate.label.hyperparam.not' })}</div>}
+                  visible={engineSource === 1}
+                  placement="topLeft"
+                >
+                  <Switch value={isHyperparamImage} onChange={(checked) => setIsHyperparamImage(checked)} />
+                </Popover>
+              </Form.Item>
+            }
           </Form.Item>
-          {(engineSource === 1 || engineSource === 4) && (
+          {(engineSource === 1) && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.engineType' })}
               required
@@ -424,10 +446,10 @@ const CodeCreate = (props) => {
                 </Select>
               </Form.Item>
               <Form.Item
-                style={{ display: 'inline-block', width: '10px' }}
+                style={{ display: 'inline-block', width: '10px', height: '0' }}
               >
                 <div>
-                  <Tooltip title={engineTip} placement="right" visible={!!engineTip}><div>{null}</div></Tooltip>
+                  <Popover content={engineTip} placement="right" visible={!!engineTip}><div>{null}</div></Popover>
                 </div>
               </Form.Item>
             </Form.Item>

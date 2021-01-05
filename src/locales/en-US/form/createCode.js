@@ -4,6 +4,7 @@ export default {
   'codeCreate.label.storePath': 'Code Storage Path',
   'codeCreate.label.engineSource': 'Engine Source',
   'codeCreate.label.hyperparam': 'Use Hyperparameters Image',
+  'codeCreate.label.hyperparam.not': 'Use Normal Image',
   'codeCreate.label.engineType': 'Engine Type',
   'codeCreate.label.jobType': 'Task type',
   'codeCreate.label.deviceType': 'Device Type',
