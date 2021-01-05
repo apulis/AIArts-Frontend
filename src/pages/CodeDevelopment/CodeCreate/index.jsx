@@ -382,6 +382,7 @@ const CodeCreate = (props) => {
           <Form.Item
             // style={{ display: 'flex', alignItems: 'center' }}
             label={formatMessage({ id: 'codeCreate.label.engineSource' })}
+            style={{ height: '32px' }}
             required
           >
             <Form.Item
@@ -400,11 +401,6 @@ const CodeCreate = (props) => {
                     {formatMessage({ id: 'codeCreate.custom.engine' })}
                   </Tooltip>
                 </Radio>
-                {/* <Radio value={4}>
-                  <Tooltip title={formatMessage({ id: 'codeCreate.label.hyperparam' })}>
-                    {formatMessage({ id: 'codeCreate.label.hyperparam' })}
-                  </Tooltip>
-                </Radio> */}
               </Radio.Group>
             </Form.Item>
             {
@@ -422,6 +418,7 @@ const CodeCreate = (props) => {
           {(engineSource === 1) && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.engineType' })}
+              style={{ height: '32px' }}
               required
             >
               <Form.Item
