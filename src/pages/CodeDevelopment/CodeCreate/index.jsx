@@ -584,7 +584,7 @@ const CodeCreate = (props) => {
             initialValue={iSPrivileged}
           >
             <Switch
-              disabled={disablePrivileged}
+              disabled={disablePrivileged || noPrivilegedJobPermission}
               onChange={(checked) => setISPrivileged(checked)}
             />
           </Form.Item>
