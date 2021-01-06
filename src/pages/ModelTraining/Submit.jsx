@@ -283,21 +283,28 @@ const ModelTraining = (props) => {
     if (['createJobWithParam', 'editParam'].includes(requestType)) {
       fetchParams().then(() => {
         getAvailableResource().then(() => {
-          getImageDescMap();;
+          getImageDescMap();
+          if (isPretrainedModel) {
+            getPresetModel();
+          }
+          if (isSubmitPage) {
+            fetchUserDockerImages();
+          }
         })
       })
     } else {
       getAvailableResource().then(() => {
-        getImageDescMap();;
+        getImageDescMap();
+        if (isPretrainedModel) {
+          getPresetModel();
+        }
+        if (isSubmitPage) {
+          fetchUserDockerImages();
+        }
       });
     }
     fetchDataSets();
-    if (isPretrainedModel) {
-      getPresetModel();
-    }
-    if (isSubmitPage) {
-      fetchUserDockerImages();
-    }
+    
   }, []);
 
   useEffect(() => {
