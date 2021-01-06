@@ -8,6 +8,7 @@ export default {
   'codeList.table.column.description': 'Description',
   'codeList.table.column.action': 'Operation',
   'codeList.table.column.action.open.jupyter': 'Jupyter',
+  'codeList.table.column.action.open.endpoint': 'Interactive Port',
   'codeList.table.column.action.upload': 'Upload',
   'codeList.table.column.action.upload.file': 'Upload File',
   'codeList.table.column.action.upload.directory': 'Upload Directory',

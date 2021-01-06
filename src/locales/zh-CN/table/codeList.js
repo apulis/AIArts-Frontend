@@ -8,6 +8,7 @@ export default {
   'codeList.table.column.description': '描述',
   'codeList.table.column.action': '操作',
   'codeList.table.column.action.open.jupyter': 'Jupyter',
+  'codeList.table.column.action.open.endpoint': '使用交互式端口',
   'codeList.table.column.action.upload': '上传',
   'codeList.table.column.action.upload.file': '上传文件',
   'codeList.table.column.action.upload.directory': '上传文件夹',

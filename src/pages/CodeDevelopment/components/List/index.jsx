@@ -442,7 +442,9 @@ const CodeList = (props) => {
               <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
-              <Button type="link" disabled={codeItem.status !== 'running'} onClick={() => {setCurrentHandledJob(codeItem)}}>使用交互式端口</Button>
+              <Button type="link" disabled={codeItem.status !== 'running'} onClick={() => {setCurrentHandledJob(codeItem)}}>
+                {formatMessage({ id: 'codeList.table.column.action.open.endpoint' })}
+              </Button>
               {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
               {/* <Menu.Item> */}
               <Button disabled={codeItem.status !== 'running'} type="link" onClick={() => handleOpenUploadModal(codeItem, false)}>
