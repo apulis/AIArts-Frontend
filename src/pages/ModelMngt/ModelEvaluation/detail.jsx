@@ -221,9 +221,6 @@ const EvaluationDetail = (props) => {
         </Descriptions>
         {['finished', 'running'].includes(evaluationJob?.status) && (
           <>
-            <div className="ant-descriptions-title" style={{ marginTop: '30px' }}>
-              {intl.formatMessage({ id: 'modelMngt.detail.evaluationResult' })}
-            </div>
             <Button type="primary" onClick={getLateastLogs} style={{ marginTop: '16px' }}>
               {intl.formatMessage({ id: 'modelMngt.detail.getEvaluationResult' })}
             </Button>
@@ -265,7 +262,7 @@ const EvaluationDetail = (props) => {
           </Descriptions>
         )}
         <Card
-          title={'获取评估日志'}
+          title={intl.formatMessage({ id: 'modelMngt.detail.evaluationResult' })}
           style={{ marginTop: '20px' }}
           extra={<Button disabled={['unapproved', 'queued', 'scheduling'].includes(evaluationJob?.jobStatus)} type="link" onClick={downloadFullLog}>{intl.formatMessage({ id: 'download.full.log' })}</Button>}
         >
