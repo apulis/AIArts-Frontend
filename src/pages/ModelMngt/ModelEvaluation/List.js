@@ -33,6 +33,8 @@ const { Option } = Select;
 
 const List = (props) => {
   const intl = useIntl();
+  // eslint-disable-next-line no-shadow
+  const { formatMessage } = intl;
   const [trainingWorkList, setTrainingWorkList] = useState([]);
   const [tableLoading, setTableLoading] = useState(true);
   const [total, setTotal] = useState(0);
@@ -180,6 +182,7 @@ const List = (props) => {
     {
       dataIndex: 'name',
       title: formatMessage({ id: 'modelEvaluationList.table.column.name' }),
+      width: '10%',
       key: 'jobName',
       render(_text, item) {
         return (
@@ -193,11 +196,13 @@ const List = (props) => {
     },
     {
       dataIndex: 'status',
+      width: '9%',
       title: formatMessage({ id: 'modelEvaluationList.table.column.status' }),
       render: (text, item) => getJobStatus(item.status),
     },
     {
       dataIndex: 'engine',
+      width: '14%',
       title: formatMessage({ id: 'modelEvaluationList.table.column.engineType' }),
       render(value) {
         return <div>{getNameFromDockerImage(value)}</div>;
@@ -205,6 +210,7 @@ const List = (props) => {
     },
     {
       dataIndex: 'createTime',
+      width: '12%',
       title: formatMessage({ id: 'modelEvaluationList.table.column.createTime' }),
       key: 'jobTime',
       render(_text, item) {
@@ -216,14 +222,15 @@ const List = (props) => {
     {
       title: formatMessage({ id: 'ManagePrivilegeJob.table.title.is.privilege' }),
       dataIndex: 'isPrivileged',
+      width: '16%',
       align: 'center',
-      width: '6%',
       render(isPrivileged) {
         return isPrivileged ? formatMessage({ id: 'ManagePrivilegeJob.table.title.is' }) : formatMessage({ id: 'ManagePrivilegeJob.table.title.not' })
       }
     },
     {
       title: formatMessage({ id: 'job.rest.time' }),
+      width: '16%',
       render: (text, item) => {
         const status = item.status || item.jobStatus;
         const lastedTime = item.duration;
@@ -237,7 +244,6 @@ const List = (props) => {
         return '-';
       },
       ellipsis: true,
-      width: '8%',
     },
     // {
     //   dataIndex: 'desc',
