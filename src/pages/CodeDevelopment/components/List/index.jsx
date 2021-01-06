@@ -843,7 +843,7 @@ const CodeList = (props) => {
                 return (
                   <Tooltip title={item.status === 'pending' ? 'pending' : undefined}>
 
-                    <Button disabled={item.status === 'pending'} type="link" href={item.link} onClick={() => {}}>
+                    <Button disabled={item.status === 'pending'} type="link" target="_blank" href={item.link} onClick={() => {}}>
                       {formatMessage({ id: 'codeList.endpoint.modal.table.action.open' })}
                     </Button>
                   </Tooltip>
