@@ -32,13 +32,9 @@ const VCModel: VCModelType = {
   }, 
   effects: {
     * userSelectVC({ payload }, { call, put, select }) {
-      const currentVCDetail = yield select(state => state.vc.currentVCDetail);
-      // if (payload.vcName === localStorage.vc && currentVCDetail) {
-      //   return;
-      // }
       localStorage.vc = payload.vcName;
       const currentUser = yield select(state => state.user.currentUser);
-      const userJobMaxTimeSecond = currentUser.jobMaxTimeSecond
+      const userJobMaxTimeSecond = currentUser.jobMaxTimeSecond;
       const res = yield call(getVCDetail, payload.vcName);
       if (res.code === 0) {
         const time = JSON.parse(res.data.metadata || '{}').admin?.job_max_time_second;

@@ -80,7 +80,8 @@ class SecurityLayout extends React.Component {
       const lang = getLocale();
       if (lang === 'en-US') {
         return enUS;
-      } if (lang === 'zh-CN') {
+      }
+      if (lang === 'zh-CN') {
         return zhCN;
       }
     };
