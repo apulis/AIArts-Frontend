@@ -51,6 +51,7 @@ export default {
   'codeList.endpoint.modal.form.endpoint': 'Endpoint',
   'codeList.endpoint.modal.form.endpoint.required': 'Endpoint is required',
   'codeList.endpoint.modal.form.endpoint.validator': 'Value range :40000-49999',
+  'codeList.endpoint.modal.form.endpoint.validator.duplicate': 'Current port has been used',
   'codeList.endpoint.modal.form.confirm': 'Confirm',
   'codeList.endpoint.modal.table.endpoint': 'Endpoint',
   'codeList.endpoint.modal.table.action': 'Operation',

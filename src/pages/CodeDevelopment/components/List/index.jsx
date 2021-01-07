@@ -807,8 +807,11 @@ const CodeList = (props) => {
                 rules={[
                   { required: true, message: formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.required' }) },
                   { validator(_rule, value, callback) {
+                    const ports = interactiveEndpoints.map(val => val.podPort);
                     if (value < 40000 || value > 49999 || !/^\d{1,}$/.test(value)) {
                       callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator' }));
+                    } else if (ports.includes(value)) {
+                      callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator.duplicate' }))
                     } else {
                       callback();
                     }
