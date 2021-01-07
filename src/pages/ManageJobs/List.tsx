@@ -109,6 +109,10 @@ const ManageJobs: React.FC = (props) => {
 
 
   const handleSearch = (value: string) => {
+    setPageParams({
+      ...pageParams,
+      pageNum: 1,
+    })
     setSearch(value);
   }
 
