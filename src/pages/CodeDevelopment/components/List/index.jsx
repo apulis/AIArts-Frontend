@@ -816,7 +816,7 @@ const CodeList = (props) => {
                 ]}
                 style={{ display: 'inline-block' }}
               >
-                <InputNumber style={{ width: '280px' }} min={40000} max={49999} placeholder="选填 40000 - 49999 之间的数值" />
+                <InputNumber style={{ width: '280px' }} placeholder={formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator' })} />
               </FormItem>
               <FormItem
                 style={{ display: 'inline-block', width: '40%', marginLeft: '25px' }}
