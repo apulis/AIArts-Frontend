@@ -61,7 +61,7 @@ const UserModel = {
         type: 'updateState',
         payload: {
           currentUser: {
-            ...user,
+            ...user.currentUser,
             currentVC,
           },
         },
