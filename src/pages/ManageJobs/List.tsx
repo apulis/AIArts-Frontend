@@ -29,10 +29,9 @@ const ManageJobs: React.FC = (props) => {
   const { formatMessage } = useIntl();
   const [loading, setLoading] = useState(false);
   const [jobTotal, setJobTotal] = useState(0);
-  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: 'ascend' | 'descend'; columnKey: string }>({
-    orderBy: 'jobTime',
-    order: 'ascend',
-    columnKey: '',
+  const [sortedInfo, setSortedInfo] = useState<{ orderBy: string; order: string; columnKey?: string }>({
+    orderBy: '',
+    order: '',
   });
   const [currentJobType, setCurrentJobType] = useState(EnumJobTrainingType.all)
   const { currentSelectedVC, jobMaxTimeSecond } = props.vc;
@@ -54,7 +53,7 @@ const ManageJobs: React.FC = (props) => {
       status: currentStatus || 'all',
       vcName: currentSearchVC || '',
       jobType: currentJobType,
-      order: sortText[sortedInfo.order],
+      order: sortText[sortedInfo.order] || undefined,
       orderBy: sortedInfo.orderBy,
     });
     setLoading(false);
@@ -64,13 +63,11 @@ const ManageJobs: React.FC = (props) => {
     }
   }
 
-  const onSortChange = (pagination, filters, sorter) => {
-    if (sorter.order !== null) {
-      setSortedInfo({
-        ...sorter,
-        order: sortText[sortedInfo.order],
-      });
-    }
+  const onSortChange = (_pagination, _filters, sorter) => {
+    setSortedInfo({
+      ...sorter,
+      orderBy: sorter.columnKey,
+    });
   };
 
 
@@ -101,7 +98,7 @@ const ManageJobs: React.FC = (props) => {
   useEffect(() => {
     getJobList(true);
     getAllJobsSummary()
-  }, [pageParams, currentSearchVC, currentStatus, currentJobType, search]);
+  }, [pageParams, currentSearchVC, currentStatus, currentJobType, search, sortedInfo]);
 
   const handleChangeStatus = (value: string) => {
     setCurrentStatus(value);
@@ -156,7 +153,7 @@ const ManageJobs: React.FC = (props) => {
       title: formatMessage({ id: 'jobManagement.table.column.name' }),
       key: 'jobName',
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobName' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === 'jobName' ? sortedInfo.order : false,
     },
     {
       dataIndex: 'jobStatus',
@@ -190,7 +187,7 @@ const ManageJobs: React.FC = (props) => {
         return <div>{moment(new Date(item.jobTime).getTime()).format('YYYY-MM-DD HH:mm:ss')}</div>;
       },
       sorter: true,
-      sortOrder: sortedInfo.columnKey === 'jobTime' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.columnKey === 'jobTime' && sortedInfo.order,
     },
     
     {
