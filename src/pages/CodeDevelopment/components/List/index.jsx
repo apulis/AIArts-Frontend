@@ -56,8 +56,8 @@ const CodeList = (props) => {
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
   const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
-  const [sshInfo, setSshInfo] = useState({});
-  const [sshCommond, setSshCommond] = useState('');
+  const [sshInfos, setSshInfos] = useState([]);
+  const [sshCommonds, setSshCommonds] = useState([]);
   const [enableDirectoryUpload, setEnableDirectoryUpload] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
@@ -279,22 +279,30 @@ const CodeList = (props) => {
     if (visible) {
       const res = await fetchSSHInfo(currentHandledJobId);
       if (res.code === 0) {
-        const sshInfo = res.data.endpointsInfo.find(val => val.name === 'ssh');
+        // eslint-disable-next-line no-shadow
+        const sshInfos = res.data.endpointsInfo.filter(val => val.name === 'ssh');
+        console.log('sshInfos', sshInfos)
         const identityFile = res.data.identityFile;
-        setSshInfo(sshInfo);
-        if (sshInfo) {
-          const { status } = sshInfo;
-          if (status === 'running') {
-            const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
-            const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
-            setSshCommond(command);
-          }
-
+        setSshInfos(sshInfos);
+        if (sshInfos.length > 0) {
+          // eslint-disable-next-line no-shadow
+          const sshCommonds = [];
+          sshInfos.forEach((sshInfo) => {
+            const { status } = sshInfo;
+            if (status === 'running') {
+              const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
+              const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
+              sshCommonds.push(command);
+            } else {
+              sshCommonds.push('');
+            }
+          })
+          setSshCommonds(sshCommonds);
         }
       }
     } else {
-      setSshCommond('');
-      setSshInfo({});
+      setSshCommonds([]);
+      setSshInfo([]);
     }
     setSshPopoverVisible(visible);
   }
@@ -418,14 +426,17 @@ const CodeList = (props) => {
                 onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
                 title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
                 content={
-                  sshInfo.status === 'running' ? <CopyToClipboard
-                    text={sshCommond}
+                  sshInfos.map((sshInfo, index) => (
+                    sshInfo.status === 'running' ? <CopyToClipboard
+                    text={sshCommonds[index]}
                     onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
                   >
                     {
-                      (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />)
+                      (sshCommonds[index] ? <pre>{sshCommonds[index]}</pre> : <LoadingOutlined />)
                     }
-                  </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>}
+                  </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>
+                  ))
+                  }
               >
                 <Button
                   type="link"
