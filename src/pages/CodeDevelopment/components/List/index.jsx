@@ -302,7 +302,7 @@ const CodeList = (props) => {
       }
     } else {
       setSshCommonds([]);
-      setSshInfo([]);
+      setSshInfos([]);
     }
     setSshPopoverVisible(visible);
   }
@@ -425,18 +425,22 @@ const CodeList = (props) => {
                 visible={sshPopoverVisible && currentHandledJobId === codeItem.id}
                 onVisibleChange={(visible) => handleSshPopoverVisible(visible, codeItem.id)}
                 title={formatMessage({ id: 'codeList.table.column.action.use.ssh' })}
+                placement="leftTop"
                 content={
                   sshInfos.map((sshInfo, index) => (
-                    sshInfo.status === 'running' ? <CopyToClipboard
-                    text={sshCommonds[index]}
-                    onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
-                  >
-                    {
-                      (sshCommonds[index] ? <pre>{sshCommonds[index]}</pre> : <LoadingOutlined />)
-                    }
-                  </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>
+                    sshInfo.status === 'running' ?
+                      <><h4>SSH to {sshInfo.podName.split('-').pop() || ''}:</h4><CopyToClipboard
+                        text={sshCommonds[index]}
+                        onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+                      >
+                        {
+                          (sshCommonds[index] ?
+                            <pre>{sshCommonds[index]}</pre>
+                            : <LoadingOutlined />)
+                        }
+                      </CopyToClipboard ></> : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>
                   ))
-                  }
+                }
               >
                 <Button
                   type="link"
