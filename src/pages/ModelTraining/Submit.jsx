@@ -480,11 +480,6 @@ const ModelTraining = (props) => {
     wrapperCol: { span: 12 },
   };
 
-  const handleDistributedJob = (e) => {
-    const type = e.target.value;
-    setDistributedJob(type === 'PSDistJob');
-  };
-
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
@@ -563,6 +558,17 @@ const ModelTraining = (props) => {
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   const currentAvailPresetImage = props.common.presetImages.normal;
+  const handleDistributedJob = (e) => {
+    const type = e.target.value;
+    setDistributedJob(type === 'PSDistJob');
+  };
+
+  useEffect(() => {
+    if (distributedJob) {
+      handleDeviceChange();
+    }
+  }, [distributedJob])
+
   return (
     <div className={styles.modelTraining}>
       <PageHeader

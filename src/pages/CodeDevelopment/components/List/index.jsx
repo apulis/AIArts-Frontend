@@ -5,7 +5,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SyncOutlined, DownOutlined, LoadingOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { getNameFromDockerImage , jobNameReg } from '@/utils/reg.js';
+import { getNameFromDockerImage, jobNameReg } from '@/utils/reg.js';
 import { connect } from 'dva';
 import useInterval from '@/hooks/useInterval';
 import FormItem from 'antd/lib/form/FormItem';
@@ -57,8 +57,9 @@ const CodeList = (props) => {
   const [currentHandledJob, setCurrentHandledJob] = useState(undefined);
   const [saveImageModalVisible, setSaveImageModalVisible] = useState(false);
   const [saveImageButtonLoading, setSaveImageButtonLoading] = useState(false);
-  const [sshInfo, setSshInfo] = useState({});
-  const [sshCommond, setSshCommond] = useState('');
+  const [sshPopoverVisible, setSshPopoverVisible] = useState(false);
+  const [sshInfos, setSshInfos] = useState([]);
+  const [sshCommonds, setSshCommonds] = useState([]);
   const [enableDirectoryUpload, setEnableDirectoryUpload] = useState(false);
   const [sortInfo, setSortInfo] = useState({
     orderBy: '',
@@ -287,23 +288,30 @@ const CodeList = (props) => {
       setSshModalVisible(true);
       const res = await fetchSSHInfo(currentHandledJobId);
       if (res.code === 0) {
-        const sshInfo = res.data.endpointsInfo.find(val => val.name === 'ssh');
+        // eslint-disable-next-line no-shadow
+        const sshInfos = res.data.endpointsInfo.filter(val => val.name === 'ssh');
+        console.log('sshInfos', sshInfos)
         const identityFile = res.data.identityFile;
-        setSshInfo(sshInfo);
-        if (sshInfo) {
-          const { status } = sshInfo;
-          if (status === 'running') {
-            const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
-            const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
-            setSshCommond(command);
-          }
-
+        setSshInfos(sshInfos);
+        if (sshInfos.length > 0) {
+          // eslint-disable-next-line no-shadow
+          const sshCommonds = [];
+          sshInfos.forEach((sshInfo) => {
+            const { status } = sshInfo;
+            if (status === 'running') {
+              const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
+              const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
+              sshCommonds.push(command);
+            } else {
+              sshCommonds.push('');
+            }
+          })
+          setSshCommonds(sshCommonds);
         }
       }
     } else {
-      setSshModalVisible(false);
-      setSshCommond('');
-      setSshInfo({});
+      setSshCommonds([]);
+      setSshInfo([]);
     }
   }
 
@@ -442,7 +450,7 @@ const CodeList = (props) => {
               <a onClick={() => handleOpen(codeItem)} disabled={!canOpenStatus.has(codeItem.status)}>
                 {formatMessage({ id: 'codeList.table.column.action.open.jupyter' })}
               </a>
-              <Button type="link" disabled={codeItem.status !== 'running'} onClick={() => {setCurrentHandledJob(codeItem)}}>
+              <Button type="link" disabled={codeItem.status !== 'running'} onClick={() => { setCurrentHandledJob(codeItem) }}>
                 {formatMessage({ id: 'codeList.table.column.action.open.endpoint' })}
               </Button>
               {/* <Dropdown disabled={!canUploadStatus.has(codeItem.status)} overlay={<Menu> */}
@@ -608,7 +616,7 @@ const CodeList = (props) => {
         }
       });
       setInteractiveEndpoints(interactiveEndpoints);
-     
+
     }
   }
 
@@ -806,16 +814,18 @@ const CodeList = (props) => {
                 name="podPort"
                 rules={[
                   { required: true, message: formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.required' }) },
-                  { validator(_rule, value, callback) {
-                    const ports = interactiveEndpoints.map(val => val.podPort);
-                    if (value < 40000 || value > 49999 || !/^\d{1,}$/.test(value)) {
-                      callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator' }));
-                    } else if (ports.includes(value)) {
-                      callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator.duplicate' }))
-                    } else {
-                      callback();
+                  {
+                    validator(_rule, value, callback) {
+                      const ports = interactiveEndpoints.map(val => val.podPort);
+                      if (value < 40000 || value > 49999 || !/^\d{1,}$/.test(value)) {
+                        callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator' }));
+                      } else if (ports.includes(value)) {
+                        callback(formatMessage({ id: 'codeList.endpoint.modal.form.endpoint.validator.duplicate' }))
+                      } else {
+                        callback();
+                      }
                     }
-                  }}
+                  }
                 ]}
                 style={{ display: 'inline-block' }}
               >
@@ -833,28 +843,30 @@ const CodeList = (props) => {
                 </Button>
               </FormItem>
             </FormItem>
-            
-            
+
+
           </Form>
 
           <Table
             loading={interactiveEndpointsTableLoading}
             columns={[
               { title: formatMessage({ id: 'codeList.endpoint.modal.table.endpoint' }), dataIndex: 'name', align: 'center' },
-              { title: formatMessage({ id: 'codeList.endpoint.modal.table.action' }), align: 'center', render(_text, item) {
-                
-                return (
-                  <Tooltip title={item.status === 'pending' ? 'pending' : undefined}>
+              {
+                title: formatMessage({ id: 'codeList.endpoint.modal.table.action' }), align: 'center', render(_text, item) {
 
-                    <Button disabled={item.status === 'pending'} type="link" target="_blank" href={item.link} onClick={() => {}}>
-                      {formatMessage({ id: 'codeList.endpoint.modal.table.action.open' })}
-                    </Button>
-                  </Tooltip>
-                )
-              }, }
+                  return (
+                    <Tooltip title={item.status === 'pending' ? 'pending' : undefined}>
+
+                      <Button disabled={item.status === 'pending'} type="link" target="_blank" href={item.link} onClick={() => { }}>
+                        {formatMessage({ id: 'codeList.endpoint.modal.table.action.open' })}
+                      </Button>
+                    </Tooltip>
+                  )
+                },
+              }
             ]}
             dataSource={interactiveEndpoints}
-            // pagination={false}
+          // pagination={false}
           />
         </Modal>
       }
@@ -868,19 +880,16 @@ const CodeList = (props) => {
           width="65%"
         >
           {
-            sshInfo && (sshInfo.status === 'running' ? <CopyToClipboard
-              text={sshCommond}
-              onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
-            >
-              {
-                (sshCommond.length ? <pre>{sshCommond}</pre> : <LoadingOutlined />)
-              }
-            </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>)
-          }
-          {
-            !sshInfo && <div>
-              {formatMessage({ id: 'codeList.ssh.not.open' })}
-            </div>
+            sshInfos.map((sshInfo, index) => (
+              sshInfo.status === 'running' ? <CopyToClipboard
+                text={sshCommonds[index]}
+                onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+              >
+                {
+                  (sshCommonds[index] ? <pre>{sshCommonds[index]}</pre> : <LoadingOutlined />)
+                }
+              </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>
+            ))
           }
         </Modal>
       }

@@ -62,6 +62,11 @@ const JobDetail: React.FC<IJobDetail> = ({ jobDetail }) => {
         <Descriptions.Item label={formatMessage({ id: 'model.training.detail.codePath' })}>
           {jobDetail.codePath}
         </Descriptions.Item>
+        {
+          jobDetail.numPsWorker && <Descriptions.Item label={formatMessage({ id: 'model.training.detail.numPsWorker' })}>
+            {jobDetail.numPsWorker} 
+          </Descriptions.Item>
+        }
         <Descriptions.Item label={formatMessage({ id: 'model.training.detail.deviceNum' })}>
           {jobDetail.deviceNum}
         </Descriptions.Item>

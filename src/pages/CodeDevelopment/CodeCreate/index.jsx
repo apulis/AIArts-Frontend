@@ -128,6 +128,7 @@ const CodeCreate = (props) => {
     setFieldsValue({ numPsWorker, deviceNum });
   };
 
+
   const apiPostCode = async (values) => {
     const obj = await postCode1({ ...values, vcName: currentSelectedVC });
     const { code, data, msg } = obj;
@@ -199,10 +200,6 @@ const CodeCreate = (props) => {
     }
   };
 
-  const handleCaclTotalDeviceNum = (nodeNum, perNodeDeviceNum) => {
-    setFieldsValue({ deviceTotal: nodeNum * perNodeDeviceNum });
-  };
-
   useEffect(() => {
     const deviceType = getFieldValue('deviceType');
     if (deviceType) {
@@ -214,10 +211,6 @@ const CodeCreate = (props) => {
       } else if (jobTrainingType === 'PSDistJob') {
         arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numberPsWorker'));
         setDeviceNumPerNodeArr(arr);
-        setTimeout(() => {
-          setFieldsValue({ deviceNum: arr[0] || undefined });
-          handleCaclTotalDeviceNum(1, arr[0] || 0)
-        }, 0);
       }
     }
   }, [jobTrainingType, currentDeviceType])
@@ -226,6 +219,9 @@ const CodeCreate = (props) => {
     const engineTip = presetImageDescMap[engine] || '';
     setEngineTip(engineTip);
   }
+  const handleCalcTotalDeviceNum = (nodeNum, deviceNum) => {
+    setFieldsValue({ deviceTotal: ((nodeNum || getFieldValue('numPsWorker')) || 0) * (deviceNum || 0) });
+  };
 
   const validateMessages = {
     required: '${label} ' + formatMessage({ id: 'codeCreate.rule.needInput' }),
@@ -287,6 +283,7 @@ const CodeCreate = (props) => {
     if (jobTrainingType === 'RegularJob') {
       renderInitRegularForm(deviceNumArr[0] || undefined);
     } else if (jobTrainingType === 'PSDistJob') {
+      handleCalcTotalDeviceNum(1, deviceNumPerNodeArr[0] || 0);
       renderInitPSDistJobForm(1, deviceNumPerNodeArr[0] || undefined);
     }
   }, [jobTrainingType]);
@@ -517,7 +514,7 @@ const CodeCreate = (props) => {
               ))}
             </Select>
           </Form.Item>
-          {jobTrainingType == 'RegularJob' && (
+          {jobTrainingType === 'RegularJob' && (
             <Form.Item
               label={formatMessage({ id: 'codeCreate.label.deviceNum' })}
               name="deviceNum"
@@ -537,6 +534,7 @@ const CodeCreate = (props) => {
               label={formatMessage({ id: 'codeCreate.label.nodeNum' })}
               name="numPsWorker"
               rules={[{ required: true }]}
+              initialValue={1}
             >
               <InputNumber
                 style={{ width: '50%' }}
@@ -544,7 +542,7 @@ const CodeCreate = (props) => {
                 max={maxNodeNum}
                 placeholder={formatMessage({ id: 'codeCreate.placeholder.nodeNum' })}
                 onChange={(nodeNum) =>
-                  handleCaclTotalDeviceNum(nodeNum, getFieldValue('deviceNum'))
+                  handleCalcTotalDeviceNum(nodeNum, getFieldValue('deviceNum'))
                 }
               />
             </Form.Item>
@@ -557,9 +555,8 @@ const CodeCreate = (props) => {
             >
               <Select
                 style={{ width: '50%' }}
-                onChange={() =>{
-                  console.log(1111, getFieldValue('numPsWorker'))
-                  handleCaclTotalDeviceNum(getFieldValue('numPsWorker'), getFieldValue('deviceNum'))
+                onChange={(deviceNum) => {
+                  handleCalcTotalDeviceNum(getFieldValue('numPsWorker'), deviceNum)
                 }}
               >
                 {deviceNumPerNodeArr.map((item, key) => (
@@ -575,7 +572,7 @@ const CodeCreate = (props) => {
               label={formatMessage({ id: 'codeCreate.label.totalDeviceNum' })}
               name="deviceTotal"
             >
-              <Input style={{ width: '50%' }} disabled></Input>
+              <Input style={{ width: '50%' }} disabled />
             </Form.Item>
           )}
           <Form.Item
@@ -599,6 +596,7 @@ const CodeCreate = (props) => {
               <Input style={{ width: '200px' }} />
             </Form.Item>
           }
+
           <Form.Item {...buttonItemLayout}>
             <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               {formatMessage({ id: 'codeCreate.submit' })}
