@@ -220,7 +220,7 @@ const CodeCreate = (props) => {
   }, [jobTrainingType, currentDeviceType])
 
   const handleCalcTotalDeviceNum = (nodeNum, deviceNum) => {
-    setFieldsValue({ deviceTotal: (nodeNum || getFieldValue('numPsWorker')) * deviceNum });
+    setFieldsValue({ deviceTotal: ((nodeNum || getFieldValue('numPsWorker')) || 0) * (deviceNum || 0) });
   };
 
   const validateMessages = {
