@@ -621,9 +621,7 @@ const CodeList = (props) => {
   }
 
   const handleCreateInteractiveEndpoints = async () => {
-    console.log(111111)
     const result = await form.validateFields(['podPort']);
-    console.log(123123123)
     const res = await addEndpointForJob(currentHandledJob.id, result.podPort);
     if (res.code === 0) {
       form.resetFields();
@@ -881,14 +879,17 @@ const CodeList = (props) => {
         >
           {
             sshInfos.map((sshInfo, index) => (
-              sshInfo.status === 'running' ? <CopyToClipboard
-                text={sshCommonds[index]}
-                onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
-              >
-                {
-                  (sshCommonds[index] ? <pre>{sshCommonds[index]}</pre> : <LoadingOutlined />)
-                }
-              </CopyToClipboard > : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>
+              sshInfo.status === 'running' ?
+                <><h4>SSH to {sshInfo.podName.split('-').pop() || ''}:</h4><CopyToClipboard
+                  text={sshCommonds[index]}
+                  onCopy={() => message.success(formatMessage({ id: 'codeList.table.column.action.copy.success' }))}
+                >
+                  {
+                    (sshCommonds[index] ?
+                      <pre>{sshCommonds[index]}</pre>
+                      : <LoadingOutlined />)
+                  }
+                </CopyToClipboard ></> : <div>{formatMessage({ id: 'codeList.table.column.action.ssh.pending' })}</div>
             ))
           }
         </Modal>
