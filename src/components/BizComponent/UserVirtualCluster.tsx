@@ -32,7 +32,7 @@ const UserVirtualCluster: React.FC<IUserVirtualClusterProps> = ({ dispatch, vc, 
         type: 'user/fetchCurrent',
       });
     }
-  }, [vc])
+  }, [])
   
   const onFinish = async () => {
     const { vcName } = await form.validateFields(['vcName']);

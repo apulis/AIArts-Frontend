@@ -14,28 +14,8 @@ const CommonLayout = ({ children, dispatch, resource, user, common }) => {
   const { currentUser } = user;
   const { currentVC, userName } = currentUser;
 
-  const getVCDetail = () => {
-    if (currentVC?.length > 0) {
-      if (!localStorage.vc || !currentVC.includes(localStorage.vc)) {
-        dispatch({
-          type: 'vc/userSelectVC',
-          payload: {
-            vcName: currentVC[0],
-          },
-        });
-      } else if (localStorage.vc) {
-        dispatch({
-          type: 'vc/userSelectVC',
-          payload: {
-            vcName: localStorage.vc,
-          },
-        });
-      }
-    }
-  }
 
   useEffect(() => {
-    getVCDetail();
     dispatch({
       type: 'common/fetchPresetImages',
     });
