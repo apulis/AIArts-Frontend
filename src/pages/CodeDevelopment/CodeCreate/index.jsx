@@ -51,6 +51,7 @@ const CodeCreate = (props) => {
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [algorithmSource, setAlgorithmSource] = useState(1);
   const [submitButtonLoading, setSubmitButtonLoading] = useState(false);
+  const [frameworkMap, setFrameworkMap] = useState({});
 
   const { currentSelectedVC } = props.vc;
 
@@ -75,6 +76,7 @@ const CodeCreate = (props) => {
     if (result) {
       setResource(result);
       const enginTypeArrData = Object.keys(result.aiFrameworks);
+      setFrameworkMap(result.aiFrameworks);
       const engineNameArrData = result.aiFrameworks[enginTypeArrData[0]] || [];
       const deviceList = result.deviceList;
       const deviceTypeArrData = deviceList.map((item) => item.deviceType);
@@ -149,14 +151,21 @@ const CodeCreate = (props) => {
     // todo 提取数据映射
     const values = await validateFields();
     if (engineSource === 1) {
-      values.frameworkType = values.engineType;
+      Object.keys(frameworkMap).forEach(key => {
+        if (Array.isArray(frameworkMap[key])) {
+          frameworkMap[key].forEach(engine => {
+            if (engine === values.engine) {
+              values.frameworkType = key;
+            }
+          })
+        }
+      })
     } else if (engineSource === 2) {
       const f = userFrameWorks.find(val => val.fullName === values.engine);
       if (f) {
         values.frameworkType = f.frameworkType;
       }
     }
-    delete values.engineType;
     values.codePath = algorithmSource === 1 ? (codePathPrefix + values.codePath) : undefined;
     values.private = [1, 2].includes(engineSource);
     setSubmitButtonLoading(true);
