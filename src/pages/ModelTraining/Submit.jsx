@@ -665,7 +665,7 @@ const ModelTraining = (props) => {
               onChange={(e) => {
                 setEngineSource(e.target.value);
               }}
-              style={{ width: '360px' }}
+              style={{ width: '480px' }}
             >
               <Radio value={1}>{formatMessage({ id: 'trainingCreate.value.presetEngine' })}</Radio>
               <Radio value={2}>{formatMessage({ id: 'trainingCreate.value.savedEngine' })}</Radio>
