@@ -144,9 +144,6 @@ const ModelTraining = (props) => {
       Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
       });
-      setFieldsValue({
-        engine: aiFrameworkList[0],
-      })
       setFrameWorks(aiFrameworkList);
       setDeviceList(deviceList);
       const totalNodes = nodeInfo.length;
@@ -864,12 +861,10 @@ const ModelTraining = (props) => {
                   >
                     <Input style={{ width: 200 }} />
                   </FormItem>
-                  {
-                    <DeleteOutlined
-                      style={{ marginLeft: '10px', cursor: 'pointer' }}
-                      onClick={() => removeRuningParams(param.createTime || param.key)}
-                    />
-                  }
+                  <DeleteOutlined
+                    style={{ marginLeft: '10px', cursor: 'pointer' }}
+                    onClick={() => removeRuningParams(param.createTime || param.key)}
+                  />
                 </div>
               );
             })}
