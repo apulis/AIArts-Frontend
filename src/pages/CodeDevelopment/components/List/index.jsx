@@ -311,7 +311,7 @@ const CodeList = (props) => {
       }
     } else {
       setSshCommonds([]);
-      setSshInfo([]);
+      setSshInfos([]);
     }
   }
 

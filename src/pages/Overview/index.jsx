@@ -42,7 +42,7 @@ const OverView = ({ user, vc }) => {
       value: [],
     },
     {
-      params: 'Inferencejob',
+      params: 'InferenceJob',
       name: <FormattedMessage id="overview.inference" />,
       value: [],
     },
