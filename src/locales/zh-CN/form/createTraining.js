@@ -5,6 +5,7 @@ export default {
   'trainingCreate.label.paramsSource': '参数来源',
   'trainingCreate.label.engineSource': '选择引擎来源',
   'trainingCreate.label.engine': '引擎',
+  'trainingCreate.engine.required': '请输入引擎',
   'trainingCreate.label.codePath': '代码目录',
   'trainingCreate.label.startupFile': '启动文件',
   'trainingCreate.label.visualPath': '可视化路径',

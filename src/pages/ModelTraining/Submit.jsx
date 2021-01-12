@@ -682,7 +682,7 @@ const ModelTraining = (props) => {
           >
             <FormItem
               name="engine"
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: formatMessage({ id: 'trainingCreate.engine.required' }) }]}
               preserve={false}
               style={{ display: 'inline-block' }}
             >

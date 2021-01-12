@@ -5,6 +5,7 @@ export default {
   'trainingCreate.label.paramsSource': 'Parameters Source',
   'trainingCreate.label.engineSource': 'Select Engine Source',
   'trainingCreate.label.engine': 'Engine',
+  'trainingCreate.engine.required': 'Engine is required',
   'trainingCreate.label.codePath': 'Code Directory',
   'trainingCreate.label.startupFile': 'Startup File',
   'trainingCreate.label.visualPath': 'Visualization Path',
