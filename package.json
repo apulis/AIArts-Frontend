@@ -33,6 +33,9 @@
     "tsc": "tsc",
     "pre-commit": "lint-staged"
   },
+  "resolutions": {
+		"typescript": "3.7.2"
+	},
   "husky": {
     "hooks": {}
   },
