@@ -632,12 +632,13 @@ const ModelEvaluation = (props) => {
               </Select>
             </Form.Item>
             <Form.Item
+              {...layout}
               label={PrivilegedLabel({ noPrivilegedJobPermission, disablePrivileged })}
               name="isPrivileged"
               initialValue={iSPrivileged}
             >
               <Switch
-                disabled={disablePrivileged}
+                disabled={disablePrivileged || noPrivilegedJobPermission}
                 onChange={(checked) => setISPrivileged(checked)}
               />
             </Form.Item>
