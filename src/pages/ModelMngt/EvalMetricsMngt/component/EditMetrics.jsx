@@ -26,7 +26,7 @@ import {
 
 import styles from './index.less';
 import { getLabeledDatasets } from '@/services/datasets';
-import { jobNameReg, getNameFromDockerImage, startUpFileReg } from '@/utils/reg';
+import { jobNameReg, getNameFromDockerImage, startUpFileReg, getUserPathPrefixReg } from '@/utils/reg';
 import { getDeviceNumArrByNodeType, formatParams } from '@/utils/utils';
 import { useIntl } from 'umi';
 import { getAvailRegularDeviceNumber } from '@/utils/device-utils';
@@ -68,6 +68,7 @@ const EditMetrics = (props) => {
   const [presetRunningParams, setPresetRunningParams] = useState([]);
   const { validateFields, getFieldValue, setFieldsValue } = form;
   const [currentSelectedPresetParamsId, setCurrentSelectedPresetParamsId] = useState('');
+  const [codePathPrefix, setCodePathPrefix] = useState('');
   const [nodeInfo, setNofeInfo] = useState([]);
   const [currentDeviceType, setCurrentDeviceType] = useState('');
   const [paramsDetailedData, setParamsDetailedData] = useState({});
@@ -78,10 +79,10 @@ const EditMetrics = (props) => {
       let {
         data: { aiFrameworks, deviceList, codePathPrefix, nodeInfo },
       } = res;
-      // if (!/\/$/.test(codePathPrefix)) {
-      //   codePathPrefix = codePathPrefix + '/';
-      // }
-      // setCodePathPrefix(codePathPrefix);
+      if (!/\/$/.test(codePathPrefix)) {
+        codePathPrefix = codePathPrefix + '/';
+      }
+      setCodePathPrefix(codePathPrefix);
       let aiFrameworkList = [];
       Object.keys(aiFrameworks).forEach((val) => {
         aiFrameworkList = aiFrameworkList.concat(aiFrameworks[val]);
@@ -356,6 +357,9 @@ const EditMetrics = (props) => {
         <FormItem
           labelCol={{ span: 4 }}
           name="codePath"
+          rules={[
+            { pattern: getUserPathPrefixReg(codePathPrefix).pattern }
+          ]}
           label={intl.formatMessage({ id: 'editMetrics.codePath' })}
         >
           <Input style={{ width: 420 }} />
@@ -364,13 +368,16 @@ const EditMetrics = (props) => {
           labelCol={{ span: 4 }}
           label={intl.formatMessage({ id: 'editMetrics.label.startupFile' })}
           name="startupFile"
-          rules={[{ required: true }, startUpFileReg]}
+          rules={[{ required: true }, startUpFileReg, { pattern: getUserPathPrefixReg(codePathPrefix).pattern }]}
         >
           <Input style={{ width: 420 }} />
-        </FormItem>
+        </FormItem> 
         <FormItem
           name="outputPath"
           labelCol={{ span: 4 }}
+          rules={[
+            { pattern: getUserPathPrefixReg(codePathPrefix).pattern }
+          ]}
           label={intl.formatMessage({ id: 'editMetrics.label.outputPath' })}
         >
           <Input disabled style={{ width: 420 }} />
