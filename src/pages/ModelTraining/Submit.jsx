@@ -590,6 +590,7 @@ const ModelTraining = (props) => {
             : formatMessage({ id: 'model.submit.pageTitle.submit' })
         }
       />
+      
       <Form form={form}>
         <FormItem
           {...commonLayout}
@@ -651,6 +652,7 @@ const ModelTraining = (props) => {
           </Radio.Group>
         </FormItem>
       )}
+      
       {/* {isSubmitPage && <FormItem
         {...commonLayout}
         label={formatMessage({ id: 'modelTraing.submit.algorithmSource' })}
@@ -686,6 +688,19 @@ const ModelTraining = (props) => {
             </Radio.Group>
           </FormItem>
         )}
+        <FormItem
+          label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
+          name="jobTrainingType"
+          {...commonLayout}
+          rules={[{ required: true }]}
+          initialValue="RegularJob"
+          onChange={handleDistributedJob}
+        >
+          <Radio.Group style={{ width: '300px' }}>
+            <Radio value={'PSDistJob'}>{formatMessage({ id: 'trainingCreate.value.yes' })}</Radio>
+            <Radio value={'RegularJob'}>{formatMessage({ id: 'trainingCreate.value.no' })}</Radio>
+          </Radio.Group>
+        </FormItem>
         {
           engineSource === 1 &&
           <FormItem
@@ -718,7 +733,7 @@ const ModelTraining = (props) => {
           
         }
         {
-          engineSource === 2 && 
+          engineSource === 2 &&
           <FormItem
             {...commonLayout}
             name="engine"
@@ -762,11 +777,12 @@ const ModelTraining = (props) => {
             )}
         </FormItem>
         {
-          algorithmSource === 1 && <FormItem
+          algorithmSource === 1 && !distributedJob && <FormItem
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.startupFile' })}
             name="startupFile"
             preserve={false}
+            style={{ height: '32px' }}
             rules={[{ required: true }, startUpFileReg]}
           >
             {isPretrainedModel || importedTrainingParams ? (
@@ -888,19 +904,6 @@ const ModelTraining = (props) => {
           </FormItem>
         }
 
-        <FormItem
-          label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
-          name="jobTrainingType"
-          {...commonLayout}
-          rules={[{ required: true }]}
-          initialValue="RegularJob"
-          onChange={handleDistributedJob}
-        >
-          <Radio.Group style={{ width: '300px' }}>
-            <Radio value={'PSDistJob'}>{formatMessage({ id: 'trainingCreate.value.yes' })}</Radio>
-            <Radio value={'RegularJob'}>{formatMessage({ id: 'trainingCreate.value.no' })}</Radio>
-          </Radio.Group>
-        </FormItem>
         {distributedJob && (
           <FormItem
             label={formatMessage({ id: 'trainingCreate.label.numPsWorker' })}
