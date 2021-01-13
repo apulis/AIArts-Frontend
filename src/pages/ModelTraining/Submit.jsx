@@ -56,6 +56,8 @@ export const subCodePathPrefix = (s = '') => {
   return s.replace(/\/home\/.+?\//, '');
 };
 
+export const codeFont = 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace';
+
 const ModelTraining = (props) => {
   const intl = useIntl();
   const { formatMessage } = intl;
@@ -375,7 +377,13 @@ const ModelTraining = (props) => {
     } else {
       if (values.jobTrainingType === 'PSDistJob') {
         values.numPs = 1;
+        values.params.masterCmd = values.masterCmd;
+        values.params.workerCmd = values.workerCmd;
+        delete values.masterCmd;
+        delete values.workerCmd;
       }
+      console.log(123, values)
+      return ;
       const submitJobInner = async () => {
         const cancel = message.loading(formatMessage({ id: 'model.submit.message.uploading' }));
         const res = await submitModelTraining({ ...values, vcName: currentSelectedVC });
@@ -819,7 +827,7 @@ const ModelTraining = (props) => {
               required: true,
             }]}
           >
-            <TextArea style={{ width: '500px', fontFamily: 'Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace' }} rows={4} />
+            <TextArea style={{ width: '500px', fontFamily: codeFont }} rows={4} />
           </FormItem>
         }
         {
@@ -968,6 +976,28 @@ const ModelTraining = (props) => {
             <Input value={deviceTotal} style={{ width: '300px' }} disabled />
           </FormItem>
         )}
+        {
+          distributedJob && (
+            <FormItem
+              name="masterCmd"
+              label="Master 节点命令"
+              {...commonLayout}
+            >
+              <TextArea style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+            </FormItem>
+          )
+        }
+        {
+          distributedJob && (
+            <FormItem
+              name="workerCmd"
+              label="Worker 节点命令"
+              {...commonLayout}
+            >
+              <TextArea style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+            </FormItem>
+          )
+        }
         <Form.Item
           {...commonLayout}
           label={PrivilegedLabel({ noPrivilegedJobPermission, disablePrivileged })}
