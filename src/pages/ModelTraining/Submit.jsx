@@ -991,6 +991,7 @@ const ModelTraining = (props) => {
               {...commonLayout}
             >
               <FormItem
+                preserve={false}
                 name="masterCmd"
                 style={{ display: 'inline-block' }}
               >
@@ -1014,6 +1015,7 @@ const ModelTraining = (props) => {
             >
               <FormItem
                 name="workerCmd"
+                preserve={false}
                 style={{ display: 'inline-block' }}
               >
                 <TextArea disabled={!workerCmdEnabled} style={{ width: '500px', fontFamily: codeFont }} rows={4} />
