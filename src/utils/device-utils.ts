@@ -3,7 +3,7 @@ import { checkIfGpuOrNpu } from "@/models/resource";
 export const getAvailRegularDeviceNumber = (deviceName: string, deviceQuota: number) => {
   if (checkIfGpuOrNpu(deviceName) === 'GPU') {
     const arr = [];
-    for (let i = 0; i <= deviceQuota; i++) {
+    for (let i = 0; i <= deviceQuota && i <= 8; i++) {
       arr.push(i);
     }
     return arr;
@@ -22,7 +22,7 @@ export const getAvailRegularDeviceNumber = (deviceName: string, deviceQuota: num
 export const getAvailPSDDeviceNumber = (deviceName: string, deviceQuota: number, nodeNumber: number) => {
   if (checkIfGpuOrNpu(deviceName) === 'GPU') {
     const arr = [0];
-    for (let i = 1; i <= deviceQuota; i *= 2) {
+    for (let i = 1; i <= deviceQuota && i <= 8; i *= 2) {
       if (i * nodeNumber > deviceQuota) break
       arr.push(i);
     }
