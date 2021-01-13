@@ -382,8 +382,6 @@ const ModelTraining = (props) => {
         delete values.masterCmd;
         delete values.workerCmd;
       }
-      console.log(123, values)
-      return ;
       const submitJobInner = async () => {
         const cancel = message.loading(formatMessage({ id: 'model.submit.message.uploading' }));
         const res = await submitModelTraining({ ...values, vcName: currentSelectedVC });
