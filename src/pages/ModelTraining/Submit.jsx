@@ -118,6 +118,9 @@ const ModelTraining = (props) => {
   const [iSPrivileged, setISPrivileged] = useState(false);
   const [engineTip, setEngineTip] = useState('');
 
+  const [masterCmdEnabled, setMasterCmdEnabled] = useState(true);
+  const [workerCmdEnabled, setWorkerCmdEnabled] = useState(true);
+
   const getImageDescMap = async () => {
     const res = await getImages();
     const { code, data } = res;
@@ -377,8 +380,12 @@ const ModelTraining = (props) => {
     } else {
       if (values.jobTrainingType === 'PSDistJob') {
         values.numPs = 1;
-        values.params.masterCmd = values.masterCmd;
-        values.params.workerCmd = values.workerCmd;
+        if (masterCmdEnabled) {
+          values.params.masterCmd = values.masterCmd;
+        }
+        if (workerCmdEnabled) {
+          values.params.workerCmd = values.workerCmd;
+        }
         delete values.masterCmd;
         delete values.workerCmd;
       }
@@ -977,22 +984,43 @@ const ModelTraining = (props) => {
         {
           distributedJob && (
             <FormItem
-              name="masterCmd"
               label="Master 节点命令"
               {...commonLayout}
             >
-              <TextArea style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+              <FormItem
+                name="masterCmd"
+                style={{ display: 'inline-block' }}
+              >
+                <TextArea disabled={!masterCmdEnabled} style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+              </FormItem>
+              
+              <FormItem
+                style={{ display: 'inline-block', marginLeft: '10px' }}
+                valuePropName="checked"
+              >
+                <Switch checked={masterCmdEnabled} onChange={(checked) => setMasterCmdEnabled(checked)} />
+              </FormItem>
             </FormItem>
           )
         }
         {
           distributedJob && (
             <FormItem
-              name="workerCmd"
               label="Worker 节点命令"
               {...commonLayout}
             >
-              <TextArea style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+              <FormItem
+                name="workerCmd"
+                style={{ display: 'inline-block' }}
+              >
+                <TextArea disabled={!workerCmdEnabled} style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+              </FormItem>
+              <FormItem
+                style={{ display: 'inline-block', marginLeft: '10px' }}
+                valuePropName="checked"
+              >
+                <Switch checked={workerCmdEnabled} onChange={((checked) => setWorkerCmdEnabled(checked))} />
+              </FormItem>
             </FormItem>
           )
         }
