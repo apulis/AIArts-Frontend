@@ -670,7 +670,22 @@ const ModelTraining = (props) => {
 
       </FormItem>} */}
       <Form form={form}>
+        
+        <FormItem
+          label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
+          name="jobTrainingType"
+          {...commonLayout}
+          rules={[{ required: true }]}
+          initialValue="RegularJob"
+          onChange={handleDistributedJob}
+        >
+          <Radio.Group style={{ width: '300px' }}>
+            <Radio value={'PSDistJob'}>{formatMessage({ id: 'trainingCreate.value.yes' })}</Radio>
+            <Radio value={'RegularJob'}>{formatMessage({ id: 'trainingCreate.value.no' })}</Radio>
+          </Radio.Group>
+        </FormItem>
         {isSubmitPage && (
+          
           <FormItem
             {...commonLayout}
             label={formatMessage({ id: 'trainingCreate.label.engineSource' })}
@@ -688,19 +703,6 @@ const ModelTraining = (props) => {
             </Radio.Group>
           </FormItem>
         )}
-        <FormItem
-          label={formatMessage({ id: 'trainingCreate.label.jobTrainingType' })}
-          name="jobTrainingType"
-          {...commonLayout}
-          rules={[{ required: true }]}
-          initialValue="RegularJob"
-          onChange={handleDistributedJob}
-        >
-          <Radio.Group style={{ width: '300px' }}>
-            <Radio value={'PSDistJob'}>{formatMessage({ id: 'trainingCreate.value.yes' })}</Radio>
-            <Radio value={'RegularJob'}>{formatMessage({ id: 'trainingCreate.value.no' })}</Radio>
-          </Radio.Group>
-        </FormItem>
         {
           engineSource === 1 &&
           <FormItem
@@ -712,7 +714,7 @@ const ModelTraining = (props) => {
               name="engine"
               rules={[{ required: true, message: formatMessage({ id: 'trainingCreate.engine.required' }) }]}
               preserve={false}
-              style={{ display: 'inline-block' }}
+              style={{ display: 'inline-block', height: '20px' }}
             >
               <Select style={{ width: 300 }} disabled={typeCreate} onChange={onEngineChange}>
                 {engineSource === 1 &&
