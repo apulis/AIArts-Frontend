@@ -327,6 +327,7 @@ const CodeCreate = (props) => {
           validateMessages={validateMessages}
           initialValues={{ jobTrainingType: 'RegularJob' }}
           form={form}
+          style={{ minWidth: '880px', overflow: 'auto' }}
         >
           <Form.Item
             label={formatMessage({ id: 'codeCreate.label.devEnvName' })}
@@ -386,13 +387,13 @@ const CodeCreate = (props) => {
             </Form.Item>
           }
           <Form.Item
-            // style={{ display: 'flex', alignItems: 'center' }}
             label={formatMessage({ id: 'codeCreate.label.engineSource' })}
             style={{ height: '32px' }}
+            {...formItemLayout}
             required
           >
             <Form.Item
-              style={{ display: 'inline-block' }}
+              style={{ display: 'inline-block' }} 
               >
               <Radio.Group
                 value={engineSource}
