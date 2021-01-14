@@ -19,6 +19,8 @@ export default {
   'model.training.detail.datasetPath': '训练数据集',
   'model.training.detail.visualPath': '可视化路径',
   'model.training.detail.command': '命令',
+  'model.training.detail.masterCommand': 'Master 命令',
+  'model.training.detail.workerCommand': 'Worker 命令',
   'model.training.detail.outputPath': '输出路径',
   'model.training.detail.checkpoint': 'checkpoint 文件',
   'model.training.detail.log': '训练日志',

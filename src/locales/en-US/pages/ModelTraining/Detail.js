@@ -19,6 +19,8 @@ export default {
   'model.training.detail.datasetPath': 'Dataset Path',
   'model.training.detail.visualPath': 'Visualization Path',
   'model.training.detail.command': 'Command',
+  'model.training.detail.masterCommand': 'Master Command',
+  'model.training.detail.workerCommand': 'Worker Command',
   'model.training.detail.outputPath': 'Output Path',
   'model.training.detail.checkpoint': 'Checkpoint File',
   'model.training.detail.log': 'Training Log',

@@ -29,6 +29,8 @@ interface IJobDetail {
     vcName: string;
     visualPath: string;
     checkpoint: string;
+    masterCmd?: string;
+    workerCmd?: string;
   }
 }
 
@@ -91,9 +93,14 @@ const JobDetail: React.FC<IJobDetail> = ({ jobDetail }) => {
           </Descriptions.Item>
         )}
         {
-          isUseCommand && <Descriptions.Item label={formatMessage({ id: 'model.training.detail.command' })}>
-          {jobDetail.command}
-        </Descriptions.Item>
+          isUseCommand && <Descriptions.Item label={formatMessage({ id: 'model.training.detail.masterCommand' })}>
+            {jobDetail.masterCmd}
+          </Descriptions.Item>
+        }
+        {
+          isUseCommand && <Descriptions.Item label={formatMessage({ id: 'model.training.detail.workerCommand' })}>
+            {jobDetail.workerCmd}
+          </Descriptions.Item>
         }
         <Descriptions.Item label={formatMessage({ id: 'model.training.detail.outputPath' })}>
           {jobDetail.outputPath}
