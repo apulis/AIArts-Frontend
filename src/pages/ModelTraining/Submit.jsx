@@ -826,7 +826,7 @@ const ModelTraining = (props) => {
         </FormItem>
         <FormItem
           name="datasetPath"
-          rules={[{ required: true }]}
+          rules={[{ required: !distributedJob }]}
           labelCol={{ span: 4 }}
           label={formatMessage({ id: 'trainingCreate.label.datasetPath' })}
         >
