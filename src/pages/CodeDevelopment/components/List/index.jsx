@@ -842,9 +842,9 @@ const CodeList = (props) => {
 
 
           </Form>
-
           <Table
             loading={interactiveEndpointsTableLoading}
+            footer={() => <div>{formatMessage({ id: 'codeList.endpoint.modal.table.distributed.notice' })}</div>}
             columns={[
               { title: formatMessage({ id: 'codeList.endpoint.modal.table.endpoint' }), dataIndex: 'name', align: 'center' },
               {

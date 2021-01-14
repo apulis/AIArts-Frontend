@@ -54,6 +54,7 @@ export default {
   'codeList.endpoint.modal.form.endpoint.validator.duplicate': 'Current port has been used',
   'codeList.endpoint.modal.form.confirm': 'Confirm',
   'codeList.endpoint.modal.table.endpoint': 'Endpoint',
+  'codeList.endpoint.modal.table.distributed.notice': 'Note: If it is a distributed task, only the interactive port of the Master node will be displayed',
   'codeList.endpoint.modal.table.action': 'Operation',
   'codeList.endpoint.modal.table.action.open': 'Open',
 

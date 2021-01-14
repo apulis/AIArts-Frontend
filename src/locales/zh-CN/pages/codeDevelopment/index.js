@@ -52,6 +52,7 @@ export default {
   'codeList.endpoint.modal.form.endpoint.required': '可交互端口是必填的',
   'codeList.endpoint.modal.form.confirm': '确定',
   'codeList.endpoint.modal.table.endpoint': '交互端口',
+  'codeList.endpoint.modal.table.distributed.notice': '注：如果是分布式任务仅展示 Master 节点的可交互端口',
   'codeList.endpoint.modal.table.action': '操作',
   'codeList.endpoint.modal.table.action.open': '打开',
 
