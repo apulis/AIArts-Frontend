@@ -31,6 +31,7 @@ import vc from './en-US/pages/vc';
 import ManageJobs from './en-US/pages/ManageJobs';
 import _const from './en-US/const';
 import ManagePrivilegeJob from './en-US/ManagePrivilegeJob';
+import envTip from './en-US/envTip';
 
 import { capFirstLetter } from '@/utils/utils';
 
@@ -84,4 +85,5 @@ export default {
   ...vc,
   ...ManageJobs,
   ...ManagePrivilegeJob,
+  ...envTip,
 };

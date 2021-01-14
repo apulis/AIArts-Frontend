@@ -43,6 +43,7 @@ import {
   getImages,
 } from '../../services/modelTraning';
 import PrivilegedLabel from '@/components/PrivilegeLabel';
+import EnvTip from './components/EnvTip';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -989,7 +990,7 @@ const ModelTraining = (props) => {
         {
           distributedJob && (
             <FormItem
-              label="Master 节点命令"
+              label={<EnvTip>Master 节点命令</EnvTip>}
               {...commonLayout}
             >
               <FormItem
@@ -1012,7 +1013,7 @@ const ModelTraining = (props) => {
         {
           distributedJob && (
             <FormItem
-              label="Worker 节点命令"
+              label={<EnvTip>Worker 节点命令</EnvTip>}
               {...commonLayout}
             >
               <FormItem
