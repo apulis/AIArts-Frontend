@@ -297,7 +297,7 @@ const CodeList = (props) => {
             const { status } = sshInfo;
             if (status === 'running') {
               const host = `${sshInfo['nodeName']}.${sshInfo['domain']}`;
-              const command = `ssh -i ${identityFile} -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
+              const command = `ssh -p ${sshInfo['port']} ${sshInfo['username']}@${host}` + ` [Password: ${sshInfo['password'] ? sshInfo['password'] : ''}]`
               sshCommonds.push(command);
             } else {
               sshCommonds.push('');
@@ -612,6 +612,7 @@ const CodeList = (props) => {
           interactiveEndpoints.push(endpoint);
         }
       });
+      console.log('interactiveEndpoints', interactiveEndpoints)
       setInteractiveEndpoints(interactiveEndpoints);
 
     }
