@@ -203,9 +203,15 @@ const ModelTraining = (props) => {
         ...paramsDetailedData,
         params: newParams,
       });
+      const params = paramsDetailedData.params.params || [];
+      const masterCmd = params.find(p => p.key === 'masterCmd');
+      const workerCmd = params.find(p => p.key === 'workerCmd');
       setCurrentDeviceType(newParams.deviceType);
       setFieldsValue({
         ...newParams,
+        masterCmd,
+        workerCmd,
+        jobTrainingType: newParams.jobTrainingType || 'RegularJob',
         deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? newParams.deviceNum : 0,
       });
     }
@@ -248,7 +254,7 @@ const ModelTraining = (props) => {
       if (deviceType) {
         setCurrentDeviceType(data.params.deviceType);
       }
-      setRunningParams(data.params.params);
+      setRunningParams(data.params.params.filter(val => val.key !== 'masterCmd' && val.key !== 'workerCmd'));
     }
   };
 
@@ -717,7 +723,7 @@ const ModelTraining = (props) => {
               preserve={false}
               style={{ display: 'inline-block', height: '20px' }}
             >
-              <Select style={{ width: 300 }} disabled={typeCreate} onChange={onEngineChange}>
+              <Select disabled={typeCreate}  style={{ width: '420px' }} onChange={onEngineChange}>
                 {engineSource === 1 &&
                 currentAvailPresetImage.map((f) => (
                   <Option value={f} key={f}>
@@ -744,7 +750,7 @@ const ModelTraining = (props) => {
             rules={[{ required: true }]}
             preserve={false}
           >
-            <Select style={{ width: 300 }} disabled={typeCreate} showSearch>
+            <Select style={{ width: '420px'  }} disabled={typeCreate} showSearch>
               {userFrameWorks.map((f) => (
                 <Option value={f.fullName} key={f.id}>
                   <Tooltip title={savedImageDescMap[f]}>
@@ -764,7 +770,7 @@ const ModelTraining = (props) => {
             rules={[{ required: true }]}
             preserve={false}
           >
-            <Input style={{ width: '300px' }} placeholder={formatMessage({ id: 'trainingCreate.engine.input.placeholder' })} />
+            <Input style={{ width: '420px' }} placeholder={formatMessage({ id: 'trainingCreate.engine.input.placeholder' })} />
           </FormItem>
         }
         <FormItem
