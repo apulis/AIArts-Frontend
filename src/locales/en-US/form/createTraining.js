@@ -38,4 +38,9 @@ export default {
   'trainingCreate.submit': 'Submit',
   'trainingCreate.npmPsWorker.validator.max': 'Currently only have {num} nodes',
   'trainingCreate.npmPsWorker.validator.min': 'Cannot be less than 1',
+
+  'trainingCreate.masterCmd.label': 'Master Command',
+  'trainingCreate.workerCmd.label': 'Worker Command',
+  'trainingCreate.masterCmd.placeholder': 'Master Command',
+  'trainingCreate.workerCmd.placeholder': 'Worker command will be executed on all worker nodes',
 };

@@ -996,7 +996,7 @@ const ModelTraining = (props) => {
         {
           distributedJob && (
             <FormItem
-              label={<EnvTip>Master 节点命令</EnvTip>}
+              label={<EnvTip>{formatMessage({ id: 'trainingCreate.masterCmd.label' })}</EnvTip>}
               {...commonLayout}
             >
               <FormItem
@@ -1004,7 +1004,12 @@ const ModelTraining = (props) => {
                 name="masterCmd"
                 style={{ display: 'inline-block' }}
               >
-                <TextArea disabled={!masterCmdEnabled} style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+                <TextArea
+                  disabled={!masterCmdEnabled}
+                  style={{ width: '500px', fontFamily: codeFont }}
+                  rows={4}
+                  placeholder={formatMessage({ id: 'trainingCreate.masterCmd.placeholder' })}
+                />
               </FormItem>
               
               <FormItem
@@ -1019,7 +1024,7 @@ const ModelTraining = (props) => {
         {
           distributedJob && (
             <FormItem
-              label={<EnvTip>Worker 节点命令</EnvTip>}
+              label={<EnvTip>{formatMessage({ id: 'trainingCreate.workerCmd.label' })}</EnvTip>}
               {...commonLayout}
             >
               <FormItem
@@ -1027,7 +1032,12 @@ const ModelTraining = (props) => {
                 preserve={false}
                 style={{ display: 'inline-block' }}
               >
-                <TextArea disabled={!workerCmdEnabled} style={{ width: '500px', fontFamily: codeFont }} rows={4} />
+                <TextArea
+                  disabled={!workerCmdEnabled}
+                  style={{ width: '500px', fontFamily: codeFont }}
+                  rows={4}
+                  placeholder={formatMessage({ id: 'trainingCreate.workerCmd.placeholder' })}
+                />
               </FormItem>
               <FormItem
                 style={{ display: 'inline-block', marginLeft: '10px' }}

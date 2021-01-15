@@ -38,4 +38,9 @@ export default {
   'trainingCreate.submit': '立即创建',
   'trainingCreate.npmPsWorker.validator.max': '当前只有 {num} 个节点',
   'trainingCreate.npmPsWorker.validator.min': '不能小于 1',
+
+  'trainingCreate.masterCmd.label': 'Master 节点命令',
+  'trainingCreate.workerCmd.label': 'Worker 节点命令',
+  'trainingCreate.masterCmd.placeholder': 'Master 节点命令',
+  'trainingCreate.workerCmd.placeholder': 'Worker 节点指令将在所有 Worker 节点执行',
 };
