@@ -96,10 +96,6 @@ const CodeCreate = (props) => {
       setDeviceNumPerNodeArr(deviceNumPerNodeArrData);
       setMaxNodeNum(maxNodeNumData);
       setDeviceNumArr(deviceNumArrData);
-      setFieldsValue({
-        engine: engineNameArrData[0],
-        deviceType: deviceTypeArrData[0],
-      });
       if (Object.keys(presetImageDescMap)) {
         setEngineTip(presetImageDescMap[engineNameArrData[0]]);
       }
