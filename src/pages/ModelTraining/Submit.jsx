@@ -193,6 +193,10 @@ const ModelTraining = (props) => {
     }
   }, [distributedJob, deviceList, currentDeviceType]);
 
+  const handleDistributedJob = (type) => {
+    setDistributedJob(type === 'PSDistJob');
+  };
+
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
       const newParams = {
@@ -206,13 +210,14 @@ const ModelTraining = (props) => {
         params: newParams,
       });
       const params = paramsDetailedData.params.params || [];
-      const masterCmd = params.find(p => p.key === 'masterCmd');
-      const workerCmd = params.find(p => p.key === 'workerCmd');
+      const masterCmd = params.find(p => p.key === 'masterCmd') || {};
+      const workerCmd = params.find(p => p.key === 'workerCmd') || {};
       setCurrentDeviceType(newParams.deviceType);
+      handleDistributedJob(newParams.jobTrainingType);
       setFieldsValue({
         ...newParams,
-        masterCmd,
-        workerCmd,
+        masterCmd: masterCmd.value,
+        workerCmd: workerCmd.value,
         jobTrainingType: newParams.jobTrainingType || 'RegularJob',
         deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? newParams.deviceNum : 0,
       });
@@ -591,16 +596,6 @@ const ModelTraining = (props) => {
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
   const currentAvailPresetImage = presetImages.normal;
-  const handleDistributedJob = (e) => {
-    const type = e.target.value;
-    setDistributedJob(type === 'PSDistJob');
-  };
-
-  useEffect(() => {
-    if (distributedJob) {
-      handleDeviceChange();
-    }
-  }, [distributedJob])
 
   return (
     <div className={styles.modelTraining}>
@@ -700,7 +695,7 @@ const ModelTraining = (props) => {
           {...commonLayout}
           rules={[{ required: true }]}
           initialValue="RegularJob"
-          onChange={handleDistributedJob}
+          onChange={(e) => handleDistributedJob(e.target.value)}
         >
           <Radio.Group style={{ width: '300px' }}>
             <Radio value={'PSDistJob'}>{formatMessage({ id: 'trainingCreate.value.yes' })}</Radio>
