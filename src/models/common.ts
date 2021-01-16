@@ -47,6 +47,9 @@ interface Image {
   category: string;
   desc: string;
   image: string;
+  brand: string;
+  cpuArchType: string;
+  deviceType: string;
 }
 
 
@@ -132,20 +135,30 @@ const common: CommonModelType = {
         const images = res.data as Image[];
         const hyperparamsImages: Image[] = [];
         const normalImages: Image[] = [];
+        const deviceForImages = {};
         images.forEach(image => {
           if (image.category === EnumImageCategorys.hyperparameters) {
             hyperparamsImages.push(image);
           } else if (image.category === EnumImageCategorys.normal) {
             normalImages.push(image);
           }
-        })
+          if (image.brand && image.deviceType && image.cpuArchType) {
+            const deviceType = `${image.brand}_${image.deviceType}_${image.cpuArchType}`;
+            if (!deviceForImages[deviceType]) {
+              deviceForImages[deviceType] = [];
+            } else {
+              deviceForImages[deviceType].push(image.image);
+            }
+          }
+        });
         yield put({
           type: 'saveImages',
           payload: {
             presetImages: {
               [EnumImageCategorys.hyperparameters]: hyperparamsImages.map(val => val.image),
               [EnumImageCategorys.normal]: normalImages.map(val => val.image),
-            }
+            },
+            deviceForImages
           }
         })
       }
@@ -169,6 +182,7 @@ const common: CommonModelType = {
       return {
         ...state,
         presetImages: payload.presetImages,
+        deviceForImages: payload.deviceForImages,
       };
     },
   },
