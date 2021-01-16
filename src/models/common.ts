@@ -15,7 +15,10 @@ export interface CommonStateType {
   enableAvisuals: boolean;
   enablePrivileged: boolean;
   presetImages: {
-    [props: string]: string[]
+    [props: string]: string[];
+  };
+  deviceForImages: {
+    [props: string]: string[];
   };
 }
 
@@ -40,6 +43,12 @@ export enum EnumImageCategorys {
   hyperparameters = 'hyperparameters',
 }
 
+interface Image {
+  category: string;
+  desc: string;
+  image: string;
+}
+
 
 const common: CommonModelType = {
   namespace: 'common',
@@ -53,7 +62,8 @@ const common: CommonModelType = {
     presetImages: {
       normal: [],
       hyperparameters: [],
-    }
+    },
+    deviceForImages: {},
   },
   effects: {
     * changeInterval({ payload }, { put }) {
@@ -119,13 +129,16 @@ const common: CommonModelType = {
     * fetchPresetImages(_, { call, put }) {
       const res = yield call(getPresetImages);
       if (res.code === 0) {
-        const images = res.data as {
-          category: string
-          desc: string
-          image: string
-        }[];
-        const hyperparamsImages = images.filter(val => val.category === EnumImageCategorys.hyperparameters);
-        const normalImages = images.filter(val => val.category === EnumImageCategorys.normal);
+        const images = res.data as Image[];
+        const hyperparamsImages: Image[] = [];
+        const normalImages: Image[] = [];
+        images.forEach(image => {
+          if (image.category === EnumImageCategorys.hyperparameters) {
+            hyperparamsImages.push(image);
+          } else if (image.category === EnumImageCategorys.normal) {
+            normalImages.push(image);
+          }
+        })
         yield put({
           type: 'saveImages',
           payload: {
