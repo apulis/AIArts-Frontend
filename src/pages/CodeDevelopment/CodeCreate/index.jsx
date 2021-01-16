@@ -61,7 +61,7 @@ const CodeCreate = (props) => {
   const [frameworkMap, setFrameworkMap] = useState({});
 
   const { currentSelectedVC } = props.vc;
-  const { presetImages } = props.common;
+  const { presetImages, deviceForImages } = props.common;
   const getImageDescMap = async () => {
     const res = await getImages();
     const { code, data } = res;
@@ -221,11 +221,25 @@ const CodeCreate = (props) => {
         arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numberPsWorker'));
         setDeviceNumPerNodeArr(arr);
       }
+      if (engineSource === 1) {
+        setFieldsValue({
+          engine: deviceForImages[deviceType][0] || undefined,
+        })
+      }
     }
   }, [jobTrainingType, currentDeviceType])
 
   const onEngineChange = (engine) => {
     const engineTip = presetImageDescMap[engine] || '';
+    if (engineSource === 1) {
+      Object.keys(deviceForImages).forEach(device => {
+        if (deviceForImages[device].includes(engine)) {
+          setFieldsValue({
+            deviceType: device || undefined,
+          })
+        }
+      })
+    }
     setEngineTip(engineTip);
   }
   const handleCalcTotalDeviceNum = (nodeNum, deviceNum) => {
