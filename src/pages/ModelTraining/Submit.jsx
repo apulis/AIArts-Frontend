@@ -122,6 +122,8 @@ const ModelTraining = (props) => {
   const [masterCmdEnabled, setMasterCmdEnabled] = useState(true);
   const [workerCmdEnabled, setWorkerCmdEnabled] = useState(true);
 
+  const { presetImages, deviceForImages } = props.common;
+
   const getImageDescMap = async () => {
     const res = await getImages();
     const { code, data } = res;
@@ -189,7 +191,7 @@ const ModelTraining = (props) => {
       const list = getAvailRegularDeviceNumber(currentDeviceType, deviceList.find(val => val.deviceType === currentDeviceType)?.userQuota);
       setAvailableDeviceNumList(list);
     }
-  }, [distributedJob, deviceList, currentDeviceType,]);
+  }, [distributedJob, deviceList, currentDeviceType]);
 
   useEffect(() => {
     if (codePathPrefix && Object.keys(paramsDetailedData).length > 0) {
@@ -501,6 +503,11 @@ const ModelTraining = (props) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
     setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
+    if (engineSource === 1) {
+      setFieldsValue({
+        engine: deviceForImages[deviceType][0] || undefined,
+      })
+    }
   };
 
   const handleConfirmPresetParams = () => {
@@ -551,6 +558,15 @@ const ModelTraining = (props) => {
 
   const onEngineChange = (engine) => {
     setEngineTip(presetImageDescMap[engine]);
+    if (engineSource === 1) {
+      Object.keys(deviceForImages).forEach(device => {
+        if (deviceForImages[device].includes(engine)) {
+          setFieldsValue({
+            deviceType: device || undefined,
+          })
+        }
+      })
+    }
   }
 
   const handleDeviceChange = () => {
@@ -574,7 +590,7 @@ const ModelTraining = (props) => {
 
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
-  const currentAvailPresetImage = props.common.presetImages.normal;
+  const currentAvailPresetImage = presetImages.normal;
   const handleDistributedJob = (e) => {
     const type = e.target.value;
     setDistributedJob(type === 'PSDistJob');
