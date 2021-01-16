@@ -65,6 +65,7 @@ const ModelEvaluation = (props) => {
   const [form2] = Form.useForm();
 
   const { currentSelectedVC } = props.vc;
+  const { presetImages, deviceForImages } = props.common;
 
   useEffect(() => {
     getAvailableResource();
@@ -258,6 +259,9 @@ const ModelEvaluation = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
+    setFieldsValue({
+      engine: deviceForImages[deviceType][0],
+    });
   };
 
   const addParams = () => {
@@ -312,6 +316,16 @@ const ModelEvaluation = (props) => {
       });
     }
   };
+
+  const onEngineChange = (engine) => {
+    Object.keys(deviceForImages).forEach(device => {
+      if (deviceForImages[device].includes(engine)) {
+        setFieldsValue({
+          deviceType: device || undefined,
+        })
+      }
+    })
+  }
 
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(
@@ -368,7 +382,7 @@ const ModelEvaluation = (props) => {
 
   const disablePrivileged = !props.common.enablePrivileged;
   const noPrivilegedJobPermission = !(props.currentUser.permissionList.includes('SUBMIT_PRIVILEGE_JOB'));
-  const currentAvailPresetImage = props.common.presetImages.normal;
+  const currentAvailPresetImage = presetImages.normal;
   return (
     <>
       <PageHeader
@@ -432,7 +446,7 @@ const ModelEvaluation = (props) => {
                 },
               ]}
             >
-              <Select>
+              <Select onChange={onEngineChange}>
                 {currentAvailPresetImage &&
                   currentAvailPresetImage.map((f) => (
                     <Option value={f} key={f}>
