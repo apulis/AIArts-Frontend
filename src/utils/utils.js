@@ -329,3 +329,7 @@ export function capFirstLetter(s = '') {
     return $1.toUpperCase() + $2.toLowerCase();
   });
 }
+
+export const arrayCommon = (arr1, arr2) => {
+  return arr1.filter((v) => arr2.includes(v));
+}

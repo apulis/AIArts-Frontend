@@ -26,6 +26,7 @@ import Ribbon from 'antd/lib/badge/Ribbon';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import PrivilegedLabel from '@/components/PrivilegeLabel/index';
 import { EnumImageCategorys } from '@/models/common'; 
+import { arrayCommon } from '@/utils/utils.js';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -218,9 +219,16 @@ const CodeCreate = (props) => {
         setDeviceNumPerNodeArr(arr);
       }
       if (engineSource === 1) {
+        const currentDeviceEngine = deviceForImages[deviceType];
+        let tempEngineList = [];
+        if (isHyperparamImage) {
+          tempEngineList = arrayCommon(currentDeviceEngine, presetImages.hyperparameters);
+        } else {
+          tempEngineList = arrayCommon(currentDeviceEngine, presetImages.normal);
+        }
         setFieldsValue({
-          engine: deviceForImages[deviceType][0] || undefined,
-        })
+          engine: tempEngineList[0] || undefined,
+        });
       }
     }
   }, [jobTrainingType, currentDeviceType])
@@ -318,9 +326,11 @@ const CodeCreate = (props) => {
   }
 
   useEffect(() => {
-    setFieldsValue({
-      engine: currentAvailPresetImage[0] || undefined,
-    });
+    if (engineSource === 1) {
+      setFieldsValue({
+        engine: currentAvailPresetImage[0] || undefined,
+      });
+    }
   }, [isHyperparamImage])
   return (
     <>
