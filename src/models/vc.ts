@@ -38,16 +38,14 @@ const VCModel: VCModelType = {
       const res = yield call(getVCDetail, payload.vcName);
       if (res.code === 0) {
         const time = JSON.parse(res.data.metadata || '{}').admin?.job_max_time_second;
-        const jobMaxTimeSecond = time || userJobMaxTimeSecond;
-        if (jobMaxTimeSecond) {
-          yield put({
-            type: 'saveCurrentVCTime',
-            payload: {
-              jobMaxTimeSecond: jobMaxTimeSecond,
-              currentVCDetail: res.data,
-            }
-          })
-        }
+        const jobMaxTimeSecond = time || userJobMaxTimeSecond || null;
+        yield put({
+          type: 'saveCurrentVCTime',
+          payload: {
+            jobMaxTimeSecond: jobMaxTimeSecond,
+            currentVCDetail: res.data,
+          }
+        })
       }
       yield put({
         type: 'saveCurrentSelectedVC',
