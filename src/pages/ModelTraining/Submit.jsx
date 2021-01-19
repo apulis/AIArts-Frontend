@@ -329,6 +329,16 @@ const ModelTraining = (props) => {
         if (res.code === 0) {
           const template = res.data.Templates;
           setPresetRunningParams(template);
+          template.forEach(t => {
+            const { params } = t;
+            if (!params.params) {
+              params.params = {};
+            }
+            params.workerCmd = params.params.workerCmd;
+            params.masterCmd = params.params.masterCmd;
+            delete params.params.workerCmd;
+            delete params.params.masterCmd;
+          })
           // setCurrentDeviceType()
           if (template.length > 0) {
             setCurrentSelectedPresetParamsId(template[0].metaData?.id);
@@ -548,6 +558,7 @@ const ModelTraining = (props) => {
       }
       setCurrentDeviceType(deviceType);
       setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
+      setDistributedJob(currentSelected.params.jobTrainingType === 'PSDistJob');
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
