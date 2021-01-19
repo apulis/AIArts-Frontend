@@ -568,7 +568,8 @@ const ModelTraining = (props) => {
         if (deviceForImages[device].includes(engine)) {
           setFieldsValue({
             deviceType: device || undefined,
-          })
+          });
+          onDeviceTypeChange(device)
         }
       })
     }
