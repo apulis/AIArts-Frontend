@@ -259,9 +259,11 @@ const ModelEvaluation = (props) => {
   const onDeviceTypeChange = (value) => {
     const deviceType = value;
     setCurrentDeviceType(deviceType);
-    setFieldsValue({
-      engine: deviceForImages[deviceType][0],
-    });
+    if (!(deviceForImages[deviceType] || []).includes(getFieldValue('engine'))) {
+      setFieldsValue({
+        engine: deviceForImages[deviceType][0],
+      });
+    }
   };
 
   const addParams = () => {
