@@ -528,7 +528,7 @@ const ModelTraining = (props) => {
 
   const handleConfirmPresetParams = () => {
     const currentSelected = presetRunningParams.find(
-      (p) => p.metaData.id == currentSelectedPresetParamsId,
+      (p) => p.metaData.id === currentSelectedPresetParamsId,
     );
     if (currentSelected) {
       setFieldsValue({
@@ -538,6 +538,7 @@ const ModelTraining = (props) => {
         outputPath: currentSelected.params.outputPath,
         deviceNum: availableDeviceNumList.includes(currentSelected.params.deviceNum) ? currentSelected.params?.deviceNum : 0,
         engine: frameWorks.includes(currentSelected.params.engine) ? currentSelected.params?.engine : undefined,
+        numPsWorker: currentSelected.params.numPsWorker,
       });
       const params = Object.entries(currentSelected.params.params || {}).map((item) => {
         var obj = {};
