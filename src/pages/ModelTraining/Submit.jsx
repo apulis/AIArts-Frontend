@@ -509,9 +509,11 @@ const ModelTraining = (props) => {
     setCurrentDeviceType(deviceType);
     setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
     if (engineSource === 1) {
-      setFieldsValue({
-        engine: deviceForImages[deviceType][0] || undefined,
-      })
+      if (!(deviceForImages[deviceType] || []).includes(getFieldValue('engine'))) {
+        setFieldsValue({
+          engine: deviceForImages[deviceType][0] || undefined,
+        })
+      }
     }
   };
 
