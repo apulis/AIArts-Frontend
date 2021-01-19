@@ -530,6 +530,7 @@ const ModelTraining = (props) => {
     const currentSelected = presetRunningParams.find(
       (p) => p.metaData.id === currentSelectedPresetParamsId,
     );
+    console.log(44, currentSelected, currentSelectedPresetParamsId)
     if (currentSelected) {
       setFieldsValue({
         ...currentSelected.params,
@@ -558,6 +559,7 @@ const ModelTraining = (props) => {
       }
       setCurrentDeviceType(deviceType);
       setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
+      console.log(123123, currentSelected.params)
       setDistributedJob(currentSelected.params.jobTrainingType === 'PSDistJob');
       setImportedTrainingParams(true);
     }
@@ -565,7 +567,7 @@ const ModelTraining = (props) => {
   };
 
   const handleSelectPresetParams = (current) => {
-    setCurrentSelectedPresetParamsId(current);
+    setCurrentSelectedPresetParamsId(Number(current));
   };
 
   const handleClickDeviceNum = (e) => {
