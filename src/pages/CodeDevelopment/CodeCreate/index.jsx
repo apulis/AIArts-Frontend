@@ -218,20 +218,25 @@ const CodeCreate = (props) => {
         arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numberPsWorker'));
         setDeviceNumPerNodeArr(arr);
       }
-      if (engineSource === 1) {
-        const currentDeviceEngine = deviceForImages[deviceType];
-        let tempEngineList = [];
-        if (isHyperparamImage) {
-          tempEngineList = arrayCommon(currentDeviceEngine, presetImages.hyperparameters);
-        } else {
-          tempEngineList = arrayCommon(currentDeviceEngine, presetImages.normal);
-        }
-        setFieldsValue({
-          engine: tempEngineList[0] || undefined,
-        });
-      }
     }
   }, [jobTrainingType, currentDeviceType])
+
+  useEffect(() => {
+    if (engineSource === 1) {
+      const deviceType = getFieldValue('deviceType');
+      if (!deviceType) return;
+      const currentDeviceEngine = deviceForImages[deviceType];
+      let tempEngineList = [];
+      if (isHyperparamImage) {
+        tempEngineList = arrayCommon(currentDeviceEngine, presetImages.hyperparameters);
+      } else {
+        tempEngineList = arrayCommon(currentDeviceEngine, presetImages.normal);
+      }
+      setFieldsValue({
+        engine: tempEngineList[0] || undefined,
+      });
+    }
+  }, [currentDeviceType])
 
   const onEngineChange = (engine) => {
     const engineTip = presetImageDescMap[engine] || '';
