@@ -232,9 +232,11 @@ const CodeCreate = (props) => {
       } else {
         tempEngineList = arrayCommon(currentDeviceEngine, presetImages.normal);
       }
-      setFieldsValue({
-        engine: tempEngineList[0] || undefined,
-      });
+      if (!tempEngineList.includes(getFieldValue('engine'))) {
+        setFieldsValue({
+          engine: tempEngineList[0] || undefined,
+        });
+      }
     }
   }, [currentDeviceType])
 
