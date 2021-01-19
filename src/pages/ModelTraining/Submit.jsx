@@ -328,7 +328,6 @@ const ModelTraining = (props) => {
       fetchPresetTemplates().then((res) => {
         if (res.code === 0) {
           const template = res.data.Templates;
-          setPresetRunningParams(template);
           template.forEach(t => {
             const { params } = t;
             if (!params.params) {
@@ -339,7 +338,7 @@ const ModelTraining = (props) => {
             delete params.params.workerCmd;
             delete params.params.masterCmd;
           })
-          // setCurrentDeviceType()
+          setPresetRunningParams(template);
           if (template.length > 0) {
             setCurrentSelectedPresetParamsId(template[0].metaData?.id);
           }
@@ -1121,29 +1120,49 @@ const ModelTraining = (props) => {
                     </Col>
                     <Col span={19}>{p.params.deviceNum}</Col>
                   </Row>
-                  <Row>
-                    <Col span={5}>{formatMessage({ id: 'model.params.item.startupFile' })}</Col>
-                    <Col span={19}>{p.params.startupFile}</Col>
-                  </Row>
+                  {
+                    p.params.startupFile && 
+                      <Row>
+                        <Col span={5}>{formatMessage({ id: 'model.params.item.startupFile' })}</Col>
+                        <Col span={19}>{p.params.startupFile}</Col>
+                      </Row>
+                  }
                   <Row>
                     <Col span={5}>{formatMessage({ id: 'model.params.item.codePath' })}</Col>
                     <Col span={19}>{p.params.codePath}</Col>
                   </Row>
-                  <Row>
-                    <Col span={5}>{formatMessage({ id: 'model.params.item.datasetPath' })}</Col>
-                    <Col span={19}>{p.params.datasetPath}</Col>
-                  </Row>
+                  {
+                    p.params.datasetPath && <Row>
+                      <Col span={5}>{formatMessage({ id: 'model.params.item.datasetPath' })}</Col>
+                      <Col span={19}>{p.params.datasetPath}</Col>
+                    </Row>
+                  }
                   <Row>
                     <Col span={5}>{formatMessage({ id: 'model.params.item.outputPath' })}</Col>
                     <Col span={19}>{p.params.outputPath}</Col>
                   </Row>
-                  <Row>
-                    <Col span={5}>{formatMessage({ id: 'model.params.item.runningParams' })}</Col>
-                    <Col span={19}>
-                      {p.params.params &&
-                        formatParams(p.params.params).map((val) => <div>{val}</div>)}
-                    </Col>
-                  </Row>
+                  {
+                    Object.keys(p.params.params).length > 0 && <Row>
+                      <Col span={5}>{formatMessage({ id: 'model.params.item.runningParams' })}</Col>
+                      <Col span={19}>
+                        {p.params.params &&
+                          formatParams(p.params.params).map((val) => <div>{val}</div>)}
+                      </Col>
+                    </Row>
+                  }
+                  
+                  {
+                    (p.params.workerCmd || p.params.masterCmd) && <Row>
+                      <Col span={5}>{formatMessage({ id: 'model.params.item.workerCmd' })}</Col>
+                      <Col span={19}>{p.params.workerCmd}</Col>
+                    </Row>
+                  }
+                  {
+                    (p.params.workerCmd || p.params.masterCmd) && <Row>
+                      <Col span={5}>{formatMessage({ id: 'model.params.item.masterCmd' })}</Col>
+                      <Col span={19}>{p.params.masterCmd}</Col>
+                    </Row>
+                  }
                   <Row>
                     <Col span={5}>{formatMessage({ id: 'model.params.item.deviceType' })}</Col>
                     <Col span={19}>{p.params.deviceType}</Col>

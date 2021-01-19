@@ -17,6 +17,8 @@ export default {
   'model.params.item.datasetPath': '训练数据集',
   'model.params.item.outputPath': '输出路径',
   'model.params.item.runningParams': '运行参数',
+  'model.params.item.masterCmd': 'Master 节点命令',
+  'model.params.item.workerCmd': 'Worker 节点命令',
   'model.params.item.deviceType': '计算节点规格',
   'model.params.item.engine': '引擎类型',
   'model.submit.modal.save.params.none': '暂无',

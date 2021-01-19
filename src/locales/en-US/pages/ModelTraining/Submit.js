@@ -19,6 +19,8 @@ export default {
   'model.params.item.datasetPath': 'Training dataset',
   'model.params.item.outputPath': 'Output path',
   'model.params.item.runningParams': 'Running parameters',
+  'model.params.item.masterCmd': 'Master Cmd',
+  'model.params.item.workerCmd': 'Worker Cmd',
   'model.params.item.deviceType': 'Device Type',
   'model.params.item.engine': 'Engine Type',
   'model.submit.modal.save.params.none': 'None',
