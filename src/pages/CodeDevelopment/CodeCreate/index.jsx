@@ -234,7 +234,7 @@ const CodeCreate = (props) => {
       }
       if (!tempEngineList.includes(getFieldValue('engine'))) {
         setFieldsValue({
-          engine: tempEngineList[0] || undefined,
+          engine: getNameFromDockerImage(tempEngineList[0]) || undefined,
         });
       }
     }

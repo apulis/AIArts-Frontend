@@ -520,7 +520,7 @@ const ModelTraining = (props) => {
     if (engineSource === 1) {
       if (!(deviceForImages[deviceType] || []).includes(getFieldValue('engine'))) {
         setFieldsValue({
-          engine: deviceForImages[deviceType][0] || undefined,
+          engine: getNameFromDockerImage(deviceForImages[deviceType][0]) || undefined,
         })
       }
     }
