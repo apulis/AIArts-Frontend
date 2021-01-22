@@ -8,14 +8,14 @@
 export default {
   dev: {
     '/ai_arts/api/': {
-      target: 'http://192.168.1.211/',
+      target: 'http://119.147.212.162:51080/',
       changeOrigin: true,
       pathRewrite: {
         '^': '',
       },
     },
     '/custom-user-dashboard-backend/': {
-      target: 'http://192.168.1.211/',
+      target: 'http://119.147.212.162:51080/',
       // target: 'http://121.46.18.83:50088/',
       // target: 'http://10.31.3.63/',
       changeOrigin: true,

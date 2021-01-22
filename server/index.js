@@ -15,4 +15,4 @@ app.use(history());
 
 app.use(ecstatic({ root: path.join(__dirname, '../dist') }));
 
-http.createServer(app).listen(process.argv[2] || 3084);
+http.createServer(app).listen(process.argv[2] || 3084, '0.0.0.0');
