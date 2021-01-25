@@ -1,10 +1,19 @@
 import { message } from 'antd';
-import { Effect } from 'dva';
-import { Reducer } from 'redux';
+import { Effect, Reducer } from 'umi';
 
 import { fetchCommonResource } from '@/services/common';
 
-let devices = {};
+interface IDeviceProps {
+  [props: string]: {
+    detail: {
+      capacity: number;
+      allocatable: number;
+      nodeName: string;
+    }[];
+  }
+}
+
+export let devices: IDeviceProps = {};
 
 export function beforeSubmitJob(isDistributed, deviceType, deviceNum, distributedJobOptions) {
   const detail = devices[deviceType].detail;
