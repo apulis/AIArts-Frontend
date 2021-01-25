@@ -193,6 +193,17 @@ const ModelTraining = (props) => {
     }
   }, [distributedJob, deviceList, currentDeviceType]);
 
+  useEffect(() => {
+    const deviceNum = getFieldValue('deviceNum');
+    if (availableDeviceNumList.length > 0 && typeof deviceNum !== 'undefined') {
+      if (!availableDeviceNumList.includes(deviceNum)) {
+        setFieldsValue({
+          deviceNum: 0,
+        })
+      }
+    }
+  }, [availableDeviceNumList])
+
   const handleDistributedJob = (type) => {
     setDistributedJob(type === 'PSDistJob');
   };
@@ -219,7 +230,7 @@ const ModelTraining = (props) => {
         masterCmd: masterCmd.value,
         workerCmd: workerCmd.value,
         jobTrainingType: newParams.jobTrainingType || 'RegularJob',
-        deviceNum: availableDeviceNumList.includes(newParams.deviceNum) ? newParams.deviceNum : 0,
+        deviceNum: newParams.deviceNum,
       });
     }
   }, [codePathPrefix]);
@@ -256,7 +267,7 @@ const ModelTraining = (props) => {
       const { deviceType, deviceNum } = data.params;
       form.setFieldsValue({
         ...data.params,
-        deviceNum: availableDeviceNumList.includes(deviceNum) ? deviceNum : 0,
+        deviceNum: deviceNum,
       });
       if (deviceType) {
         setCurrentDeviceType(data.params.deviceType);
@@ -530,7 +541,6 @@ const ModelTraining = (props) => {
     const currentSelected = presetRunningParams.find(
       (p) => p.metaData.id === currentSelectedPresetParamsId,
     );
-    console.log(44, currentSelected, currentSelectedPresetParamsId)
     if (currentSelected) {
       setFieldsValue({
         ...currentSelected.params,
@@ -559,7 +569,6 @@ const ModelTraining = (props) => {
       }
       setCurrentDeviceType(deviceType);
       setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
-      console.log(123123, currentSelected.params)
       setDistributedJob(currentSelected.params.jobTrainingType === 'PSDistJob');
       setImportedTrainingParams(true);
     }
