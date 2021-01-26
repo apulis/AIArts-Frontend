@@ -32,13 +32,7 @@ const UserLayout = (props) => {
         <title>{title}</title>
         <meta name="description" content={title} />
       </Helmet>
-
-      <div className={styles.container}>
-        <div className={styles.lang}>
-          <SelectLang />
-        </div>
-        <div className={styles.content}>{children}</div>
-      </div>
+      {children}
     </HelmetProvider>
   );
 };
