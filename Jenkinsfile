@@ -5,7 +5,7 @@ buildPlugin ( {
     dockerImages = [
         [
             "directory": ".",
-            "imageName": "aiarts-frontend",
+            "imageName": "apulistech/aiarts-frontend",
             "arch": ["amd64", "arm64"]
         ]
     ]
