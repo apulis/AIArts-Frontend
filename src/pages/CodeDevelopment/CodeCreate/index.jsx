@@ -60,6 +60,7 @@ const CodeCreate = (props) => {
   const [engineTip, setEngineTip] = useState('');
   const [isHyperparamImage, setIsHyperparamImage] = useState(false);
   const [frameworkMap, setFrameworkMap] = useState({});
+  const [nodeNum, setNodeNum] = useState(0);
 
   const { currentSelectedVC } = props.vc;
   const { presetImages, deviceForImages } = props.common;
@@ -215,11 +216,11 @@ const CodeCreate = (props) => {
         setFieldsValue({ deviceNum: arr[0] });
         setDeviceNumArr(arr);
       } else if (jobTrainingType === 'PSDistJob') {
-        arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numberPsWorker'));
+        arr = getAvailPSDDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota, getFieldValue('numPsWorker'));
         setDeviceNumPerNodeArr(arr);
       }
     }
-  }, [jobTrainingType, currentDeviceType])
+  }, [jobTrainingType, currentDeviceType, nodeNum])
 
   useEffect(() => {
     if (engineSource === 1) {
@@ -255,6 +256,7 @@ const CodeCreate = (props) => {
   }
   const handleCalcTotalDeviceNum = (nodeNum, deviceNum) => {
     setFieldsValue({ deviceTotal: ((nodeNum || getFieldValue('numPsWorker')) || 0) * (deviceNum || 0) });
+    setNodeNum(nodeNum);
   };
 
   const validateMessages = {
@@ -330,6 +332,10 @@ const CodeCreate = (props) => {
     currentAvailPresetImage = presetImages.hyperparameters;
   } else {
     currentAvailPresetImage = presetImages.normal;
+  }
+
+  const handleNumPsWorkerChange = () => {
+
   }
 
   useEffect(() => {

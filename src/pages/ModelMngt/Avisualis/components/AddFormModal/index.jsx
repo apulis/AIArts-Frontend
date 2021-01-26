@@ -39,7 +39,7 @@ const AddFormModal = (props, ref) => {
     }
 
     setAvailableDeviceNumList(list);
-  }, [jobTrainingType, deviceList, deviceType]);
+  }, [jobTrainingType, deviceList, deviceType, deviceTotal]);
 
   const getData = async () => {
     if (detailData) {
