@@ -826,7 +826,6 @@ const ModelTraining = (props) => {
             labelCol={{ span: 4 }}
             label={formatMessage({ id: 'trainingCreate.label.startupFile' })}
             name="startupFile"
-            preserve={false}
             style={{ height: '32px' }}
             rules={[{ required: true }, startUpFileReg]}
           >
