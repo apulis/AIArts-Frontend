@@ -330,6 +330,6 @@ export function capFirstLetter(s = '') {
   });
 }
 
-export const arrayCommon = (arr1, arr2) => {
+export const arrayCommon = (arr1 = [], arr2 = []) => {
   return arr1.filter((v) => arr2.includes(v));
 }
