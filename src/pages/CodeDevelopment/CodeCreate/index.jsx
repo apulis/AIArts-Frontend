@@ -235,7 +235,7 @@ const CodeCreate = (props) => {
       }
       if (!tempEngineList.includes(getFieldValue('engine'))) {
         setFieldsValue({
-          engine: getNameFromDockerImage(tempEngineList[0]) || undefined,
+          engine: tempEngineList[0] || undefined,
         });
       }
     }
@@ -469,7 +469,7 @@ const CodeCreate = (props) => {
                     message: formatMessage({ id: 'codeCreate.rule.selectEngineName' }),
                   },
                 ]}
-                style={{ display: 'inline-block', width: 'calc(50%)' }}
+                style={{ display: 'inline-block', width: 'calc(70%)' }}
                 preserve={false}
               >
                 <Select

@@ -261,7 +261,7 @@ const ModelEvaluation = (props) => {
     setCurrentDeviceType(deviceType);
     if (!(deviceForImages[deviceType] || []).includes(getFieldValue('engine'))) {
       setFieldsValue({
-        engine: getNameFromDockerImage(deviceForImages[deviceType][0]) || undefined,
+        engine: deviceForImages[deviceType][0] || undefined,
       });
     }
   };
