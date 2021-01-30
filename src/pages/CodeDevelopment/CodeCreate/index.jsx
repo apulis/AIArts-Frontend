@@ -352,7 +352,9 @@ const CodeCreate = (props) => {
         onBack={() => history.push('/codeDevelopment')}
         title={formatMessage({ id: 'codeCreate.pageHeader.backCodeCreate' })}
       />
-      <Card>
+      <Card
+        style={{ minWidth: '1000px', overflow: 'auto' }}
+        >
         <Form
           {...formItemLayout}
           labelAlign="right"
