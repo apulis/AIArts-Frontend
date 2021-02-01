@@ -145,7 +145,7 @@ const common: CommonModelType = {
           if (image.brand && image.deviceType && image.cpuArchType) {
             const deviceType = `${image.brand}_${image.deviceType}_${image.cpuArchType}`;
             if (!deviceForImages[deviceType]) {
-              deviceForImages[deviceType] = [];
+              deviceForImages[deviceType] = [image.image];
             } else {
               deviceForImages[deviceType].push(image.image);
             }
