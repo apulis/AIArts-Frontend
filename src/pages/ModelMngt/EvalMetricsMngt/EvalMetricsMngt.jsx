@@ -322,6 +322,7 @@ const EvalMetricsMngt = () => {
           visible={importedParamsModalVisible}
           onCancel={() => {
             setImportedParamsModalVisible(false);
+            setFileList([]);
           }}
           onOk={saveFileAsTemplate}
         >

@@ -313,6 +313,7 @@ const ParamsManage = () => {
           visible={importedParamsModalVisible}
           onCancel={() => {
             setImportedParamsModalVisible(false);
+            setFileList([]);
           }}
           onOk={saveFileAsTemplate}
         >
