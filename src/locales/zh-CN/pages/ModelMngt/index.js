@@ -103,7 +103,7 @@ export default {
   'createPretrained.label.codePath': '代码目录!',
   'createPretrained.label.startupFile': '代码目录!',
   'createPretrained.label.outputPath': '输出路径!',
-  'createPretrained.label.modelParamPath': '模型参数路径',
+  'createPretrained.label.modelParamPath': '模型权重文件',
   'createPretrained.label.runningParam': '运行参数!',
 
   'createPretrained.rule.needModelName': '模型名称不能为空!',
@@ -117,7 +117,7 @@ export default {
   'createPretrained.rule.needCodePath': '代码路径不能为空!',
   'createPretrained.rule.needStartupFile': '代码目录不能为空!',
   'createPretrained.rule.needOutputPath': '输出路径不能为空!',
-  'createPretrained.rule.needModelParamPath': '模型参数路径不能为空!',
+  'createPretrained.rule.needModelParamPath': '模型权重文件不能为空!',
 
   'createPretrained.value.conifg': '手动配置',
   'createPretrained.value.importParams': '导入参数',
@@ -132,7 +132,7 @@ export default {
   'createPretrained.placeholder.inputCodePath': '请输入代码目录!',
   'createPretrained.placeholder.inputStartupFile': '请输入代码目录!',
   'createPretrained.placeholder.inputOutputPath': '请输入输出路径!',
-  'createPretrained.placeholder.inputModelParamPath': '请输入模型参数路径!',
+  'createPretrained.placeholder.inputModelParamPath': '请输入模型权重文件!',
 
   'createPretrained.clickAddParam': '点击增加参数',
   'createPretrained.Submit': '立即创建',
@@ -161,7 +161,7 @@ export default {
   'editMetrics.label.codePath': '代码目录',
   'editMetrics.label.startupFile': '启动文件',
   'editMetrics.label.outputPath': '输出路径',
-  'editMetrics.label.modelParamPath': '模型参数路径',
+  'editMetrics.label.modelParamPath': '模型权重文件',
   'editMetrics.label.trainingDataSet': '训练数据集',
   'editMetrics.label.runningParam': '运行参数',
   'editMetrics.clickAddParam': '点击增加参数',
