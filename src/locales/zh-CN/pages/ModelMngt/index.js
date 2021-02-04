@@ -103,7 +103,7 @@ export default {
   'createPretrained.label.codePath': '代码目录!',
   'createPretrained.label.startupFile': '代码目录!',
   'createPretrained.label.outputPath': '输出路径!',
-  'createPretrained.label.modelParamPath': '模型参数路径!',
+  'createPretrained.label.modelParamPath': '模型参数路径',
   'createPretrained.label.runningParam': '运行参数!',
 
   'createPretrained.rule.needModelName': '模型名称不能为空!',

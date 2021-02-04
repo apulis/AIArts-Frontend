@@ -126,10 +126,10 @@ const CreateModel = (props) => {
       }
     },
     beforeUpload(file) {
-      const { type, size } = file;
+      const { type, name } = file;
       return new Promise((resolve, reject) => {
         if (fileList.length && fileList.findIndex((i) => i.name === name && i.type === type) > -1) {
-          message.warning(`${formatMessage({ id: 'createModel.upload.tips.desc' })}`);
+          message.warning(`${formatMessage({ id: 'createModel.upload.tips' })}`);
           reject(file);
         }
         if (
@@ -141,7 +141,7 @@ const CreateModel = (props) => {
             type === 'application/gzip'
           )
         ) {
-          message.warning(`${formatMessage({ id: 'createModel.upload.tips' })}`);
+          message.warning(`${formatMessage({ id: 'createModel.upload.tips.desc' })}`);
           reject(file);
         }
         resolve(file);
