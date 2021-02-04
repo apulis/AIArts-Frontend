@@ -102,6 +102,10 @@ const ManageJobs: React.FC = (props) => {
 
   const handleChangeStatus = (value: string) => {
     setCurrentStatus(value);
+    setPageParams({
+      ...pageParams,
+      pageNum: 1,
+    });
   }
 
 
