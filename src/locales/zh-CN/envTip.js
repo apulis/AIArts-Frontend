@@ -17,4 +17,7 @@ export default {
   'envTip.example.DLWS_SD_worker15_IP': ' ',
   'envTip.example.DLWS_SD_worker15_SSH_PORT': ' ',
   'envTip.example.DLWS_ROLE_IDX': '从0开始整数递增，例如WORKER 0 的Rank=0',
+  'envTip.table.desc': '说明',
+  'envTip.table.envKey': '环境变量名称',
+  'envTip.table.envValue': '环境变量Value（举例/说明）',
 }

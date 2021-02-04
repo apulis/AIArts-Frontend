@@ -37,15 +37,15 @@ const EnvTip: React.FC = (props) => {
             pagination={false}
             columns={[
               {
-                title: '说明',
+                title: formatMessage({ id: 'envTip.table.desc' }),
                 dataIndex: 'desc'
               },
               {
-                title: '环境变量名称',
+                title: formatMessage({ id: 'envTip.table.envKey' }),
                 dataIndex: 'key',
               },
               {
-                title: '环境变量Value（举例/说明）',
+                title: formatMessage({ id: 'envTip.table.envValue' }),
                 dataIndex: 'example',
               }
             ]}

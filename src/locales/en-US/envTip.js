@@ -17,4 +17,6 @@ export default {
   'envTip.example.DLWS_SD_worker15_IP': ' ',
   'envTip.example.DLWS_SD_worker15_SSH_PORT': ' ',
   'envTip.example.DLWS_ROLE_IDX': 'Starting from 0 and increasing by integer, for example, Rank=0 of WORKER 0',
-}
+  'envTip.table.desc': 'Info',
+  'envTip.table.envKey': 'Environment variable name',
+  'envTip.table.envValue': 'Environment variable Value (example/description)',}
