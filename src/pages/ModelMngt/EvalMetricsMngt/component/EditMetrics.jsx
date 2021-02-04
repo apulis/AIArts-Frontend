@@ -386,6 +386,7 @@ const EditMetrics = (props) => {
           name="paramPath"
           labelCol={{ span: 4 }}
           label={intl.formatMessage({ id: 'editMetrics.label.modelParamPath' })}
+          rules={[{ pattern: getUserPathPrefixReg(codePathPrefix).pattern }]}
         >
           <Input style={{ width: 420 }} />
         </FormItem>
