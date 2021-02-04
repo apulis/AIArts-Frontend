@@ -383,13 +383,6 @@ const EditMetrics = (props) => {
           <Input disabled style={{ width: 420 }} />
         </FormItem>
         <FormItem
-          name="paramPath"
-          labelCol={{ span: 4 }}
-          label={intl.formatMessage({ id: 'editMetrics.label.modelParamPath' })}
-        >
-          <Input style={{ width: 420 }} />
-        </FormItem>
-        <FormItem
           name="datasetPath"
           rules={[]}
           labelCol={{ span: 4 }}
