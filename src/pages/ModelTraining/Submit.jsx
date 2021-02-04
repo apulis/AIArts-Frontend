@@ -542,12 +542,13 @@ const ModelTraining = (props) => {
       (p) => p.metaData.id === currentSelectedPresetParamsId,
     );
     if (currentSelected) {
+      const { deviceType, engine } = currentSelected.params;
       setFieldsValue({
         ...currentSelected.params,
+        deviceType: deviceType,
         codePath: currentSelected.params.codePath,
         startupFile: currentSelected.params.startupFile,
         outputPath: currentSelected.params.outputPath,
-        deviceNum: availableDeviceNumList.includes(currentSelected.params.deviceNum) ? currentSelected.params?.deviceNum : 0,
         engine: frameWorks.includes(currentSelected.params.engine) ? currentSelected.params?.engine : undefined,
         numPsWorker: currentSelected.params.numPsWorker,
       });
@@ -561,15 +562,30 @@ const ModelTraining = (props) => {
       setFieldsValue({
         params: params,
       });
-      const { deviceType, engine } = currentSelected.params;
       if (frameWorks.includes(engine)) {
         setEngineSource(1);
       } else if (userFrameWorks.includes(engine)) {
         setEngineSource(2);
       }
       setCurrentDeviceType(deviceType);
-      setTotalNodes(props.resource.devices[deviceType]?.detail?.length);
-      setDistributedJob(currentSelected.params.jobTrainingType === 'PSDistJob');
+      const nodesNum = props.resource.devices[deviceType]?.detail?.length
+      setTotalNodes(nodesNum);
+      const distributed = currentSelected.params.jobTrainingType === 'PSDistJob';
+      let availDeviceNums = [];
+      const deviceQuota =  deviceList.find(val => val.deviceType === deviceType)?.userQuota;
+      if (distributed) {
+        availDeviceNums = getAvailPSDDeviceNumber(deviceType, deviceQuota, nodesNum); 
+      } else {
+        availDeviceNums = getAvailRegularDeviceNumber(deviceType, deviceQuota);
+      }
+      const paramsDeviceNum = currentSelected.params.deviceNum;
+      if (availDeviceNums.includes(paramsDeviceNum)) {
+        setFieldsValue({
+          deviceNum: availDeviceNums.includes(paramsDeviceNum) ? paramsDeviceNum : undefined,
+          deviceTotal: (paramsDeviceNum || 0) * (currentSelected.params.numPsWorker || 0),
+        })
+      }
+      setDistributedJob(distributed);
       setImportedTrainingParams(true);
     }
     setPresetParamsVisible(false);
