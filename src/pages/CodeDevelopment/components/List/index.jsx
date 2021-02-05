@@ -234,7 +234,14 @@ const CodeList = (props) => {
         okText: formatMessage({ id: 'codeList.tips.delete.modal.okText' }),
       });
     } else {
-      apiDeleteCode(item.id);
+      Modal.warning({
+        title: formatMessage({ id: 'delete.modal.title' }),
+        content: formatMessage({ id: 'delete.modal.content' }),
+        okText: formatMessage({ id: 'delete.modal.okText' }),
+        onOk() {
+          apiDeleteCode(item.id);
+        }
+      })
     }
   };
 

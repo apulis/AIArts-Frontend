@@ -147,21 +147,27 @@ const List = (props) => {
     //   handleSearch();
     //   getJobStatusSumary();
     // }
-
-    const { code, msg } = await deleteEvaluation(item.id);
-
-    if (code === 0) {
-      // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
-      if (trainingWorkList.length === 1 && pageParams.pageNum > 1) {
-        setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
-      } else {
-        handleSearch();
+    Modal.warning({
+      title: formatMessage({ id: 'delete.modal.title' }),
+      content: formatMessage({ id: 'delete.modal.content' }),
+      okText: formatMessage({ id: 'delete.modal.okText' }),
+      async onOk() {
+        const { code, msg } = await deleteEvaluation(item.id);
+        if (code === 0) {
+          // 若删除的是当前页最后一项，且页数不是第一页，则将页数减一
+          if (trainingWorkList.length === 1 && pageParams.pageNum > 1) {
+            setPageParams({ ...pageParams, pageNum: pageParams.pageNum - 1 });
+          } else {
+            handleSearch();
+          }
+          getJobStatusSumary();
+          message.success(`${intl.formatMessage({ id: 'list.delete.success' })}`);
+        } else {
+          message.error(`${intl.formatMessage({ id: 'list.delete.error' })}${msg}。`);
+        }
       }
-      getJobStatusSumary();
-      message.success(`${intl.formatMessage({ id: 'list.delete.success' })}`);
-    } else {
-      message.error(`${intl.formatMessage({ id: 'list.delete.error' })}${msg}。`);
-    }
+    })
+    
   };
   const onSearchName = (name) => {
     setPageParams({ ...pageParams, ...{ pageNum: 1 } });

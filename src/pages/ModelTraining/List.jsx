@@ -169,7 +169,14 @@ const List = (props) => {
         onOk() {},
       });
     } else {
-      handleDelete();
+      Modal.warning({
+        title: formatMessage({ id: 'delete.modal.title' }),
+        content: formatMessage({ id: 'delete.modal.content' }),
+        okText: formatMessage({ id: 'delete.modal.okText' }),
+        onOk() {
+          handleDelete();
+        }
+      })
     }
   };
 
