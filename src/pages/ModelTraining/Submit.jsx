@@ -232,6 +232,11 @@ const ModelTraining = (props) => {
         jobTrainingType: newParams.jobTrainingType || 'RegularJob',
         deviceNum: newParams.deviceNum,
       });
+      if (newParams.jobTrainingType !== 'RegularJob') {
+        setFieldsValue({
+          deviceTotal: (newParams.deviceNum || 0) * (newParams.numPsWorker || 0),
+        });
+      }
     }
   }, [codePathPrefix]);
 
