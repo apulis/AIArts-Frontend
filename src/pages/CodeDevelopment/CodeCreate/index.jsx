@@ -210,6 +210,7 @@ const CodeCreate = (props) => {
   useEffect(() => {
     const deviceType = getFieldValue('deviceType');
     if (deviceType) {
+      if (deviceList.length === 0) return;
       let arr = [];
       if (jobTrainingType === 'RegularJob') {
         arr = getAvailRegularDeviceNumber(deviceType, deviceList.find(val => val.deviceType === deviceType).userQuota);
@@ -249,6 +250,9 @@ const CodeCreate = (props) => {
           setFieldsValue({
             deviceType: device || undefined,
           })
+          if (device) {
+            setCurrentDeviceType(device);
+          }
         }
       })
     }
@@ -309,13 +313,6 @@ const CodeCreate = (props) => {
   }, [engineSource]);
 
   useEffect(() => {
-    if (isHyperparamImage) {
-      setEngineTip(presetImageDescMap[presetImages.hyperparameters[0]] || '');
-    } else {
-      setEngineTip(presetImageDescMap[presetImages.normal[0]] || '');
-    }
-  }, [isHyperparamImage]);
-  useEffect(() => {
     if (jobTrainingType === 'RegularJob') {
       renderInitRegularForm(deviceNumArr[0] || undefined);
     } else if (jobTrainingType === 'PSDistJob') {
@@ -333,18 +330,24 @@ const CodeCreate = (props) => {
   } else {
     currentAvailPresetImage = presetImages.normal;
   }
-
-  const handleNumPsWorkerChange = () => {
-
-  }
-
+  
   useEffect(() => {
-    if (engineSource === 1) {
-      setFieldsValue({
-        engine: currentAvailPresetImage[0] || undefined,
-      });
+    if (isHyperparamImage) {
+      setEngineTip(presetImageDescMap[presetImages.hyperparameters[0]] || '');
+    } else {
+      setEngineTip(presetImageDescMap[presetImages.normal[0]] || '');
     }
-  }, [isHyperparamImage])
+    if (engineSource === 1) {
+      const engine = currentAvailPresetImage[0] || undefined;
+      setFieldsValue({
+        engine,
+      });
+      if (engine) {
+        onEngineChange(engine);
+      }
+    }
+  }, [isHyperparamImage]);
+
   return (
     <>
       <PageHeader
